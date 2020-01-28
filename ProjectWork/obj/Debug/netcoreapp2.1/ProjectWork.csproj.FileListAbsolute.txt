@@ -1,0 +1,14 @@
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\ProjectWork.deps.json
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\ProjectWork.runtimeconfig.json
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\ProjectWork.runtimeconfig.dev.json
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\ProjectWork.dll
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\ProjectWork.pdb
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.csproj.CoreCompileInputs.cache
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.RazorAssemblyInfo.cache
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.RazorAssemblyInfo.cs
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.AssemblyInfoInputs.cache
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.AssemblyInfo.cs
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.RazorTargetAssemblyInfo.cache
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.dll
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.pdb
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.csprojAssemblyReference.cache
