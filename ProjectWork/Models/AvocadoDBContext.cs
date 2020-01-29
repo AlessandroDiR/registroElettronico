@@ -21,20 +21,17 @@ namespace ProjectWork.Models
         public virtual DbSet<Corsi> Corsi { get; set; }
         public virtual DbSet<Docenti> Docenti { get; set; }
         public virtual DbSet<Insegnare> Insegnare { get; set; }
-        public virtual DbSet<Lezioni> Lezioni { get; set; }
         public virtual DbSet<Materie> Materie { get; set; }
         public virtual DbSet<Studenti> Studenti { get; set; }
         public virtual DbSet<Tenere> Tenere { get; set; }
         public virtual DbSet<Valutazioni> Valutazioni { get; set; }
-
-        // Unable to generate entity type for table 'dbo.Presenze'. Please see the warning messages.
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=ALESSANDRO\\MSSQLSERVER02;Database=AvocadoDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 
@@ -117,6 +114,12 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.Descrizione).HasColumnName("descrizione");
 
+                entity.Property(e => e.Luogo)
+                    .IsRequired()
+                    .HasColumnName("luogo")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Nome)
                     .IsRequired()
                     .HasColumnName("nome")
@@ -185,13 +188,6 @@ namespace ProjectWork.Models
                     .HasConstraintName("FK_Insegnare_Materie");
             });
 
-            modelBuilder.Entity<Lezioni>(entity =>
-            {
-                entity.HasKey(e => e.IdLezione);
-
-                entity.Property(e => e.IdLezione).HasColumnName("id_lezione");
-            });
-
             modelBuilder.Entity<Materie>(entity =>
             {
                 entity.HasKey(e => e.IdMateria);
@@ -214,10 +210,7 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.IdStudente).HasColumnName("id_studente");
 
-                entity.Property(e => e.AnnoIscrizione)
-                    .IsRequired()
-                    .HasColumnName("anno_iscrizione")
-                    .HasMaxLength(4);
+                entity.Property(e => e.AnnoIscrizione).HasColumnName("anno_iscrizione");
 
                 entity.Property(e => e.Cf)
                     .IsRequired()

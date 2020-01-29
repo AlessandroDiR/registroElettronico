@@ -1,2 +1,2 @@
 ##### CONNESSIONE AL DB CON EF
-Scaffold-DbContext "Server={mssql server name};Database={db name};Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+Scaffold-DbContext "Server={mssql server name};Database=AvocadoDB;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models

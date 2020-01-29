@@ -16,7 +16,7 @@ namespace ProjectWork.Models
         public string Password { get; set; }
         public string Cf { get; set; }
         public DateTime DataNascita { get; set; }
-        public string AnnoIscrizione { get; set; }
+        public int AnnoIscrizione { get; set; }
         public int IdCorso { get; set; }
         public string LuogoNascita { get; set; }
 
