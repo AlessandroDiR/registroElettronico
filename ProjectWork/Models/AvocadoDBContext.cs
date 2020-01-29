@@ -41,7 +41,10 @@ namespace ProjectWork.Models
             {
                 entity.HasKey(e => new { e.IdAdmin, e.IdCorso });
 
-                entity.Property(e => e.IdAdmin).HasColumnName("id_admin");
+                entity.Property(e => e.IdAdmin)
+                    .HasColumnName("id_admin")
+                    .HasMaxLength(25)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.IdCorso).HasColumnName("id_corso");
 
@@ -62,17 +65,23 @@ namespace ProjectWork.Models
             {
                 entity.HasKey(e => e.IdAdmin);
 
-                entity.Property(e => e.IdAdmin).HasColumnName("id_admin");
+                entity.Property(e => e.IdAdmin)
+                    .HasColumnName("id_admin")
+                    .HasMaxLength(25)
+                    .IsUnicode(false)
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Cognome)
                     .IsRequired()
                     .HasColumnName("cognome")
-                    .HasMaxLength(100);
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Nome)
                     .IsRequired()
                     .HasColumnName("nome")
-                    .HasMaxLength(100);
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Password)
                     .IsRequired()

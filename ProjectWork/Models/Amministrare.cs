@@ -5,7 +5,7 @@ namespace ProjectWork.Models
 {
     public partial class Amministrare
     {
-        public int IdAdmin { get; set; }
+        public string IdAdmin { get; set; }
         public int IdCorso { get; set; }
 
         public Amministratori IdAdminNavigation { get; set; }

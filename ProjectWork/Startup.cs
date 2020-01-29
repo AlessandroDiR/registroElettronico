@@ -20,6 +20,7 @@ namespace ProjectWork
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            //Scaffold-DbContext "Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
         }
 
         public IConfiguration Configuration { get; }

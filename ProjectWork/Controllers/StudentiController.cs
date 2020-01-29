@@ -83,24 +83,24 @@ namespace ProjectWork.Controllers
 
         // POST: api/Studenti
         [HttpPost]
-        public async Task<IActionResult> PostStudenti([FromBody] Studenti studente )
+        public async Task<IActionResult> PostStudenti([FromBody] Studenti s )
         {
             //string nome, string luogo_nas, string cognome, string cf, DateTime data_nas, int anno_iscrizione, int id_corso
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            /*
+            
             Studenti studente = new Studenti();
-            studente.Nome = nome;
-            studente.Cognome = cognome;
-            studente.Cf = cf;
-            studente.DataNascita = data_nas;
-            studente.AnnoIscrizione = anno_iscrizione;
-            studente.LuogoNascita = luogo_nas;
-            studente.IdCorso = id_corso;
-            studente.Password = cf;
-            */
+            studente.Nome = s.Nome;
+            studente.Cognome = s.Cognome;
+            studente.Cf = s.Cf;
+            studente.DataNascita = s.DataNascita;
+            studente.AnnoIscrizione = s.AnnoIscrizione;
+            studente.LuogoNascita = s.LuogoNascita;
+            studente.IdCorso = s.IdCorso;
+            studente.Password = s.Cf;
+            
             _context.Studenti.Add(studente);
             
             await _context.SaveChangesAsync();
