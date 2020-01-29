@@ -28,7 +28,7 @@ namespace ProjectWork.Controllers
         }
 
         // GET: api/Studenti/5
-        [HttpGet("{id}")]
+        [HttpGet("[action]/{id}")]
         public async Task<IActionResult> GetStudenti([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -45,6 +45,23 @@ namespace ProjectWork.Controllers
 
             return Ok(studenti);
         }
+
+        // GET: api/Studenti/firma/codice
+        [HttpGet("[action]/{code}")]
+        public string Firma([FromRoute] string code)
+        {
+            if (!CheckCode(Encoder.encode(code)))
+            {
+                return OutputMsg.generateMessage("Errore", "Il codice non è valido", true);
+            }
+
+            return OutputMsg.generateMessage("Ok", "Il codice è valido");
+        }
+
+        //private List<Studenti> LoadStudentiFromCsv()
+        //{
+
+        //} 
 
         // PUT: api/Studenti/5
         [HttpPut("{id}")]
@@ -132,6 +149,14 @@ namespace ProjectWork.Controllers
         private bool StudentiExists(int id)
         {
             return _context.Studenti.Any(e => e.IdStudente == id);
+        }
+
+        public bool CheckCode(string code)
+        {
+            var decoded = Encoder.decode(code);
+            var studente = _context.Studenti.FirstOrDefault(s => s.Cf == decoded);
+
+            return studente != null ? true : false;
         }
     }
 }

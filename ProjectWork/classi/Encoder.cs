@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ProvaQR2
+namespace ProjectWork
 {
     public class Encoder
     {

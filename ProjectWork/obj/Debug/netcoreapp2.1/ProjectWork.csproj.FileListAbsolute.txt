@@ -3,7 +3,6 @@ C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\Proj
 C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\ProjectWork.runtimeconfig.dev.json
 C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\ProjectWork.dll
 C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\ProjectWork.pdb
-C:\Users\dirom\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.csproj.CoreCompileInputs.cache
 C:\Users\dirom\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.RazorAssemblyInfo.cache
 C:\Users\dirom\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.RazorAssemblyInfo.cs
 C:\Users\dirom\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.AssemblyInfoInputs.cache
@@ -28,3 +27,6 @@ C:\Users\ITSstudente\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.
 C:\Users\ITSstudente\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.RazorTargetAssemblyInfo.cache
 C:\Users\ITSstudente\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.dll
 C:\Users\ITSstudente\source\repos\ProjectWork\ProjectWork\obj\Debug\netcoreapp2.1\ProjectWork.pdb
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\appsettings.Development.json
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\appsettings.json
+C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\Properties\launchSettings.json
