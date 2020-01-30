@@ -48,7 +48,7 @@ namespace ProjectWork.Controllers
 
         // PUT: api/Amministratori/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAmministratori([FromRoute] int id, [FromBody] Amministratori amministratori)
+        public async Task<IActionResult> PutAmministratori([FromRoute] string id, [FromBody] Amministratori amministratori)
         {
             if (!ModelState.IsValid)
             {
@@ -117,7 +117,7 @@ namespace ProjectWork.Controllers
             return Ok(amministratori);
         }
 
-        private bool AmministratoriExists(int id)
+        private bool AmministratoriExists(string id)
         {
             return _context.Amministratori.Any(e => e.IdAdmin == id);
         }

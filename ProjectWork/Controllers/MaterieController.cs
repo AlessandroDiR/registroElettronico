@@ -11,75 +11,75 @@ namespace ProjectWork.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DocentiController : ControllerBase
+    public class MaterieController : ControllerBase
     {
         private readonly AvocadoDBContext _context;
 
-        public DocentiController(AvocadoDBContext context)
+        public MaterieController(AvocadoDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Docenti
+        // GET: api/Materie
         [HttpGet]
-        public IEnumerable<Docenti> GetDocenti()
+        public IEnumerable<Materie> GetMaterie()
         {
-            return _context.Docenti;
+            return _context.Materie;
         }
 
-        // GET: api/Docenti/ID/5
+        // GET: api/Materie/ID/5
         [HttpGet("ID/{id}")]
-        public async Task<IActionResult> GetDocenti([FromRoute] int id)
+        public async Task<IActionResult> GetMaterie([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var docenti = await _context.Docenti.FindAsync(id);
+            var materie = await _context.Materie.FindAsync(id);
 
-            if (docenti == null)
+            if (materie == null)
             {
                 return NotFound();
             }
 
-            return Ok(docenti);
+            return Ok(materie);
         }
 
-        // GET: api/Studenti/CF/5
-        [HttpGet("CF/{Cf}")]
-        public async Task<IActionResult> GetDocenti([FromRoute] string cf)
+        // GET: api/Materie/Nome/5
+        [HttpGet("Nome/{nome}")]
+        public async Task<IActionResult> GetMaterie([FromRoute] string nome)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var docenti = _context.Docenti.Where(d => d.Cf == cf).FirstOrDefault();
+            var materie = _context.Materie.Where(m => m.Nome == nome).FirstOrDefault();
 
-            if (docenti == null)
+            if (materie == null)
             {
                 return NotFound();
             }
 
-            return Ok(docenti);
+            return Ok(materie);
         }
 
-        // PUT: api/Docenti/5
+        // PUT: api/Materie/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDocenti([FromRoute] int id, [FromBody] Docenti docenti)
+        public async Task<IActionResult> PutMaterie([FromRoute] int id, [FromBody] Materie materie)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != docenti.IdDocente)
+            if (id != materie.IdMateria)
             {
                 return BadRequest();
             }
 
-            _context.Entry(docenti).State = EntityState.Modified;
+            _context.Entry(materie).State = EntityState.Modified;
 
             try
             {
@@ -87,7 +87,7 @@ namespace ProjectWork.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DocentiExists(id))
+                if (!MaterieExists(id))
                 {
                     return NotFound();
                 }
@@ -100,55 +100,45 @@ namespace ProjectWork.Controllers
             return NoContent();
         }
 
-        //Crea docente
-        // POST: api/Docenti
+        // POST: api/Materie
         [HttpPost]
-        public async Task<IActionResult> PostDocenti([FromBody] Docenti d)
+        public async Task<IActionResult> PostMaterie([FromBody] Materie materie)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Docenti docente = new Docenti();
-            docente.Nome = d.Nome;
-            docente.Cognome = d.Cognome;
-            docente.Cf = d.Cf;
-            docente.DataNascita = d.DataNascita;
-            docente.LuogoNascita = d.LuogoNascita;
-            docente.Password = d.Cf;
-
-            _context.Docenti.Add(docente);
-
+            _context.Materie.Add(materie);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetDocenti", new { id = docente.IdDocente }, docente);
+            return CreatedAtAction("GetMaterie", new { id = materie.IdMateria }, materie);
         }
 
-        // DELETE: api/Docenti/5
+        // DELETE: api/Materie/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDocenti([FromRoute] int id)
+        public async Task<IActionResult> DeleteMaterie([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var docenti = await _context.Docenti.FindAsync(id);
-            if (docenti == null)
+            var materie = await _context.Materie.FindAsync(id);
+            if (materie == null)
             {
                 return NotFound();
             }
 
-            _context.Docenti.Remove(docenti);
+            _context.Materie.Remove(materie);
             await _context.SaveChangesAsync();
 
-            return Ok(docenti);
+            return Ok(materie);
         }
 
-        private bool DocentiExists(int id)
+        private bool MaterieExists(int id)
         {
-            return _context.Docenti.Any(e => e.IdDocente == id);
+            return _context.Materie.Any(e => e.IdMateria == id);
         }
     }
 }

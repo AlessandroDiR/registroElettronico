@@ -11,56 +11,56 @@ namespace ProjectWork.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CorsiController : ControllerBase
+    public class ValutazioniController : ControllerBase
     {
         private readonly AvocadoDBContext _context;
 
-        public CorsiController(AvocadoDBContext context)
+        public ValutazioniController(AvocadoDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Corsi
+        // GET: api/Valutazioni
         [HttpGet]
-        public IEnumerable<Corsi> GetCorsi()
+        public IEnumerable<Valutazioni> GetValutazioni()
         {
-            return _context.Corsi;
+            return _context.Valutazioni;
         }
 
-        // GET: api/Corsi/5
+        // GET: api/Valutazioni/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCorsi([FromRoute] int id)
+        public async Task<IActionResult> GetValutazioni([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var corsi = await _context.Corsi.FindAsync(id);
+            var valutazioni = await _context.Valutazioni.FindAsync(id);
 
-            if (corsi == null)
+            if (valutazioni == null)
             {
                 return NotFound();
             }
 
-            return Ok(corsi);
+            return Ok(valutazioni);
         }
 
-        // PUT: api/Corsi/5
+        // PUT: api/Valutazioni/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCorsi([FromRoute] int id, [FromBody] Corsi corsi)
+        public async Task<IActionResult> PutValutazioni([FromRoute] int id, [FromBody] Valutazioni valutazioni)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != corsi.IdCorso)
+            if (id != valutazioni.IdValutazione)
             {
                 return BadRequest();
             }
 
-            _context.Entry(corsi).State = EntityState.Modified;
+            _context.Entry(valutazioni).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace ProjectWork.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CorsiExists(id))
+                if (!ValutazioniExists(id))
                 {
                     return NotFound();
                 }
@@ -81,45 +81,45 @@ namespace ProjectWork.Controllers
             return NoContent();
         }
 
-        // POST: api/Corsi
+        // POST: api/Valutazioni
         [HttpPost]
-        public async Task<IActionResult> PostCorsi([FromBody] Corsi corsi)
+        public async Task<IActionResult> PostValutazioni([FromBody] Valutazioni valutazioni)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Corsi.Add(corsi);
+            _context.Valutazioni.Add(valutazioni);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCorsi", new { id = corsi.IdCorso }, corsi);
+            return CreatedAtAction("GetValutazioni", new { id = valutazioni.IdValutazione }, valutazioni);
         }
 
-        // DELETE: api/Corsi/5
+        // DELETE: api/Valutazioni/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCorsi([FromRoute] int id)
+        public async Task<IActionResult> DeleteValutazioni([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var corsi = await _context.Corsi.FindAsync(id);
-            if (corsi == null)
+            var valutazioni = await _context.Valutazioni.FindAsync(id);
+            if (valutazioni == null)
             {
                 return NotFound();
             }
 
-            _context.Corsi.Remove(corsi);
+            _context.Valutazioni.Remove(valutazioni);
             await _context.SaveChangesAsync();
 
-            return Ok(corsi);
+            return Ok(valutazioni);
         }
 
-        private bool CorsiExists(int id)
+        private bool ValutazioniExists(int id)
         {
-            return _context.Corsi.Any(e => e.IdCorso == id);
+            return _context.Valutazioni.Any(e => e.IdValutazione == id);
         }
     }
 }
