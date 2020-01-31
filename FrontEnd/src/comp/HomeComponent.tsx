@@ -29,7 +29,11 @@ export default class HomeComponent extends React.PureComponent<IProps, IState>{
     }
 
     tryToLog = (code: string) => {
-        axios.get("http://localhost:5000/checkCode/" + code).then((response) => {
+        console.log(code);
+        let endpoint = "https://localhost:44336/api/studenti/firma/" + code;
+        console.log(endpoint);
+        axios.get(endpoint).then((response) => {
+            console.log(response);
             this.setState({
                 popup: response.data as IMessage
             })

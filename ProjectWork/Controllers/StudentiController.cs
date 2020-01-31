@@ -55,13 +55,31 @@ namespace ProjectWork.Controllers
                 return OutputMsg.generateMessage("Errore", "Il codice non è valido", true);
             }
 
-            return OutputMsg.generateMessage("Ok", "Il codice è valido");
+            // recupero lo studente, controllo se è ingresso o uscita e 
+            // salvare la firma nel db con l'ora attuale. (LA TOLLERANZA VIENE CONSIDERATA DA PARTE DEL TUTOR)
+
+            var studente = _context.Studenti.SingleOrDefault(s => s.Cf == code);
+            return OutputMsg.generateMessage("Ok", $"Ciao {studente.Nome}!");
         }
 
-        //private List<Studenti> LoadStudentiFromCsv()
-        //{
+        // GET: api/studenti/coderequest/2
+        [HttpGet("[action]/{idStudente}")]
+        public async Task<IActionResult> CodeRequest([FromRoute] int idStudente)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //} 
+            var studente = await _context.Studenti.SingleOrDefaultAsync(s => s.IdStudente == idStudente);
+
+            if (studente == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(Encoder.encode(studente.Cf));
+        }
 
         // PUT: api/Studenti/5
         [HttpPut("{id}")]
