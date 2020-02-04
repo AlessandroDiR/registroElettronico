@@ -7,6 +7,7 @@ namespace ProjectWork.Models
     {
         public int IdDocente { get; set; }
         public int IdMateria { get; set; }
+        public int Anno { get; set; }
 
         public Docenti IdDocenteNavigation { get; set; }
         public Materie IdMateriaNavigation { get; set; }
