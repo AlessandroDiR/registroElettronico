@@ -105,21 +105,24 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            Amministratori amministratore = (Amministratori) _context.Amministratori.Where(a => a.IdAdmin == amministratori.IdAdmin);
+            var amministratore =  _context.Amministratori.Where(a => a.IdAdmin == amministratori.IdAdmin);
 
             if (amministratore == null)
             {
                 return CreatedAtAction("GetAmministratori", false);
             }else
             {
-                if (amministratore.Password == amministratori.Password)
+                foreach (var item in amministratore)
                 {
-                    return CreatedAtAction("GetAmministratori", true);
-                }      
+                    if (item.Password == amministratori.Password)
+                    {
+                        return CreatedAtAction("GetAmministratori", true);
+                    }
+                }
             }
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAmministratori", new { id = amministratori.IdAdmin }, amministratori);
+            return CreatedAtAction("GetAmministratori", false);
         }
 
         // DELETE: api/Amministratori/5
