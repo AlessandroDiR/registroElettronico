@@ -125,6 +125,36 @@ namespace ProjectWork.Controllers
             return CreatedAtAction("GetDocenti", new { id = docente.IdDocente }, docente);
         }
 
+        // POST: api/Docenti/LoginDocente
+        [HttpPost("[action]")]
+        public async Task<IActionResult> LoginDocente([FromBody] Docenti docenti)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var docente = _context.Docenti.Where(d => d.Cf == docenti.Cf);
+
+            if (docente == null)
+            {
+                return CreatedAtAction("GetDocenti", false);
+            }
+            else
+            {
+                foreach (var item in docente)
+                {
+                    if (item.Password == docenti.Password)
+                    {
+                        return CreatedAtAction("GetDocenti", true);
+                    }
+                }
+            }
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetDocenti", false);
+        }
+
         // DELETE: api/Docenti/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDocenti([FromRoute] int id)
