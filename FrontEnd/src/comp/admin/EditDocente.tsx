@@ -1,7 +1,7 @@
 import React from "react"
 import { Modal, Icon, Spin } from "antd";
 import { routerHistory } from "../..";
-import { getDateDay, getDateMonth, getDateYear, isValidData } from "../../utilities";
+import { getDateDay, getDateMonth, getDateYear, isValidData, siteUrl } from "../../utilities";
 import { IDocente } from "../../models/IDocente";
 import Axios from "axios";
 import { RouteComponentProps } from "react-router-dom";
@@ -50,7 +50,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push("/adminpanel")
 
-        Axios.get("http://localhost/reg/api?docente&id=" + id).then((response) => {
+        Axios.get(siteUrl+"/reg/api?docente&id=" + id).then((response) => {
             let doc = response.data as IDocente
 
             this.setState({
