@@ -27,9 +27,9 @@ namespace ProjectWork.Controllers
             return _context.Docenti;
         }
 
-        // GET: api/Docenti/ID/5
-        [HttpGet("ID/{id}")]
-        public async Task<IActionResult> GetDocenti([FromRoute] int id)
+        // GET: api/Docenti/GetDocentiById/5
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> GetDocentiById([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -46,9 +46,9 @@ namespace ProjectWork.Controllers
             return Ok(docenti);
         }
 
-        // GET: api/Studenti/CF/5
-        [HttpGet("CF/{Cf}")]
-        public async Task<IActionResult> GetDocenti([FromRoute] string cf)
+        // GET: api/Docenti/GetDocentiByCf/5
+        [HttpGet("[action]/{Cf}")]
+        public async Task<IActionResult> GetDocentiByCf([FromRoute] string cf)
         {
             if (!ModelState.IsValid)
             {

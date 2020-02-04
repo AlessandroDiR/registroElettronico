@@ -96,6 +96,32 @@ namespace ProjectWork.Controllers
             return CreatedAtAction("GetAmministratori", new { id = amministratori.IdAdmin }, amministratori);
         }
 
+        // POST: api/Amministratori/LoginAdmin
+        [HttpPost("[action]")]
+        public async Task<IActionResult> LoginAdmin([FromBody] Amministratori amministratori)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Amministratori amministratore = (Amministratori) _context.Amministratori.Where(a => a.IdAdmin == amministratori.IdAdmin);
+
+            if (amministratore == null)
+            {
+                return CreatedAtAction("GetAmministratori", false);
+            }else
+            {
+                if (amministratore.Password == amministratori.Password)
+                {
+                    return CreatedAtAction("GetAmministratori", true);
+                }      
+            }
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetAmministratori", new { id = amministratori.IdAdmin }, amministratori);
+        }
+
         // DELETE: api/Amministratori/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAmministratori([FromRoute] int id)

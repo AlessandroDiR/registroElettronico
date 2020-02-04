@@ -27,9 +27,9 @@ namespace ProjectWork.Controllers
             return _context.Studenti;
         }
 
-        // GET: api/Studenti/ID/5
-        [HttpGet("ID/{id}")]
-        public async Task<IActionResult> GetStudenti([FromRoute] int id)
+        // GET: api/Studenti/GetStudentiById/5
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> GetStudentiById([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -46,16 +46,16 @@ namespace ProjectWork.Controllers
             return Ok(studenti);
         }
 
-        // GET: api/Studenti/CF/5
-        [HttpGet("CF/{Cf}")]
-        public async Task<IActionResult> GetStudenti([FromRoute] string cf)
+        // GET: api/Studenti/GetStudentiByCf/5
+        [HttpGet("[action]/{Cf}")]
+        public async Task<IActionResult> GetStudentiByCf([FromRoute] string cf)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var studenti = _context.Studenti.Where(s => s.Cf == cf).FirstOrDefault();
+            var studenti = await _context.Studenti.FirstOrDefaultAsync(s => s.Cf == cf);
 
             if (studenti == null)
             {
@@ -63,6 +63,49 @@ namespace ProjectWork.Controllers
             }
             
             return Ok(studenti);
+        }
+
+        // GET: api/Studenti/firma/codice
+        [HttpGet("[action]/{code}")]
+        public string Firma([FromRoute] string code)
+        {
+            if (!CheckCode(Encoder.encode(code)))
+            {
+                return OutputMsg.generateMessage("Errore", "Il codice non è valido!", true);
+            }
+
+            // recupero lo studente, controllo se è ingresso o uscita e 
+            // salvare la firma nel db con l'ora attuale. (LA TOLLERANZA VIENE CONSIDERATA DA PARTE DEL TUTOR)
+
+            var studente = _context.Studenti.SingleOrDefault(s => s.Cf == code);
+            return OutputMsg.generateMessage("Ok", $"Ciao {studente.Nome}!");
+        }
+
+        // GET: api/studenti/coderequest/2
+        [HttpGet("[action]/{idStudente}")]
+        public async Task<IActionResult> CodeRequest([FromRoute] int idStudente)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var studente = await _context.Studenti.SingleOrDefaultAsync(s => s.IdStudente == idStudente);
+
+            if (studente == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(Encoder.encode(studente.Cf));
+        }
+
+        public bool CheckCode(string code)
+        {
+            var decoded = Encoder.decode(code);
+            var studente = _context.Studenti.FirstOrDefault(s => s.Cf == decoded);
+
+            return studente != null ? true : false;
         }
 
         //Crea studente
