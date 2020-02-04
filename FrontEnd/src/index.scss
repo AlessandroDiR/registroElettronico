@@ -1,0 +1,177 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500');
+@import url('https://pro.fontawesome.com/releases/v5.10.2/css/all.css');
+
+$bodycolor: #fff;
+
+body{
+  font: 300 14px "Poppins";
+  min-height: 100vh;
+  background-color: $bodycolor
+}
+#mainBlock{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-wrap: wrap
+}
+#mainInput{
+  font-size: 25px !important;
+  width: 60%
+}
+#mainInput::-ms-clear, #mainInput::-ms-reveal {
+  display: none;
+}
+#popup{
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  transition: 0.4s;
+  margin-top: 100vh;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  text-align: center;
+  font-size: 23px;
+  z-index: 1
+}
+#popup.show{
+  margin-top: 0;
+  box-shadow: 0 -100vh 0 rgba(0,0,0,0.3)
+}
+.menu .logo{
+  filter: drop-shadow(1.5px 0 0 white) drop-shadow(-0.7px 0px 0 white) drop-shadow(0 -1px 0 white) drop-shadow(0 1.5px 0 white)
+}
+.router-link{
+  text-decoration: none;
+  color: #fff !important;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: block;
+  font-size: 20px;
+  padding: 1rem 1.5rem;
+  position: relative;
+  font-weight: 400;
+  
+  &:hover, &.active{
+    background-color: rgba(0,0,0,0.2);
+    text-decoration: none
+  }
+  
+  &.active:after{
+    display: block;
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 25%;
+    border: 15px solid transparent;
+    border-right-color: $bodycolor
+  }
+}
+.fc-day-grid .fc-row{
+  height: 95px !important
+}
+.fc-scroller.fc-day-grid-container{
+  height: auto !important
+}
+.fc-other-month{
+  opacity: 0.4
+}
+.fc-today{
+  background-color: #fce3e3 !important
+}
+td.fc-day-top{
+  text-align: center
+}
+th.fc-day-header.fc-widget-header{
+  text-transform: uppercase;
+  background-color: #f1f1f1;
+  font-weight: 500
+}
+.fc-content{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap
+}
+.fc-content *, .fc-content{
+  font-size: 13px !important
+}
+a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end{
+  border-radius: 50px;
+  padding: 0 0.5rem;
+
+  &:hover{
+    background-color: #2f73b7;
+    border-color: #266baf
+  }
+}
+.fc *, .event-bubble{
+  font-family: "Segoe UI";
+  font-size: initial;
+  font-weight: initial
+}
+.event-bubble{
+  width: 400px;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 5px 3px rgba(0,0,0,0.25);
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+
+  & .event-title{
+    line-height: 1.4rem;
+    font-weight: 500;
+
+    & .icon{
+      color: green;
+      pointer-events: none
+    }
+  }
+
+  & .label{
+    text-align: center;
+    background-color: #3788d8;
+    color: #fff;
+    border-radius: 50px;
+    display: block;
+    font-size: 14px;
+    padding: 0.15rem 0
+  }
+
+  & .desc{
+    background-color: #555;
+    border-radius: 50px;
+    color: #fff;
+    padding: 0 1rem;
+    font-size: 17px;
+    height: 100%
+  }
+
+  & .bubble-close{
+    border-radius: 50px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float: right;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 0.7rem;
+    color: #888
+  }
+
+  & .bubble-close:hover{
+    background: #f1f1f1
+  }
+
+  & .where{
+    font-size: 13px
+  }
+}

@@ -31,7 +31,7 @@ namespace ProjectWork.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=DELL-ALESSANDRO\\DELL_ALESSANDRO;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 
@@ -41,10 +41,7 @@ namespace ProjectWork.Models
             {
                 entity.HasKey(e => new { e.IdAdmin, e.IdCorso });
 
-                entity.Property(e => e.IdAdmin)
-                    .HasColumnName("id_admin")
-                    .HasMaxLength(25)
-                    .IsUnicode(false);
+                entity.Property(e => e.IdAdmin).HasColumnName("id_admin");
 
                 entity.Property(e => e.IdCorso).HasColumnName("id_corso");
 
@@ -65,23 +62,17 @@ namespace ProjectWork.Models
             {
                 entity.HasKey(e => e.IdAdmin);
 
-                entity.Property(e => e.IdAdmin)
-                    .HasColumnName("id_admin")
-                    .HasMaxLength(25)
-                    .IsUnicode(false)
-                    .ValueGeneratedNever();
+                entity.Property(e => e.IdAdmin).HasColumnName("id_admin");
 
                 entity.Property(e => e.Cognome)
                     .IsRequired()
                     .HasColumnName("cognome")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Nome)
                     .IsRequired()
                     .HasColumnName("nome")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Password)
                     .IsRequired()
