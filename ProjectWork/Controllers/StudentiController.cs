@@ -27,8 +27,8 @@ namespace ProjectWork.Controllers
             return _context.Studenti;
         }
 
-        // GET: api/Studenti/5
-        [HttpGet("[action]/{id}")]
+        // GET: api/Studenti/ID/5
+        [HttpGet("ID/{id}")]
         public async Task<IActionResult> GetStudenti([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -46,39 +46,51 @@ namespace ProjectWork.Controllers
             return Ok(studenti);
         }
 
-        // GET: api/Studenti/firma/codice
-        [HttpGet("[action]/{code}")]
-        public string Firma([FromRoute] string code)
-        {
-            if (!CheckCode(Encoder.encode(code)))
-            {
-                return OutputMsg.generateMessage("Errore", "Il codice non è valido", true);
-            }
-
-            // recupero lo studente, controllo se è ingresso o uscita e 
-            // salvare la firma nel db con l'ora attuale. (LA TOLLERANZA VIENE CONSIDERATA DA PARTE DEL TUTOR)
-
-            var studente = _context.Studenti.SingleOrDefault(s => s.Cf == code);
-            return OutputMsg.generateMessage("Ok", $"Ciao {studente.Nome}!");
-        }
-
-        // GET: api/studenti/coderequest/2
-        [HttpGet("[action]/{idStudente}")]
-        public async Task<IActionResult> CodeRequest([FromRoute] int idStudente)
+        // GET: api/Studenti/CF/5
+        [HttpGet("CF/{Cf}")]
+        public async Task<IActionResult> GetStudenti([FromRoute] string cf)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var studente = await _context.Studenti.SingleOrDefaultAsync(s => s.IdStudente == idStudente);
+            var studenti = _context.Studenti.Where(s => s.Cf == cf).FirstOrDefault();
 
-            if (studente == null)
+            if (studenti == null)
             {
                 return NotFound();
             }
+            
+            return Ok(studenti);
+        }
 
-            return Ok(Encoder.encode(studente.Cf));
+        //Crea studente
+        // POST: api/Studenti
+        [HttpPost]
+        public async Task<IActionResult> PostStudenti([FromBody] Studenti s )
+        {
+            //string nome, string luogo_nas, string cognome, string cf, DateTime data_nas, int anno_iscrizione, int id_corso
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            Studenti studente = new Studenti();
+            studente.Nome = s.Nome;
+            studente.Cognome = s.Cognome;
+            studente.Cf = s.Cf;
+            studente.DataNascita = s.DataNascita;
+            studente.AnnoIscrizione = s.AnnoIscrizione;
+            studente.LuogoNascita = s.LuogoNascita;
+            studente.IdCorso = s.IdCorso;
+            studente.Password = s.Cf;
+            
+            _context.Studenti.Add(studente);
+            
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetStudenti", new { id = studente.IdStudente }, studente);
         }
 
         // PUT: api/Studenti/5
@@ -116,33 +128,6 @@ namespace ProjectWork.Controllers
             return NoContent();
         }
 
-        // POST: api/Studenti
-        [HttpPost]
-        public async Task<IActionResult> PostStudenti([FromBody] Studenti s )
-        {
-            //string nome, string luogo_nas, string cognome, string cf, DateTime data_nas, int anno_iscrizione, int id_corso
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            
-            Studenti studente = new Studenti();
-            studente.Nome = s.Nome;
-            studente.Cognome = s.Cognome;
-            studente.Cf = s.Cf;
-            studente.DataNascita = s.DataNascita;
-            studente.AnnoIscrizione = s.AnnoIscrizione;
-            studente.LuogoNascita = s.LuogoNascita;
-            studente.IdCorso = s.IdCorso;
-            studente.Password = s.Cf;
-            
-            _context.Studenti.Add(studente);
-            
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetStudenti", new { id = studente.IdStudente }, studente);
-        }
-
         // DELETE: api/Studenti/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudenti([FromRoute] int id)
@@ -167,14 +152,6 @@ namespace ProjectWork.Controllers
         private bool StudentiExists(int id)
         {
             return _context.Studenti.Any(e => e.IdStudente == id);
-        }
-
-        public bool CheckCode(string code)
-        {
-            var decoded = Encoder.decode(code);
-            var studente = _context.Studenti.FirstOrDefault(s => s.Cf == decoded);
-
-            return studente != null ? true : false;
         }
     }
 }
