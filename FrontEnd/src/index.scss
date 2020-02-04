@@ -2,13 +2,42 @@
 @import url('https://pro.fontawesome.com/releases/v5.10.2/css/all.css');
 
 $bodycolor: #fff;
+$mobilecolor: #1999e4;
 
-body{
-  font: 300 14px "Poppins";
-  min-height: 100vh;
-  background-color: $bodycolor
+$theme-colors: (
+  "orange": #f57723,
+  "warning": #ffbb00
+);
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
+*{
+  outline: none !important
 }
-#mainBlock{
+body{
+  font: 400 14px "Poppins";
+  min-height: 100vh;
+  background-color: $bodycolor;
+  color: #000
+}
+.text-black{
+  color: #000 !important
+}
+.underline{
+  text-decoration: underline
+}
+.pointer{
+  cursor: pointer
+}
+.menu{
+  height: 100vh;
+  overflow: auto;
+
+  & .logo{
+    filter: drop-shadow(1.5px 0 0 white) drop-shadow(-0.7px 0px 0 white) drop-shadow(0 -1px 0 white) drop-shadow(0 1.5px 0 white)
+  }
+}
+#mainBlock, #loginBlock{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,9 +47,6 @@ body{
 #mainInput{
   font-size: 25px !important;
   width: 60%
-}
-#mainInput::-ms-clear, #mainInput::-ms-reveal {
-  display: none;
 }
 #popup{
   height: 100vh;
@@ -36,14 +62,31 @@ body{
   flex-wrap: wrap;
   text-align: center;
   font-size: 23px;
-  z-index: 1
+  z-index: 1;
+
+  &.show{
+    margin-top: 0;
+    box-shadow: 0 -100vh 0 rgba(0,0,0,0.3)
+  }
+
+  &.preview{
+    font-size: inherit;
+    align-items: inherit;
+    padding-bottom: 70px;
+
+    .bottom-side{
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      background: #fff;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2)
+    }
+  }
 }
-#popup.show{
-  margin-top: 0;
-  box-shadow: 0 -100vh 0 rgba(0,0,0,0.3)
-}
-.menu .logo{
-  filter: drop-shadow(1.5px 0 0 white) drop-shadow(-0.7px 0px 0 white) drop-shadow(0 -1px 0 white) drop-shadow(0 1.5px 0 white)
+.right-block{
+  overflow: auto;
+  max-height: 100vh
 }
 .router-link{
   text-decoration: none;
@@ -124,6 +167,13 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end{
   top: 0;
   left: 0;
 
+  &.mobile-bubble{
+    width: 300px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
+  }
+
   & .event-title{
     line-height: 1.4rem;
     font-weight: 500;
@@ -153,25 +203,104 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end{
     height: 100%
   }
 
-  & .bubble-close{
-    border-radius: 50px;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    float: right;
-    font-size: 20px;
-    cursor: pointer;
-    margin-left: 0.7rem;
-    color: #888
-  }
-
-  & .bubble-close:hover{
-    background: #f1f1f1
-  }
-
   & .where{
     font-size: 13px
+  }
+}
+table td, table th{
+  vertical-align: middle !important
+}
+.event-bubble .bubble-close, .year-mark{
+  border-radius: 50px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  float: right;
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: 0.7rem;
+  color: #888
+}
+.event-bubble .bubble-close:hover, .year-mark{
+  background: #f1f1f1
+}
+.edit-time{
+  padding: 0.2rem;
+  height: auto;
+  text-align: center;
+  font-size: inherit
+}
+.ant-collapse-borderless{
+  background-color: transparent !important;
+
+  & .ant-collapse-item{
+    border: 0 !important
+  }
+}
+.ant-upload-list{
+  display: none
+}
+.border-text{
+  background: #fff;
+  padding: 0 1rem;
+  position: absolute;
+  top: 0;
+  left: 20px;
+  transform: translateY(-50%);
+  font-weight: 500
+}
+.circle-btn{
+  border-radius: 50px;
+  height: 42px;
+  width: 42px
+}
+.anticon-check-circle{
+  vertical-align: middle !important;
+  margin-top: -5px
+}
+.uploader{
+  flex-grow: 1;
+
+  & > span{
+    display: block;
+    width: 100%;
+    height: 100%
+  }
+}
+.main-screen{
+  height: calc(100vh - 100px) !important
+}
+.bottom-menu{
+  height: 100px;
+  display: flex;
+  color: #fff;
+  background: $mobilecolor;
+  justify-content: center;
+  align-items: center;
+
+  & .router-link{
+    color: darken($mobilecolor, 15%) !important;
+    font-weight: 500;
+    font-size: 80%;
+
+    & span{
+      display: flex;
+      flex-direction: column;
+      align-items: center
+    }
+
+    &:hover, &.active{
+      background: inherit
+    }
+
+    &.active{
+      color: #fff !important
+    }
+
+    &.active:after{
+      display: none
+    }
   }
 }

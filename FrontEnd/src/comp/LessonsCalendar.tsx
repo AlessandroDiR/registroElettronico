@@ -2,15 +2,12 @@ import React from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
+import { Digits2 } from '../utilities';
 
 import '@fullcalendar/core/main.css'
 import '@fullcalendar/timegrid/main.css';
 
 export default class LessonsCalendar extends React.Component {
-
-    Digits2 = (time: number) => {
-        return time < 10 ? "0" + time : time
-    }
 
     closeBubble = () => {
         let current = document.getElementById("bubble"),
@@ -27,8 +24,7 @@ export default class LessonsCalendar extends React.Component {
     render() {
         let self = this
 
-        return (
-            <FullCalendar
+        return <FullCalendar
                 plugins={[ googleCalendarPlugin, dayGridPlugin ]}
                 events={ { googleCalendarId: 'ckhj7iqj3msae4i4ietm5ip1cg@group.calendar.google.com'} }
                 googleCalendarApiKey={'AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs'}
@@ -60,11 +56,11 @@ export default class LessonsCalendar extends React.Component {
                             <h6 class="event-title"><i class="fad fa-calendar-check fa-fw icon fa-lg"></i> ` + event.title + `</h6>
                             <div class="row px-2 py-1">
                                 <div class="col-4 pl-0"><span class="label">Inizio</span></div>
-                                <div class="col-8 pl-0"><span class="desc">` + self.Digits2(event.start.getHours()) + `:` + self.Digits2(event.start.getMinutes()) + `</span></div>
+                                <div class="col-8 pl-0"><span class="desc">` + Digits2(event.start.getHours()) + `:` + Digits2(event.start.getMinutes()) + `</span></div>
                             </div>
                             <div class="row px-2 py-1">
                                 <div class="col-4 pl-0"><span class="label">Fine</span></div>
-                                <div class="col-8 pl-0"><span class="desc">` + self.Digits2(event.end.getHours()) + `:` + self.Digits2(event.end.getMinutes()) + `</span></div>
+                                <div class="col-8 pl-0"><span class="desc">` + Digits2(event.end.getHours()) + `:` + Digits2(event.end.getMinutes()) + `</span></div>
                             </div>`
 
                         if(event.extendedProps.location){
@@ -103,7 +99,6 @@ export default class LessonsCalendar extends React.Component {
                     }
                 }
             />
-        )
     }
   
   }
