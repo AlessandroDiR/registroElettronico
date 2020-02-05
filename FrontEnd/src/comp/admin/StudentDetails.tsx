@@ -5,12 +5,7 @@ import { routerHistory } from '../..';
 import { Icon, Spin, Progress, Statistic } from 'antd';
 import PresenzeTable from './PresenzeTable';
 import Axios from 'axios';
-<<<<<<< HEAD
-import { formattaData } from '../../utilities';
-import VotiStudent from './VotiStudent';
-=======
 import { formattaData, siteUrl } from '../../utilities';
->>>>>>> 924813bffbda01796b7b4b020faf634c75418a99
 
 export interface IRouteParams{
     readonly id: string
