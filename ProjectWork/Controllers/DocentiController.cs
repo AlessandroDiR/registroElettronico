@@ -27,9 +27,9 @@ namespace ProjectWork.Controllers
             return _context.Docenti;
         }
 
-        // GET: api/Docenti/ID/5
-        [HttpGet("ID/{id}")]
-        public async Task<IActionResult> GetDocenti([FromRoute] int id)
+        // GET: api/Docenti/GetDocentiById/5
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> GetDocentiById([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -46,9 +46,9 @@ namespace ProjectWork.Controllers
             return Ok(docenti);
         }
 
-        // GET: api/Studenti/CF/5
-        [HttpGet("CF/{Cf}")]
-        public async Task<IActionResult> GetDocenti([FromRoute] string cf)
+        // GET: api/Docenti/GetDocentiByCf/5
+        [HttpGet("[action]/{Cf}")]
+        public async Task<IActionResult> GetDocentiByCf([FromRoute] string cf)
         {
             if (!ModelState.IsValid)
             {
@@ -123,6 +123,36 @@ namespace ProjectWork.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetDocenti", new { id = docente.IdDocente }, docente);
+        }
+
+        // POST: api/Docenti/LoginDocente
+        [HttpPost("[action]")]
+        public async Task<IActionResult> LoginDocente([FromBody] Docenti docenti)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var docente = _context.Docenti.Where(d => d.Cf == docenti.Cf);
+
+            if (docente == null)
+            {
+                return CreatedAtAction("GetDocenti", false);
+            }
+            else
+            {
+                foreach (var item in docente)
+                {
+                    if (item.Password == docenti.Password)
+                    {
+                        return CreatedAtAction("GetDocenti", true);
+                    }
+                }
+            }
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetDocenti", false);
         }
 
         // DELETE: api/Docenti/5

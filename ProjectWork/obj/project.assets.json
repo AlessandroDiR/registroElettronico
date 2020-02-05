@@ -12535,11 +12535,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\dirom\\source\\repos\\ProjectWork\\ProjectWork\\ProjectWork.csproj",
+      "projectUniqueName": "C:\\Users\\dirom\\Source\\Repos\\ProjectWork\\ProjectWork\\ProjectWork.csproj",
       "projectName": "ProjectWork",
-      "projectPath": "C:\\Users\\dirom\\source\\repos\\ProjectWork\\ProjectWork\\ProjectWork.csproj",
+      "projectPath": "C:\\Users\\dirom\\Source\\Repos\\ProjectWork\\ProjectWork\\ProjectWork.csproj",
       "packagesPath": "C:\\Users\\dirom\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\dirom\\source\\repos\\ProjectWork\\ProjectWork\\obj\\",
+      "outputPath": "C:\\Users\\dirom\\Source\\Repos\\ProjectWork\\ProjectWork\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

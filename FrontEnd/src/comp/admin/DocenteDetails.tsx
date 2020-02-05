@@ -5,7 +5,7 @@ import { Icon, Spin } from 'antd';
 import Axios from 'axios';
 import { IDocente } from '../../models/IDocente';
 import LezioniDocenteTable from './LezioniDocenteTable';
-import { formattaData } from '../../utilities';
+import { formattaData, siteUrl } from '../../utilities';
 
 export interface IRouteParams{
     readonly id: string
@@ -38,7 +38,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
         /* CONTROLLARE ANCHE SE FA PARTE DEL CORSO          */
         /****************************************************/
 
-        Axios.get("http://localhost:3000/reg/api?docente&id=" + id).then((response) => {
+        Axios.get(siteUrl+"/reg/api?docente&id=" + id).then((response) => {
             this.setState({
                 docente: response.data as IDocente
             })

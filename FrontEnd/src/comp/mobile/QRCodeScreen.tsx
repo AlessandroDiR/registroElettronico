@@ -2,6 +2,7 @@ import React from "react"
 import { Spin, Icon } from "antd";
 import QRCode from "qrcode.react"
 import Axios from "axios";
+import { siteUrl } from "../../utilities";
 
 export interface IProps{
     studentId: number
@@ -32,7 +33,7 @@ export default class QRCodeScreen extends React.PureComponent<IProps, IState>{
     }
 
     reloadCode = () => {
-        Axios.get("http://localhost/reg/api?codice&studente="+this.props.studentId).then((response) => {
+        Axios.get(siteUrl+"/reg/api?codice&studente="+this.props.studentId).then((response) => {
             let date = new Date()
 
             this.setState({

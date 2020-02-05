@@ -1,7 +1,7 @@
 import React from "react"
 import { Modal, Icon, Spin } from "antd";
 import { routerHistory } from "../..";
-import { getDateDay, getDateMonth, getDateYear, isValidData } from "../../utilities";
+import { getDateDay, getDateMonth, getDateYear, isValidData, siteUrl } from "../../utilities";
 import Axios from "axios";
 import { RouteComponentProps } from "react-router-dom";
 import { IStudent } from "../../models/IStudent";
@@ -46,7 +46,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push("/adminpanel")
 
-        Axios.get("http://localhost:3000/reg/api?studente&id=" + id).then((response) => {
+        Axios.get(siteUrl+"/reg/api?studente&id=" + id).then((response) => {
             let stu = response.data as IStudent
 
             this.setState({
@@ -159,7 +159,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             title: "Complimenti!",
             content: "Docente modificato con successo.",
             onOk: () => {
-                routerHistory.push("/adminpanel/docenti")
+                routerHistory.push("/adminpanel/studenti")
             }
         })
 

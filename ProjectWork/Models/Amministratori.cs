@@ -10,7 +10,7 @@ namespace ProjectWork.Models
             Amministrare = new HashSet<Amministrare>();
         }
 
-        public int IdAdmin { get; set; }
+        public string IdAdmin { get; set; }
         public string Nome { get; set; }
         public string Cognome { get; set; }
         public string Password { get; set; }

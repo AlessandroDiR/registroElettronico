@@ -21,7 +21,9 @@ namespace ProjectWork.Models
         public virtual DbSet<Corsi> Corsi { get; set; }
         public virtual DbSet<Docenti> Docenti { get; set; }
         public virtual DbSet<Insegnare> Insegnare { get; set; }
+        public virtual DbSet<Lezioni> Lezioni { get; set; }
         public virtual DbSet<Materie> Materie { get; set; }
+        public virtual DbSet<Presenze> Presenze { get; set; }
         public virtual DbSet<Studenti> Studenti { get; set; }
         public virtual DbSet<Tenere> Tenere { get; set; }
         public virtual DbSet<Valutazioni> Valutazioni { get; set; }
@@ -41,7 +43,10 @@ namespace ProjectWork.Models
             {
                 entity.HasKey(e => new { e.IdAdmin, e.IdCorso });
 
-                entity.Property(e => e.IdAdmin).HasColumnName("id_admin");
+                entity.Property(e => e.IdAdmin)
+                    .HasColumnName("id_admin")
+                    .HasMaxLength(25)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.IdCorso).HasColumnName("id_corso");
 
@@ -62,17 +67,23 @@ namespace ProjectWork.Models
             {
                 entity.HasKey(e => e.IdAdmin);
 
-                entity.Property(e => e.IdAdmin).HasColumnName("id_admin");
+                entity.Property(e => e.IdAdmin)
+                    .HasColumnName("id_admin")
+                    .HasMaxLength(25)
+                    .IsUnicode(false)
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Cognome)
                     .IsRequired()
                     .HasColumnName("cognome")
-                    .HasMaxLength(100);
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Nome)
                     .IsRequired()
                     .HasColumnName("nome")
-                    .HasMaxLength(100);
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Password)
                     .IsRequired()
@@ -175,6 +186,8 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.IdMateria).HasColumnName("id_materia");
 
+                entity.Property(e => e.Anno).HasColumnName("anno");
+
                 entity.HasOne(d => d.IdDocenteNavigation)
                     .WithMany(p => p.Insegnare)
                     .HasForeignKey(d => d.IdDocente)
@@ -186,6 +199,31 @@ namespace ProjectWork.Models
                     .HasForeignKey(d => d.IdMateria)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Insegnare_Materie");
+            });
+
+            modelBuilder.Entity<Lezioni>(entity =>
+            {
+                entity.HasKey(e => e.IdLezione);
+
+                entity.Property(e => e.IdLezione)
+                    .HasColumnName("id_lezione")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Data)
+                    .HasColumnName("data")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.IdMateria).HasColumnName("id_materia");
+
+                entity.Property(e => e.OraFine).HasColumnName("ora_fine");
+
+                entity.Property(e => e.OraInizio).HasColumnName("ora_inizio");
+
+                entity.HasOne(d => d.IdLezioneNavigation)
+                    .WithOne(p => p.Lezioni)
+                    .HasForeignKey<Lezioni>(d => d.IdLezione)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Lezioni_Materie");
             });
 
             modelBuilder.Entity<Materie>(entity =>
@@ -202,6 +240,33 @@ namespace ProjectWork.Models
                     .IsRequired()
                     .HasColumnName("nome")
                     .HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<Presenze>(entity =>
+            {
+                entity.HasKey(e => e.IdPresenza);
+
+                entity.Property(e => e.IdPresenza).HasColumnName("id_presenza");
+
+                entity.Property(e => e.IdLezione).HasColumnName("id_lezione");
+
+                entity.Property(e => e.IdStudente).HasColumnName("id_studente");
+
+                entity.Property(e => e.Ingresso).HasColumnName("ingresso");
+
+                entity.Property(e => e.Uscita).HasColumnName("uscita");
+
+                entity.HasOne(d => d.IdLezioneNavigation)
+                    .WithMany(p => p.Presenze)
+                    .HasForeignKey(d => d.IdLezione)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Presenze_Lezioni");
+
+                entity.HasOne(d => d.IdStudenteNavigation)
+                    .WithMany(p => p.Presenze)
+                    .HasForeignKey(d => d.IdStudente)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Presenze_Studenti");
             });
 
             modelBuilder.Entity<Studenti>(entity =>

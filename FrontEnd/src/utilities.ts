@@ -1,3 +1,5 @@
+export const siteUrl = "http://localhost"
+
 export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n
 }

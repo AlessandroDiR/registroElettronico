@@ -27,9 +27,9 @@ namespace ProjectWork.Controllers
             return _context.Materie;
         }
 
-        // GET: api/Materie/ID/5
-        [HttpGet("ID/{id}")]
-        public async Task<IActionResult> GetMaterie([FromRoute] int id)
+        // GET: api/Materie/GetMaterieById/5
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> GetMaterieById([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -46,9 +46,9 @@ namespace ProjectWork.Controllers
             return Ok(materie);
         }
 
-        // GET: api/Materie/Nome/5
-        [HttpGet("Nome/{nome}")]
-        public async Task<IActionResult> GetMaterie([FromRoute] string nome)
+        // GET: api/Materie/GetMaterieByName/5
+        [HttpGet("[action]/{nome}")]
+        public async Task<IActionResult> GetMaterieByName([FromRoute] string nome)
         {
             if (!ModelState.IsValid)
             {
