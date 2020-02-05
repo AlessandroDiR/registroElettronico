@@ -1,4 +1,4 @@
-export const siteUrl = "http://localhost"
+export const siteUrl = "http://mygraphic.altervista.org"
 
 export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n
@@ -56,8 +56,9 @@ export const hideAll = () => {
     })
 }
 
-export const formattaData = (d: string) => {
-    let date = new Date(d)
+export const formattaData = (d: string, convert?: boolean) => {
+    let from = d.split(/[/-]/g),
+    date = convert ? new Date(from[2], from[1] - 1, from[0]) : new Date(d)
 
     return Digits2(date.getDate()) + "-" + Digits2(date.getMonth() + 1) + "-" + date.getFullYear()
 }
@@ -85,4 +86,28 @@ export const isValidData = (g: number, m: number, a: number) => {
         return false
 
     return true
+}
+
+export const capitalizeFirst = (name: string) => {
+    let splitStr = capitalizeQuote(name.toLowerCase()).split(' ')
+
+    for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);    
+    }
+   
+    return splitStr.join(' '); 
+}
+
+export const capitalizeQuote = (name: string) => {
+    let splitStr = name.toLowerCase().split("'")
+
+    for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);    
+    }
+   
+    return splitStr.join("'"); 
+}
+
+export const clearVowels = (s: string) => {
+    // return s.replace("à", "&agrave;").replace("è", "&egrave;").replace("é", "&eacute;").replace("ì", "&igrave;").replace("ò", "&ograve;").replace("")
 }

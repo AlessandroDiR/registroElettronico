@@ -177,13 +177,20 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         /* MODIFICA DOCENTE E POI MOSTRARE MODAL */
         /*****************************************/
 
-        Modal.success({
-            title: "Complimenti!",
-            content: "Docente modificato con successo.",
-            onOk: () => {
-                routerHistory.push("/adminpanel/docenti")
-            }
-        })
+        // const params = new URLSearchParams();
+
+        // params.append('nomeParametro', 'valoreParametro'); // per ogni parametro da passare
+          
+        // Axios.post("http://mygraphic.altervista.org/reg/put", params).then((response) => {
+        //     if(Boolean(response.data) === true)
+        //     Modal.success({
+        //         title: "Complimenti!",
+        //         content: "Docente modificato con successo.",
+        //         onOk: () => {
+        //             routerHistory.push("/adminpanel/docenti")
+        //         }
+        //     })
+        // })
 
     }
 
