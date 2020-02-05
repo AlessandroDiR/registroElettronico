@@ -38,7 +38,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
         /* CONTROLLARE ANCHE SE FA PARTE DEL CORSO          */
         /****************************************************/
 
-        Axios.get("http://localhost/reg/api?docente&id=" + id).then((response) => {
+        Axios.get("http://localhost:3000/reg/api?docente&id=" + id).then((response) => {
             this.setState({
                 docente: response.data as IDocente
             })

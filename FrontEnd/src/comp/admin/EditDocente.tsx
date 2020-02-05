@@ -50,7 +50,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push("/adminpanel")
 
-        Axios.get("http://localhost/reg/api?docente&id=" + id).then((response) => {
+        Axios.get("http://localhost:3000/reg/api?docente&id=" + id).then((response) => {
             let doc = response.data as IDocente
 
             this.setState({

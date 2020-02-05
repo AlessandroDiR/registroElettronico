@@ -28,7 +28,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get("http://localhost/reg/api?studenti&corso=" + this.props.corso).then((response) => {
+        Axios.get("http://localhost:3000/reg/api?studenti&corso=" + this.props.corso).then((response) => {
             this.setState({
                 students: response.data as IStudent[]
             })
