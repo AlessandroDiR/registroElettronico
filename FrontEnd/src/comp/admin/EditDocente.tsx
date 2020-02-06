@@ -1,7 +1,7 @@
 import React from "react"
 import { Modal, Icon, Spin, Checkbox } from "antd";
 import { routerHistory } from "../..";
-import { getDateDay, getDateMonth, getDateYear, isValidData, siteUrl } from "../../utilities";
+import { getDateDay, getDateMonth, getDateYear, isValidData } from "../../utilities";
 import { IDocente } from "../../models/IDocente";
 import Axios from "axios";
 import { RouteComponentProps } from "react-router-dom";
@@ -69,8 +69,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                 gNascita: getDateDay(doc.dataNascita),
                 mNascita: getDateMonth(doc.dataNascita),
                 aNascita: getDateYear(doc.dataNascita),
-                luogoNascita: doc.luogoNascita,
-                email: doc.email
+                luogoNascita: doc.luogoNascita
             })
         })
         
@@ -96,14 +95,6 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
 
         this.setState({
             nome: nome
-        })
-    }
-
-    changeEmail = (event: any) => {
-        let mail = event.target.value
-
-        this.setState({
-            email: mail
         })
     }
 
@@ -192,20 +183,13 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         /* MODIFICA DOCENTE E POI MOSTRARE MODAL */
         /*****************************************/
 
-        // const params = new URLSearchParams();
-
-        // params.append('nomeParametro', 'valoreParametro'); // per ogni parametro da passare
-          
-        // Axios.post("http://mygraphic.altervista.org/reg/put", params).then((response) => {
-        //     if(Boolean(response.data) === true)
-        //     Modal.success({
-        //         title: "Complimenti!",
-        //         content: "Docente modificato con successo.",
-        //         onOk: () => {
-        //             routerHistory.push("/adminpanel/docenti")
-        //         }
-        //     })
-        // })
+        Modal.success({
+            title: "Complimenti!",
+            content: "Docente modificato con successo.",
+            onOk: () => {
+                routerHistory.push("/adminpanel/docenti")
+            }
+        })
 
     }
 
@@ -250,10 +234,6 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
                         <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">E-mail</label>
-                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                 </div>
 

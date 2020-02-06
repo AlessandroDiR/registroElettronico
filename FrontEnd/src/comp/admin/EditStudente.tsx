@@ -21,7 +21,6 @@ export interface IState{
     readonly aNascita: string
     readonly luogoNascita: string
     readonly CF: string
-    readonly email: string
 }
 
 export default class EditStudente extends React.PureComponent<IProps, IState>{
@@ -37,8 +36,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             mNascita: "",
             aNascita: "",
             luogoNascita: "",
-            CF: "",
-            email: ""
+            CF: ""
         }
     }
 
@@ -59,8 +57,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
                 gNascita: getDateDay(stu.dataNascita),
                 mNascita: getDateMonth(stu.dataNascita),
                 aNascita: getDateYear(stu.dataNascita),
-                luogoNascita: stu.luogoNascita,
-                email: stu.email
+                luogoNascita: stu.luogoNascita
             })
         })
     }
@@ -70,14 +67,6 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
 
         this.setState({
             nome: nome
-        })
-    }
-
-    changeEmail = (event: any) => {
-        let mail = event.target.value
-
-        this.setState({
-            email: mail
         })
     }
 
@@ -130,12 +119,12 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
     }
 
     aggiungiDocente = () => {
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, email } = this.state
+        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF } = this.state
         let giorno = Number(gNascita),
         mese = Number(mNascita),
         anno = Number(aNascita)
 
-        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || CF === "" || email === ""){
+        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || CF === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -170,14 +159,14 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             title: "Complimenti!",
             content: "Docente modificato con successo.",
             onOk: () => {
-                routerHistory.push("/adminpanel/studenti")
+                routerHistory.push("/adminpanel/docenti")
             }
         })
 
     }
 
     render(): JSX.Element{
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, studente, email } = this.state
+        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, studente } = this.state
 
         if(!studente){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
@@ -199,10 +188,6 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
                         <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">E-mail</label>
-                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                 </div>
 

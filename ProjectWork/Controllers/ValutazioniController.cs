@@ -90,11 +90,13 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
+
             _context.Valutazioni.Add(valutazioni);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetValutazioni", new { id = valutazioni.IdValutazione }, valutazioni);
         }
+
 
         // DELETE: api/Valutazioni/5
         [HttpDelete("{id}")]

@@ -15,7 +15,6 @@ export interface IState{
     readonly luogoNascita: string
     readonly CF: string
     readonly annoScolastico: number
-    readonly email: string
 }
 
 export default class AddNewStudent extends React.PureComponent<IProps, IState>{
@@ -31,7 +30,6 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
             aNascita: "",
             luogoNascita: "",
             CF: "",
-            email: "",
             annoScolastico: 1
         }
     }
@@ -41,14 +39,6 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
 
         this.setState({
             nome: nome
-        })
-    }
-
-    changeEmail = (event: any) => {
-        let mail = event.target.value
-
-        this.setState({
-            email: mail
         })
     }
 
@@ -109,12 +99,12 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
     }
 
     aggiungiStudente = () => {
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, annoScolastico, email } = this.state
+        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, annoScolastico } = this.state
         let giorno = Number(gNascita),
         mese = Number(mNascita),
         anno = Number(aNascita)
 
-        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || CF === "" || email === ""){
+        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || CF === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -156,7 +146,7 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, email } = this.state
+        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF } = this.state
 
         return <div className="col-9 px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo studente</h3>
@@ -170,10 +160,6 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
                         <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">E-mail</label>
-                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                 </div>
 

@@ -42,8 +42,30 @@ namespace ProjectWork.Controllers
             {
                 return NotFound();
             }
-
+            
             return Ok(corsi);
+        }
+
+        // GET: api/Corsi/GetCorsiByDocente/IdDoc
+        [HttpGet("[action]/{IdDoc}")]
+        public async Task<IActionResult> GetCorsiByDocente([FromRoute] int IdDoc)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var cor = _context.Tenere.Where(d => d.IdDocente == IdDoc);
+
+            var corso = new List<Tuple<int, string>>();
+
+
+            foreach (var item in cor)
+            {
+                var c = await _context.Corsi.FindAsync(item.IdCorso);
+                corso.Add(new Tuple<int, string>(item.IdCorso, c.Nome));
+            }
+
+            return Ok(corso);
         }
 
         // PUT: api/Corsi/5
@@ -59,6 +81,11 @@ namespace ProjectWork.Controllers
             {
                 return BadRequest();
             }
+
+            var com = _context.Comprende.Where(c => c.IdCorso == id);
+            _context.Comprende.RemoveRange(com);
+
+            _context.Comprende.AddRange(corsi.Comprende);
 
             _context.Entry(corsi).State = EntityState.Modified;
 
@@ -90,6 +117,16 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
+            var cor = _context.Corsi.Last();
+            if (cor == null)
+            {
+                return CreatedAtAction("GetCorsi", "Corso inesistente");
+            }
+            foreach (var item in corsi.Comprende)
+            {
+                item.IdCorso = cor.IdCorso;
+            }
+            _context.Comprende.AddRange(corsi.Comprende);
             _context.Corsi.Add(corsi);
             await _context.SaveChangesAsync();
 
@@ -111,6 +148,8 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
+            var com = _context.Comprende.Where(c => c.IdCorso == id);
+            _context.Comprende.RemoveRange(com);
             _context.Corsi.Remove(corsi);
             await _context.SaveChangesAsync();
 

@@ -43,6 +43,13 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
+            //var t = _context.Tenere.Where(d => d.IdDocente == id);
+
+            //foreach (var i in t)
+            //{
+            //    docenti.Tenere.Add(i);
+            //}
+
             return Ok(docenti);
         }
 
@@ -78,6 +85,22 @@ namespace ProjectWork.Controllers
             {
                 return BadRequest();
             }
+
+            if (docenti == null)
+            {
+                return NotFound();
+            }
+
+
+            var t = _context.Tenere.Where(d => d.IdDocente == id);
+            _context.Tenere.RemoveRange(t);
+            
+            _context.Tenere.AddRange(docenti.Tenere);
+
+            var i = _context.Insegnare.Where(d => d.IdDocente == id);
+            _context.Insegnare.RemoveRange(i);
+
+            _context.Insegnare.AddRange(docenti.Insegnare);
 
             _context.Entry(docenti).State = EntityState.Modified;
 
@@ -118,6 +141,21 @@ namespace ProjectWork.Controllers
             docente.LuogoNascita = d.LuogoNascita;
             docente.Password = d.Cf;
 
+            var doc = _context.Docenti.Last();
+            if (doc == null)
+            {
+                return CreatedAtAction("GetDocenti", "Docente inesistente");
+            }
+            foreach (var item in d.Tenere)
+            {
+                item.IdDocente = doc.IdDocente;
+            }
+            _context.Tenere.AddRange(d.Tenere);
+            foreach (var item in d.Insegnare)
+            {
+                item.IdDocente = doc.IdDocente;
+            }
+            _context.Insegnare.AddRange(d.Insegnare);
             _context.Docenti.Add(docente);
 
             await _context.SaveChangesAsync();
@@ -170,6 +208,10 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
+            var t = _context.Tenere.Where(d => d.IdDocente == id);
+            _context.Tenere.RemoveRange(t);
+            var i = _context.Insegnare.Where(d => d.IdDocente == id);
+            _context.Insegnare.RemoveRange(i);
             _context.Docenti.Remove(docenti);
             await _context.SaveChangesAsync();
 

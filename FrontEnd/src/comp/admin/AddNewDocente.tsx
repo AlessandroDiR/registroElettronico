@@ -71,14 +71,6 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         })
     }
 
-    changeEmail = (event: any) => {
-        let mail = event.target.value
-
-        this.setState({
-            email: mail
-        })
-    }
-
     changeCognome = (event: any) => {
         let cognome = event.target.value
 
@@ -215,10 +207,6 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
                         <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">E-mail</label>
-                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                 </div>
 
