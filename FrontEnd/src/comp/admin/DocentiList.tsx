@@ -3,7 +3,6 @@ import { IDocente } from "../../models/IDocente";
 import { routerHistory } from "../..";
 import { Modal, Tooltip, Spin, Icon } from "antd"
 import Axios from "axios";
-import { siteUrl } from "../../utilities";
 
 export interface IProps{
     readonly corso: number
@@ -23,7 +22,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/reg/api?docenti&corso=" + this.props.corso).then((response) => {
+        Axios.get("http://localhost/reg/api?docenti&corso=" + this.props.corso).then((response) => {
             this.setState({
                 docenti: response.data as IDocente[]
             })

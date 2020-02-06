@@ -5,7 +5,7 @@ import { routerHistory } from '../..';
 import { Icon, Spin, Progress, Statistic } from 'antd';
 import PresenzeTable from './PresenzeTable';
 import Axios from 'axios';
-import { formattaData, siteUrl } from '../../utilities';
+import { formattaData } from '../../utilities';
 
 export interface IRouteParams{
     readonly id: string
@@ -38,7 +38,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
         /* CONTROLLARE ANCHE SE FA PARTE DEL CORSO          */
         /****************************************************/
 
-        Axios.get(siteUrl+"/reg/api?studente&id=" + id).then((response) => {
+        Axios.get("http://localhost/reg/api?studente&id=" + id).then((response) => {
             this.setState({
                 student: response.data as IStudent
             })

@@ -107,6 +107,63 @@ namespace ProjectWork.Controllers
             return Ok(Encoder.encode(studente.Cf));
         }
 
+        [HttpGet("[action]/{idStudente}")]
+        public async Task<IActionResult> GetHoursAmount([FromRoute] int idStudente)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var studente = await _context.Studenti.SingleOrDefaultAsync(s => s.IdStudente == idStudente);
+
+            if (studente == null)
+            {
+                return NotFound();
+            }
+
+            var presenzeTotali = _context.Presenze.Where(p => p.IdStudente == idStudente);
+            TimeSpan? hoursAmount = new TimeSpan();
+
+            foreach (var p in presenzeTotali)
+            {
+                var dailyHours = p.Uscita - p.Ingresso;
+                if (dailyHours != null)
+                {
+                    hoursAmount += dailyHours;
+                }
+            }
+
+            return Ok(hoursAmount);
+        }
+
+        [HttpGet("[action]/{idStudente}")]
+        public async Task<IActionResult> GetDaysAmount([FromRoute] int idStudente)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var studente = await _context.Studenti.SingleOrDefaultAsync(s => s.IdStudente == idStudente);
+
+            if (studente == null)
+            {
+                return NotFound();
+            }
+
+            var getPresenze = _context.Presenze.Where(p => p.IdStudente == idStudente);
+            foreach (var day in getPresenze)
+            {
+                if (day.IdLezioneNavigation == null)
+                    day.IdLezioneNavigation = _context.Lezioni.FirstOrDefault(l => l.IdLezione == day.IdLezione);
+            }
+
+            var daysAmount = getPresenze.GroupBy(p => p.IdLezioneNavigation.Data);
+
+            return Ok(daysAmount.Count());
+        }
+
         //Crea studente
         // POST: api/Studenti
         [HttpPost]
@@ -206,8 +263,9 @@ namespace ProjectWork.Controllers
 
         private bool SalvaFirma(int idStudente)
         {
-            var date = new DateTime().Date;
-            var time = date.TimeOfDay;
+            var date = DateTime.Now;
+            var time = TimeSpan.Parse(date.TimeOfDay.ToString().Split('.')[0]);
+
             var lesson = _context.Lezioni.Where(l => l.Data == date);
 
             if (lesson != null)
@@ -230,9 +288,15 @@ namespace ProjectWork.Controllers
                         _context.SaveChanges();
                         return true;
                     }
-                    else if (presenza != null && presenza.Ingresso == null && l.OraInizio <= time && l.OraFine >= time)
+                    else if (presenza == null && l.OraInizio <= time && l.OraFine >= time)
                     {
-                        presenza.Ingresso = time;
+                        var newPresenza = new Presenze
+                        {
+                            IdLezione = l.IdLezione,
+                            IdStudente = idStudente
+                        };
+                        newPresenza.Ingresso = time;
+                        _context.Presenze.Add(newPresenza);
                         _context.SaveChanges();
                         return true;
                     }

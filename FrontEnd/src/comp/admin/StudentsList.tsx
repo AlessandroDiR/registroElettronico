@@ -3,7 +3,6 @@ import { IStudent } from "../../models/IStudent";
 import { routerHistory } from "../..";
 import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse } from "antd"
 import Axios from "axios";
-import { siteUrl } from "../../utilities";
 
 export interface IProps{
     readonly corso: number
@@ -29,7 +28,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/reg/api?studenti&corso=" + this.props.corso).then((response) => {
+        Axios.get("http://localhost/reg/api?studenti&corso=" + this.props.corso).then((response) => {
             this.setState({
                 students: response.data as IStudent[]
             })
@@ -44,11 +43,9 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             okType: 'danger',
             cancelText: 'Annulla',
             onOk() {
-                /************************************/
-                /* ELIMINAZIONE STUDENTE            */
-                /* this.state.students = null       */
-                /* RICHIESTA AXIOS LISTA AGGIORNATA */
-                /************************************/
+                /*************************/
+                /* ELIMINAZIONE STUDENTE */
+                /*************************/
             }
         })
     }
@@ -98,8 +95,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
 
         /*******************************************************/
         /* SPOSTARE STUDENTI NEL NUOVO ANNO E RIFARE RICHIESTA */
-        /* this.state.students = null                          */
-        /* RICHIESTA AXIOS LISTA AGGIORNATA                    */
+        /* (OPPURE RESTITUIRE GIA' I DATI DOPO AVER CAMBIATO)  */
         /*******************************************************/
 
         this.showHideModal()
