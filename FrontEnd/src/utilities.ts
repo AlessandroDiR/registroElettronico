@@ -1,4 +1,4 @@
-export const siteUrl = "http://localhost"
+export const siteUrl = "http://mygraphic.altervista.org"
 
 export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n
@@ -11,7 +11,7 @@ export const isValidMeseGiorno = (g: number, m: number, a: number) => {
 
     switch(m){
         case 4 || 6 || 9 || 11:
-            if(g > 30)
+            if(g > 30)  
                 return false
             break
         case 2:

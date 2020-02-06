@@ -6,6 +6,7 @@ import { Icon, Spin, Progress, Statistic } from 'antd';
 import PresenzeTable from './PresenzeTable';
 import Axios from 'axios';
 import { formattaData, siteUrl } from '../../utilities';
+import VotiStudent from './VotiStudent';
 
 export interface IRouteParams{
     readonly id: string
@@ -81,6 +82,8 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
 
             <h3 className="my-3">Presenze studente</h3>
             <PresenzeTable studente={student.id} />
+            <h3 className="my-3">Voti studente</h3>
+            <VotiStudent studente={student.id} />
         </div>
     }
 }
