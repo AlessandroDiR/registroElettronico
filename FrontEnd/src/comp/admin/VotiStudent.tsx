@@ -16,17 +16,7 @@ export default class VotiStudent extends React.PureComponent<IProps, IState>{
         super(props)
 
         this.state = {
-            voti: [{
-                docente: "Brizio",
-                materia: "Databees",
-                voto: 0,
-                data: "03/02/2020",
-            },{
-                docente: "Fabrizio",
-            materia: "Matematica",
-            voto: 2,
-            data: "04/02/2020",
-            }]
+            voti: null
         }
     }
 

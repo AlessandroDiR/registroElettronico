@@ -1,7 +1,7 @@
 import React from "react"
 import { IStudent } from "../../models/IStudent";
 import { routerHistory } from "../..";
-import { Tooltip, Spin, Icon } from "antd"
+import { Tooltip, Spin, Icon, Modal } from "antd"
 import Axios from "axios";
 import { siteUrl } from "../../utilities";
 
@@ -10,6 +10,9 @@ export interface IProps{
 }
 export interface IState{
     readonly students: IStudent[]
+    readonly selectedStudente: IStudent
+    readonly confirmModal: boolean
+    readonly voto: string
 }
 
 export default class StudentsList extends React.PureComponent<IProps, IState>{
@@ -18,7 +21,10 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         super(props)
 
         this.state = {
-            students: null
+            students: null,
+            confirmModal: false,
+            selectedStudente: null,
+            voto: null
         }
     }
 
@@ -30,8 +36,51 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         })
     }
 
+    showHideModal = (studente: IStudent) => {
+        this.setState({
+            confirmModal: !this.state.confirmModal,
+            selectedStudente: studente
+        })
+    }
+
+    aggiungiVoto = () => {
+        const { voto } = this.state
+        let n = parseInt(voto)
+
+        if(voto === "" || isNaN(n) || n < 0 || n > 100){
+            Modal.error({
+                title: "Errore!",
+                content: "Voto non valido."
+            })
+
+           return
+        }        
+
+        /*************************************************/
+        /* CREAZIONE VOTO STUDENTE E POI MOSTRARE MODAL  */
+        /* RITORNARE LISTA AGGIORNATA STUDENTI           */
+        /*************************************************/
+
+        Modal.success({
+            title: "Complimenti!",
+            content: "Voto aggiunto con successo.",
+            onOk: () => {
+                routerHistory.push("/docentipanel/studenti")
+            }
+        })
+
+    }
+
+    changeVoto = (event: any) => {
+        let voto = event.target.value
+
+        this.setState({
+            voto: voto
+        })
+    }
+
     render(): JSX.Element{
-        const { students } = this.state
+        const { students, voto, selectedStudente } = this.state
         
         if(!students){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
@@ -66,7 +115,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                 <th>Codice Fiscale</th>
                                 <th>Corso</th>
                                 <th style={{width: "18%"}}>Anno scolastico</th>
-                                <th style={{width: "10%"}}>Azioni</th>
+                                <th style={{width: "15%"}}>Azioni</th>
                             </tr>
                 
                             {
@@ -78,7 +127,12 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.corso}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.anno}-{s.anno + 1}</td>
                                         <td>
-                                            <Tooltip title="Voti">
+                                            <Tooltip title="Aggiungi voto">
+                                                <button type="button" className="btn btn-success text-white circle-btn mr-2" onClick={() => this.showHideModal(s)}>
+                                                    <i className="fal fa-plus"></i>
+                                                </button>
+                                            </Tooltip>
+                                            <Tooltip title="Lista voti">
                                                 <button type="button" className="btn btn-info text-white circle-btn" onClick={() => routerHistory.push("/docentipanel/studenti/" + s.id)}>
                                                     <i className="fa fa-stars"></i>
                                                 </button>
@@ -91,6 +145,13 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                     })
                 }
             </table>
+
+            {
+                selectedStudente && <Modal title={"Aggiungi un voto allo studente: " + selectedStudente.nome + " " + selectedStudente.cognome} visible={this.state.confirmModal} onCancel={() => this.showHideModal(null)} cancelText="Annulla" okText="Conferma" onOk={this.aggiungiVoto}>
+                    <label className="text-secondary">Voto</label>
+                    <input type="text" value={voto} onChange={this.changeVoto} maxLength={3} className="form-control" />
+                </Modal>
+            }
         </div>
     }
 }

@@ -5,7 +5,6 @@ import { Docente } from "../../models/DocenteModel";
 import LoginDocenti from "./LoginDocenti";
 import StudentsList from "./StudentsList"
 import StudentDetails from "./StudentDetails";
-import AddNewVote from "./AddNewVote";
 
 export default class DocentiDashboard extends React.Component{
 
@@ -33,9 +32,6 @@ export default class DocentiDashboard extends React.Component{
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/docentipanel/studenti")} to="/docentipanel/studenti">
                             <span>Studenti</span>
                         </NavLink>
-                        <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/docentipanel/voti/new")} to="/docentipanel/voti/new">
-                            <span>Aggiungi un voto</span>
-                        </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => {
                             localStorage.removeItem("docenteSession")
                             routerHistory.push("/docentipanel")
@@ -58,10 +54,6 @@ export default class DocentiDashboard extends React.Component{
 
                             <Route exact path="/docentipanel/studenti/:id" render={(routeProps) => (
                                 <StudentDetails {...routeProps} corso={admin.corso} idDocente={admin.id} />
-                            )} />
-
-                            <Route exact path="/docentipanel/voti/new" render={() => (
-                                <AddNewVote corso={admin.corso} />
                             )} />
 
 
