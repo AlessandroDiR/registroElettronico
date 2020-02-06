@@ -1,7 +1,5 @@
 import React from "react"
-import { IPresenze } from "../../models/IPresenze"
-import { Tooltip, Icon, Spin } from "antd"
-import { hideAll } from "../../utilities"
+import { Icon, Spin } from "antd"
 import { IVoti } from "../../models/IVoti"
 
 export interface IProps{

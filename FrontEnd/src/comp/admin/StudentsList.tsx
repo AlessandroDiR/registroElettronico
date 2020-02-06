@@ -44,9 +44,11 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             okType: 'danger',
             cancelText: 'Annulla',
             onOk() {
-                /*************************/
-                /* ELIMINAZIONE STUDENTE */
-                /*************************/
+                /************************************/
+                /* ELIMINAZIONE STUDENTE            */
+                /* this.state.students = null       */
+                /* RICHIESTA AXIOS LISTA AGGIORNATA */
+                /************************************/
             }
         })
     }
@@ -96,7 +98,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
 
         /*******************************************************/
         /* SPOSTARE STUDENTI NEL NUOVO ANNO E RIFARE RICHIESTA */
-        /* (OPPURE RESTITUIRE GIA' I DATI DOPO AVER CAMBIATO)  */
+        /* this.state.students = null                          */
+        /* RICHIESTA AXIOS LISTA AGGIORNATA                    */
         /*******************************************************/
 
         this.showHideModal()
