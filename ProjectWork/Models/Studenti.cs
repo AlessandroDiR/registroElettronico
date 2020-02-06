@@ -7,6 +7,7 @@ namespace ProjectWork.Models
     {
         public Studenti()
         {
+            Presenze = new HashSet<Presenze>();
             Valutazioni = new HashSet<Valutazioni>();
         }
 
@@ -21,6 +22,7 @@ namespace ProjectWork.Models
         public string LuogoNascita { get; set; }
 
         public Corsi IdCorsoNavigation { get; set; }
+        public ICollection<Presenze> Presenze { get; set; }
         public ICollection<Valutazioni> Valutazioni { get; set; }
     }
 }

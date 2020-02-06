@@ -16,6 +16,7 @@ namespace ProjectWork.Models
         public string Nome { get; set; }
         public string Descrizione { get; set; }
 
+        public Lezioni Lezioni { get; set; }
         public ICollection<Comprende> Comprende { get; set; }
         public ICollection<Insegnare> Insegnare { get; set; }
         public ICollection<Valutazioni> Valutazioni { get; set; }

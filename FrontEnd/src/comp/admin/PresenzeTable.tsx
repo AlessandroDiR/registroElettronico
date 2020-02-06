@@ -2,6 +2,7 @@ import React from "react"
 import { IPresenze } from "../../models/IPresenze"
 import { Tooltip, Icon, Spin } from "antd"
 import { hideAll } from "../../utilities"
+import axios from "axios"
 
 export interface IProps{
     readonly studente: number

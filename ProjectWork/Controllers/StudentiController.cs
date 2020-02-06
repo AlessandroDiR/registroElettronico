@@ -61,7 +61,7 @@ namespace ProjectWork.Controllers
             {
                 return NotFound();
             }
-            
+
             return Ok(studenti);
         }
 
@@ -75,10 +75,17 @@ namespace ProjectWork.Controllers
             }
 
             // recupero lo studente, controllo se è ingresso o uscita e 
-            // salvare la firma nel db con l'ora attuale. (LA TOLLERANZA VIENE CONSIDERATA DA PARTE DEL TUTOR)
+            // salvo la firma nel db con l'ora attuale. (LA TOLLERANZA VIENE CONSIDERATA DA PARTE DEL TUTOR)
 
             var studente = _context.Studenti.SingleOrDefault(s => s.Cf == code);
-            return OutputMsg.generateMessage("Ok", $"Ciao {studente.Nome}!");
+
+            if (SalvaFirma(studente.IdStudente))
+            {
+                return OutputMsg.generateMessage("Ok", $"Ciao {studente.Nome}!");
+            }
+
+            return OutputMsg.generateMessage("Errore", "Qualcosa è andato storto", true);
+
         }
 
         // GET: api/studenti/coderequest/2
@@ -100,25 +107,17 @@ namespace ProjectWork.Controllers
             return Ok(Encoder.encode(studente.Cf));
         }
 
-        public bool CheckCode(string code)
-        {
-            var decoded = Encoder.decode(code);
-            var studente = _context.Studenti.FirstOrDefault(s => s.Cf == decoded);
-
-            return studente != null ? true : false;
-        }
-
         //Crea studente
         // POST: api/Studenti
         [HttpPost]
-        public async Task<IActionResult> PostStudenti([FromBody] Studenti s )
+        public async Task<IActionResult> PostStudenti([FromBody] Studenti s)
         {
             //string nome, string luogo_nas, string cognome, string cf, DateTime data_nas, int anno_iscrizione, int id_corso
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            
+
             Studenti studente = new Studenti();
             studente.Nome = s.Nome;
             studente.Cognome = s.Cognome;
@@ -128,9 +127,9 @@ namespace ProjectWork.Controllers
             studente.LuogoNascita = s.LuogoNascita;
             studente.IdCorso = s.IdCorso;
             studente.Password = s.Cf;
-            
+
             _context.Studenti.Add(studente);
-            
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetStudenti", new { id = studente.IdStudente }, studente);
@@ -195,6 +194,52 @@ namespace ProjectWork.Controllers
         private bool StudentiExists(int id)
         {
             return _context.Studenti.Any(e => e.IdStudente == id);
+        }
+
+        private bool CheckCode(string code)
+        {
+            var decoded = Encoder.decode(code);
+            var studente = _context.Studenti.FirstOrDefault(s => s.Cf == decoded);
+
+            return studente != null ? true : false;
+        }
+
+        private bool SalvaFirma(int idStudente)
+        {
+            var date = new DateTime().Date;
+            var time = date.TimeOfDay;
+            var lesson = _context.Lezioni.Where(l => l.Data == date);
+
+            if (lesson != null)
+            {
+                foreach (var l in lesson)
+                {
+                    var presenza = _context.Presenze.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdStudente == idStudente);
+                    if (l.OraFine < time)
+                    {
+                        if (presenza != null && presenza.Ingresso != null && presenza.Uscita == null)
+                        {
+                            presenza.Uscita = time;
+                            _context.SaveChanges();
+                            return true;
+                        }
+                    }
+                    else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == null)
+                    {
+                        presenza.Uscita = time;
+                        _context.SaveChanges();
+                        return true;
+                    }
+                    else if (presenza != null && presenza.Ingresso == null && l.OraInizio <= time && l.OraFine >= time)
+                    {
+                        presenza.Ingresso = time;
+                        _context.SaveChanges();
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }
