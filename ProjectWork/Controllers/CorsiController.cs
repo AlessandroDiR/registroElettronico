@@ -46,6 +46,28 @@ namespace ProjectWork.Controllers
             return Ok(corsi);
         }
 
+        // GET: api/Corsi/GetCorsiByDocente/IdDoc
+        [HttpGet("[action]/{IdDoc}")]
+        public async Task<IActionResult> GetCorsiByDocente([FromRoute] int IdDoc)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var cor = _context.Tenere.Where(d => d.IdDocente == IdDoc);
+
+            var corso = new List<Tuple<int, string>>();
+
+
+            foreach (var item in cor)
+            {
+                var c = await _context.Corsi.FindAsync(item.IdCorso);
+                corso.Add(new Tuple<int, string>(item.IdCorso, c.Nome));
+            }
+
+            return Ok(corso);
+        }
+
         // PUT: api/Corsi/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCorsi([FromRoute] int id, [FromBody] Corsi corsi)

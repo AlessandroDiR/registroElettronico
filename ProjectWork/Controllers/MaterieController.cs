@@ -65,6 +65,50 @@ namespace ProjectWork.Controllers
             return Ok(materie);
         }
 
+        // GET: api/Materie/GetMaterieByDocente/IdDoc
+        [HttpGet("[action]/{IdDoc}")]
+        public async Task<IActionResult> GetMaterieByDocente([FromRoute] int IdDoc)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var mat = _context.Insegnare.Where(d => d.IdDocente == IdDoc);
+
+            var materie = new List<Tuple<int, string>>();
+
+
+            foreach (var item in mat)
+            {
+                var m = await _context.Materie.FindAsync(item.IdMateria);
+                materie.Add(new Tuple<int, string>(item.IdMateria, m.Nome));
+            }
+
+            return Ok(materie);
+        }
+
+        // GET: api/Materie/GetMaterieByCorso/IdCor
+        [HttpGet("[action]/{IdCor}")]
+        public async Task<IActionResult> GetMaterieByCorso([FromRoute] int IdCor)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var mat = _context.Comprende.Where(c => c.IdCorso == IdCor);
+
+            var materie = new List<Tuple<int, string>>();
+
+
+            foreach (var item in mat)
+            {
+                var c = await _context.Materie.FindAsync(item.IdMateria);
+                materie.Add(new Tuple<int, string>(item.IdMateria, c.Nome));
+            }
+
+            return Ok(materie);
+        }
+
         // PUT: api/Materie/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMaterie([FromRoute] int id, [FromBody] Materie materie)
