@@ -29,7 +29,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/reg/api?studenti&corso=" + this.props.corso).then((response) => {
+        Axios.get(siteUrl+"/api/studenti").then((response) => {
             this.setState({
                 students: response.data as IStudent[]
             })
@@ -55,12 +55,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
 
     changeSelection = (student: IStudent) => {
         let find = this.state.selection.find(s => s === student),
-        newList = []
-
-        if(find)
-            newList = this.state.selection.filter(s => s.id !== student.id)
-        else
-            newList = this.state.selection.concat(student)
+        newList = find ? this.state.selection.filter(s => s.idStudente !== student.idStudente) : this.state.selection.concat(student)
 
         this.setState({
             selection: newList
@@ -68,7 +63,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     selectAll = (anno: number, event: any) => {
-        let selectionList = event.target.checked ? this.state.students.filter(s => s.anno === anno).map(s => {
+        let selectionList = event.target.checked ? this.state.students.filter(s => s.annoIscrizione === anno).map(s => {
             return s
         }) : []
 
@@ -116,8 +111,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             </div>
         }
         
-        let firstYear = students.filter(s => s.anno === 1),
-        secondYear = students.filter(s => s.anno === 2),
+        let firstYear = students.filter(s => s.annoIscrizione === 2018),
+        secondYear = students.filter(s => s.annoIscrizione === 2019),
         groups = [firstYear, secondYear]
 
         return <div className="col-9 px-5 py-4 right-block">
@@ -140,24 +135,28 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 
                 {
                     groups.map(g => {
-                        let checkedAll = false
+                        if(!g[0])
+                            return false
+                            
+                        let checkedAll = true
 
                         g.forEach(element => {
-                            checkedAll = selection.indexOf(element) !== -1
+                            if(selection.indexOf(element) === -1)
+                                checkedAll = false
                         })
 
                         return <tbody className="border-top-0">
                             
                             <tr className="thead-light">
                                 <th colSpan={7}>
-                                    { g[0].anno === 1 ? "Primo" : "Secondo" } anno
+                                    { g[0].annoIscrizione === 2018 ? "Primo" : "Secondo" } anno
                                 </th>
                             </tr>
 
                             <tr>
                                 <th style={{width: "5%"}}>
                                     <Tooltip title="Seleziona tutti">
-                                        <Checkbox onChange={(e) => this.selectAll(g[0].anno, e)} checked={checkedAll} />
+                                        <Checkbox onChange={(e) => this.selectAll(g[0].annoIscrizione, e)} checked={checkedAll} />
                                     </Tooltip>
                                 </th>
                                 <th>Nome</th>
@@ -179,17 +178,17 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.nome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cognome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
-                                        <td style={{maxWidth: 0}} className="text-truncate">{s.corso}</td>
-                                        <td style={{maxWidth: 0}} className="text-truncate">{s.anno}-{s.anno + 1}</td>
+                                        <td style={{maxWidth: 0}} className="text-truncate">{s.idCorso}</td>
+                                        <td style={{maxWidth: 0}} className="text-truncate">{s.annoIscrizione}-{s.annoIscrizione + 1}</td>
                                         <td>
                                             <Tooltip title="Dettagli">
-                                                <button type="button" className="btn btn-info circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/studenti/" + s.id)}>
+                                                <button type="button" className="btn btn-info circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/studenti/" + s.idStudente)}>
                                                     <i className="fa fa-info"></i>
                                                 </button>
                                             </Tooltip>
 
                                             <Tooltip title="Modifica">
-                                                <button type="button" className="btn btn-warning text-white circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/studenti/edit/" + s.id)}>
+                                                <button type="button" className="btn btn-warning text-white circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/studenti/edit/" + s.idStudente)}>
                                                     <i className="fa fa-pen"></i>
                                                 </button>
                                             </Tooltip>
@@ -220,7 +219,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                         { 
                             selection.map(s => {
                                 return <span className="d-block">
-                                    <strong>{s.nome} {s.cognome}</strong> ({s.anno}° anno)
+                                    <strong>{s.nome} {s.cognome}</strong> ({s.annoIscrizione}° anno)
                                 </span>
                             })
                         }

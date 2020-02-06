@@ -38,7 +38,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
         /* CONTROLLARE ANCHE SE FA PARTE DEL CORSO          */
         /****************************************************/
 
-        Axios.get(siteUrl+"/reg/api?docente&id=" + id).then((response) => {
+        Axios.get(siteUrl+"/api/docenti/GetDocentiById/" + id).then((response) => {
             this.setState({
                 docente: response.data as IDocente
             })
@@ -65,7 +65,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
             </div>
 
             <h3 className="my-3">Lezioni tenute dal docente</h3>
-            <LezioniDocenteTable docente={docente.id} />
+            <LezioniDocenteTable docente={docente.idDocente} />
         </div>
     }
 }

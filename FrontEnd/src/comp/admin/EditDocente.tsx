@@ -1,10 +1,12 @@
 import React from "react"
-import { Modal, Icon, Spin } from "antd";
+import { Modal, Icon, Spin, Checkbox } from "antd";
 import { routerHistory } from "../..";
 import { getDateDay, getDateMonth, getDateYear, isValidData, siteUrl } from "../../utilities";
 import { IDocente } from "../../models/IDocente";
 import Axios from "axios";
 import { RouteComponentProps } from "react-router-dom";
+import { IMateria } from "../../models/IMateria";
+import { ICorso } from "../../models/ICorso";
 
 export interface IRouteParams{
     readonly id: string
@@ -21,9 +23,11 @@ export interface IState{
     readonly aNascita: string
     readonly luogoNascita: string
     readonly CF: string
-    readonly materia1: string
-    readonly materia2: string
     readonly email: string
+    readonly materie: IMateria[]
+    readonly corsi: ICorso[]
+    readonly materieSel: number[]
+    readonly corsiSel: number[] 
 }
 
 export default class EditDocente extends React.PureComponent<IProps, IState>{
@@ -40,9 +44,11 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             aNascita: "",
             luogoNascita: "",
             CF: "",
-            materia1: "",
-            materia2: "",
-            email: ""
+            email: "",
+            materie: [],
+            materieSel: [],
+            corsi: [],
+            corsiSel: []
         }
     }
 
@@ -52,7 +58,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push("/adminpanel")
 
-        Axios.get(siteUrl+"/reg/api?docente&id=" + id).then((response) => {
+        Axios.get(siteUrl+"/api/docenti/GetDocentiById/" + id).then((response) => {
             let doc = response.data as IDocente
 
             this.setState({
@@ -60,13 +66,27 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                 nome: doc.nome,
                 cognome: doc.cognome,
                 CF: doc.cf,
-                materia1: doc.materia1,
-                materia2: doc.materia2,
                 gNascita: getDateDay(doc.dataNascita),
                 mNascita: getDateMonth(doc.dataNascita),
                 aNascita: getDateYear(doc.dataNascita),
                 luogoNascita: doc.luogoNascita,
                 email: doc.email
+            })
+        })
+        
+        Axios.get(siteUrl+"/api/materie").then((response) => {
+            let materie = response.data as IMateria[]
+            
+            this.setState({
+                materie: materie
+            })
+        })
+
+        Axios.get(siteUrl+"/api/corsi").then((response) => {
+            let corsi = response.data as ICorso[]
+            
+            this.setState({
+                corsi: corsi
             })
         })
     }
@@ -127,22 +147,6 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         })
     }
 
-    changeMateria1 = (event: any) => {
-        let mat = event.target.value
-
-        this.setState({
-            materia1: mat
-        })
-    }
-
-    changeMateria2 = (event: any) => {
-        let mat = event.target.value
-
-        this.setState({
-            materia2: mat
-        })
-    }
-
     changeCF = (event: any) => {
         let CF = event.target.value
 
@@ -152,12 +156,12 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
     }
 
     aggiungiDocente = () => {
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, materia1, materia2, email } = this.state
+        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, email } = this.state
         let giorno = Number(gNascita),
         mese = Number(mNascita),
         anno = Number(aNascita)
 
-        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || CF === "" || materia1 === "" || materia2 === "" || email === ""){
+        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || CF === "" || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -205,10 +209,28 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
 
     }
 
-    render(): JSX.Element{
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, materia1, materia2, docente, email } = this.state
+    switchMateria = (materiaId: number) => {
+        let find = this.state.materieSel.find(m => m === materiaId),
+        newList = find ? this.state.materieSel.filter(m => m !== materiaId) : this.state.materieSel.concat(materiaId)
 
-        if(!docente){
+        this.setState({
+            materieSel: newList
+        })
+    }
+
+    switchCorso = (corsoId: number) => {
+        let find = this.state.corsiSel.find(m => m === corsoId),
+        newList = find ? this.state.corsiSel.filter(m => m !== corsoId) : this.state.corsiSel.concat(corsoId)
+
+        this.setState({
+            corsiSel: newList
+        })
+    }
+
+    render(): JSX.Element{
+        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, docente, email, materie, materieSel, corsi, corsiSel } = this.state
+
+        if(!docente || !materie.length || !corsi.length){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
             return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
@@ -260,15 +282,40 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                         <input type="text" className="form-control" maxLength={16} value={CF} onChange={this.changeCF} />
                     </div>
                 </div>
-                
+
                 <div className="form-group row">
                     <div className="col">
-                        <label className="text-secondary">Materia insegnata al primo anno</label>
-                        <input type="text" className="form-control" value={materia1} onChange={this.changeMateria1} />
+                        <label className="text-secondary">Materie insegnate dal docente</label>
+                        <div className="multiselect form-control p-0">
+                            {
+                                materie.map(m => {
+                                    let find = materieSel.find(f => f === m.idMateria),
+                                    checked = find ? true : false,
+                                    classname = checked ? "checked" : ""
+
+                                    return <label className={"option " + classname}>
+                                        <Checkbox className="mr-2" onChange={() => this.switchMateria(m.idMateria)} checked={checked} /> {m.nome}
+                                    </label>
+                                })
+                            }
+                        </div>
                     </div>
+
                     <div className="col">
-                        <label className="text-secondary">Materia insegnata al secondo anno</label>
-                        <input type="text" className="form-control" value={materia2} onChange={this.changeMateria2} />
+                        <label className="text-secondary">Corsi del docente</label>
+                        <div className="multiselect form-control p-0">
+                            {
+                                corsi.map(m => {
+                                    let find = corsiSel.find(f => f === m.idCorso),
+                                    checked = find ? true : false,
+                                    classname = checked ? "checked" : ""
+
+                                    return <label className={"option " + classname}>
+                                        <Checkbox className="mr-2" onChange={() => this.switchCorso(m.idCorso)} checked={checked} /> {m.nome}
+                                    </label>
+                                })
+                            }
+                        </div>
                     </div>
                 </div>
 

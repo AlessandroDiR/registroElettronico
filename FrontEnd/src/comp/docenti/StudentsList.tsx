@@ -65,7 +65,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             title: "Complimenti!",
             content: "Voto aggiunto con successo.",
             onOk: () => {
-                routerHistory.push("/docentipanel/studenti")
+                this.showHideModal(null)
             }
         })
 

@@ -1,4 +1,4 @@
-export const siteUrl = "http://mygraphic.altervista.org"
+export const siteUrl = "https://10.62.1.209:44336"
 
 export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n
@@ -72,7 +72,7 @@ export const getDateDay = (d: string) => {
 export const getDateMonth = (d: string) => {
     let date = new Date(d)
 
-    return Digits2(date.getMonth()).toString()
+    return Digits2(date.getMonth() + 1).toString()
 }
 
 export const getDateYear = (d: string) => {
@@ -108,6 +108,10 @@ export const capitalizeQuote = (name: string) => {
     return splitStr.join("'"); 
 }
 
-export const clearVowels = (s: string) => {
-    // return s.replace("à", "&agrave;").replace("è", "&egrave;").replace("é", "&eacute;").replace("ì", "&igrave;").replace("ò", "&ograve;").replace("")
+export const fixTotPresenze = (time: string) => {
+    let pieces = time.split(":"),
+    mins = Number(pieces[1]),
+    prop = mins / 60
+
+    return (Number(pieces[0]) + prop)
 }

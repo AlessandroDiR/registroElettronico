@@ -23,7 +23,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/reg/api?docenti&corso=" + this.props.corso).then((response) => {
+        Axios.get(siteUrl+"/api/docenti").then((response) => {
             this.setState({
                 docenti: response.data as IDocente[]
             })
@@ -71,8 +71,6 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                             <th>Cognome</th>
                             <th>Codice Fiscale</th>
                             <th>Corso</th>
-                            <th>Materia 1° anno</th>
-                            <th>Materia 2° anno</th>
                             <th style={{width: "20%"}}>Azioni</th>
                         </tr>
 
@@ -83,26 +81,15 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.cognome}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.cf}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.corso}</td>
-                                    <Tooltip title={d.materia1}>
-                                        <td style={{maxWidth: 0}} className="text-truncate">
-                                                {d.materia1}
-                                        </td>
-                                    </Tooltip>
-                                    
-                                    <Tooltip title={d.materia2}>
-                                        <td style={{maxWidth: 0}} className="text-truncate">
-                                                {d.materia2}
-                                        </td>
-                                    </Tooltip>
                                     <td>
                                         <Tooltip title="Dettagli">
-                                            <button type="button" className="btn btn-info circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/docenti/" + d.id)}>
+                                            <button type="button" className="btn btn-info circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/docenti/" + d.idDocente)}>
                                                 <i className="fa fa-info"></i>
                                             </button>
                                         </Tooltip>
 
                                         <Tooltip title="Modifica">
-                                            <button type="button" className="btn btn-warning text-white circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/docenti/edit/" + d.id)}>
+                                            <button type="button" className="btn btn-warning text-white circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/docenti/edit/" + d.idDocente)}>
                                                 <i className="fa fa-pen"></i>
                                             </button>
                                         </Tooltip>

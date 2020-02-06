@@ -1,5 +1,7 @@
+import { IMateria } from "./IMateria";
+
 export interface IDocente{
-    readonly id: number
+    readonly idDocente: number
     readonly email: string
     readonly corso: number
     readonly nome: string
@@ -7,6 +9,6 @@ export interface IDocente{
     readonly cf: string
     readonly dataNascita: string
     readonly luogoNascita: string
-    readonly materia1: string
-    readonly materia2: string
+    readonly insegnare: IMateria[]
+    readonly password?: string
 }
