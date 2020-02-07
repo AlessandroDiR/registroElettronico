@@ -33,7 +33,7 @@ namespace ProjectWork.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 
@@ -186,8 +186,6 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.IdMateria).HasColumnName("id_materia");
 
-                entity.Property(e => e.Anno).HasColumnName("anno");
-
                 entity.HasOne(d => d.IdDocenteNavigation)
                     .WithMany(p => p.Insegnare)
                     .HasForeignKey(d => d.IdDocente)
@@ -219,9 +217,9 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.OraInizio).HasColumnName("ora_inizio");
 
-                entity.HasOne(d => d.IdLezioneNavigation)
-                    .WithOne(p => p.Lezioni)
-                    .HasForeignKey<Lezioni>(d => d.IdLezione)
+                entity.HasOne(d => d.IdMateriaNavigation)
+                    .WithMany(p => p.Lezioni)
+                    .HasForeignKey(d => d.IdMateria)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Lezioni_Materie");
             });
@@ -292,6 +290,12 @@ namespace ProjectWork.Models
                 entity.Property(e => e.DataNascita)
                     .HasColumnName("data_nascita")
                     .HasColumnType("date");
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasColumnName("email")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.IdCorso).HasColumnName("id_corso");
 

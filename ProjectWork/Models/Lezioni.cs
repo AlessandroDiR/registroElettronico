@@ -16,7 +16,7 @@ namespace ProjectWork.Models
         public TimeSpan OraInizio { get; set; }
         public TimeSpan OraFine { get; set; }
 
-        public Materie IdLezioneNavigation { get; set; }
+        public Materie IdMateriaNavigation { get; set; }
         public ICollection<Presenze> Presenze { get; set; }
     }
 }
