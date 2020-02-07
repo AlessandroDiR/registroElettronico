@@ -2,28 +2,25 @@ import React from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
-import { Digits2 } from '../utilities';
+import { Digits2, closeBubble } from '../utilities';
 
 import '@fullcalendar/core/main.css'
 import '@fullcalendar/timegrid/main.css';
 
-export default class LessonsCalendar extends React.Component {
+export interface IProps{
+    readonly corso?: number
+}
+export interface IState{
+    // variabile che prende il calendario, da caricare in base al corso
+}
 
-    closeBubble = () => {
-        let current = document.getElementById("bubble"),
-        body = document.getElementsByTagName("body")[0]
-        
-        if(current)
-            body.removeChild(current)
-    }
+export default class LessonsCalendar extends React.PureComponent<IProps, IState> {
 
     componentWillUnmount = () => {
-        this.closeBubble()
+        closeBubble()
     }
 
     render() {
-        let self = this
-
         return <FullCalendar
                 plugins={[ googleCalendarPlugin, dayGridPlugin ]}
                 events={ { googleCalendarId: 'ckhj7iqj3msae4i4ietm5ip1cg@group.calendar.google.com'} }
@@ -82,8 +79,8 @@ export default class LessonsCalendar extends React.Component {
 
                         body.appendChild(bubble)
 
-                        children.removeEventListener("click", self.closeBubble)
-                        children.addEventListener("click", self.closeBubble)
+                        children.removeEventListener("click", closeBubble)
+                        children.addEventListener("click", closeBubble)
 
                         let newBubble = document.getElementById("bubble")
                         

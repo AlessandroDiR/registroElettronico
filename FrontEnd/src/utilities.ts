@@ -115,3 +115,11 @@ export const fixTotPresenze = (time: string) => {
 
     return (Number(pieces[0]) + prop)
 }
+
+export const closeBubble = () => {
+    let current = document.getElementById("bubble"),
+    body = document.getElementsByTagName("body")[0]
+    
+    if(current)
+        body.removeChild(current)
+}

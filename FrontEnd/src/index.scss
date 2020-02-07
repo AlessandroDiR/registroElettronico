@@ -284,7 +284,8 @@ table td, table th{
   & .router-link{
     color: darken($mobilecolor, 15%) !important;
     font-weight: 500;
-    font-size: 80%;
+    font-size: 65%;
+    padding: 1rem;
 
     & span{
       display: flex;
