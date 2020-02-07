@@ -336,7 +336,7 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return OutputMsg.generateMessage("Ops", "Qualcosa è andato storto", true);
+            return OutputMsg.generateMessage("Ops", "Non ci sono lezioni oggi!", true);
         }
     }
 }
