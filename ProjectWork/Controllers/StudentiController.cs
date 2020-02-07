@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectWork.Models;
+using Newtonsoft.Json;
 
 namespace ProjectWork.Controllers
 {
@@ -164,10 +165,41 @@ namespace ProjectWork.Controllers
             return Ok(daysAmount.Count());
         }
 
+        [HttpGet("[action]/{idStudente}")]
+        public async Task<IActionResult> GetDetailedPresences([FromRoute] int idStudente)
+        {
+            var presences = _context.Presenze.Where(p => p.IdStudente == idStudente);
+
+            if(presences == null)
+            {
+                return RedirectToAction("GetStudenti");
+            }
+
+            var result = new List<object>();
+            foreach(var p in presences)
+            {
+                if (p.IdLezioneNavigation == null)
+                    p.IdLezioneNavigation = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezione);
+
+                var json = new
+                {
+                    idPresenza = p.IdPresenza,
+                    idStudente = p.IdStudente,
+                    data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).Data,
+                    lezione = _context.Materie.FirstOrDefault(m => m.IdMateria == p.IdLezioneNavigation.IdMateria).Nome,
+                    ingresso = p.Ingresso,
+                    uscita = p.Uscita
+                };
+
+                result.Add(json);
+            }
+            return Ok(result);
+        }
+
         //Crea studente
         // POST: api/Studenti
         [HttpPost]
-        public async Task<IActionResult> PostStudenti([FromBody] Studenti s)
+        public async Task<IActionResult> PostStudenti([FromBody] Studenti[] studenti)
         {
             //string nome, string luogo_nas, string cognome, string cf, DateTime data_nas, int anno_iscrizione, int id_corso
             if (!ModelState.IsValid)
@@ -175,21 +207,27 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            Studenti studente = new Studenti();
-            studente.Nome = s.Nome;
-            studente.Cognome = s.Cognome;
-            studente.Cf = s.Cf;
-            studente.DataNascita = s.DataNascita;
-            studente.AnnoIscrizione = s.AnnoIscrizione;
-            studente.LuogoNascita = s.LuogoNascita;
-            studente.IdCorso = s.IdCorso;
-            studente.Password = s.Cf;
+            foreach(var s in studenti)
+            {
+                Studenti studente = new Studenti();
+                studente.Nome = s.Nome;
+                studente.Cognome = s.Cognome;
+                studente.Cf = s.Cf;
+                studente.Email = s.Email;
+                studente.DataNascita = s.DataNascita;
+                studente.AnnoIscrizione = s.AnnoIscrizione;
+                studente.LuogoNascita = s.LuogoNascita;
+                studente.IdCorso = s.IdCorso;
+                studente.Password = s.Cf;
 
-            _context.Studenti.Add(studente);
+                _context.Studenti.Add(studente);
+            }
+
+            
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetStudenti", new { id = studente.IdStudente }, studente);
+            return RedirectToAction("GetStudenti");
         }
 
         // PUT: api/Studenti/5
