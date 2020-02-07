@@ -146,7 +146,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         })
     }
 
-    aggiungiDocente = () => {
+    modificaDocente = () => {
         const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, email } = this.state
         let giorno = Number(gNascita),
         mese = Number(mNascita),
@@ -299,7 +299,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                     </div>
                 </div>
 
-                <button type="button" className="btn btn-success text-uppercase w-100" onClick={this.aggiungiDocente}>Modifica docente</button>
+                <button type="button" className="btn btn-success text-uppercase w-100" onClick={this.modificaDocente}>Modifica docente</button>
             </form>
         </div>
     }

@@ -94,8 +94,6 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         secondYear = students.filter(s => s.annoIscrizione === 2019),
         groups = [firstYear, secondYear]
 
-        console.log(groups)
-
         return <div className="col-9 px-5 py-4 right-block">
             <h3 className="mb-3 text-center">Studenti del corso</h3>
 

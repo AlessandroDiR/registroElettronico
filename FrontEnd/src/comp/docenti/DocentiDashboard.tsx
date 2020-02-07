@@ -57,10 +57,6 @@ export default class DocentiDashboard extends React.Component{
                                 <StudentDetails {...routeProps} corso={admin.corso} idDocente={admin.id} />
                             )} />
 
-                            <Route exact path="/docentipanel/voti/edit/:id" render={(routeProps) => (
-                                <EditVoto {...routeProps} corso={admin.corso} />
-                            )} />
-
 
                         </Switch>
                         
