@@ -90,9 +90,11 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             </div>
         }
         
-        let firstYear = students.filter(s => s.anno === 1),
-        secondYear = students.filter(s => s.anno === 2),
+        let firstYear = students.filter(s => s.annoIscrizione === 2018),
+        secondYear = students.filter(s => s.annoIscrizione === 2019),
         groups = [firstYear, secondYear]
+
+        console.log(groups)
 
         return <div className="col-9 px-5 py-4 right-block">
             <h3 className="mb-3 text-center">Studenti del corso</h3>
@@ -105,7 +107,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                             
                             <tr className="thead-light">
                                 <th colSpan={7}>
-                                    { g[0].anno === 1 ? "Primo" : "Secondo" } anno
+                                    { g[0].annoIscrizione === 2018 ? "Primo" : "Secondo" } anno
                                 </th>
                             </tr>
 
@@ -124,8 +126,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.nome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cognome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
-                                        <td style={{maxWidth: 0}} className="text-truncate">{s.corso}</td>
-                                        <td style={{maxWidth: 0}} className="text-truncate">{s.anno}-{s.anno + 1}</td>
+                                        <td style={{maxWidth: 0}} className="text-truncate">{s.idCorso}</td>
+                                        <td style={{maxWidth: 0}} className="text-truncate">{s.annoIscrizione}-{s.annoIscrizione + 1}</td>
                                         <td>
                                             <Tooltip title="Aggiungi voto">
                                                 <button type="button" className="btn btn-success text-white circle-btn mr-2" onClick={() => this.showHideModal(s)}>
@@ -133,7 +135,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                                 </button>
                                             </Tooltip>
                                             <Tooltip title="Lista voti">
-                                                <button type="button" className="btn btn-info text-white circle-btn" onClick={() => routerHistory.push("/docentipanel/studenti/" + s.id)}>
+                                                <button type="button" className="btn btn-info text-white circle-btn" onClick={() => routerHistory.push("/docentipanel/studenti/" + s.idStudente)}>
                                                     <i className="fa fa-stars"></i>
                                                 </button>
                                             </Tooltip>

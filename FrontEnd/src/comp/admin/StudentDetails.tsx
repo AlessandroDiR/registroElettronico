@@ -6,6 +6,7 @@ import { Icon, Spin, Progress, Statistic } from 'antd';
 import PresenzeTable from './PresenzeTable';
 import Axios from 'axios';
 import { formattaData, siteUrl, fixTotPresenze } from '../../utilities';
+import VotiStudent from './VotiStudent';
 
 export interface IRouteParams{
     readonly id: string
@@ -79,7 +80,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                     <h4 className="text-uppercase mb-2 text-truncate">{student.nome} {student.cognome}</h4>
                     <p className="mb-0"><strong>Codice Fiscale</strong>: {student.cf}</p>
                     <p className="mb-0"><strong>Nascita</strong>: {student.luogoNascita}, {formattaData(student.dataNascita)}</p>
-                    <p className="mb-0"><strong>Corso</strong>: {student.corso}</p>
+                    <p className="mb-0"><strong>Corso</strong>: {student.email}</p>
                 </div>
 
                 <div className="col-5 p-3 bg-white border" style={{borderRadius: 5}}>
