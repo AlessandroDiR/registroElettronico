@@ -80,13 +80,7 @@ namespace ProjectWork.Controllers
 
             var studente = _context.Studenti.SingleOrDefault(s => s.Cf == code);
 
-            if (SalvaFirma(studente.IdStudente))
-            {
-                return OutputMsg.generateMessage("Ok", $"Ciao {studente.Nome}!");
-            }
-
-            return OutputMsg.generateMessage("Errore", "Qualcosa è andato storto", true);
-
+            return SalvaFirma(studente);
         }
 
         // GET: api/studenti/coderequest/2
@@ -299,7 +293,7 @@ namespace ProjectWork.Controllers
             return studente != null ? true : false;
         }
 
-        private bool SalvaFirma(int idStudente)
+        private string SalvaFirma(Studenti s)
         {
             var date = DateTime.Now;
             var time = TimeSpan.Parse(date.TimeOfDay.ToString().Split('.')[0]);
@@ -310,38 +304,39 @@ namespace ProjectWork.Controllers
             {
                 foreach (var l in lesson)
                 {
-                    var presenza = _context.Presenze.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdStudente == idStudente);
+                    var presenza = _context.Presenze.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdStudente == s.IdStudente);
                     if (l.OraFine < time)
                     {
                         if (presenza != null && presenza.Ingresso != null && presenza.Uscita == null)
                         {
                             presenza.Uscita = time;
                             _context.SaveChanges();
-                            return true;
+                            return OutputMsg.generateMessage("Ok",$"Arrivederci {s.Nome}!");
                         }
                     }
                     else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == null)
                     {
                         presenza.Uscita = time;
                         _context.SaveChanges();
-                        return true;
+                        return OutputMsg.generateMessage("Ok", $"Arrivederci {s.Nome}!");
                     }
                     else if (presenza == null && l.OraInizio <= time && l.OraFine >= time)
                     {
                         var newPresenza = new Presenze
                         {
                             IdLezione = l.IdLezione,
-                            IdStudente = idStudente
+                            IdStudente = s.IdStudente,
+                            Ingresso = time
                         };
-                        newPresenza.Ingresso = time;
+  
                         _context.Presenze.Add(newPresenza);
                         _context.SaveChanges();
-                        return true;
+                        return OutputMsg.generateMessage("Ok", $"Ben arrivato {s.Nome}!");
                     }
                 }
             }
 
-            return false;
+            return OutputMsg.generateMessage("Ops", "Non ci sono lezioni oggi!", true);
         }
     }
 }
