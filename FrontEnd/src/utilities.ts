@@ -56,8 +56,9 @@ export const hideAll = () => {
     })
 }
 
-export const formattaData = (d: string) => {
-    let date = new Date(d)
+export const formattaData = (d: string, convert?: boolean) => {
+    let from = d.split(/[/-]/g),
+    date = convert ? new Date(Number(from[2]), Number(from[1]) - 1, Number(from[0])) : new Date(d)
 
     return Digits2(date.getDate()) + "-" + Digits2(date.getMonth() + 1) + "-" + date.getFullYear()
 }
