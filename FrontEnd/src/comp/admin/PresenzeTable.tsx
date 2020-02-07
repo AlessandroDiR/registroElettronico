@@ -1,7 +1,8 @@
 import React from "react"
 import { IPresenze } from "../../models/IPresenze"
 import { Tooltip, Icon, Spin } from "antd"
-import { hideAll } from "../../utilities"
+import { hideAll, siteUrl, formattaData } from "../../utilities"
+import Axios from "axios"
 
 export interface IProps{
     readonly studente: number
@@ -25,9 +26,17 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        /*******************************/
-        /* CARICAMENTO PRESENZE UTENTE */
-        /*******************************/
+        Axios.get(siteUrl+"/api/studenti/getdetailedpresences/"+this.props.studente).then((response) => {
+
+            console.log(response.data)
+            let presenze = response.data as IPresenze[]
+
+            console.log(presenze)
+
+            this.setState({
+                presenze: presenze
+            })
+        })
     }
 
     changeEntrata = (event: any) => {
@@ -53,7 +62,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
         uscitaSpan = document.getElementById("uscitaSpan_" + id),
         editBtn = document.getElementById("editBtn_" + id),
         confirmBtn = document.getElementById("confirmBtn_" + id),
-        presenza = this.state.presenze.find(p => p.id === id)
+        presenza = this.state.presenze.find(p => p.idPresenza === id)
 
         hideAll()
 
@@ -65,7 +74,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
         editBtn.style.display = "none"
 
         this.setState({
-            entrataEdit: presenza.entrata,
+            entrataEdit: presenza.ingresso,
             uscitaEdit: presenza.uscita
         })
     }
@@ -115,22 +124,22 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
                 {
                     presenze.map(p => {
                         return <tr>
-                            <td style={{maxWidth: 0}} className="text-truncate">{p.data}</td>
+                            <td style={{maxWidth: 0}} className="text-truncate">{formattaData(p.data)}</td>
                             <td style={{maxWidth: 0}} className="text-truncate">
-                                <span id={"entrataSpan_"+p.id}>{p.entrata}</span>
-                                <input type="text" className="form-control edit-time" value={entrataEdit} style={{display: "none"}} onChange={this.changeEntrata} id={"entrataInput_"+p.id} />
+                                <span id={"entrataSpan_"+p.idPresenza}>{p.ingresso}</span>
+                                <input type="text" className="form-control edit-time" value={entrataEdit} style={{display: "none"}} onChange={this.changeEntrata} id={"entrataInput_"+p.idPresenza} />
                             </td>
                             <td style={{maxWidth: 0}} className="text-truncate">
-                                <span id={"uscitaSpan_"+p.id}>{p.uscita}</span>
-                                <input type="text" className="form-control edit-time" value={uscitaEdit} style={{display: "none"}} onChange={this.changeUscita} id={"uscitaInput_"+p.id} />
+                                <span id={"uscitaSpan_"+p.idPresenza}>{p.uscita}</span>
+                                <input type="text" className="form-control edit-time" value={uscitaEdit} style={{display: "none"}} onChange={this.changeUscita} id={"uscitaInput_"+p.idPresenza} />
                             </td>
                             <td style={{maxWidth: 0}} className="text-truncate">{p.lezione}</td>
                             <td>
                                 <Tooltip title="Modifica orari">
-                                    <button type="button" className="far fa-clock btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p.id)} id={"editBtn_"+p.id}></button>
+                                    <button type="button" className="far fa-clock btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p.idPresenza)} id={"editBtn_"+p.idPresenza}></button>
                                 </Tooltip>
                                 <Tooltip title="Conferma modifiche">
-                                    <button type="button" className="far fa-check btn btn-success circle-btn" onClick={() => this.confirmEdit(p.id)} id={"confirmBtn_"+p.id} style={{display: "none"}}></button>
+                                    <button type="button" className="far fa-check btn btn-success circle-btn" onClick={() => this.confirmEdit(p.idPresenza)} id={"confirmBtn_"+p.idPresenza} style={{display: "none"}}></button>
                                 </Tooltip>
                             </td>
                         </tr>

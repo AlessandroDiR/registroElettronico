@@ -1,3 +1,5 @@
+export const siteUrl = "https://10.62.1.209:44336"
+
 export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n
 }
@@ -69,7 +71,7 @@ export const getDateDay = (d: string) => {
 export const getDateMonth = (d: string) => {
     let date = new Date(d)
 
-    return Digits2(date.getMonth()).toString()
+    return Digits2(date.getMonth() + 1).toString()
 }
 
 export const getDateYear = (d: string) => {
@@ -83,4 +85,32 @@ export const isValidData = (g: number, m: number, a: number) => {
         return false
 
     return true
+}
+
+export const capitalizeFirst = (name: string) => {
+    let splitStr = capitalizeQuote(name.toLowerCase()).split(' ')
+
+    for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);    
+    }
+   
+    return splitStr.join(' '); 
+}
+
+export const capitalizeQuote = (name: string) => {
+    let splitStr = name.toLowerCase().split("'")
+
+    for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);    
+    }
+   
+    return splitStr.join("'"); 
+}
+
+export const fixTotPresenze = (time: string) => {
+    let pieces = time.split(":"),
+    mins = Number(pieces[1]),
+    prop = mins / 60
+
+    return (Number(pieces[0]) + prop)
 }

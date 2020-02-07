@@ -304,3 +304,18 @@ table td, table th{
     }
   }
 }
+.multiselect{
+  height: 100px !important;
+  overflow: auto;
+  
+  .option{
+    display: block;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    margin: 0;
+
+    &.checked{
+      background: #eee
+    }
+  }
+}
