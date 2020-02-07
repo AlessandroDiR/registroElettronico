@@ -1,8 +1,6 @@
 import React from "react"
 import { Modal, Icon, Spin } from "antd";
 import { routerHistory } from "../..";
-import { getDateDay, getDateMonth, getDateYear, isValidData, siteUrl } from "../../utilities";
-import { IDocente } from "../../models/IDocente";
 import Axios from "axios";
 import { RouteComponentProps } from "react-router-dom";
 import { IVoti } from "../../models/IVoti"

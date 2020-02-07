@@ -60,7 +60,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
         return <div className="col-9 px-5 py-4 right-block">
 
             <div className="col-5 mr-4 p-3 bg-white border position-relative" style={{borderRadius: 5}}>
-                <span className="border-text">{student.anno === 1 ? "Primo" : "Secondo"} anno</span>
+                <span className="border-text">{student.annoIscrizione === 2018 ? "Primo" : "Secondo"} anno</span>
                 <h4 className="text-uppercase mb-2 text-truncate">{student.nome} {student.cognome}</h4>
             </div>
 

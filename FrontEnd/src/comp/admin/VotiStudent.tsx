@@ -22,7 +22,7 @@ export default class VotiStudent extends React.PureComponent<IProps, IState>{
 
     componentDidMount = () => {
         /*******************************/
-        /* CARICAMENTO PRESENZE UTENTE */
+        /* CARICAMENTO VOTI STUDENTE   */
         /*******************************/
     }
     
