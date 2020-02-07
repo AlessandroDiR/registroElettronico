@@ -72,6 +72,19 @@ namespace ProjectWork.Controllers
             return Ok(docenti);
         }
 
+        [HttpGet("[action]/{idDocente}")]
+        public async Task<IActionResult> GetLezioniDocente([FromRoute] int idDocente)
+        {
+            var materie = _context.Insegnare.Where(i => i.IdDocente == idDocente);
+            var lezioni = new List<object>();
+            foreach(var m in materie)
+            {
+                lezioni.Add(_context.Lezioni.Where(l => l.IdMateria == m.IdMateria && l.Data < DateTime.Now));
+            }
+
+            return Ok(lezioni);
+        }
+
         // PUT: api/Docenti/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDocenti([FromRoute] int id, [FromBody] Docenti docenti)
