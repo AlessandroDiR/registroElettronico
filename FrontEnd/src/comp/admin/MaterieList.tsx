@@ -176,13 +176,13 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                     </tbody>
             </table>
 
-            <Modal title="Aggiungi una materia" visible={showModal} onCancel={this.showHideModal} cancelText="Annulla" okText="Conferma" onOk={this.aggiungiMateria}>
+            <Modal title="Aggiungi una materia" visible={showModal} onCancel={this.showHideModal} cancelText="Annulla" okText="Aggiungi" onOk={this.aggiungiMateria}>
                 <label className="text-secondary">Nome della materia</label>
                 <input type="text" value={nomeMateria} onChange={this.changeNome} className="form-control" />
             </Modal>
 
             {
-                materiaEdit && <Modal title="Modifica di una materia" visible={showEditModal} onCancel={this.hideEditModal} cancelText="Annulla" okText="Conferma" onOk={this.modificaMateria}>
+                materiaEdit && <Modal title="Modifica di una materia" visible={showEditModal} onCancel={this.hideEditModal} cancelText="Annulla" okText="Modifica" onOk={this.modificaMateria}>
                     <label className="text-secondary">Nome della materia</label>
                     <input type="text" value={nomeEdit} onChange={this.changeNomeEdit} className="form-control" />
                 </Modal>

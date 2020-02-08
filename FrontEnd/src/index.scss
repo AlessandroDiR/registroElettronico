@@ -211,7 +211,7 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end{
 table td, table th{
   vertical-align: middle !important
 }
-.event-bubble .bubble-close, .year-mark{
+.event-bubble .bubble-close, .year-mark, .faq{
   border-radius: 50px;
   width: 35px;
   height: 35px;
@@ -224,7 +224,7 @@ table td, table th{
   margin-left: 0.7rem;
   color: #888
 }
-.event-bubble .bubble-close:hover, .year-mark{
+.event-bubble .bubble-close:hover, .year-mark, .faq:hover{
   background: #f1f1f1
 }
 .edit-time{
@@ -319,5 +319,28 @@ table td, table th{
     &.checked{
       background: #eee
     }
+  }
+}
+.imagescale{
+  cursor: pointer;
+  margin-right: 1rem;
+  box-shadow: none;
+  border-radius: 0.2rem;
+
+  &:hover{
+    box-shadow: 0 0 2px 2px rgba(0,0,0,0.2)
+  }
+
+  &.scaled{
+    position: fixed;
+    transition: transform 0.5s, box-shadow 0s linear 0.5s;
+    top: 100px;
+    bottom: 100px;
+    left: 100px;
+    right: 100px;
+    margin: auto;
+    transform: scale(4.5);
+    box-shadow: 0 0 0 100px rgba(0,0,0,0.4);
+    z-index: 2
   }
 }

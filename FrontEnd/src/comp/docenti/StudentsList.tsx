@@ -147,7 +147,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             </table>
 
             {
-                selectedStudente && <Modal title={"Aggiungi un voto allo studente: " + selectedStudente.nome + " " + selectedStudente.cognome} visible={this.state.confirmModal} onCancel={() => this.showHideModal(null)} cancelText="Annulla" okText="Conferma" onOk={this.aggiungiVoto}>
+                selectedStudente && <Modal title={"Aggiungi un voto allo studente: " + selectedStudente.nome + " " + selectedStudente.cognome} visible={this.state.confirmModal} onCancel={() => this.showHideModal(null)} cancelText="Annulla" okText="Aggiungi" onOk={this.aggiungiVoto}>
                     <label className="text-secondary">Voto</label>
                     <input type="text" value={voto} onChange={this.changeVoto} maxLength={3} className="form-control" />
                 </Modal>

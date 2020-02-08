@@ -24,7 +24,7 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
         return <FullCalendar
                 plugins={[ googleCalendarPlugin, dayGridPlugin ]}
                 events={ { googleCalendarId: 'ckhj7iqj3msae4i4ietm5ip1cg@group.calendar.google.com'} }
-                googleCalendarApiKey={'AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs'}
+                googleCalendarApiKey={'AIzaSyCEEaAbHOYhofQs-iLdHd_J8-KyD_IlRbE'}
                 defaultView="dayGridMonth"
                 fixedWeekCount={false}
                 header={false}

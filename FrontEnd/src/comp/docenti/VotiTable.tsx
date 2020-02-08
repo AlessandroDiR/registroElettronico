@@ -153,7 +153,7 @@ export default class VotiTable extends React.PureComponent<IProps, IState>{
             </tbody>
 
             {
-                votoEdit && <Modal title="Modifica di una voto" visible={showEditModal} onCancel={this.hideEditModal} cancelText="Annulla" okText="Conferma" onOk={this.modificaVoto}>
+                votoEdit && <Modal title="Modifica di una voto" visible={showEditModal} onCancel={this.hideEditModal} cancelText="Annulla" okText="Modifica" onOk={this.modificaVoto}>
                     <label className="text-secondary">Voto</label>
                     <input type="text" value={votoValueEdit} maxLength={3} onChange={this.changeVoto} className="form-control" />
                 </Modal>

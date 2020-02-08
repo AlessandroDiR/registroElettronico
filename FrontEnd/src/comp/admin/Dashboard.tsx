@@ -16,6 +16,7 @@ import CorsiList from "./CorsiList";
 import AddNewCorso from "./AddNewCorso";
 import EditCorso from "./EditCorso";
 import MaterieList from "./MaterieList";
+import ConfigCalendar from "./ConfigCalendar";
 
 export default class Dashboard extends React.Component{
 
@@ -51,6 +52,9 @@ export default class Dashboard extends React.Component{
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/adminpanel/materie")} to="/adminpanel/materie">
                             <span>Materie</span>
+                        </NavLink>
+                        <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/adminpanel/config")} to="/adminpanel/config">
+                            <span>Configura calendario</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => {
                             localStorage.removeItem("session")
@@ -118,6 +122,10 @@ export default class Dashboard extends React.Component{
 
                             <Route exact path="/adminpanel/materie" render={() => (
                                 <MaterieList />
+                            )} />
+
+                            <Route exact path="/adminpanel/config" render={() => (
+                                <ConfigCalendar corso={admin.corso} />
                             )} />
 
                         </Switch>
