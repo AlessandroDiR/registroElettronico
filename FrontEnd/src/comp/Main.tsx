@@ -1,10 +1,11 @@
 import React from "react"
 import { NavLink, Route, Router, Switch } from 'react-router-dom';
 import { routerHistory } from ".."
-import HomeComponent from "./HomeComponent";
+import FirmaComponent from "./FirmaComponent";
 import LessonsCalendar from "./LessonsCalendar";
 
 export default class Main extends React.Component{
+
     focusInput = () => {
         let input = document.getElementById("mainInput") as HTMLInputElement
 
@@ -34,7 +35,7 @@ export default class Main extends React.Component{
                     
                         <Switch>
                             <Route exact path="/firme/" render={() => (
-                                <HomeComponent />
+                                <FirmaComponent />
                             )} />
 
                             <Route exact path="/firme/calendar" render={() => (

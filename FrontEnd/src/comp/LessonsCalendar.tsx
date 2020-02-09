@@ -2,7 +2,7 @@ import React from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
-import { Digits2, closeBubble } from '../utilities';
+import { Digits2 } from '../utilities';
 
 import '@fullcalendar/core/main.css'
 import '@fullcalendar/timegrid/main.css';
@@ -15,10 +15,6 @@ export interface IState{
 }
 
 export default class LessonsCalendar extends React.PureComponent<IProps, IState> {
-
-    componentWillUnmount = () => {
-        closeBubble()
-    }
 
     render() {
         return <FullCalendar
@@ -71,16 +67,12 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
                         bubble.style.left = x + "px"
                     
                         let current = document.getElementById("bubble"),
-                        body = document.getElementsByTagName("body")[0],
-                        children = bubble.childNodes[0]
+                        body = document.getElementsByTagName("body")[0]
                         
                         if(current)
                             body.removeChild(current)
 
                         body.appendChild(bubble)
-
-                        children.removeEventListener("click", closeBubble)
-                        children.addEventListener("click", closeBubble)
 
                         let newBubble = document.getElementById("bubble")
                         

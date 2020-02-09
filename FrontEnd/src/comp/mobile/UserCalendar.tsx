@@ -1,7 +1,7 @@
 import React from "react"
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from '@fullcalendar/daygrid';
-import { Digits2, closeBubble } from "../../utilities";
+import { Digits2 } from "../../utilities";
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
 
 import '@fullcalendar/core/main.css'
@@ -15,10 +15,6 @@ export interface IState{
 }
 
 export default class UserCalendar extends React.PureComponent<IProps, IState> {
-
-    componentWillUnmount = () => {
-        closeBubble()
-    }
 
     render(): JSX.Element{
         return <div>
@@ -68,16 +64,12 @@ export default class UserCalendar extends React.PureComponent<IProps, IState> {
                     }
                 
                     let current = document.getElementById("bubble"),
-                    body = document.getElementsByTagName("body")[0],
-                    children = bubble.childNodes[0]
+                    body = document.getElementsByTagName("body")[0]
                     
                     if(current)
                         body.removeChild(current)
 
                     body.appendChild(bubble)
-
-                    children.removeEventListener("click", closeBubble)
-                    children.addEventListener("click", closeBubble)
                 }
             } />
         </div>

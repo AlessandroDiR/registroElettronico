@@ -28,10 +28,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
     componentDidMount = () => {
         Axios.get(siteUrl+"/api/studenti/getdetailedpresences/"+this.props.studente).then((response) => {
 
-            console.log(response.data)
             let presenze = response.data as IPresenze[]
-
-            console.log(presenze)
 
             this.setState({
                 presenze: presenze

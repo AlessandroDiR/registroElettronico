@@ -10,6 +10,7 @@ export interface IState{
     readonly votoEdit: IVoti
     readonly votoValueEdit: string
     readonly showEditModal: boolean
+    readonly materia: string
 }
 
 export default class VotiTable extends React.PureComponent<IProps, IState>{
@@ -18,22 +19,11 @@ export default class VotiTable extends React.PureComponent<IProps, IState>{
         super(props)
 
         this.state = {
-            voti: [{
-                id:1,
-                docente: "Brizio",
-                materia: "Databees",
-                voto: 0,
-                data: "03/02/2020",
-            },{
-                id:2,
-                docente: "Fabrizio",
-                materia: "Matematica",
-                voto: 2,
-                data: "04/02/2020",
-            }],
+            voti: null,
             votoEdit: null,
             votoValueEdit: "",
-            showEditModal: false
+            showEditModal: false,
+            materia: ""
 
         }
     }
@@ -65,7 +55,8 @@ export default class VotiTable extends React.PureComponent<IProps, IState>{
         this.setState({
             votoValueEdit: voto.voto.toString(),
             votoEdit: voto,
-            showEditModal: true
+            showEditModal: true,
+            materia: voto.materia
         })
     }
 
@@ -85,9 +76,26 @@ export default class VotiTable extends React.PureComponent<IProps, IState>{
         })
     }
 
+    changeMateria = (event: any) => {
+        let materia = event.target.value
+
+        this.setState({
+            materia: materia
+        })
+    }
+
     modificaVoto = () => {
-        const { votoValueEdit } = this.state
-        let numVoto = parseInt(votoValueEdit)
+        const { votoValueEdit, materia } = this.state
+        let numVoto = parseInt(votoValueEdit)   
+
+        if(materia === "" || votoValueEdit === ""){
+            Modal.error({
+                title: "Errore!",
+                content: "Riempire tutti i campi."
+            })
+
+           return
+        }  
 
         if(isNaN(numVoto) || numVoto < 0 || numVoto > 100){
             Modal.error({
@@ -96,12 +104,12 @@ export default class VotiTable extends React.PureComponent<IProps, IState>{
             })
 
            return
-        }        
+        }      
 
-        /************************************************/
-        /* MODIFICA VOTO E POI MOSTRARE MODAL           */
-        /* RITORNARE LISTA AGGIORNATA VOTI              */
-        /************************************************/
+        /**************************************/
+        /* MODIFICA VOTO E POI MOSTRARE MODAL */
+        /* RITORNARE LISTA AGGIORNATA VOTI    */
+        /**************************************/
 
         Modal.success({
             title: "Complimenti!",
@@ -114,7 +122,7 @@ export default class VotiTable extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { voti, votoEdit, votoValueEdit, showEditModal } = this.state
+        const { voti, votoEdit, votoValueEdit, showEditModal, materia } = this.state
 
         if(!voti){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
@@ -154,8 +162,14 @@ export default class VotiTable extends React.PureComponent<IProps, IState>{
 
             {
                 votoEdit && <Modal title="Modifica di una voto" visible={showEditModal} onCancel={this.hideEditModal} cancelText="Annulla" okText="Modifica" onOk={this.modificaVoto}>
-                    <label className="text-secondary">Voto</label>
-                    <input type="text" value={votoValueEdit} maxLength={3} onChange={this.changeVoto} className="form-control" />
+                    <div className="form-group">
+                        <label className="text-secondary">Materia</label>
+                        <input type="text" value={materia} onChange={this.changeMateria} className="form-control" />
+                    </div>
+                    <div className="form-group">
+                        <label className="text-secondary">Voto</label>
+                        <input type="text" value={votoValueEdit} maxLength={3} onChange={this.changeVoto} className="form-control" />
+                    </div>
                 </Modal>
             }
         </table>

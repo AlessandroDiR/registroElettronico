@@ -1,7 +1,7 @@
 import React from "react"
 import Dragger from "antd/lib/upload/Dragger"
 import { IStudent } from "../../models/IStudent"
-import { Checkbox, Modal, Tooltip } from "antd"
+import { Checkbox, Modal, Tooltip, Icon } from "antd"
 import { routerHistory } from "../.."
 import { formattaData, capitalizeFirst } from "../../utilities"
 
@@ -11,7 +11,29 @@ export interface IProps{
 export interface IState{
     readonly addList: IStudent[]
     readonly jumpFirstLine: boolean
+    readonly fileContent: string
+    readonly fields: any
 }
+
+const fields = [{
+    label: "Nome",
+    field: "nome"
+},{
+    label: "Cognome",
+    field: "cognome"
+},{
+    label: "Codice Fiscale",
+    field: "cf"
+},{
+    label: "Anno di iscrizione",
+    field: "annoIscrizione"
+},{
+    label: "Data di nascita",
+    field: "dataNascita"
+},{
+    label: "E-mail",
+    field: "email"
+}]
 
 export default class StudentsImport extends React.PureComponent<IProps, IState>{
     
@@ -20,7 +42,16 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
 
         this.state = {
             addList: [],
-            jumpFirstLine: false
+            jumpFirstLine: false,
+            fileContent: "",
+            fields: {
+                nome: 0,
+                cognome: 0,
+                cf: 0,
+                dataNascita: 0,
+                email: 0,
+                annoIscrizione: 0
+            }
         }
     }
 
@@ -28,49 +59,105 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
         let regex = /(["'])(?:(?=(\\?))\2.)*?\1/g,
         pieces = data.match(regex)
 
-        console.log(pieces)
-        return pieces.map(p => { return p.replace(/["]/g, '')} )
+        return pieces.map(p => { return p.replace(/["]/g, '') })
+    }
+
+    renderOptions = () => {
+        let rows = this.state.fileContent.split("\n"),
+        cells = this.splitCSV(rows[0]),
+        options = cells.map((c, i) => {
+            if(c === "")
+                return null
+
+            return <option value={i}>{c}</option>
+        })
+
+        return options
+    }
+
+    changeVarPos = (e: any, varName: string) => {
+        let value = e.target.value,
+        obj = this.state.fields
+
+        obj[varName] = value
+
+        this.setState({
+            fields: obj
+        })
     }
 
     readFile = (file: any) => {
         const reader = new FileReader()
 
         reader.onload = e => {
-            let rows = String(e.target.result).trim().split("\n"),
-            list: IStudent[] = [],
-            popup = document.getElementById("popup")
-
-            rows.forEach((r, i) => {
-                
-                if(i === 0 && this.state.jumpFirstLine)
-                    return
-
-                let cells = this.splitCSV(r)
-
-                let student: IStudent = {
-                    idCorso: this.props.corso,
-                    nome: capitalizeFirst(cells[7]),
-                    cognome: capitalizeFirst(cells[8]),
-                    annoIscrizione: Number(cells[2]),
-                    cf: cells[3],
-                    dataNascita: formattaData(cells[10], true),
-                    luogoNascita: "",
-                    email: cells[22]
-                }
-
-                list.push(student)
-            })
-
             this.setState({
-                addList: list
+                fileContent: String(e.target.result).trim()
             })
 
-            popup.classList.add("show")
+            Modal.info({
+                width: 500,
+                centered: true,
+                title: "Selezionare i campi da abbinare",
+                icon: <Icon type="api" style={{ color: "var(--success)" }} />,
+                content: <div style={{ marginLeft: -38 }}>
+                    {
+                        fields.map(f => {
+                            return <div className="row mt-3 px-0">
+                                <div className="col-4">
+                                    <label className="mt-2">{f.label}: </label>
+                                </div>
+                                <div className="col">
+                                    <select className="custom-select pointer" style={{ height: 35 }} onChange={(e) => this.changeVarPos(e, f.field)}>
+                                        {this.renderOptions()}
+                                    </select>
+                                </div>
+                            </div>
+                        })
+                    }
+                </div>,
+                onOk: () => this.showImportPreview(),
+                okText: "Prosegui"
+            })
         }
 
         reader.readAsText(file, "ISO-8859-1")
 
         return false
+    }
+
+    showImportPreview = () => {
+        const { jumpFirstLine, fileContent, fields} = this.state
+
+        let rows = fileContent.split("\n"),
+        list: IStudent[] = [],
+        popup = document.getElementById("popup")
+
+        rows.forEach((r, i) => {
+            
+            if(i === 0 && jumpFirstLine)
+                return
+
+            let cells = this.splitCSV(r)
+
+            let student: IStudent = {
+                idCorso: this.props.corso,
+                nome: capitalizeFirst(cells[fields['nome']]),
+                cognome: capitalizeFirst(cells[fields['cognome']]),
+                annoIscrizione: Number(cells[fields['annoIscrizione']]),
+                cf: cells[fields['cf']],
+                dataNascita: formattaData(cells[fields['dataNascita']], true),
+                luogoNascita: "",
+                email: cells[fields['email']]
+            }
+
+            list.push(student)
+        })
+
+        this.setState({
+            addList: list
+        })
+
+        popup.classList.add("show")
     }
 
     checkUncheck = () => {
@@ -83,7 +170,15 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
         let popup = document.getElementById("popup")
 
         this.setState({
-            addList: []
+            addList: [],
+            fields: {
+                nome: 0,
+                cognome: 0,
+                cf: 0,
+                dataNascita: 0,
+                email: 0,
+                annoIscrizione: 0
+            }
         })
 
         popup.classList.remove("show")
@@ -151,7 +246,9 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                                                 <td style={{maxWidth: 0}} className="text-truncate">{s.cognome}</td>
                                             </Tooltip>
                                             <td style={{maxWidth: 0}} className="text-truncate">{s.annoIscrizione}</td>
-                                            <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
+                                            <Tooltip title={s.cf}>
+                                                <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
+                                            </Tooltip>
                                             <td style={{maxWidth: 0}} className="text-truncate">{s.dataNascita}</td>
                                             <Tooltip title={s.email}>
                                                 <td style={{maxWidth: 0}} className="text-truncate">{s.email}</td>

@@ -152,6 +152,9 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end{
     border-color: #266baf
   }
 }
+.fc-day-grid-event *, .event-bubble * {
+  pointer-events: none
+}
 .fc *, .event-bubble{
   font-family: "Segoe UI";
   font-size: initial;
@@ -222,7 +225,8 @@ table td, table th{
   font-size: 20px;
   cursor: pointer;
   margin-left: 0.7rem;
-  color: #888
+  color: #888;
+  pointer-events: all
 }
 .event-bubble .bubble-close:hover, .year-mark, .faq:hover{
   background: #f1f1f1
@@ -333,7 +337,7 @@ table td, table th{
 
   &.scaled{
     position: fixed;
-    transition: transform 0.5s, box-shadow 0s linear 0.5s;
+    transition: transform 0.2s ease, box-shadow 0s linear 0.2s;
     top: 100px;
     bottom: 100px;
     left: 100px;

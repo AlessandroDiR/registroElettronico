@@ -1,5 +1,5 @@
 import React from "react"
-import { Modal } from "antd";
+import { Modal, Icon, Spin } from "antd";
 import { routerHistory } from "../..";
 import { siteUrl } from "../../utilities";
 import Axios from "axios";
@@ -11,6 +11,7 @@ export interface IRouteParams{
 }
 export interface IProps extends RouteComponentProps<IRouteParams>{}
 export interface IState{
+    readonly corso: ICorso
     readonly nome: string
     readonly desc: string
     readonly luogo: string
@@ -22,6 +23,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         super(props)
 
         this.state = {
+            corso: null,
             nome: "",
             desc: "",
             luogo: ""
@@ -38,6 +40,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
             let corso = response.data as ICorso
 
             this.setState({
+                corso: corso,
                 nome: corso.nome,
                 desc: corso.desc,
                 luogo: corso.luogo
@@ -96,7 +99,15 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { nome, desc, luogo } = this.state
+        const { nome, desc, luogo, corso } = this.state
+
+        if(!corso){
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+
+            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+                <Spin indicator={icon} />
+            </div>
+        }
 
         return <div className="col-9 px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Modifica di un corso</h3>
