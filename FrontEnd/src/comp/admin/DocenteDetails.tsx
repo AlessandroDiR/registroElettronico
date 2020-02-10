@@ -61,7 +61,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
                 <h4 className="text-uppercase mb-2 text-truncate">{docente.nome} {docente.cognome}</h4>
                 <p className="mb-0"><strong>Codice Fiscale</strong>: {docente.cf}</p>
                 <p className="mb-0"><strong>Nascita</strong>: {docente.luogoNascita}, {formattaData(docente.dataNascita)}</p>
-                <p className="mb-0"><strong>Corso</strong>: {docente.corso}</p>
+                <p className="mb-0"><strong>E-mail</strong>: {docente.email}</p>
             </div>
 
             <h3 className="my-3">Lezioni tenute dal docente</h3>

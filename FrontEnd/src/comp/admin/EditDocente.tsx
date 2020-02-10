@@ -69,7 +69,8 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                 gNascita: getDateDay(doc.dataNascita),
                 mNascita: getDateMonth(doc.dataNascita),
                 aNascita: getDateYear(doc.dataNascita),
-                luogoNascita: doc.luogoNascita
+                luogoNascita: doc.luogoNascita,
+                materieSel: doc.insegnare.map(m => { return m.idMateria })
             })
         })
         

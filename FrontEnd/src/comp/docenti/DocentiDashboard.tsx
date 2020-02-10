@@ -5,7 +5,6 @@ import { Docente } from "../../models/DocenteModel";
 import LoginDocenti from "./LoginDocenti";
 import StudentsList from "./StudentsList"
 import StudentDetails from "./StudentDetails";
-import EditVoto from "./EditVoto";
 
 export default class DocentiDashboard extends React.Component{
 
