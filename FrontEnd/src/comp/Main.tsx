@@ -3,6 +3,8 @@ import { NavLink, Route, Router, Switch } from 'react-router-dom';
 import { routerHistory } from ".."
 import FirmaComponent from "./FirmaComponent";
 import LessonsCalendar from "./LessonsCalendar";
+import SceltaCorso from "./SceltaCorso";
+import SceltaClasse from "./SceltaClasse";
 
 export default class Main extends React.Component{
 
@@ -34,9 +36,18 @@ export default class Main extends React.Component{
 
                     
                         <Switch>
-                            <Route exact path="/firme/" render={() => (
-                                <FirmaComponent />
-                            )} />
+                            <Route exact path="/firme/" render={() => {
+                                let corso = sessionStorage.getItem("corso"),
+                                classe = sessionStorage.getItem("classe")
+
+                                if(!corso)
+                                    return <SceltaCorso />
+
+                                if(!classe)
+                                    return <SceltaClasse />
+
+                                return <FirmaComponent />
+                            }} />
 
                             <Route exact path="/firme/calendar" render={() => (
                                 <div className="col-9 px-5 py-4" id="mainBlock">

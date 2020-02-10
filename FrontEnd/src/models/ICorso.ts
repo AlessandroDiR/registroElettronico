@@ -3,4 +3,5 @@ export interface ICorso{
     readonly nome: string
     readonly desc: string
     readonly luogo: string
+    readonly logo: string
 }

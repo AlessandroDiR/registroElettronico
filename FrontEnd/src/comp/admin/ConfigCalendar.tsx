@@ -9,7 +9,6 @@ export interface IProps{
     readonly corso: number
 }
 export interface IState{
-    readonly corsi: ICorso[]
     readonly calendarId: string
     readonly apiKey: string
 }
@@ -19,7 +18,6 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
         super(props)
 
         this.state = {
-            corsi: null,
             calendarId: "",
             apiKey: ""
         }
@@ -30,14 +28,6 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
         /******************************************************/
         /* CARICARE LA CONFIGURAZIONE CORRENTE DEL CALENDARIO */
         /******************************************************/
-
-        Axios.get(siteUrl+"/reg/api?corsi").then(response => {
-            let corsi = response.data as ICorso[]
-
-            this.setState({
-                corsi: corsi
-            })
-        })
     }
 
     showHideModal = () => {
@@ -106,15 +96,7 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { corsi, calendarId, apiKey } = this.state
-        
-        if(!corsi){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
-
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
-                <Spin indicator={icon} />
-            </div>
-        }
+        const { calendarId, apiKey } = this.state
 
         return <div className="col-9 px-5 py-4 right-block">
             <h3 className="mb-2 text-center">

@@ -1,3 +1,6 @@
+import { resolve } from "dns"
+import { readFile } from "fs"
+
 export const siteUrl = "http://mygraphic.altervista.org"
 
 export const Digits2 = (n: number) => {
@@ -126,4 +129,36 @@ window.onclick = (event: any) => {
         if(current)
             body.removeChild(current)
     }
+}
+
+export const mountLogin = () => {
+    let body = document.getElementsByTagName("body")[0]
+
+    body.classList.add("login")
+}
+export const unmountLogin = () => {
+    let body = document.getElementsByTagName("body")[0]
+
+    body.classList.remove("login")
+}
+
+export const imageFileToBase64 = async (file: any) => {
+    function readImageFile(file: any){
+        return new Promise((resolve, reject) => {
+            let reader = new FileReader();
+        
+            reader.onload = e => {
+                let base64Img = new Buffer(e.target.result as any, "binary").toString("base64"),
+                src = "data:image/png;base64," + base64Img
+
+                resolve(src)
+            };
+        
+            reader.onerror = reject;
+        
+            reader.readAsArrayBuffer(file);
+        })     
+    }
+
+    return readImageFile(file)
 }

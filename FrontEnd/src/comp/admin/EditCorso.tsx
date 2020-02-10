@@ -1,7 +1,7 @@
 import React from "react"
-import { Modal, Icon, Spin } from "antd";
+import { Modal, Icon, Spin, Upload } from "antd";
 import { routerHistory } from "../..";
-import { siteUrl } from "../../utilities";
+import { siteUrl, imageFileToBase64 } from "../../utilities";
 import Axios from "axios";
 import { RouteComponentProps } from "react-router-dom";
 import { ICorso } from "../../models/ICorso";
@@ -15,6 +15,7 @@ export interface IState{
     readonly nome: string
     readonly desc: string
     readonly luogo: string
+    readonly logo: string
 }
 
 export default class EditCorso extends React.PureComponent<IProps, IState>{
@@ -26,7 +27,8 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
             corso: null,
             nome: "",
             desc: "",
-            luogo: ""
+            luogo: "",
+            logo: null
         }
     }
 
@@ -43,7 +45,8 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
                 corso: corso,
                 nome: corso.nome,
                 desc: corso.desc,
-                luogo: corso.luogo
+                luogo: corso.luogo,
+                logo: corso.logo
             })
         })
     }
@@ -98,8 +101,24 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
 
     }
 
+    convertImage = (file: any) => {
+        imageFileToBase64(file).then(result => {
+            this.setState({
+                logo: String(result)
+            })
+        })
+
+        return false
+    }
+
     render(): JSX.Element{
-        const { nome, desc, luogo, corso } = this.state
+        const { nome, desc, luogo, corso, logo } = this.state,
+        uploadButton = (
+            <div>
+                <Icon type="plus" style={{ fontSize: 30, marginBottom: 5 }} />
+                <div className="ant-upload-text">Carica immagine</div>
+            </div>
+        )
 
         if(!corso){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
@@ -112,22 +131,31 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         return <div className="col-9 px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Modifica di un corso</h3>
 
-            <form>
-                <div className="form-group row">
-                    <div className="col">
-                        <label className="text-secondary">Nome</label>
-                        <input type="text" className="form-control" value={nome} onChange={this.changeNome} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">Luogo</label>
-                        <input type="text" className="form-control" value={luogo} onChange={this.changeLuogo} />
-                    </div>
+            <form className="row">
+                <div className="form-group mr-3">
+                    <label className="text-secondary d-block">Logo</label>
+                    <Upload listType="picture-card" showUploadList={false} beforeUpload={(file) => this.convertImage(file)} className="logo-upload" accept="image/*">
+                        {logo ? <img src={logo} alt="logo" style={{ width: '100%' }} /> : uploadButton}
+                    </Upload>
                 </div>
 
-                <div className="form-group row">
-                    <div className="col">
-                        <label className="text-secondary">Breve descrizione</label>
-                        <input type="text" className="form-control" value={desc} onChange={this.changeDesc} />
+                <div className="col">
+                    <div className="form-group row">
+                        <div className="col">
+                            <label className="text-secondary">Nome</label>
+                            <input type="text" className="form-control" value={nome} onChange={this.changeNome} />
+                        </div>
+                        <div className="col">
+                            <label className="text-secondary">Luogo</label>
+                            <input type="text" className="form-control" value={luogo} onChange={this.changeLuogo} />
+                        </div>
+                    </div>
+
+                    <div className="form-group row">
+                        <div className="col">
+                            <label className="text-secondary">Breve descrizione</label>
+                            <textarea className="form-control" rows={2} onChange={this.changeDesc}>{desc}</textarea>
+                        </div>
                     </div>
                 </div>
 

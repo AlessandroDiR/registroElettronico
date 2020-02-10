@@ -1,9 +1,8 @@
 import React from "react"
-import { Modal, Spin, Icon, Checkbox } from "antd";
+import { Modal, Upload, Icon } from "antd";
 import { routerHistory } from "../..";
-import { isValidData, siteUrl } from "../../utilities";
+import { siteUrl, imageFileToBase64 } from "../../utilities";
 import Axios from "axios";
-import { IMateria } from "../../models/IMateria";
 import { ICorso } from "../../models/ICorso";
 
 export interface IProps{}
@@ -11,6 +10,7 @@ export interface IState{
     readonly nome: string
     readonly desc: string
     readonly luogo: string
+    readonly logo: string
 }
 
 export default class AddNewCorso extends React.PureComponent<IProps, IState>{
@@ -21,7 +21,8 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
         this.state = {
             nome: "",
             desc: "",
-            luogo: ""
+            luogo: "",
+            logo: null
         }
     }
 
@@ -51,6 +52,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
 
     aggiungiCorso = () => {
         const { nome, desc, luogo } = this.state
+        let corso = {...this.state} as ICorso
 
         if(nome === "" || desc === "" || luogo === ""){
             Modal.error({
@@ -75,31 +77,56 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
 
     }
 
+    convertImage = (file: any) => {
+        imageFileToBase64(file).then(result => {
+            this.setState({
+                logo: String(result)
+            })
+        })
+
+        return false
+    }
+
     render(): JSX.Element{
-        const { nome, desc, luogo } = this.state
+        const { nome, desc, luogo, logo } = this.state,
+        uploadButton = (
+            <div>
+                <Icon type="plus" style={{ fontSize: 30, marginBottom: 5 }} />
+                <div className="ant-upload-text">Carica immagine</div>
+            </div>
+        )
 
         return <div className="col-9 px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo corso</h3>
 
-            <form>
-                <div className="form-group row">
-                    <div className="col">
-                        <label className="text-secondary">Nome</label>
-                        <input type="text" className="form-control" value={nome} onChange={this.changeNome} />
+            <form className="row">
+
+                <div className="form-group mr-3">
+                    <label className="text-secondary d-block">Logo</label>
+                    <Upload listType="picture-card" showUploadList={false} beforeUpload={(file) => this.convertImage(file)} className="logo-upload" accept="image/*">
+                        {logo ? <img src={logo} alt="logo" style={{ width: '100%' }} /> : uploadButton}
+                    </Upload>
+                </div>
+                
+                <div className="col">
+                    <div className="form-group row">
+                        <div className="col">
+                            <label className="text-secondary">Nome</label>
+                            <input type="text" className="form-control" value={nome} onChange={this.changeNome} />
+                        </div>
+                        <div className="col pr-0">
+                            <label className="text-secondary">Luogo</label>
+                            <input type="text" className="form-control" value={luogo} onChange={this.changeLuogo} />
+                        </div>
                     </div>
-                    <div className="col">
-                        <label className="text-secondary">Luogo</label>
-                        <input type="text" className="form-control" value={luogo} onChange={this.changeLuogo} />
+
+                    <div className="form-group row">
+                        <div className="col pr-0">
+                            <label className="text-secondary">Breve descrizione</label>
+                            <textarea className="form-control" rows={2} onChange={this.changeDesc}>{desc}</textarea>
+                        </div>
                     </div>
                 </div>
-
-                <div className="form-group row">
-                    <div className="col">
-                        <label className="text-secondary">Breve descrizione</label>
-                        <input type="text" className="form-control" value={desc} onChange={this.changeDesc} />
-                    </div>
-                </div>
-
                 <button type="button" className="btn btn-success text-uppercase w-100" onClick={this.aggiungiCorso}>Aggiungi corso</button>
             </form>
         </div>
