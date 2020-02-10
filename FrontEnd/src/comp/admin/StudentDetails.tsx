@@ -80,7 +80,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                     <h4 className="text-uppercase mb-2 text-truncate">{student.nome} {student.cognome}</h4>
                     <p className="mb-0"><strong>Codice Fiscale</strong>: {student.cf}</p>
                     <p className="mb-0"><strong>Nascita</strong>: {student.luogoNascita}, {formattaData(student.dataNascita)}</p>
-                    <p className="mb-0"><strong>Corso</strong>: {student.email}</p>
+                    <p className="mb-0"><strong>E-mail</strong>: {student.email}</p>
                 </div>
 
                 <div className="col-5 p-3 bg-white border" style={{borderRadius: 5}}>
