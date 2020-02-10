@@ -1,6 +1,3 @@
-import { resolve } from "dns"
-import { readFile } from "fs"
-
 export const siteUrl = "http://mygraphic.altervista.org"
 
 export const Digits2 = (n: number) => {
