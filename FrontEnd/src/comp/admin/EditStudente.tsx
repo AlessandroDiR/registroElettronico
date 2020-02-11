@@ -1,7 +1,7 @@
 import React from "react"
 import { Modal, Icon, Spin } from "antd";
 import { routerHistory } from "../..";
-import { getDateDay, getDateMonth, getDateYear, isValidData } from "../../utilities";
+import { getDateDay, getDateMonth, getDateYear, isValidData, siteUrl } from "../../utilities";
 import Axios from "axios";
 import { RouteComponentProps } from "react-router-dom";
 import { IStudent } from "../../models/IStudent";
@@ -46,7 +46,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push("/adminpanel")
 
-        Axios.get("http://localhost/reg/api?studente&id=" + id).then((response) => {
+        Axios.get(siteUrl+"/api/studenti/getstudentibyid/" + id).then((response) => {
             let stu = response.data as IStudent
 
             this.setState({
@@ -118,7 +118,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
         })
     }
 
-    aggiungiDocente = () => {
+    modificaStudente = () => {
         const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF } = this.state
         let giorno = Number(gNascita),
         mese = Number(mNascita),
@@ -217,7 +217,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
                     </div>
                 </div>
 
-                <button type="button" className="btn btn-success text-uppercase w-100" onClick={this.aggiungiDocente}>Modifica studente</button>
+                <button type="button" className="btn btn-success text-uppercase w-100" onClick={this.modificaStudente}>Modifica studente</button>
             </form>
         </div>
     }

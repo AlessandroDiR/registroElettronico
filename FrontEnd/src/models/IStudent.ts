@@ -1,10 +1,12 @@
 export interface IStudent{
-    readonly id?: number
-    readonly corso: number
+    readonly idStudente?: number
+    readonly email: string
+    readonly idCorso: number
     readonly nome: string
     readonly cognome: string
-    readonly anno: number
+    readonly annoIscrizione: number
     readonly cf: string
+    readonly password?: string
     readonly dataNascita: string
     readonly luogoNascita: string
     readonly code?: string

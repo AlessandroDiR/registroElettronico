@@ -1,8 +1,8 @@
 import React from "react"
 import axios from "axios"
 import { routerHistory } from "../.."
-import { Admin } from "../../models/AdminModel"
 import { message } from "antd"
+import { Docente } from "../../models/DocenteModel"
 import { mountLogin, unmountLogin } from "../../utilities"
 
 export interface IProps{}
@@ -11,7 +11,7 @@ export interface IState{
     readonly adminPsw: string
 }
 
-export default class LoginComponent extends React.PureComponent<IProps, IState>{
+export default class LoginDocenti extends React.PureComponent<IProps, IState>{
     constructor(props: IProps){
         super(props)
 
@@ -48,15 +48,15 @@ export default class LoginComponent extends React.PureComponent<IProps, IState>{
     tryLogin = () => {
         const { adminName, adminPsw } = this.state
 
-        if(adminName === "admin" && adminPsw === "admin"){
-            sessionStorage.setItem("adminSession", JSON.stringify(new Admin(1, "Luca", "Arcangeli")))
-            routerHistory.push("/adminpanel/")
+        if(adminName === "doc" && adminPsw === "doc"){
+            sessionStorage.setItem("docenteSession", JSON.stringify(new Docente(1, 1, "Luca", "Arcangeli")))
+            routerHistory.push("/docentipanel/")
             message.success("Login effettuato con successo!")
         }
 
         /*************************************************/
         /* FARE RICHIESTA PER CONTROLLARE SE adminName   */
-        /* a adminPsw CORRISPONDONO AD UN AMMINISTRATORE */
+        /* a adminPsw CORRISPONDONO AD UN Docente        */
         /*************************************************/
     }
 

@@ -1,3 +1,5 @@
+export const siteUrl = "http://mygraphic.altervista.org"
+
 export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n
 }
@@ -54,8 +56,9 @@ export const hideAll = () => {
     })
 }
 
-export const formattaData = (d: string) => {
-    let date = new Date(d)
+export const formattaData = (d: string, convert?: boolean) => {
+    let from = d.split(/[/-]/g),
+    date = convert ? new Date(Number(from[2]), Number(from[1]) - 1, Number(from[0])) : new Date(d)
 
     return Digits2(date.getDate()) + "-" + Digits2(date.getMonth() + 1) + "-" + date.getFullYear()
 }
@@ -69,7 +72,7 @@ export const getDateDay = (d: string) => {
 export const getDateMonth = (d: string) => {
     let date = new Date(d)
 
-    return Digits2(date.getMonth()).toString()
+    return Digits2(date.getMonth() + 1).toString()
 }
 
 export const getDateYear = (d: string) => {
@@ -83,4 +86,76 @@ export const isValidData = (g: number, m: number, a: number) => {
         return false
 
     return true
+}
+
+export const capitalizeFirst = (name: string) => {
+    let splitStr = capitalizeQuote(name.toLowerCase()).split(' ')
+
+    for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);    
+    }
+   
+    return splitStr.join(' '); 
+}
+
+export const capitalizeQuote = (name: string) => {
+    let splitStr = name.toLowerCase().split("'")
+
+    for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);    
+    }
+   
+    return splitStr.join("'"); 
+}
+
+export const fixTotPresenze = (time: string) => {
+    let pieces = time.split(":"),
+    mins = Number(pieces[1]),
+    prop = mins / 60
+
+    return (Number(pieces[0]) + prop)
+}
+
+window.onclick = (event: any) => {
+    let html = event.target as HTMLElement
+
+    if(!html.classList.contains("fc-day-grid-event") && !html.classList.contains("event-bubble")){
+        let current = document.getElementById("bubble"),
+        body = document.getElementsByTagName("body")[0]
+        
+        if(current)
+            body.removeChild(current)
+    }
+}
+
+export const mountLogin = () => {
+    let body = document.getElementsByTagName("body")[0]
+
+    body.classList.add("login")
+}
+export const unmountLogin = () => {
+    let body = document.getElementsByTagName("body")[0]
+
+    body.classList.remove("login")
+}
+
+export const imageFileToBase64 = async (file: any) => {
+    function readImageFile(file: any){
+        return new Promise((resolve, reject) => {
+            let reader = new FileReader();
+        
+            reader.onload = e => {
+                let base64Img = new Buffer(e.target.result as any, "binary").toString("base64"),
+                src = "data:image/png;base64," + base64Img
+
+                resolve(src)
+            };
+        
+            reader.onerror = reject;
+        
+            reader.readAsArrayBuffer(file);
+        })     
+    }
+
+    return readImageFile(file)
 }

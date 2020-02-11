@@ -6,19 +6,31 @@ $mobilecolor: #1999e4;
 
 $theme-colors: (
   "orange": #f57723,
-  "warning": #ffbb00
+  "warning": #ffbb00,
+  "blue": #1e99d5
 );
 
 @import "node_modules/bootstrap/scss/bootstrap";
 
 *{
-  outline: none !important
+  outline: none !important;
+  resize: none !important
 }
 body{
   font: 400 14px "Poppins";
   min-height: 100vh;
   background-color: $bodycolor;
-  color: #000
+  color: #000;
+
+  &.login{
+    background-image: url('https://wallpaperaccess.com/full/690151.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    & .menu{
+      display: none
+    }
+  }
 }
 .text-black{
   color: #000 !important
@@ -151,6 +163,9 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end{
     border-color: #266baf
   }
 }
+.fc-day-grid-event *, .event-bubble * {
+  pointer-events: none
+}
 .fc *, .event-bubble{
   font-family: "Segoe UI";
   font-size: initial;
@@ -210,7 +225,7 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end{
 table td, table th{
   vertical-align: middle !important
 }
-.event-bubble .bubble-close, .year-mark{
+.event-bubble .bubble-close, .year-mark, .faq{
   border-radius: 50px;
   width: 35px;
   height: 35px;
@@ -221,9 +236,10 @@ table td, table th{
   font-size: 20px;
   cursor: pointer;
   margin-left: 0.7rem;
-  color: #888
+  color: #888;
+  pointer-events: all
 }
-.event-bubble .bubble-close:hover, .year-mark{
+.event-bubble .bubble-close:hover, .year-mark, .faq:hover{
   background: #f1f1f1
 }
 .edit-time{
@@ -283,7 +299,8 @@ table td, table th{
   & .router-link{
     color: darken($mobilecolor, 15%) !important;
     font-weight: 500;
-    font-size: 80%;
+    font-size: 65%;
+    padding: 1rem;
 
     & span{
       display: flex;
@@ -302,5 +319,60 @@ table td, table th{
     &.active:after{
       display: none
     }
+  }
+}
+.multiselect{
+  height: 100px !important;
+  overflow: auto;
+  
+  .option{
+    display: block;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    margin: 0;
+
+    &.checked{
+      background: #eee
+    }
+  }
+}
+.imagescale{
+  cursor: pointer;
+  margin-right: 1rem;
+  box-shadow: none;
+  border-radius: 0.2rem;
+
+  &:hover{
+    box-shadow: 0 0 2px 2px rgba(0,0,0,0.2)
+  }
+
+  &.scaled{
+    position: fixed;
+    transition: transform 0.2s ease, box-shadow 0s linear 0.2s;
+    top: 100px;
+    bottom: 100px;
+    left: 100px;
+    right: 100px;
+    margin: auto;
+    transform: scale(4.5);
+    box-shadow: 0 0 0 100px rgba(0,0,0,0.4);
+    z-index: 2
+  }
+}
+.corso-item{
+  font-size: 20px;
+  text-transform: uppercase;
+
+  &:hover{
+    background: #eee
+  }
+}
+.logo-upload{
+  width: auto;
+  
+  & .ant-upload-select{
+    height: 145px !important;
+    width: 145px !important;
+    margin: 0 !important 
   }
 }

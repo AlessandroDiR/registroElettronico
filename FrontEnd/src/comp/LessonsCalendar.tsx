@@ -7,27 +7,20 @@ import { Digits2 } from '../utilities';
 import '@fullcalendar/core/main.css'
 import '@fullcalendar/timegrid/main.css';
 
-export default class LessonsCalendar extends React.Component {
+export interface IProps{
+    readonly corso?: number
+}
+export interface IState{
+    // variabile che prende il calendario, da caricare in base al corso
+}
 
-    closeBubble = () => {
-        let current = document.getElementById("bubble"),
-        body = document.getElementsByTagName("body")[0]
-        
-        if(current)
-            body.removeChild(current)
-    }
-
-    componentWillUnmount = () => {
-        this.closeBubble()
-    }
+export default class LessonsCalendar extends React.PureComponent<IProps, IState> {
 
     render() {
-        let self = this
-
         return <FullCalendar
                 plugins={[ googleCalendarPlugin, dayGridPlugin ]}
                 events={ { googleCalendarId: 'ckhj7iqj3msae4i4ietm5ip1cg@group.calendar.google.com'} }
-                googleCalendarApiKey={'AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs'}
+                googleCalendarApiKey={'AIzaSyCEEaAbHOYhofQs-iLdHd_J8-KyD_IlRbE'}
                 defaultView="dayGridMonth"
                 fixedWeekCount={false}
                 header={false}
@@ -74,16 +67,12 @@ export default class LessonsCalendar extends React.Component {
                         bubble.style.left = x + "px"
                     
                         let current = document.getElementById("bubble"),
-                        body = document.getElementsByTagName("body")[0],
-                        children = bubble.childNodes[0]
+                        body = document.getElementsByTagName("body")[0]
                         
                         if(current)
                             body.removeChild(current)
 
                         body.appendChild(bubble)
-
-                        children.removeEventListener("click", self.closeBubble)
-                        children.addEventListener("click", self.closeBubble)
 
                         let newBubble = document.getElementById("bubble")
                         

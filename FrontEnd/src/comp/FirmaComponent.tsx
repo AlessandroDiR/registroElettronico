@@ -8,7 +8,7 @@ export interface IState{
     readonly popup: IMessage
 }
 
-export default class HomeComponent extends React.PureComponent<IProps, IState>{
+export default class FirmaComponent extends React.PureComponent<IProps, IState>{
     constructor(props: IProps){
         super(props)
 

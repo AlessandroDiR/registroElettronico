@@ -12,16 +12,21 @@ import DocenteDetails from "./DocenteDetails";
 import EditDocente from "./EditDocente";
 import EditStudente from "./EditStudente";
 import StudentsImport from "./StudentsImport";
+import CorsiList from "./CorsiList";
+import AddNewCorso from "./AddNewCorso";
+import EditCorso from "./EditCorso";
+import MaterieList from "./MaterieList";
+import ConfigCalendar from "./ConfigCalendar";
 
 export default class Dashboard extends React.Component{
 
     componentWillUnmount = () => {
-        localStorage.removeItem("session")
+        sessionStorage.removeItem("adminSession")
     }
 
     render(): JSX.Element{
 
-        let session = localStorage.getItem("session")
+        let session = sessionStorage.getItem("adminSession")
         
         if(!session)
             return <LoginComponent />
@@ -31,7 +36,7 @@ export default class Dashboard extends React.Component{
         return <div className="container-fluid">
             <Router history={routerHistory}>
                 <div className="row">
-                    <div className="col-12 col-lg-3 bg-danger p-0 menu">
+                    <div className="col-12 col-lg-3 bg-blue p-0 menu">
                         <div className="logo-block px-3 py-4">
                             <img src="https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png" height="100" className="mx-auto d-block logo" alt="logo" />
                         </div>
@@ -42,8 +47,17 @@ export default class Dashboard extends React.Component{
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/adminpanel/docenti")} to="/adminpanel/docenti">
                             <span>Docenti</span>
                         </NavLink>
+                        <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/adminpanel/corsi")} to="/adminpanel/corsi">
+                            <span>Corsi</span>
+                        </NavLink>
+                        <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/adminpanel/materie")} to="/adminpanel/materie">
+                            <span>Materie</span>
+                        </NavLink>
+                        <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/adminpanel/config")} to="/adminpanel/config">
+                            <span>Configura calendario</span>
+                        </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => {
-                            localStorage.removeItem("session")
+                            sessionStorage.removeItem("session")
                             routerHistory.push("/adminpanel")
                         }} exact to="/adminpanel/login">
                             <span>Esci</span>
@@ -92,6 +106,26 @@ export default class Dashboard extends React.Component{
 
                             <Route exact path="/adminpanel/docenti/edit/:id" render={(routeProps) => (
                                 <EditDocente {...routeProps} corso={admin.corso} />
+                            )} />
+
+                            <Route exact path="/adminpanel/corsi" render={() => (
+                                <CorsiList />
+                            )} />
+
+                            <Route exact path="/adminpanel/corsi/new" render={() => (
+                                <AddNewCorso />
+                            )} />
+
+                            <Route exact path="/adminpanel/corsi/edit/:id" render={(routeProps) => (
+                                <EditCorso {...routeProps} />
+                            )} />
+
+                            <Route exact path="/adminpanel/materie" render={() => (
+                                <MaterieList />
+                            )} />
+
+                            <Route exact path="/adminpanel/config" render={() => (
+                                <ConfigCalendar corso={admin.corso} />
                             )} />
 
                         </Switch>
