@@ -1,6 +1,7 @@
 import React from "react"
 import axios from "axios"
 import { IMessage, genericError } from "../models/IMessage"
+import { siteUrl } from "../utilities"
 
 export interface IProps{}
 export interface IState{
@@ -29,7 +30,7 @@ export default class FirmaComponent extends React.PureComponent<IProps, IState>{
     }
 
     tryToLog = (code: string) => {
-        axios.get("https://192.168.43.21:44336/api/studenti/firma/" + code).then((response) => {
+        axios.get(siteUrl + "/api/studenti/firma/" + code).then((response) => {
             this.setState({
                 popup: response.data as IMessage
             })
