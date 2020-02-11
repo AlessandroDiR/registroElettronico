@@ -20,7 +20,7 @@ export default class CorsiList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/reg/api?corsi").then(response => {
+        Axios.get(siteUrl+"/api/corsi").then(response => {
             let corsi = response.data as ICorso[]
 
             this.setState({
