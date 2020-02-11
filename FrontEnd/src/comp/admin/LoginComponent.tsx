@@ -3,6 +3,7 @@ import axios from "axios"
 import { routerHistory } from "../.."
 import { Admin } from "../../models/AdminModel"
 import { message } from "antd"
+import { mountLogin, unmountLogin } from "../../utilities"
 
 export interface IProps{}
 export interface IState{
@@ -18,6 +19,14 @@ export default class LoginComponent extends React.PureComponent<IProps, IState>{
             adminName: "",
             adminPsw: ""
         }
+    }
+
+    componentDidMount = () => {
+        mountLogin()
+    }
+
+    componentWillUnmount = () => {
+        unmountLogin()
     }
 
     changeInputName = (event: any) => {
@@ -40,7 +49,7 @@ export default class LoginComponent extends React.PureComponent<IProps, IState>{
         const { adminName, adminPsw } = this.state
 
         if(adminName === "admin" && adminPsw === "admin"){
-            localStorage.setItem("session", JSON.stringify(new Admin(1, "Luca", "Arcangeli")))
+            sessionStorage.setItem("adminSession", JSON.stringify(new Admin(1, "Luca", "Arcangeli")))
             routerHistory.push("/adminpanel/")
             message.success("Login effettuato con successo!")
         }
@@ -55,7 +64,7 @@ export default class LoginComponent extends React.PureComponent<IProps, IState>{
         const { adminName, adminPsw } = this.state
 
         return <div className="col-5 mx-auto" id="loginBlock">
-            <form className="w-100" onSubmit={this.tryLogin}>
+            <form className="w-100 bg-white p-3 rounded shadow" onSubmit={this.tryLogin}>
                 <h3 className="text-center">Effettua il login</h3>
 
                 <div className="form-group">

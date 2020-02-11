@@ -9,12 +9,12 @@ import StudentDetails from "./StudentDetails";
 export default class DocentiDashboard extends React.Component{
 
     componentWillUnmount = () => {
-        localStorage.removeItem("docenteSession")
+        sessionStorage.removeItem("docenteSession")
     }
 
     render(): JSX.Element{
 
-        let session = localStorage.getItem("docenteSession")
+        let session = sessionStorage.getItem("docenteSession")
         
         if(!session)
             return <LoginDocenti />
@@ -33,7 +33,7 @@ export default class DocentiDashboard extends React.Component{
                             <span>Studenti</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => {
-                            localStorage.removeItem("docenteSession")
+                            sessionStorage.removeItem("docenteSession")
                             routerHistory.push("/docentipanel")
                         }} exact to="/docentipanel/login">
                             <span>Esci</span>

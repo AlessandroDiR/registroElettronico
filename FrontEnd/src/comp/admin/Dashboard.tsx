@@ -21,12 +21,12 @@ import ConfigCalendar from "./ConfigCalendar";
 export default class Dashboard extends React.Component{
 
     componentWillUnmount = () => {
-        localStorage.removeItem("session")
+        sessionStorage.removeItem("adminSession")
     }
 
     render(): JSX.Element{
 
-        let session = localStorage.getItem("session")
+        let session = sessionStorage.getItem("adminSession")
         
         if(!session)
             return <LoginComponent />
@@ -57,7 +57,7 @@ export default class Dashboard extends React.Component{
                             <span>Configura calendario</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => {
-                            localStorage.removeItem("session")
+                            sessionStorage.removeItem("session")
                             routerHistory.push("/adminpanel")
                         }} exact to="/adminpanel/login">
                             <span>Esci</span>

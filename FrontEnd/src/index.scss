@@ -13,13 +13,24 @@ $theme-colors: (
 @import "node_modules/bootstrap/scss/bootstrap";
 
 *{
-  outline: none !important
+  outline: none !important;
+  resize: none !important
 }
 body{
   font: 400 14px "Poppins";
   min-height: 100vh;
   background-color: $bodycolor;
-  color: #000
+  color: #000;
+
+  &.login{
+    background-image: url('https://wallpaperaccess.com/full/690151.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    & .menu{
+      display: none
+    }
+  }
 }
 .text-black{
   color: #000 !important
@@ -346,5 +357,22 @@ table td, table th{
     transform: scale(4.5);
     box-shadow: 0 0 0 100px rgba(0,0,0,0.4);
     z-index: 2
+  }
+}
+.corso-item{
+  font-size: 20px;
+  text-transform: uppercase;
+
+  &:hover{
+    background: #eee
+  }
+}
+.logo-upload{
+  width: auto;
+  
+  & .ant-upload-select{
+    height: 145px !important;
+    width: 145px !important;
+    margin: 0 !important 
   }
 }

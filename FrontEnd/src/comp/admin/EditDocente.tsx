@@ -58,7 +58,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push("/adminpanel")
 
-        Axios.get(siteUrl+"/api/docenti/GetDocentiById/" + id).then((response) => {
+        Axios.get(siteUrl+"/reg/api?docente&id=" + id).then((response) => {
             let doc = response.data as IDocente
 
             this.setState({
@@ -74,7 +74,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             })
         })
         
-        Axios.get(siteUrl+"/api/materie").then((response) => {
+        Axios.get(siteUrl+"/reg/api?materie").then((response) => {
             let materie = response.data as IMateria[]
             
             this.setState({
@@ -82,7 +82,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             })
         })
 
-        Axios.get(siteUrl+"/api/corsi").then((response) => {
+        Axios.get(siteUrl+"/reg/api?corsi").then((response) => {
             let corsi = response.data as ICorso[]
             
             this.setState({
@@ -96,6 +96,14 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
 
         this.setState({
             nome: nome
+        })
+    }
+
+    changeEmail = (event: any) => {
+        let email = event.target.value
+
+        this.setState({
+            email: email
         })
     }
 
@@ -148,7 +156,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
     }
 
     modificaDocente = () => {
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, email } = this.state
+        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, email, corsiSel, materieSel } = this.state
         let giorno = Number(gNascita),
         mese = Number(mNascita),
         anno = Number(aNascita)
@@ -157,6 +165,24 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
+            })
+
+            return
+        }
+
+        if(!materieSel.length){
+            Modal.error({
+                title: "Errore!",
+                content: "Scegliere almeno una materia."
+            })
+
+            return
+        }
+
+        if(!corsiSel.length){
+            Modal.error({
+                title: "Errore!",
+                content: "Scegliere almeno un corso."
             })
 
             return
@@ -235,6 +261,10 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
                         <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
+                    </div>
+                    <div className="col">
+                        <label className="text-secondary">E-mail</label>
+                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                 </div>
 
