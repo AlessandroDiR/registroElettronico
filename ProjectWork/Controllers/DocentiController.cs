@@ -215,11 +215,14 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
-            var t = _context.Tenere.Where(d => d.IdDocente == id);
-            _context.Tenere.RemoveRange(t);
-            var i = _context.Insegnare.Where(d => d.IdDocente == id);
-            _context.Insegnare.RemoveRange(i);
-            _context.Docenti.Remove(docenti);
+            docenti.Ritirato = "True";
+
+            //var t = _context.Tenere.Where(d => d.IdDocente == id);
+            //_context.Tenere.RemoveRange(t);
+            //var i = _context.Insegnare.Where(d => d.IdDocente == id);
+            //_context.Insegnare.RemoveRange(i);
+            //_context.Docenti.Remove(docenti);
+            _context.Entry(docenti).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return Ok(docenti);
