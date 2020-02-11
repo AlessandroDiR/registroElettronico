@@ -122,11 +122,13 @@ namespace ProjectWork.Controllers
             {
                 return CreatedAtAction("GetCorsi", "Corso inesistente");
             }
+
             foreach (var item in corsi.Comprende)
             {
                 item.IdCorso = cor.IdCorso;
             }
             _context.Comprende.AddRange(corsi.Comprende);
+
             _context.Corsi.Add(corsi);
             await _context.SaveChangesAsync();
 

@@ -43,12 +43,6 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
-            //var t = _context.Tenere.Where(d => d.IdDocente == id);
-
-            //foreach (var i in t)
-            //{
-            //    docenti.Tenere.Add(i);
-            //}
 
             return Ok(docenti);
         }
