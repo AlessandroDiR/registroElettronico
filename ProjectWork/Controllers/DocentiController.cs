@@ -62,7 +62,7 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            var docenti = _context.Docenti.Where(d => d.Cf == cf).FirstOrDefault();
+            var docenti = await _context.Docenti.FirstOrDefaultAsync(d => d.Cf == cf);
 
             if (docenti == null)
             {
