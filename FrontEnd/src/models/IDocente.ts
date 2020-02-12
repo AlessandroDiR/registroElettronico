@@ -1,4 +1,5 @@
 import { IMateria } from "./IMateria";
+import { ICorso } from "./ICorso";
 
 export interface IDocente{
     readonly idDocente: number
@@ -10,5 +11,6 @@ export interface IDocente{
     readonly dataNascita: string
     readonly luogoNascita: string
     readonly insegnare: IMateria[]
+    readonly tenere: ICorso[]
     readonly password?: string
 }

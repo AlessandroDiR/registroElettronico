@@ -13,7 +13,7 @@ export interface IProps extends RouteComponentProps<IRouteParams>{}
 export interface IState{
     readonly corso: ICorso
     readonly nome: string
-    readonly desc: string
+    readonly descrizione: string
     readonly luogo: string
     readonly logo: string
 }
@@ -26,7 +26,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         this.state = {
             corso: null,
             nome: "",
-            desc: "",
+            descrizione: "",
             luogo: "",
             logo: null
         }
@@ -38,13 +38,13 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push("/adminpanel")
 
-        Axios.get(siteUrl+"/reg/api?corso&id=" + id).then((response) => {
+        Axios.get(siteUrl+"/api/corsi/" + id).then((response) => {
             let corso = response.data as ICorso
 
             this.setState({
                 corso: corso,
                 nome: corso.nome,
-                desc: corso.desc,
+                descrizione: corso.descrizione,
                 luogo: corso.luogo,
                 logo: corso.logo
             })
@@ -63,7 +63,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         let desc = event.target.value
 
         this.setState({
-            desc: desc
+            descrizione: desc
         })
     }
 
@@ -76,9 +76,9 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
     }
 
     modificaCorso = () => {
-        const { nome, desc, luogo } = this.state
+        const { nome, descrizione, luogo } = this.state
 
-        if(nome === "" || desc === "" || luogo === ""){
+        if(nome === "" || descrizione === "" || luogo === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -112,7 +112,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { nome, desc, luogo, corso, logo } = this.state,
+        const { nome, descrizione, luogo, corso, logo } = this.state,
         uploadButton = (
             <div>
                 <Icon type="plus" style={{ fontSize: 30, marginBottom: 5 }} />
@@ -154,7 +154,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
                     <div className="form-group row">
                         <div className="col">
                             <label className="text-secondary">Breve descrizione</label>
-                            <textarea className="form-control" rows={2} onChange={this.changeDesc}>{desc}</textarea>
+                            <textarea className="form-control" rows={2} onChange={this.changeDesc}>{descrizione}</textarea>
                         </div>
                     </div>
                 </div>

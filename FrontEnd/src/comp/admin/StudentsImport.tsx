@@ -3,7 +3,8 @@ import Dragger from "antd/lib/upload/Dragger"
 import { IStudent } from "../../models/IStudent"
 import { Checkbox, Modal, Tooltip, Icon } from "antd"
 import { routerHistory } from "../.."
-import { formattaData, capitalizeFirst } from "../../utilities"
+import { formattaData, capitalizeFirst, siteUrl } from "../../utilities"
+import Axios from "axios"
 
 export interface IProps{
     readonly corso: number
@@ -147,7 +148,8 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 cf: cells[fields['cf']],
                 dataNascita: formattaData(cells[fields['dataNascita']], true),
                 luogoNascita: "",
-                email: cells[fields['email']]
+                email: cells[fields['email']],
+                password: cells[fields['cf']]
             }
 
             list.push(student)
@@ -185,16 +187,14 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
     }
 
     confirmImport = () => {
-        /*************************************/
-        /* INSERIMENTO DI this.state.addList */
-        /*************************************/
-
-        Modal.success({
-            title: "Congratulazioni!",
-            content: "Importazione eseguita con successo.",
-            onOk: () => {
-                routerHistory.push("/adminpanel/studenti")
-            }
+        Axios.post(siteUrl+"/api/studenti", this.state.addList).then(response => {
+            Modal.success({
+                title: "Congratulazioni!",
+                content: "Importazione eseguita con successo.",
+                onOk: () => {
+                    routerHistory.push("/adminpanel/studenti")
+                }
+            })
         })
     }
 

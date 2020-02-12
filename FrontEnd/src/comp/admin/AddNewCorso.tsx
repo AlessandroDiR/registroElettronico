@@ -8,7 +8,7 @@ import { ICorso } from "../../models/ICorso";
 export interface IProps{}
 export interface IState{
     readonly nome: string
-    readonly desc: string
+    readonly descrizione: string
     readonly luogo: string
     readonly logo: string
 }
@@ -20,7 +20,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
 
         this.state = {
             nome: "",
-            desc: "",
+            descrizione: "",
             luogo: "",
             logo: null
         }
@@ -38,7 +38,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
         let desc = event.target.value
 
         this.setState({
-            desc: desc
+            descrizione: desc
         })
     }
 
@@ -51,10 +51,10 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
     }
 
     aggiungiCorso = () => {
-        const { nome, desc, luogo } = this.state
+        const { nome, descrizione, luogo } = this.state
         let corso = {...this.state} as ICorso
 
-        if(nome === "" || desc === "" || luogo === ""){
+        if(nome === "" || descrizione === "" || luogo === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -88,7 +88,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { nome, desc, luogo, logo } = this.state,
+        const { nome, descrizione, luogo, logo } = this.state,
         uploadButton = (
             <div>
                 <Icon type="plus" style={{ fontSize: 30, marginBottom: 5 }} />
@@ -123,7 +123,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
                     <div className="form-group row">
                         <div className="col pr-0">
                             <label className="text-secondary">Breve descrizione</label>
-                            <textarea className="form-control" rows={2} onChange={this.changeDesc}>{desc}</textarea>
+                            <textarea className="form-control" rows={2} onChange={this.changeDesc}>{descrizione}</textarea>
                         </div>
                     </div>
                 </div>
