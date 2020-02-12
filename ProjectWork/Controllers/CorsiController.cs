@@ -82,6 +82,10 @@ namespace ProjectWork.Controllers
                 return BadRequest();
             }
 
+            var t = _context.Tenere.Where(c => c.IdCorso == id);
+            _context.Tenere.RemoveRange(t);
+
+            _context.Tenere.AddRange(corsi.Tenere);
             var com = _context.Comprende.Where(c => c.IdCorso == id);
             _context.Comprende.RemoveRange(com);
 
@@ -122,11 +126,17 @@ namespace ProjectWork.Controllers
             {
                 return CreatedAtAction("GetCorsi", "Corso inesistente");
             }
+            foreach (var item in corsi.Tenere)
+            {
+                item.IdCorso = corsi.IdCorso;
+            }
+            _context.Tenere.AddRange(corsi.Tenere);
             foreach (var item in corsi.Comprende)
             {
                 item.IdCorso = cor.IdCorso;
             }
             _context.Comprende.AddRange(corsi.Comprende);
+
             _context.Corsi.Add(corsi);
             await _context.SaveChangesAsync();
 
@@ -147,7 +157,8 @@ namespace ProjectWork.Controllers
             {
                 return NotFound();
             }
-
+            var t = _context.Tenere.Where(c => c.IdCorso == id);
+            _context.Tenere.RemoveRange(t);
             var com = _context.Comprende.Where(c => c.IdCorso == id);
             _context.Comprende.RemoveRange(com);
             _context.Corsi.Remove(corsi);

@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ProjectWork.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ProjectWork.Models;
 
 namespace ProjectWork.Controllers
 {
@@ -123,6 +122,16 @@ namespace ProjectWork.Controllers
                 return BadRequest();
             }
 
+            var c = _context.Comprende.Where(m => m.IdMateria == id);
+            _context.Comprende.RemoveRange(c);
+
+            _context.Comprende.AddRange(materie.Comprende);
+
+            var i = _context.Insegnare.Where(m => m.IdMateria == id);
+            _context.Insegnare.RemoveRange(i);
+
+            _context.Insegnare.AddRange(materie.Insegnare);
+
             _context.Entry(materie).State = EntityState.Modified;
 
             try
@@ -153,7 +162,23 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
+            var mat = _context.Materie.Last();
+            if (mat == null)
+            {
+                return CreatedAtAction("GetMaterie", "Materia inesistente");
+            }
+            foreach (var item in materie.Comprende)
+            {
+                item.IdMateria = mat.IdMateria;
+            }
+            _context.Comprende.AddRange(materie.Comprende);
+            foreach (var item in materie.Insegnare)
+            {
+                item.IdMateria = mat.IdMateria;
+            }
+            _context.Insegnare.AddRange(materie.Insegnare);
             _context.Materie.Add(materie);
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetMaterie", new { id = materie.IdMateria }, materie);
@@ -174,6 +199,10 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
+            var c = _context.Comprende.Where(m => m.IdMateria == id);
+            _context.Comprende.RemoveRange(c);
+            var i = _context.Insegnare.Where(m => m.IdMateria == id);
+            _context.Insegnare.RemoveRange(i);
             _context.Materie.Remove(materie);
             await _context.SaveChangesAsync();
 

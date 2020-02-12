@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectWork.Models;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Cors;
 
 namespace ProjectWork.Controllers
 {
+    [EnableCors("AllowAllHeaders")]
     [Route("api/[controller]")]
     [ApiController]
     public class StudentiController : ControllerBase
@@ -256,7 +258,7 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(studenti);
         }
 
         // DELETE: api/Studenti/5
@@ -273,8 +275,9 @@ namespace ProjectWork.Controllers
             {
                 return NotFound();
             }
-
-            _context.Studenti.Remove(studenti);
+            studenti.Ritirato = "True";
+            //_context.Studenti.Remove(studenti);
+            _context.Entry(studenti).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return Ok(studenti);

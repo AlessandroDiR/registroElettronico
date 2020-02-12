@@ -33,7 +33,7 @@ namespace ProjectWork.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 
@@ -176,6 +176,13 @@ namespace ProjectWork.Models
                     .IsRequired()
                     .HasColumnName("password")
                     .IsUnicode(false);
+
+                entity.Property(e => e.Ritirato)
+                    .IsRequired()
+                    .HasColumnName("ritirato")
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('False')");
             });
 
             modelBuilder.Entity<Insegnare>(entity =>
@@ -217,9 +224,9 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.OraInizio).HasColumnName("ora_inizio");
 
-                entity.HasOne(d => d.IdMateriaNavigation)
-                    .WithMany(p => p.Lezioni)
-                    .HasForeignKey(d => d.IdMateria)
+                entity.HasOne(d => d.IdLezioneNavigation)
+                    .WithOne(p => p.Lezioni)
+                    .HasForeignKey<Lezioni>(d => d.IdLezione)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Lezioni_Materie");
             });
@@ -292,7 +299,6 @@ namespace ProjectWork.Models
                     .HasColumnType("date");
 
                 entity.Property(e => e.Email)
-                    .IsRequired()
                     .HasColumnName("email")
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -315,6 +321,13 @@ namespace ProjectWork.Models
                     .IsRequired()
                     .HasColumnName("password")
                     .IsUnicode(false);
+
+                entity.Property(e => e.Ritirato)
+                    .IsRequired()
+                    .HasColumnName("ritirato")
+                    .HasMaxLength(5)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('False')");
 
                 entity.HasOne(d => d.IdCorsoNavigation)
                     .WithMany(p => p.Studenti)

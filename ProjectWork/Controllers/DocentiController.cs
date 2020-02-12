@@ -43,12 +43,6 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
-            //var t = _context.Tenere.Where(d => d.IdDocente == id);
-
-            //foreach (var i in t)
-            //{
-            //    docenti.Tenere.Add(i);
-            //}
 
             return Ok(docenti);
         }
@@ -62,7 +56,7 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            var docenti = _context.Docenti.Where(d => d.Cf == cf).FirstOrDefault();
+            var docenti = await _context.Docenti.FirstOrDefaultAsync(d => d.Cf == cf);
 
             if (docenti == null)
             {
@@ -221,11 +215,14 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
-            var t = _context.Tenere.Where(d => d.IdDocente == id);
-            _context.Tenere.RemoveRange(t);
-            var i = _context.Insegnare.Where(d => d.IdDocente == id);
-            _context.Insegnare.RemoveRange(i);
-            _context.Docenti.Remove(docenti);
+            docenti.Ritirato = "True";
+
+            //var t = _context.Tenere.Where(d => d.IdDocente == id);
+            //_context.Tenere.RemoveRange(t);
+            //var i = _context.Insegnare.Where(d => d.IdDocente == id);
+            //_context.Insegnare.RemoveRange(i);
+            //_context.Docenti.Remove(docenti);
+            _context.Entry(docenti).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return Ok(docenti);
