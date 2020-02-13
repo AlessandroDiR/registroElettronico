@@ -57,7 +57,7 @@ export default class Dashboard extends React.Component{
                             <span>Configura calendario</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => {
-                            sessionStorage.removeItem("session")
+                            sessionStorage.removeItem("adminSession")
                             routerHistory.push("/adminpanel")
                         }} exact to="/adminpanel/login">
                             <span>Esci</span>

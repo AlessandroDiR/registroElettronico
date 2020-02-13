@@ -11,4 +11,5 @@ export interface IStudent{
     readonly luogoNascita: string
     readonly code?: string
     readonly ritirato?: string
+    readonly giornate?: number
 }

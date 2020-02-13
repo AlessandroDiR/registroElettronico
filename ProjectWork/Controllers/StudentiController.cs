@@ -25,9 +25,31 @@ namespace ProjectWork.Controllers
 
         // GET: api/Studenti
         [HttpGet]
-        public IEnumerable<Studenti> GetStudenti()
+        public IActionResult GetStudenti()
         {
-            return _context.Studenti;
+            var studenti = _context.Studenti;
+            var result = new List<object>();
+
+            foreach(var s in studenti)
+            {
+                var json = new
+                {
+                    idStudente = s.IdStudente,
+                    nome = s.Nome,
+                    cognome = s.Cognome,
+                    email = s.Email,
+                    luogoNascita = s.LuogoNascita,
+                    dataNascita = s.DataNascita,
+                    cf = s.Cf,
+                    password = s.Password,
+                    ritirato = s.Ritirato,
+                    annoIscrizione = s.AnnoIscrizione,
+                    giornate = GetDaysAmount(s.IdStudente)
+                };
+
+                result.Add(json);
+            }
+            return Ok(result);
         }
 
         // GET: api/Studenti/GetStudentiById/5
@@ -132,33 +154,6 @@ namespace ProjectWork.Controllers
             }
 
             return Ok(hoursAmount);
-        }
-
-        [HttpGet("[action]/{idStudente}")]
-        public async Task<IActionResult> GetDaysAmount([FromRoute] int idStudente)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var studente = await _context.Studenti.SingleOrDefaultAsync(s => s.IdStudente == idStudente);
-
-            if (studente == null)
-            {
-                return NotFound();
-            }
-
-            var getPresenze = _context.Presenze.Where(p => p.IdStudente == idStudente);
-            foreach (var day in getPresenze)
-            {
-                if (day.IdLezioneNavigation == null)
-                    day.IdLezioneNavigation = _context.Lezioni.FirstOrDefault(l => l.IdLezione == day.IdLezione);
-            }
-
-            var daysAmount = getPresenze.GroupBy(p => p.IdLezioneNavigation.Data);
-
-            return Ok(daysAmount.Count());
         }
 
         [HttpGet("[action]/{idStudente}")]
@@ -341,6 +336,22 @@ namespace ProjectWork.Controllers
             }
 
             return OutputMsg.generateMessage("Ops", "Non ci sono lezioni oggi!", true);
+        }
+
+        public int GetDaysAmount(int idStudente)
+        {
+            var studente = _context.Studenti.SingleOrDefault(s => s.IdStudente == idStudente);
+
+            var getPresenze = _context.Presenze.Where(p => p.IdStudente == idStudente);
+            foreach (var day in getPresenze)
+            {
+                if (day.IdLezioneNavigation == null)
+                    day.IdLezioneNavigation = _context.Lezioni.FirstOrDefault(l => l.IdLezione == day.IdLezione);
+            }
+
+            var daysAmount = getPresenze.GroupBy(p => p.IdLezioneNavigation.Data);
+
+            return daysAmount.Count();
         }
     }
 }
