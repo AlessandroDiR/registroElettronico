@@ -20,6 +20,7 @@ namespace ProjectWork.Models
         public DateTime DataNascita { get; set; }
         public string LuogoNascita { get; set; }
         public string Email { get; set; }
+        public string Ritirato { get; set; }
 
         public ICollection<Insegnare> Insegnare { get; set; }
         public ICollection<Tenere> Tenere { get; set; }
