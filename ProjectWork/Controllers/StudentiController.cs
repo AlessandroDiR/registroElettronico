@@ -275,8 +275,9 @@ namespace ProjectWork.Controllers
             {
                 return NotFound();
             }
-
-            _context.Studenti.Remove(studenti);
+            studenti.Ritirato = "True";
+            //_context.Studenti.Remove(studenti);
+            _context.Entry(studenti).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return Ok(studenti);

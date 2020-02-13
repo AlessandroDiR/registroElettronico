@@ -1,4 +1,4 @@
-export const siteUrl = "https://localhost:44336"
+export const siteUrl = "https://10.62.3.50:44336"
 
 export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n
@@ -60,7 +60,7 @@ export const formattaData = (d: string, convert?: boolean) => {
     let from = d.split(/[/-]/g),
     date = convert ? new Date(Number(from[2]), Number(from[1]) - 1, Number(from[0])) : new Date(d)
 
-    return Digits2(date.getDate()) + "-" + Digits2(date.getMonth() + 1) + "-" + date.getFullYear()
+    return date.getFullYear() + "-" + Digits2(date.getMonth() + 1) + "-" + Digits2(date.getDate())
 }
 
 export const getDateDay = (d: string) => {

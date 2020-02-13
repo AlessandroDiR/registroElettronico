@@ -61,7 +61,7 @@ export default class CorsiList extends React.PureComponent<IProps, IState>{
                             corsi.map(c => {        
                                 return <tr>
                                     <td style={{maxWidth: 0}} className="text-truncate">{c.nome}</td>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{c.desc}</td>
+                                    <td style={{maxWidth: 0}} className="text-truncate">{c.descrizione}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{c.luogo}</td>
                                     <td>
                                         <Tooltip title="Modifica">

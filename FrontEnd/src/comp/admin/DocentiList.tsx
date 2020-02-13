@@ -23,7 +23,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/reg/api?docenti&corso=1").then((response) => {
+        Axios.get(siteUrl+"/api/docenti").then((response) => {
             this.setState({
                 docenti: response.data as IDocente[]
             })

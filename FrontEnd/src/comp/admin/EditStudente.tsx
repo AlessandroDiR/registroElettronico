@@ -21,6 +21,7 @@ export interface IState{
     readonly aNascita: string
     readonly luogoNascita: string
     readonly CF: string
+    readonly email: string
 }
 
 export default class EditStudente extends React.PureComponent<IProps, IState>{
@@ -36,7 +37,8 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             mNascita: "",
             aNascita: "",
             luogoNascita: "",
-            CF: ""
+            CF: "",
+            email: ""
         }
     }
 
@@ -47,6 +49,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             routerHistory.push("/adminpanel")
 
         Axios.get(siteUrl+"/api/studenti/getstudentibyid/" + id).then((response) => {
+            console.log(response.data)
             let stu = response.data as IStudent
 
             this.setState({
@@ -57,7 +60,8 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
                 gNascita: getDateDay(stu.dataNascita),
                 mNascita: getDateMonth(stu.dataNascita),
                 aNascita: getDateYear(stu.dataNascita),
-                luogoNascita: stu.luogoNascita
+                luogoNascita: stu.luogoNascita,
+                email: stu.email
             })
         })
     }
@@ -67,6 +71,14 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
 
         this.setState({
             nome: nome
+        })
+    }
+
+    changeEmail = (event: any) => {
+        let email = event.target.value
+
+        this.setState({
+            email: email
         })
     }
 
@@ -119,12 +131,12 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
     }
 
     modificaStudente = () => {
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF } = this.state
+        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, email } = this.state
         let giorno = Number(gNascita),
         mese = Number(mNascita),
         anno = Number(aNascita)
 
-        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || CF === ""){
+        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || CF === "" || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -151,22 +163,32 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             return
         }
 
-        /******************************************/
-        /* MODIFICA DOCENTE E POI MOSTRARE MODAL */
-        /*****************************************/
+        Axios.put(siteUrl+"/api/studenti/" + this.state.studente.idStudente, {
+            idStudente: this.state.studente.idStudente,
+            nome: nome,
+            cognome: cognome,
+            email: email,
+            password: this.state.studente.password,
+            cf: CF,
+            idCorso: this.props.corso,
+            annoIscrizione: this.state.studente.annoIscrizione,
+            dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
+            luogoNascita: luogoNascita
+        }).then(response => {
+            Modal.success({
+                title: "Complimenti!",
+                content: "Studente modificato con successo.",
+                onOk: () => {
+                    routerHistory.push("/adminpanel/studenti")
+                }
+            })
 
-        Modal.success({
-            title: "Complimenti!",
-            content: "Docente modificato con successo.",
-            onOk: () => {
-                routerHistory.push("/adminpanel/docenti")
-            }
         })
-
+        
     }
 
     render(): JSX.Element{
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, studente } = this.state
+        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, studente, email } = this.state
 
         if(!studente){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
@@ -188,6 +210,10 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
                         <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
+                    </div>
+                    <div className="col">
+                        <label className="text-secondary">E-mail</label>
+                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                 </div>
 

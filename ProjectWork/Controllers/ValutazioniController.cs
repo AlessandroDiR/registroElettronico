@@ -46,6 +46,25 @@ namespace ProjectWork.Controllers
             return Ok(valutazioni);
         }
 
+        // GET: api/Valutazioni/GetValutazioniStudenteByDocente/5/3
+        [HttpGet("[action]/{idDocente}/{idStudente}")]
+        public async Task<IActionResult> GetValutazioniStudenteByDocente([FromRoute] int idDocente, int idStudente)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var valutazioni = _context.Valutazioni.Where(v => v.IdDocente == idDocente && v.IdStudente == v.IdStudente);
+
+            if (valutazioni == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(valutazioni);
+        }
+
         // PUT: api/Valutazioni/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutValutazioni([FromRoute] int id, [FromBody] Valutazioni valutazioni)
