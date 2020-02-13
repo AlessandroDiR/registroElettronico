@@ -11,7 +11,7 @@ namespace ProjectWork.Models
         }
 
         public int IdLezione { get; set; }
-        public int IdMateria { get; set; }
+        public int? IdMateria { get; set; }
         public DateTime Data { get; set; }
         public TimeSpan OraInizio { get; set; }
         public TimeSpan OraFine { get; set; }

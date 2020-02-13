@@ -160,6 +160,12 @@ namespace ProjectWork.Models
                     .HasColumnName("data_nascita")
                     .HasColumnType("date");
 
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasColumnName("email")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.LuogoNascita)
                     .IsRequired()
                     .HasColumnName("luogo_nascita")
@@ -220,7 +226,6 @@ namespace ProjectWork.Models
                 entity.HasOne(d => d.IdMateriaNavigation)
                     .WithMany(p => p.Lezioni)
                     .HasForeignKey(d => d.IdMateria)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Lezioni_Materie");
             });
 
