@@ -12,9 +12,10 @@ namespace ProjectWork.Models
 
         public int IdLezione { get; set; }
         public int? IdMateria { get; set; }
-        public DateTime Data { get; set; }
-        public TimeSpan OraInizio { get; set; }
-        public TimeSpan OraFine { get; set; }
+        public DateTime? Data { get; set; }
+        public TimeSpan? OraInizio { get; set; }
+        public TimeSpan? OraFine { get; set; }
+        public string Titolo { get; set; }
 
         public Materie IdLezioneNavigation { get; set; }
         public ICollection<Presenze> Presenze { get; set; }

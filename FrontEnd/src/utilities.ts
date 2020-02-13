@@ -1,4 +1,4 @@
-export const siteUrl = "https://localhost"
+export const siteUrl = "https://localhost:44336"
 
 export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n

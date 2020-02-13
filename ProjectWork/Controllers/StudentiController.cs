@@ -240,6 +240,7 @@ namespace ProjectWork.Controllers
                 return BadRequest();
             }
 
+            studenti.Ritirato = studenti.Ritirato;
             _context.Entry(studenti).State = EntityState.Modified;
 
             try

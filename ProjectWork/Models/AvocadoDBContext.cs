@@ -161,7 +161,6 @@ namespace ProjectWork.Models
                     .HasColumnType("date");
 
                 entity.Property(e => e.Email)
-                    .IsRequired()
                     .HasColumnName("email")
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -182,6 +181,13 @@ namespace ProjectWork.Models
                     .IsRequired()
                     .HasColumnName("password")
                     .IsUnicode(false);
+
+                entity.Property(e => e.Ritirato)
+                    .IsRequired()
+                    .HasColumnName("ritirato")
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('False')");
             });
 
             modelBuilder.Entity<Insegnare>(entity =>
@@ -211,7 +217,7 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.IdLezione)
                     .HasColumnName("id_lezione")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Data)
                     .HasColumnName("data")
@@ -223,9 +229,15 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.OraInizio).HasColumnName("ora_inizio");
 
-                entity.HasOne(d => d.IdMateriaNavigation)
-                    .WithMany(p => p.Lezioni)
-                    .HasForeignKey(d => d.IdMateria)
+                entity.Property(e => e.Titolo)
+                    .HasColumnName("titolo")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdLezioneNavigation)
+                    .WithOne(p => p.Lezioni)
+                    .HasForeignKey<Lezioni>(d => d.IdLezione)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Lezioni_Materie");
             });
 
@@ -297,7 +309,6 @@ namespace ProjectWork.Models
                     .HasColumnType("date");
 
                 entity.Property(e => e.Email)
-                    .IsRequired()
                     .HasColumnName("email")
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -320,6 +331,13 @@ namespace ProjectWork.Models
                     .IsRequired()
                     .HasColumnName("password")
                     .IsUnicode(false);
+
+                entity.Property(e => e.Ritirato)
+                    .IsRequired()
+                    .HasColumnName("ritirato")
+                    .HasMaxLength(5)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('False')");
 
                 entity.HasOne(d => d.IdCorsoNavigation)
                     .WithMany(p => p.Studenti)

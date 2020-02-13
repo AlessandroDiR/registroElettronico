@@ -10,4 +10,5 @@ export interface IStudent{
     readonly dataNascita: string
     readonly luogoNascita: string
     readonly code?: string
+    readonly ritirato?: string
 }
