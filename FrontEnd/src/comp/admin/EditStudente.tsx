@@ -173,7 +173,8 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             idCorso: this.props.corso,
             annoIscrizione: this.state.studente.annoIscrizione,
             dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
-            luogoNascita: luogoNascita
+            luogoNascita: luogoNascita,
+            ritirato: this.state.studente.ritirato
         }).then(response => {
             Modal.success({
                 title: "Complimenti!",

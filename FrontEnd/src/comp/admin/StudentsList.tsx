@@ -159,8 +159,9 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                 <th>Nome</th>
                                 <th>Cognome</th>
                                 <th>Codice Fiscale</th>
-                                <th>Corso</th>
-                                <th style={{width: "18%"}}>Anno scolastico</th>
+                                <th>Tot. Giornate</th>
+                                {/* <th>Corso</th>
+                                <th style={{width: "18%"}}>Anno scolastico</th> */}
                                 <th style={{width: "20%"}}>Azioni</th>
                             </tr>
                 
@@ -175,8 +176,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.nome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cognome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
-                                        <td style={{maxWidth: 0}} className="text-truncate">{s.idCorso}</td>
-                                        <td style={{maxWidth: 0}} className="text-truncate">{s.annoIscrizione}-{s.annoIscrizione + 1}</td>
+                                        <td style={{maxWidth: 0}} className="text-truncate">{s.giornate}</td>
+                                        
                                         <td>
                                             <Tooltip title="Dettagli">
                                                 <button type="button" className="btn btn-info circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/studenti/" + s.idStudente)}>

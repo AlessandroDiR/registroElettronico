@@ -33,7 +33,7 @@ namespace ProjectWork.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 
@@ -160,6 +160,11 @@ namespace ProjectWork.Models
                     .HasColumnName("data_nascita")
                     .HasColumnType("date");
 
+                entity.Property(e => e.Email)
+                    .HasColumnName("email")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.LuogoNascita)
                     .IsRequired()
                     .HasColumnName("luogo_nascita")
@@ -210,9 +215,7 @@ namespace ProjectWork.Models
             {
                 entity.HasKey(e => e.IdLezione);
 
-                entity.Property(e => e.IdLezione)
-                    .HasColumnName("id_lezione")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.IdLezione).HasColumnName("id_lezione");
 
                 entity.Property(e => e.Data)
                     .HasColumnName("data")
@@ -224,10 +227,13 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.OraInizio).HasColumnName("ora_inizio");
 
-                entity.HasOne(d => d.IdLezioneNavigation)
-                    .WithOne(p => p.Lezioni)
-                    .HasForeignKey<Lezioni>(d => d.IdLezione)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                entity.Property(e => e.Titolo)
+                    .HasColumnName("titolo")
+                    .HasColumnType("text");
+
+                entity.HasOne(d => d.IdMateriaNavigation)
+                    .WithMany(p => p.Lezioni)
+                    .HasForeignKey(d => d.IdMateria)
                     .HasConstraintName("FK_Lezioni_Materie");
             });
 
