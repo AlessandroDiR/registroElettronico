@@ -38,8 +38,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
 
     showDeleteConfirm = (student: IStudent) => {
         Modal.confirm({
-            title: 'Confermi di voler eliminare questo studente dal corso? (' + student.nome + ' ' + student.cognome + ')',
-            content: 'Insieme allo studente verranno cancellate anche tutte le entrate e le uscite relative allo studente.',
+            title: 'Confermi il ritiro dello studente dal corso? (' + student.nome + ' ' + student.cognome + ')',
+            content: 'I dati identificativi dello studente e le sue frequenze verranno comunque mantenuti, ma lo studente non sarà più visualizzabile in questa lista.',
             okText: 'Confermo',
             okType: 'danger',
             cancelText: 'Annulla',
@@ -160,8 +160,6 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                 <th>Cognome</th>
                                 <th>Codice Fiscale</th>
                                 <th>Tot. Giornate</th>
-                                {/* <th>Corso</th>
-                                <th style={{width: "18%"}}>Anno scolastico</th> */}
                                 <th style={{width: "20%"}}>Azioni</th>
                             </tr>
                 
@@ -191,9 +189,9 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                                 </button>
                                             </Tooltip>
                                             
-                                            <Tooltip title="Elimina">
+                                            <Tooltip title="Ritirato">
                                                 <button type="button" className="btn btn-danger circle-btn" onClick={() => this.showDeleteConfirm(s)}>
-                                                    <i className="fa fa-trash"></i>
+                                                    <i className="fa fa-user-minus"></i>
                                                 </button>
                                             </Tooltip>
                                         </td>

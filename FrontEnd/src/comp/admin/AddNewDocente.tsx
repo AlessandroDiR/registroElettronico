@@ -176,7 +176,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
                     routerHistory.push("/adminpanel/docenti")
                 }
             })
-        }).catch(err => { console.log(err)})
+        })
 
     }
 

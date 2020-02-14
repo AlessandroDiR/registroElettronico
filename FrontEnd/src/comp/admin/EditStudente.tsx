@@ -49,7 +49,6 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             routerHistory.push("/adminpanel")
 
         Axios.get(siteUrl+"/api/studenti/getstudentibyid/" + id).then((response) => {
-            console.log(response.data)
             let stu = response.data as IStudent
 
             this.setState({
