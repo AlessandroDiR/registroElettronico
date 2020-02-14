@@ -215,9 +215,7 @@ namespace ProjectWork.Models
             {
                 entity.HasKey(e => e.IdLezione);
 
-                entity.Property(e => e.IdLezione)
-                    .HasColumnName("id_lezione")
-                    .ValueGeneratedOnAdd();
+                entity.Property(e => e.IdLezione).HasColumnName("id_lezione");
 
                 entity.Property(e => e.Data)
                     .HasColumnName("data")
@@ -231,13 +229,11 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.Titolo)
                     .HasColumnName("titolo")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .HasColumnType("text");
 
-                entity.HasOne(d => d.IdLezioneNavigation)
-                    .WithOne(p => p.Lezioni)
-                    .HasForeignKey<Lezioni>(d => d.IdLezione)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                entity.HasOne(d => d.IdMateriaNavigation)
+                    .WithMany(p => p.Lezioni)
+                    .HasForeignKey(d => d.IdMateria)
                     .HasConstraintName("FK_Lezioni_Materie");
             });
 

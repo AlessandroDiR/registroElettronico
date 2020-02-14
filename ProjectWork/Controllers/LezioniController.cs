@@ -24,19 +24,30 @@ namespace ProjectWork.Controllers
         [HttpGet]
         public IEnumerable<Lezioni> GetLezioni()
         {
-            var calendar = new CalendarApi(_context);
-            calendar.GetCalendarEvents();
-            return _context.Lezioni;
+            //SaveEventsInContext();
+            return _context.Lezioni.OrderBy(l => l.Data);
         }
 
-        // POST: api/lezioni
-        //[HttpPost]
-        //public IActionResult PostLezioni()
-        //{
-            
-        //    return RedirectToAction("GetLezioni");
-        //}
+        public void SaveEventsInContext()
+        {
+            var events = CalendarApi.GetCalendarEvents();
+            foreach (var e in events)
+            {
+                var lezione = new Lezioni
+                {
+                    Titolo = e.summary,
+                    Data = e.date,
+                    OraInizio = e.start,
+                    OraFine = e.end
+                };
 
-        
+                _context.Lezioni.Add(lezione);
+            }
+
+            _context.SaveChanges();
+
+        }
+
+
     }
 }

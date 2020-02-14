@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
@@ -13,20 +10,14 @@ namespace ProjectWork.classi
 {
     public class CalendarApi
     {
-        private readonly AvocadoDBContext _context;
-
-        public CalendarApi(AvocadoDBContext context)
-        {
-            _context = context;
-        }
-        public async void GetCalendarEvents()
+        static public List<EventiModel> GetCalendarEvents()
         {
             var service = new CalendarService(new BaseClientService.Initializer
             {
                 ApiKey = "AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs"
             });
 
-            var response = await service.Events.List("ckhj7iqj3msae4i4ietm5ip1cg@group.calendar.google.com").ExecuteAsync();
+            var response = service.Events.List("ckhj7iqj3msae4i4ietm5ip1cg@group.calendar.google.com").Execute();
             var events = response.Items;
             var result = new List<EventiModel>();
 
@@ -49,26 +40,7 @@ namespace ProjectWork.classi
                 }
             }
 
-            SaveEventsInContext(result);
-        }
-
-        private void SaveEventsInContext(List<EventiModel> events)
-        {
-            foreach(var e in events)
-            {
-                var lezione = new Lezioni
-                {
-                    Titolo = e.summary,
-                    Data = e.date,
-                    OraInizio = e.start,
-                    OraFine = e.end
-                };
-
-                _context.Lezioni.Add(lezione);
-            }
-
-            _context.SaveChanges();
-
+            return result;
         }
     }
 }
