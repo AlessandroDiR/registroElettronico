@@ -29,7 +29,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/reg/api?studenti&corso=" + this.props.corso).then((response) => {
+        Axios.get(siteUrl+"/api/studenti").then((response) => {
             this.setState({
                 students: response.data as IStudent[]
             })
@@ -90,8 +90,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             </div>
         }
         
-        let firstYear = students.filter(s => s.annoIscrizione === 2018),
-        secondYear = students.filter(s => s.annoIscrizione === 2019),
+        let firstYear = students.filter(s => s.annoIscrizione === 1),
+        secondYear = students.filter(s => s.annoIscrizione === 2),
         groups = [firstYear, secondYear]
 
         return <div className="col-9 px-5 py-4 right-block">
@@ -105,7 +105,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                             
                             <tr className="thead-light">
                                 <th colSpan={7}>
-                                    { g[0].annoIscrizione === 2018 ? "Primo" : "Secondo" } anno
+                                    { g[0].annoIscrizione === 1 ? "Primo" : "Secondo" } anno
                                 </th>
                             </tr>
 

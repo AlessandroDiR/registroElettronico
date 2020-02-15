@@ -1,7 +1,7 @@
 import React from "react"
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from '@fullcalendar/daygrid';
-import { Digits2 } from "../../utilities";
+import { Digits2, bodyClick } from "../../utilities";
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
 
 import '@fullcalendar/core/main.css'
@@ -15,7 +15,10 @@ export interface IState{
 }
 
 export default class UserCalendar extends React.PureComponent<IProps, IState> {
-
+    componentWillUnmount = () => {
+        bodyClick()
+    }
+    
     render(): JSX.Element{
         return <div>
             <h5 className="text-center text-black w-100">Calendario del mese</h5>

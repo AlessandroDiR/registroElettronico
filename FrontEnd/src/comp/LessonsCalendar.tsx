@@ -2,7 +2,7 @@ import React from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
-import { Digits2 } from '../utilities';
+import { Digits2, bodyClick } from '../utilities';
 
 import '@fullcalendar/core/main.css'
 import '@fullcalendar/timegrid/main.css';
@@ -15,6 +15,10 @@ export interface IState{
 }
 
 export default class LessonsCalendar extends React.PureComponent<IProps, IState> {
+
+    componentWillUnmount = () => {
+        bodyClick()
+    }
 
     render() {
         return <FullCalendar

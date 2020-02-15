@@ -87,7 +87,14 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
 
     moveStudents = () => {
         let select = document.getElementById("moveToClass") as HTMLSelectElement,
-        value = select.value
+        value = parseInt(select.value)
+
+        if(value !== 1 && value !== 2){
+            Modal.error({
+                title: "Errore!",
+                content: "L'anno selezionato non è valido."
+            })
+        }
 
         /*******************************************************/
         /* SPOSTARE STUDENTI NEL NUOVO ANNO E RIFARE RICHIESTA */

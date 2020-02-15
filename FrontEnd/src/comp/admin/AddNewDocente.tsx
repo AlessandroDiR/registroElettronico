@@ -168,7 +168,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             email: email,
             dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
             luogoNascita: luogoNascita
-        }).then(response => {
+        }).then(_ => {
             Modal.success({
                 title: "Complimenti!",
                 content: "Docente creato con successo.",
