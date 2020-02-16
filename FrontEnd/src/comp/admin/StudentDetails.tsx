@@ -2,7 +2,7 @@ import React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { IStudent } from '../../models/IStudent';
 import { routerHistory } from '../..';
-import { Icon, Spin, Progress, Statistic } from 'antd';
+import { Icon, Spin, Progress, Statistic, Tabs } from 'antd';
 import PresenzeTable from './PresenzeTable';
 import Axios from 'axios';
 import { formatItalian, siteUrl, fixTotPresenze } from '../../utilities';
@@ -60,6 +60,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
 
     render(): JSX.Element{
         const { student, totPresenze } = this.state
+        const { TabPane } = Tabs
 
         if(!student || !totPresenze){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
@@ -93,10 +94,15 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                 </div>
             </div>
 
-            <h3 className="my-3">Presenze studente</h3>
-            <PresenzeTable studente={student.idStudente} />
-            <h3 className="my-3">Voti studente</h3>
-            <VotiStudent studente={student.idStudente} />
+            <Tabs defaultActiveKey="1" tabPosition="left" className="mt-4">
+                <TabPane tab="Presenze" key="1">
+                    <PresenzeTable studente={student.idStudente} />
+                </TabPane>
+                <TabPane tab="Voti" key="2">
+                    <VotiStudent studente={student.idStudente} />
+                </TabPane>
+            </Tabs>
+            
         </div>
     }
 }

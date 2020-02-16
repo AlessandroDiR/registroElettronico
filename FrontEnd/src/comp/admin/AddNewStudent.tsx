@@ -111,9 +111,9 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
 
     aggiungiStudente = () => {
         const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, cf, annoScolastico, email } = this.state
-        let giorno = Number(gNascita),
-        mese = Number(mNascita),
-        anno = Number(aNascita)
+        let giorno = parseInt(gNascita),
+        mese = parseInt(mNascita),
+        anno = parseInt(aNascita)
 
         if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || cf === "" || !annoScolastico || email === ""){
             Modal.error({

@@ -122,24 +122,6 @@ export const fixTotPresenze = (time: string) => {
     return (Number(pieces[0]) + prop)
 }
 
-export const bodyClick = () => {
-    let body = document.getElementsByTagName("body")[0]
-
-    body.click()
-}
-
-window.onclick = (event: any) => {
-    let html = event.target as HTMLElement
-
-    if(!html.classList.contains("fc-day-grid-event") && !html.classList.contains("event-bubble")){
-        let current = document.getElementById("bubble"),
-        body = document.getElementsByTagName("body")[0]
-        
-        if(current)
-            body.removeChild(current)
-    }
-}
-
 export const mountLogin = () => {
     let body = document.getElementsByTagName("body")[0]
 

@@ -61,9 +61,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     selectAll = (anno: number, event: any) => {
-        let selectionList = event.target.checked ? this.state.students.filter(s => s.annoIscrizione === anno).map(s => {
-            return s
-        }) : []
+        let selectionList = event.target.checked ? this.state.students.filter(s => s.annoIscrizione === anno) : this.state.selection.filter(s => s.annoIscrizione !== anno)
 
         this.setState({
             selection: selectionList
@@ -130,7 +128,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 <i className="fa fa-arrows-alt"></i> Sposta studenti
             </button>
 
-            <button className="btn btn-primary float-right mb-3 mr-2" type="button" onClick={() => routerHistory.push("/adminpanel/studenti/import")}>
+            <button className="btn btn-blue float-right mb-3 mr-2" type="button" onClick={() => routerHistory.push("/adminpanel/studenti/import")}>
                 <i className="fa fa-file-csv"></i> Importa da CSV
             </button>
 
@@ -166,7 +164,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                 <th>Nome</th>
                                 <th>Cognome</th>
                                 <th>Codice Fiscale</th>
-                                <th>Tot. Giornate</th>
+                                <th style={{width: "15%"}}>Tot. Giornate</th>
                                 <th style={{width: "20%"}}>Azioni</th>
                             </tr>
                 

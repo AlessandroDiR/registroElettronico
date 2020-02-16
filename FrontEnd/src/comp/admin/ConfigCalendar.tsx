@@ -43,7 +43,7 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
             okText: "Ho capito",
             content: <div className="text-justify">
                 <strong>Dove mi trovo?</strong>
-                <p>In questa pagina potrai configurare il calendario che vedranno gli studenti nel loro profilo.</p>
+                <p>In questa pagina potrai configurare il calendario dal quale verranno caricate le lezioni del corso.</p>
                 <strong>Come si configura il calendario?</strong>
                 <p>Per configurare il calendario avrai bisogno di due codici univoci, che ti permetteranno di collegare il calendario al sito.</p>
                 <strong>API Key</strong>

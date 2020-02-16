@@ -129,9 +129,9 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
 
     aggiungiDocente = () => {
         const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, email, materieSel, corsiSel } = this.state
-        let giorno = Number(gNascita),
-        mese = Number(mNascita),
-        anno = Number(aNascita)
+        let giorno = parseInt(gNascita),
+        mese = parseInt(mNascita),
+        anno = parseInt(aNascita)
 
         if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || CF === "" || email === "" || !materieSel.length || !corsiSel.length){
             Modal.error({

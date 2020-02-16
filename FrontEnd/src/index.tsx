@@ -9,6 +9,7 @@ import { Router, Switch, Route } from 'react-router-dom';
 import Dashboard from './comp/admin/Dashboard';
 import UserApplication from './comp/mobile/UserApplication';
 import DocentiDashboard from './comp/docenti/DocentiDashboard';
+import Page404 from './comp/Page404';
 export const routerHistory = createHashHistory();
 
 
@@ -35,6 +36,8 @@ ReactDOM.render(<Router history={routerHistory}>
         <Route path="/docentipanel" render={() => (
             <DocentiDashboard />
         )} />
+
+        <Route component={Page404} />
     </Switch>
 </Router>, document.getElementById('root'));
 

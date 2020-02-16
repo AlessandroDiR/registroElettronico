@@ -1,7 +1,7 @@
 import React from "react"
 import { IPresenze } from "../../models/IPresenze"
 import { Tooltip, Icon, Spin, Modal } from "antd"
-import { hideAll, siteUrl, formattaData } from "../../utilities"
+import { hideAll, siteUrl, formatItalian } from "../../utilities"
 import Axios from "axios"
 
 export interface IProps{
@@ -136,6 +136,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
     render(): JSX.Element{
         const { presenze, entrataEdit, uscitaEdit } = this.state
 
+        console.log(presenze)
         if(!presenze){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
@@ -144,9 +145,9 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
             </div>
         }
 
-        return <table className="table table-bordered text-center mt-3">
+        return <table className="table table-bordered text-center">
             <tbody>
-                <tr className="thead-light">
+                <tr>
                     <th>Giorno</th>
                     <th>Entrata</th>
                     <th>Uscita</th>
@@ -157,7 +158,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
                 {
                     presenze.map(p => {
                         return <tr>
-                            <td style={{maxWidth: 0}} className="text-truncate">{formattaData(p.data)}</td>
+                            <td style={{maxWidth: 0}} className="text-truncate">{formatItalian(p.data)}</td>
                             <td style={{maxWidth: 0}} className="text-truncate">
                                 <span id={"entrataSpan_"+p.idPresenza}>{p.ingresso}</span>
                                 <input type="text" className="form-control edit-time" value={entrataEdit} style={{display: "none"}} onChange={this.changeEntrata} id={"entrataInput_"+p.idPresenza} />
@@ -166,16 +167,18 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
                                 <span id={"uscitaSpan_"+p.idPresenza}>{p.uscita}</span>
                                 <input type="text" className="form-control edit-time" value={uscitaEdit} style={{display: "none"}} onChange={this.changeUscita} id={"uscitaInput_"+p.idPresenza} />
                             </td>
-                            <td style={{maxWidth: 0}} className="text-truncate">{p.lezione}</td>
+                            <Tooltip title={p.lezione}>
+                                <td style={{maxWidth: 0}} className="text-truncate">{p.lezione}</td>
+                            </Tooltip>
                             <td>
                                 <Tooltip title="Modifica orari">
                                     <button type="button" className="btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p.idPresenza)} id={"editBtn_"+p.idPresenza}>
-                                        <i className="fa fa-user-clock"></i>
+                                        <i className="fa fa-user-edit"></i>
                                     </button>
                                 </Tooltip>
                                 <Tooltip title="Conferma modifiche">
                                     <button type="button" className="btn btn-success circle-btn" onClick={() => this.confirmEdit(p.idPresenza)} id={"confirmBtn_"+p.idPresenza} style={{display: "none"}}>
-                                        <i className="far fa-check"></i>
+                                        <i className="fa fa-check"></i>
                                     </button>
                                 </Tooltip>
                             </td>

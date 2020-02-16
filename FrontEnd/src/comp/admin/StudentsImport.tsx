@@ -26,9 +26,6 @@ const fields = [{
     label: "Codice Fiscale",
     field: "cf"
 },{
-    label: "Anno di iscrizione",
-    field: "annoIscrizione"
-},{
     label: "Data di nascita",
     field: "dataNascita"
 },{
@@ -51,7 +48,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 cf: 0,
                 dataNascita: 0,
                 email: 0,
-                annoIscrizione: 0
+                annoIscrizione: 1
             }
         }
     }
@@ -101,6 +98,17 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 title: "Selezionare i campi da abbinare",
                 icon: <Icon type="api" style={{ color: "var(--success)" }} />,
                 content: <div style={{ marginLeft: -38 }}>
+                    <div className="row mt-3 px-0">
+                        <div className="col-4">
+                            <label className="mt-2">Classe: </label>
+                        </div>
+                        <div className="col">
+                            <select className="custom-select pointer" style={{ height: 35 }} onChange={(e) => this.changeVarPos(e, "annoIscrizione")}>
+                                <option value="1">Primo anno</option>
+                                <option value="2">Secondo anno</option>
+                            </select>
+                        </div>
+                    </div>
                     {
                         fields.map(f => {
                             return <div className="row mt-3 px-0">
@@ -144,7 +152,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 idCorso: this.props.corso,
                 nome: capitalizeFirst(cells[fields['nome']]),
                 cognome: capitalizeFirst(cells[fields['cognome']]),
-                annoIscrizione: Number(cells[fields['annoIscrizione']]),
+                annoIscrizione: parseInt(fields['annoIscrizione']),
                 cf: cells[fields['cf']],
                 dataNascita: formattaData(cells[fields['dataNascita']], true),
                 luogoNascita: "",

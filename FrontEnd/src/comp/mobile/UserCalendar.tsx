@@ -1,11 +1,12 @@
 import React from "react"
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from '@fullcalendar/daygrid';
-import { Digits2, bodyClick } from "../../utilities";
+import { Digits2 } from "../../utilities";
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
 
 import '@fullcalendar/core/main.css'
 import '@fullcalendar/timegrid/main.css';
+import { Modal } from "antd";
 
 export interface IProps{
     readonly corso?: number
@@ -14,11 +15,7 @@ export interface IState{
     // variabile che prende il calendario, da caricare in base al corso
 }
 
-export default class UserCalendar extends React.PureComponent<IProps, IState> {
-    componentWillUnmount = () => {
-        bodyClick()
-    }
-    
+export default class UserCalendar extends React.PureComponent<IProps, IState> {    
     render(): JSX.Element{
         return <div>
             <h5 className="text-center text-black w-100">Calendario del mese</h5>
@@ -39,40 +36,47 @@ export default class UserCalendar extends React.PureComponent<IProps, IState> {
             locale={'it'}
             eventClick={
                 function(info){
-
                     info.jsEvent.preventDefault();
+                    let event = info.event
                     
-                    let event = info.event,
-                    bubble = document.createElement("div")
-
-                    bubble.setAttribute('id', "bubble");
-                    bubble.setAttribute('class', "event-bubble mobile-bubble")
-
-                    bubble.innerHTML = `<div class="bubble-close" id="close-b"><i class="fal fa-times fa-fw"></i></div>
-                        <h6 class="event-title"><i class="fad fa-calendar-check fa-fw icon fa-lg"></i> ` + event.title + `</h6>
-                        <div class="row px-2 py-1">
-                            <div class="col-4 pl-0"><span class="label">Inizio</span></div>
-                            <div class="col-8 pl-0"><span class="desc">` + Digits2(event.start.getHours()) + `:` + Digits2(event.start.getMinutes()) + `</span></div>
+                    Modal.info({
+                        maskClosable: true,
+                        centered: true,
+                        icon: null,
+                        title: event.title,
+                        content: <div className="mt-3" style={{ fontSize: 20 }}>
+                            <div className="row">
+                                <div className="col-3 pr-0">
+                                    <span className="label">Inizio</span>
+                                </div>
+                                <div className="col">
+                                    <span className="desc">
+                                        { Digits2(event.start.getHours()) }:{ Digits2(event.start.getMinutes()) }
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-3 pr-0">
+                                    <span className="label">Fine</span>
+                                </div>
+                                <div className="col">
+                                    <span className="desc">
+                                        { Digits2(event.end.getHours()) }:{ Digits2(event.end.getMinutes()) }
+                                    </span>
+                                </div>
+                            </div>
+                            {  
+                                event.extendedProps.location && <div className="row">
+                                    <div className="col-3 pr-0">
+                                        <span className="label">Luogo</span>
+                                    </div>
+                                    <div className="col" style={{ fontSize: 15 }}>
+                                        {event.extendedProps.location}
+                                    </div>
+                                </div>
+                            }
                         </div>
-                        <div class="row px-2 py-1">
-                            <div class="col-4 pl-0"><span class="label">Fine</span></div>
-                            <div class="col-8 pl-0"><span class="desc">` + Digits2(event.end.getHours()) + `:` + Digits2(event.end.getMinutes()) + `</span></div>
-                        </div>`
-
-                    if(event.extendedProps.location){
-                        bubble.innerHTML = bubble.innerHTML + `<div class="row px-2 py-1">
-                            <div class="col-4 pl-0"><span class="label where">Luogo</span></div>
-                            <div class="col-8 px-0 where">` + event.extendedProps.location + `</div>
-                        </div>`
-                    }
-                
-                    let current = document.getElementById("bubble"),
-                    body = document.getElementsByTagName("body")[0]
-                    
-                    if(current)
-                        body.removeChild(current)
-
-                    body.appendChild(bubble)
+                    })
                 }
             } />
         </div>
