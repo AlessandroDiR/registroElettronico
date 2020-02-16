@@ -140,9 +140,8 @@ body{
   background-color: #fce3e3 !important;
 
   &:not(.fc-day-top):after{
-    content: "\f276";
-    font-family: "Font Awesome 5 Pro";
-    font-size: 40px;
+    content: "\f08d";
+    font: 300 40px "Font Awesome 5 Pro";
     display: flex;
     justify-content: center;
     margin-top: 20px;

@@ -9,22 +9,17 @@ export default class UserApplication extends React.Component{
 
     componentDidMount = () => {
         localStorage.setItem("student", JSON.stringify({
-            id: 1,
-            corso: 1,
+            idStudente: 1,
+            idCorso: 1,
             nome: "Leonardo",
             cognome: "Grandolfo",
-            anno: 1,
+            annoIscrizione: 1,
             cf: "GRNLRD99D17L219L",
             dataNascita: "17-04-1999",
             luogoNascita: "Torino",
             code: "CIAO-GGG"
         }))
     }
-
-    componentWillUnmount = () => {
-        // localStorage.removeItem("student")
-    }
-
     render(): JSX.Element{
         let session = localStorage.getItem("student")
         
@@ -48,7 +43,7 @@ export default class UserApplication extends React.Component{
                             )} />
 
                             <Route exact path="/userprofile/calendar" render={() => (
-                                <UserCalendar />
+                                <UserCalendar student={student} />
                             )} />
 
                         </Switch>
