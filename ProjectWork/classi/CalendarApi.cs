@@ -17,7 +17,10 @@ namespace ProjectWork.classi
                 ApiKey = "AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs"
             });
 
-            var response = service.Events.List("ckhj7iqj3msae4i4ietm5ip1cg@group.calendar.google.com").Execute();
+            var request = service.Events.List("ckhj7iqj3msae4i4ietm5ip1cg@group.calendar.google.com");
+            request.MaxResults = 400;
+
+            var response = request.Execute();
             var events = response.Items;
             var result = new List<EventiModel>();
 
