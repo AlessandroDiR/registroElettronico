@@ -2,11 +2,10 @@ import React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { IStudent } from '../../models/IStudent';
 import { routerHistory } from '../..';
-import { Icon, Spin, Progress, Statistic, Tabs } from 'antd';
+import { Icon, Spin, Progress, Statistic } from 'antd';
 import PresenzeTable from './PresenzeTable';
 import Axios from 'axios';
 import { formatItalian, siteUrl, fixTotPresenze } from '../../utilities';
-import VotiStudent from './VotiStudent';
 
 export interface IRouteParams{
     readonly id: string
@@ -60,7 +59,6 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
 
     render(): JSX.Element{
         const { student, totPresenze } = this.state
-        const { TabPane } = Tabs
 
         if(!student || !totPresenze){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
@@ -81,7 +79,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                         <span className="border-text">{student.annoIscrizione === 2018 ? "Primo" : "Secondo"} anno</span>
                         <h4 className="text-uppercase mb-2 text-truncate">{student.nome} {student.cognome}</h4>
                         <p className="mb-0"><strong>Codice Fiscale</strong>: {student.cf}</p>
-                        <p className="mb-0"><strong>Nascita</strong>: {student.luogoNascita}, {formatItalian(student.dataNascita)}</p>
+                        <p className="mb-0"><strong>Data di nascita</strong>: {formatItalian(student.dataNascita)}</p>
                         <p className="mb-0"><strong>E-mail</strong>: {student.email}</p>
                     </div>
                 </div>
@@ -94,14 +92,8 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                 </div>
             </div>
 
-            <Tabs defaultActiveKey="1" tabPosition="left" className="mt-4">
-                <TabPane tab="Presenze" key="1">
-                    <PresenzeTable studente={student.idStudente} />
-                </TabPane>
-                <TabPane tab="Voti" key="2">
-                    <VotiStudent studente={student.idStudente} />
-                </TabPane>
-            </Tabs>
+            <h3 className="mt-3">Presenze dello studente</h3>
+            <PresenzeTable studente={student.idStudente} />
             
         </div>
     }

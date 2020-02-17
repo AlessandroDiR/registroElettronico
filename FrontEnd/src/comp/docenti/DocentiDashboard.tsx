@@ -3,8 +3,8 @@ import { NavLink, Route, Router, Switch } from 'react-router-dom';
 import { routerHistory } from "../.."
 import { Docente } from "../../models/DocenteModel";
 import LoginDocenti from "./LoginDocenti";
-import StudentsList from "./StudentsList"
-import StudentDetails from "./StudentDetails";
+import LezioniDocente from "./LezioniDocente";
+import LezioneDetails from "./LezioneDetails";
 
 export default class DocentiDashboard extends React.Component{
 
@@ -29,8 +29,8 @@ export default class DocentiDashboard extends React.Component{
                             <img src="https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png" height="100" className="mx-auto d-block logo" alt="logo" />
                         </div>
 
-                        <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/docentipanel/studenti")} to="/docentipanel/studenti">
-                            <span>Studenti</span>
+                        <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/docentipanel/lezioni")} to="/docentipanel/lezioni">
+                            <span>Lezioni tenute</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => {
                             sessionStorage.removeItem("docenteSession")
@@ -43,20 +43,18 @@ export default class DocentiDashboard extends React.Component{
                     
                         <Switch>
                             <Route exact path="/docentipanel/" render={() => {
-                                routerHistory.push("/docentipanel/studenti")
+                                routerHistory.push("/docentipanel/lezioni")
 
                                 return null
                             }} />
 
-                            <Route exact path="/docentipanel/studenti" render={() => (
-                                <StudentsList corso={admin.corso} />
+                            <Route exact path="/docentipanel/lezioni/:id" render={(routeProps) => (
+                                <LezioneDetails {...routeProps} corso={admin.corso} />
                             )} />
 
-                            <Route exact path="/docentipanel/studenti/:id" render={(routeProps) => (
-                                <StudentDetails {...routeProps} corso={admin.corso} idDocente={admin.id} />
-                            )} />
-
-
+                            <Route exact path="/docentipanel/lezioni" render={() => 
+                                <LezioniDocente idCorso={admin.corso} idDocente={admin.id}/>
+                            } />
                         </Switch>
                         
                     </div>

@@ -13,7 +13,6 @@ export interface IState{
     readonly gNascita: string
     readonly mNascita: string
     readonly aNascita: string
-    readonly luogoNascita: string
     readonly cf: string
     readonly email: string
     readonly annoScolastico: number
@@ -30,7 +29,6 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
             gNascita: "",
             mNascita: "",
             aNascita: "",
-            luogoNascita: "",
             cf: "",
             annoScolastico: 1,
             email: ""
@@ -85,14 +83,6 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
         })
     }
 
-    changeLuogo = (event: any) => {
-        let luogo = event.target.value
-
-        this.setState({
-            luogoNascita: luogo
-        })
-    }
-
     changeAnnoScolastico = (event: any) => {
         let annoS = event.target.value
 
@@ -110,12 +100,12 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
     }
 
     aggiungiStudente = () => {
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, cf, annoScolastico, email } = this.state
+        const { nome, cognome, gNascita, mNascita, aNascita, cf, annoScolastico, email } = this.state
         let giorno = parseInt(gNascita),
         mese = parseInt(mNascita),
         anno = parseInt(aNascita)
 
-        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || cf === "" || !annoScolastico || email === ""){
+        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || cf === "" || !annoScolastico || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -150,7 +140,6 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
             email: email,
             annoIscrizione: annoScolastico,
             dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
-            luogoNascita: luogoNascita,
             idCorso: this.props.corso
         }]
 
@@ -167,7 +156,7 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, cf, email } = this.state
+        const { nome, cognome, gNascita, mNascita, aNascita, cf, email } = this.state
 
         return <div className="col-9 px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo studente</h3>
@@ -183,8 +172,11 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
                         <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
                     </div>
                     <div className="col">
-                        <label className="text-secondary">E-mail</label>
-                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
+                        <label className="text-secondary">Anno frequentato</label>
+                        <select onChange={this.changeAnnoScolastico} className="custom-select">
+                            <option value={1}>Primo anno</option>
+                            <option value={2}>Secondo anno</option>
+                        </select>
                     </div>
                 </div>
 
@@ -205,19 +197,12 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
                 
                 <div className="form-group row">
                     <div className="col">
-                        <label className="text-secondary">Luogo di nascita</label>
-                        <input type="text" className="form-control" value={luogoNascita} onChange={this.changeLuogo} />
+                        <label className="text-secondary">E-mail</label>
+                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Codice Fiscale</label>
                         <input type="text" className="form-control" maxLength={16} value={cf} onChange={this.changeCF} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">Anno frequentato</label>
-                        <select onChange={this.changeAnnoScolastico} className="custom-select">
-                            <option value={1}>Primo anno</option>
-                            <option value={2}>Secondo anno</option>
-                        </select>
                     </div>
                 </div>
 
