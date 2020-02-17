@@ -55,7 +55,7 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            var valutazioni = _context.Valutazioni.Where(v => v.IdDocente == idDocente && v.IdStudente == v.IdStudente);
+            var valutazioni = _context.Valutazioni.Where(v => v.IdDocente == idDocente && v.IdStudente == idStudente);
 
             if (valutazioni == null)
             {

@@ -221,8 +221,6 @@ namespace ProjectWork.Models
                     .HasColumnName("data")
                     .HasColumnType("date");
 
-                entity.Property(e => e.IdMateria).HasColumnName("id_materia");
-
                 entity.Property(e => e.OraFine).HasColumnName("ora_fine");
 
                 entity.Property(e => e.OraInizio).HasColumnName("ora_inizio");
@@ -230,11 +228,6 @@ namespace ProjectWork.Models
                 entity.Property(e => e.Titolo)
                     .HasColumnName("titolo")
                     .HasColumnType("text");
-
-                entity.HasOne(d => d.IdMateriaNavigation)
-                    .WithMany(p => p.Lezioni)
-                    .HasForeignKey(d => d.IdMateria)
-                    .HasConstraintName("FK_Lezioni_Materie");
             });
 
             modelBuilder.Entity<Materie>(entity =>
@@ -286,7 +279,7 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.IdStudente).HasColumnName("id_studente");
 
-                entity.Property(e => e.AnnoIscrizione).HasColumnName("anno_iscrizione");
+                entity.Property(e => e.AnnoFrequentazione).HasColumnName("anno_frequentazione");
 
                 entity.Property(e => e.Cf)
                     .IsRequired()
@@ -310,12 +303,6 @@ namespace ProjectWork.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.IdCorso).HasColumnName("id_corso");
-
-                entity.Property(e => e.LuogoNascita)
-                    .IsRequired()
-                    .HasColumnName("luogo_nascita")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.Nome)
                     .IsRequired()

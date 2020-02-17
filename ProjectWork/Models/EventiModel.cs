@@ -8,8 +8,8 @@ namespace ProjectWork.Models
     public class EventiModel
     {
         public string summary { get; set; }
-        public DateTime? date { get; set; }
-        public TimeSpan? start { get; set; }
-        public TimeSpan? end { get; set; }
+        public DateTime date { get; set; }
+        public TimeSpan start { get; set; }
+        public TimeSpan end { get; set; }
     }
 }

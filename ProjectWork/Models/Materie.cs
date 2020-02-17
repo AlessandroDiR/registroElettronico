@@ -9,7 +9,6 @@ namespace ProjectWork.Models
         {
             Comprende = new HashSet<Comprende>();
             Insegnare = new HashSet<Insegnare>();
-            Lezioni = new HashSet<Lezioni>();
             Valutazioni = new HashSet<Valutazioni>();
         }
 
@@ -19,7 +18,6 @@ namespace ProjectWork.Models
 
         public ICollection<Comprende> Comprende { get; set; }
         public ICollection<Insegnare> Insegnare { get; set; }
-        public ICollection<Lezioni> Lezioni { get; set; }
         public ICollection<Valutazioni> Valutazioni { get; set; }
     }
 }

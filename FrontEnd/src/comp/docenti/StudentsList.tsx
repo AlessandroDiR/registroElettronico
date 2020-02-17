@@ -101,6 +101,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 
                 {
                     groups.map(g => {
+                        if(!g[0])
+                            return false;
                         return <tbody className="border-top-0">
                             
                             <tr className="thead-light">

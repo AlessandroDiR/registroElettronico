@@ -38,13 +38,13 @@ namespace ProjectWork.Controllers
                     nome = s.Nome,
                     cognome = s.Cognome,
                     email = s.Email,
-                    luogoNascita = s.LuogoNascita,
                     dataNascita = s.DataNascita,
                     cf = s.Cf,
                     password = s.Password,
                     ritirato = s.Ritirato,
-                    annoIscrizione = s.AnnoIscrizione,
-                    giornate = GetDaysAmount(s.IdStudente)
+                    annoFrequentazione = s.AnnoFrequentazione,
+                    giornate = GetDaysAmount(s.IdStudente),
+                    frequenza = GetPercentualeFrequenza(s.IdStudente)
                 };
 
                 result.Add(json);
@@ -141,17 +141,7 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
-            var presenzeTotali = _context.Presenze.Where(p => p.IdStudente == idStudente);
-            TimeSpan? hoursAmount = new TimeSpan();
-
-            foreach (var p in presenzeTotali)
-            {
-                var dailyHours = p.Uscita - p.Ingresso;
-                if (dailyHours != null)
-                {
-                    hoursAmount += dailyHours;
-                }
-            }
+            var hoursAmount = HoursAmount(idStudente);
 
             return Ok(hoursAmount);
         }
@@ -177,7 +167,7 @@ namespace ProjectWork.Controllers
                     idPresenza = p.IdPresenza,
                     idStudente = p.IdStudente,
                     data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).Data,
-                    lezione = _context.Materie.FirstOrDefault(m => m.IdMateria == p.IdLezioneNavigation.IdMateria).Nome,
+                    lezione = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).Titolo,
                     ingresso = p.Ingresso,
                     uscita = p.Uscita
                 };
@@ -206,8 +196,7 @@ namespace ProjectWork.Controllers
                 studente.Cf = s.Cf;
                 studente.Email = s.Email;
                 studente.DataNascita = s.DataNascita;
-                studente.AnnoIscrizione = s.AnnoIscrizione;
-                studente.LuogoNascita = s.LuogoNascita;
+                studente.AnnoFrequentazione = s.AnnoFrequentazione;
                 studente.IdCorso = s.IdCorso;
                 studente.Password = s.Cf;
 
@@ -335,7 +324,7 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return OutputMsg.generateMessage("Ops", "Non ci sono lezioni oggi!", true);
+            return OutputMsg.generateMessage("Spiacente", "Non ci sono lezioni oggi!", true);
         }
 
         public int GetDaysAmount(int idStudente)
@@ -352,6 +341,41 @@ namespace ProjectWork.Controllers
             var daysAmount = getPresenze.GroupBy(p => p.IdLezioneNavigation.Data);
 
             return daysAmount.Count();
+        }
+
+        public double GetPercentualeFrequenza(int idStudente)
+        {
+            // la percentuale viene calcolata in relazione alle ore di lezione svolte ed alle ore di presenza effettive dello studente
+            var lezioni = _context.Lezioni.Where(l => l.Data <= DateTime.Now && l.OraInizio > DateTime.Now.TimeOfDay);
+            TimeSpan totOreLezioni = new TimeSpan();
+
+            foreach (var l in lezioni)
+            {
+                totOreLezioni += l.OraFine - l.OraInizio;
+            }
+
+            var oreEffettiveStudente = HoursAmount(idStudente);
+
+            var percentualePresenza = oreEffettiveStudente.TotalHours * 100 / totOreLezioni.TotalHours;
+
+            return Math.Round(percentualePresenza, 0);
+        }
+
+        public TimeSpan HoursAmount(int idStudente)
+        {
+            var presenzeTotali = _context.Presenze.Where(p => p.IdStudente == idStudente);
+            TimeSpan hoursAmount = new TimeSpan();
+
+            foreach (var p in presenzeTotali)
+            {
+                var dailyHours = p.Uscita - p.Ingresso;
+                if (dailyHours != null)
+                {
+                    hoursAmount += dailyHours;
+                }
+            }
+
+            return hoursAmount;
         }
     }
 }

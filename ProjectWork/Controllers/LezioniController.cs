@@ -26,6 +26,7 @@ namespace ProjectWork.Controllers
         {
             //SaveEventsInContext();
             return _context.Lezioni.OrderBy(l => l.Data);
+            //return CalendarApi.GetCalendarEvents();
         }
 
         public void SaveEventsInContext()
