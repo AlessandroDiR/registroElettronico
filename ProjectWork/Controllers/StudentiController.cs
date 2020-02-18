@@ -107,6 +107,25 @@ namespace ProjectWork.Controllers
             return Ok(studenti);
         }
 
+        // GET: api/Studenti/GetStudentiByCorso/5
+        [HttpGet("[action]/{idc}")]
+        public async Task<IActionResult> GetStudentiByCorso([FromRoute] int idc)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var studenti =  _context.Studenti.Where(s => s.IdCorso == idc);
+
+            if (studenti == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(studenti);
+        }
+
         // GET: api/Studenti/firma/codice
         [HttpGet("[action]/{code}")]
         public string Firma([FromRoute] string code)
@@ -248,7 +267,6 @@ namespace ProjectWork.Controllers
                 return BadRequest();
             }
 
-            studenti.Ritirato = studenti.Ritirato;
             _context.Entry(studenti).State = EntityState.Modified;
 
             try
@@ -264,6 +282,38 @@ namespace ProjectWork.Controllers
                 else
                 {
                     throw;
+                }
+            }
+
+            return Ok(studenti);
+        }
+
+        // PUT: api/Studenti
+        [HttpPut()]
+        public async Task<IActionResult> PutStudentiArray([FromBody] Studenti[] studenti)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            foreach (var item in studenti)
+            {
+                _context.Entry(item).State = EntityState.Modified;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!StudentiExists(item.IdStudente))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
 

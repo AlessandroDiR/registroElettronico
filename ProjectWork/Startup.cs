@@ -29,7 +29,7 @@ namespace ProjectWork
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AvocadoDBContext>(options =>
-                options.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;"));
+                options.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;"));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
