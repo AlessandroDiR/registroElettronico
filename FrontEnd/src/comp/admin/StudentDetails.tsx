@@ -5,7 +5,7 @@ import { routerHistory } from '../..';
 import { Icon, Spin, Progress, Statistic } from 'antd';
 import PresenzeTable from './PresenzeTable';
 import Axios from 'axios';
-import { formatItalian, siteUrl, fixTotPresenze } from '../../utilities';
+import { formatItalian, siteUrl } from '../../utilities';
 
 export interface IRouteParams{
     readonly id: string
@@ -16,6 +16,7 @@ export interface IProps extends RouteComponentProps<IRouteParams>{
 export interface IState{
     readonly student: IStudent
     readonly totPresenze: string
+    readonly oreTotali: number
 }
 
 export default class StudentDetails extends React.PureComponent<IProps, IState>{
@@ -25,7 +26,8 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
 
         this.state = {
             student: null,
-            totPresenze: null
+            totPresenze: null,
+            oreTotali: null
         }
     }
 
@@ -34,11 +36,6 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
 
         if(isNaN(id))
             routerHistory.push("/adminpanel")
-
-        /****************************************************/
-        /* CARICAMENTO DATI UTENTE (REDIRECT SE NON ESISTE) */
-        /* CONTROLLARE ANCHE SE FA PARTE DEL CORSO          */
-        /****************************************************/
 
         Axios.get(siteUrl+"/api/studenti/getstudentibyid/" + id).then((response) => {
             this.setState({
@@ -51,6 +48,12 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                 totPresenze: response.data as string
             })
         })
+
+        Axios.get(siteUrl+"/api/studenti/gettotaleorelezioni").then((response) => {
+            this.setState({
+                oreTotali: response.data as number
+            })
+        })
     }
 
     roundToTwo = (total: number, current: number) => {    
@@ -58,9 +61,9 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { student, totPresenze } = this.state
+        const { student, totPresenze, oreTotali } = this.state
 
-        if(!student || !totPresenze){
+        if(!student || !totPresenze || !oreTotali){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
             return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
@@ -68,15 +71,15 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
             </div>
         }
 
-        let tot = fixTotPresenze(totPresenze).toFixed(2),
-        perc = this.roundToTwo(2000, Number(tot)),
+        let tot = oreTotali.toFixed(2),
+        perc = student.frequenza,
         color = perc >= 80 ? "var(--success)" : "var(--danger)"
 
         return <div className="col-9 px-5 py-4 right-block">
             <div className="row mx-0">
                 <div className="col-6 pl-0">
                     <div className="p-3 bg-white border position-relative rounded">
-                        <span className="border-text">{student.annoIscrizione === 2018 ? "Primo" : "Secondo"} anno</span>
+                        <span className="border-text">{student.annoFrequentazione === 1 ? "Primo" : "Secondo"} anno</span>
                         <h4 className="text-uppercase mb-2 text-truncate">{student.nome} {student.cognome}</h4>
                         <p className="mb-0"><strong>Codice Fiscale</strong>: {student.cf}</p>
                         <p className="mb-0"><strong>Data di nascita</strong>: {formatItalian(student.dataNascita)}</p>
@@ -86,7 +89,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                 <div className="col-6 pr-0">
                     <div className="p-3 bg-white border rounded">
                         <Progress type="circle" percent={perc} width={80} className="float-left mr-3" strokeColor={color} />
-                        <Statistic title="Presenze totali (ore)" value={tot} suffix="/ 2000" decimalSeparator="," groupSeparator="." />
+                        <Statistic title="Presenze totali (ore)" value={tot} suffix={"/ "+oreTotali} decimalSeparator="," groupSeparator="." />
                         <div className="clearfix"></div>
                     </div>
                 </div>

@@ -36,7 +36,7 @@ export default class QRCodeScreen extends React.PureComponent<IProps, IState>{
             let date = new Date()
 
             this.setState({
-                code: response.data + date.getMilliseconds()
+                code: response.data
             })
         })
     }

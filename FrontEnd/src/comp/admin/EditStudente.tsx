@@ -159,7 +159,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             password: this.state.studente.password,
             cf: CF,
             idCorso: this.props.corso,
-            annoIscrizione: this.state.studente.annoIscrizione,
+            annoFrequentazione: this.state.studente.annoFrequentazione,
             dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
             ritirato: this.state.studente.ritirato
         }).then(response => {

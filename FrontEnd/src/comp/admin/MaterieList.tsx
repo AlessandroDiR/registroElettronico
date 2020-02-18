@@ -69,34 +69,25 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             })
 
            return
-        }        
-
-        /************************************************/
-        /* CREAZIONE MATERIA E POI MOSTRARE MODAL       */
-        /* RITORNARE LISTA AGGIORNATA MATERIE           */
-        /************************************************/
+        }
 
         this.setState({
             materie: null,
             showModal: false
         })
 
-        const params = new URLSearchParams();
-        params.append('materia', JSON.stringify({ nome: nomeMateria }));
+        Axios.post(siteUrl+"/api/materie", {
+            nome: nomeMateria
+        }).then(response => {
+            let materie = response.data as IMateria[]
 
-        Axios.post(siteUrl+"/reg/api", params).then(response => {
             this.setState({
-                materie: response.data as IMateria[]
+                materie: materie
             })
 
             Modal.success({
                 title: "Complimenti!",
-                content: "Materia aggiunta con successo.",
-                onOk: () => {
-                    this.setState({
-                        nomeMateria: ""
-                    })
-                }
+                content: "Materia aggiunta con successo."
             })
 
         })
@@ -104,7 +95,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
     }
 
     modificaMateria = () => {
-        const { nomeEdit } = this.state
+        const { nomeEdit, materiaEdit } = this.state
 
         if(nomeEdit === ""){
             Modal.error({
@@ -113,32 +104,28 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             })
 
            return
-        }        
-
-        /************************************************/
-        /* MODIFICA MATERIA E POI MOSTRARE MODAL        */
-        /* RITORNARE LISTA AGGIORNATA MATERIE           */
-        /************************************************/
-
+        }
+        
         this.setState({
             materie: null,
             showEditModal: false
         })
 
-        const params = new URLSearchParams();
-        params.append('modificaMateria', JSON.stringify({ idMateria: this.state.materiaEdit.idMateria,nome: nomeEdit }));
+        Axios.put(siteUrl+"/api/materie", {
+            idMateria: materiaEdit.idMateria,
+            nome: nomeEdit
+        }).then(response => {
+            let materie = response.data as IMateria[]
 
-        Axios.post(siteUrl+"/reg/api", params).then(response => {
             this.setState({
-                materie: response.data as IMateria[]
+                materie: materie,
+                materiaEdit: null,
+                nomeEdit: ""
             })
 
             Modal.success({
                 title: "Complimenti!",
-                content: "Materia modificata con successo.",
-                onOk: () => {
-                    this.hideEditModal()
-                }
+                content: "Materia aggiunta con successo."
             })
 
         })

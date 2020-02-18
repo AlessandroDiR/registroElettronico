@@ -138,7 +138,7 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
             cf: cf,
             password: cf,
             email: email,
-            annoIscrizione: annoScolastico,
+            annoFrequentazione: annoScolastico,
             dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
             idCorso: this.props.corso
         }]

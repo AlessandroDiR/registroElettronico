@@ -93,14 +93,15 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
         const { entrataEdit, uscitaEdit, presenze } = this.state
 
         let entrataSpan = document.getElementById("entrataSpan_" + id),
-        uscitaSpan = document.getElementById("uscitaSpan_" + id)
+        uscitaSpan = document.getElementById("uscitaSpan_" + id),
+        presenza = presenze.find(p => p.idPresenza === id)
 
-        Axios.post(siteUrl+"/reg/api.php", {
-            modificaPresenza: {
-                idPresenza: id,
-                ingresso: entrataEdit,
-                uscita: uscitaEdit
-            }
+        Axios.put(siteUrl+"/api/presenze/" + id, {
+            idPresenza: presenza.idPresenza,
+            idStudente: presenza.idStudente,
+            ingresso: entrataEdit,
+            uscita: uscitaEdit,
+            idLezione: presenza.idLezione
         }).then(response => {
             let output = response.data
 
@@ -136,7 +137,6 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
     render(): JSX.Element{
         const { presenze, entrataEdit, uscitaEdit } = this.state
 
-        console.log(presenze)
         if(!presenze){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 

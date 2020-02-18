@@ -32,6 +32,8 @@ export default class FirmaComponent extends React.PureComponent<IProps, IState>{
     }
 
     tryToLog = (code: string) => {
+        if(code.length < 16) return false
+        
         axios.get(siteUrl + "/api/studenti/firma/" + code).then((response) => {
             this.setState({
                 popup: response.data as IMessage

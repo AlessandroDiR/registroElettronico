@@ -4,11 +4,12 @@ export interface IStudent{
     readonly idCorso: number
     readonly nome: string
     readonly cognome: string
-    readonly annoIscrizione: number
+    readonly annoFrequentazione: number
     readonly cf: string
     readonly password?: string
     readonly dataNascita: string
     readonly code?: string
     readonly ritirato?: boolean
     readonly giornate?: number
+    readonly frequenza?: number
 }

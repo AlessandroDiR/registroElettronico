@@ -33,7 +33,7 @@ export default class UserCalendar extends React.PureComponent<IProps, IState> {
         /*************************************/
         /* CARICAMENTO CALENDARIO IN BASE A  */
         /* this.props.student.idCorso        */
-        /* this.props.student.annoIScrizione */
+        /* this.props.student.annoFrequentazione */
         /*************************************/
     }
     

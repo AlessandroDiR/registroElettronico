@@ -13,7 +13,7 @@ export default class UserApplication extends React.Component{
             idCorso: 1,
             nome: "Leonardo",
             cognome: "Grandolfo",
-            annoIscrizione: 1,
+            annoFrequentazione: 1,
             cf: "GRNLRD99D17L219L",
             dataNascita: "17-04-1999",
             code: "CIAO-GGG"
