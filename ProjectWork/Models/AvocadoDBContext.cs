@@ -26,7 +26,6 @@ namespace ProjectWork.Models
         public virtual DbSet<Presenze> Presenze { get; set; }
         public virtual DbSet<Studenti> Studenti { get; set; }
         public virtual DbSet<Tenere> Tenere { get; set; }
-        public virtual DbSet<Valutazioni> Valutazioni { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -221,6 +220,8 @@ namespace ProjectWork.Models
                     .HasColumnName("data")
                     .HasColumnType("date");
 
+                entity.Property(e => e.IdMateria).HasColumnName("id_materia");
+
                 entity.Property(e => e.OraFine).HasColumnName("ora_fine");
 
                 entity.Property(e => e.OraInizio).HasColumnName("ora_inizio");
@@ -228,6 +229,11 @@ namespace ProjectWork.Models
                 entity.Property(e => e.Titolo)
                     .HasColumnName("titolo")
                     .HasColumnType("text");
+
+                entity.HasOne(d => d.IdMateriaNavigation)
+                    .WithMany(p => p.Lezioni)
+                    .HasForeignKey(d => d.IdMateria)
+                    .HasConstraintName("FK_Lezioni_Materie");
             });
 
             modelBuilder.Entity<Materie>(entity =>
@@ -348,47 +354,6 @@ namespace ProjectWork.Models
                     .HasForeignKey(d => d.IdDocente)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Tenere_Docenti");
-            });
-
-            modelBuilder.Entity<Valutazioni>(entity =>
-            {
-                entity.HasKey(e => e.IdValutazione);
-
-                entity.Property(e => e.IdValutazione).HasColumnName("id_valutazione");
-
-                entity.Property(e => e.Data)
-                    .HasColumnName("data")
-                    .HasColumnType("date");
-
-                entity.Property(e => e.IdDocente).HasColumnName("id_docente");
-
-                entity.Property(e => e.IdMateria).HasColumnName("id_materia");
-
-                entity.Property(e => e.IdStudente).HasColumnName("id_studente");
-
-                entity.Property(e => e.Voto)
-                    .IsRequired()
-                    .HasColumnName("voto")
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.IdDocenteNavigation)
-                    .WithMany(p => p.Valutazioni)
-                    .HasForeignKey(d => d.IdDocente)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Valutazioni_Docenti");
-
-                entity.HasOne(d => d.IdMateriaNavigation)
-                    .WithMany(p => p.Valutazioni)
-                    .HasForeignKey(d => d.IdMateria)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Valutazioni_Materie");
-
-                entity.HasOne(d => d.IdStudenteNavigation)
-                    .WithMany(p => p.Valutazioni)
-                    .HasForeignKey(d => d.IdStudente)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Valutazioni_Studenti");
             });
         }
     }
