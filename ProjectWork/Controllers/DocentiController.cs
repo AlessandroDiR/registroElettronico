@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectWork.Models;
+using BCrypt;
 
 namespace ProjectWork.Controllers
 {
@@ -71,6 +72,27 @@ namespace ProjectWork.Controllers
 
 
             return Ok(result);
+        }
+
+        // GET: api/Docenti/GetDocentiByCorso/5
+        [HttpGet("[action]/{idc}")]
+        public async Task<IActionResult> GetDocentiByCorso([FromRoute] int idc)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var tenere = _context.Tenere.Where(t => t.IdCorso == idc);
+
+            var docenti = _context.Docenti.Where(d => tenere.Any(t => t.IdDocente == d.IdDocente));
+
+            if (docenti == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(docenti);
         }
 
         // GET: api/Docenti/GetDocentiByCf/cf
@@ -172,7 +194,7 @@ namespace ProjectWork.Controllers
             docente.Cf = d.Cf;
             docente.DataNascita = d.DataNascita;
             docente.LuogoNascita = d.LuogoNascita;
-            docente.Password = d.Cf;
+            docente.Password = BCrypt.Net.BCrypt.HashPassword(d.Cf);
             docente.Email = d.Email;
 
             var doc = _context.Docenti.Last();

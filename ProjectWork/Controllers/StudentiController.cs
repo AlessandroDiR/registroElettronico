@@ -90,6 +90,25 @@ namespace ProjectWork.Controllers
             return Ok(studenti);
         }
 
+        // GET: api/Studenti/GetStudentiByCorso/5
+        [HttpGet("[action]/{idc}")]
+        public async Task<IActionResult> GetStudentiByCorso([FromRoute] int idc)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var studenti =  _context.Studenti.Where(s => s.IdCorso == idc);
+
+            if (studenti == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(studenti);
+        }
+
         // GET: api/Studenti/firma/codice
         [HttpGet("[action]/{code}")]
         public string Firma([FromRoute] string code)
