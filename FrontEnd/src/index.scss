@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500');
-@import url('https://pro.fontawesome.com/releases/v5.10.2/css/all.css');
+@import url('https://pro.fontawesome.com/releases/v5.12.0/css/all.css');
 
 $bodycolor: #fff;
 $mobilecolor: #1999e4;
@@ -7,7 +7,8 @@ $mobilecolor: #1999e4;
 $theme-colors: (
   "orange": #f57723,
   "warning": #ffbb00,
-  "blue": #1e99d5
+  "blue": #1e99d5,
+  "white": #fff
 );
 
 @import "node_modules/bootstrap/scss/bootstrap";
@@ -136,7 +137,17 @@ body{
   opacity: 0.4
 }
 .fc-today{
-  background-color: #fce3e3 !important
+  background-color: #fce3e3 !important;
+
+  &:not(.fc-day-top):after{
+    content: "\f08d";
+    font: 300 40px "Font Awesome 5 Pro";
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    color: rgba(0,0,0,0.2);
+    transform: rotate(45deg)
+  }
 }
 td.fc-day-top{
   text-align: center
@@ -163,84 +174,27 @@ a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end{
     border-color: #266baf
   }
 }
-.fc-day-grid-event *, .event-bubble * {
-  pointer-events: none
-}
-.fc *, .event-bubble{
+.fc *{
   font-family: "Segoe UI";
   font-size: initial;
   font-weight: initial
 }
-.event-bubble{
-  width: 400px;
-  padding: 1rem;
-  background: #fff;
-  border-radius: 4px;
-  box-shadow: 0 0 5px 3px rgba(0,0,0,0.25);
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 0;
-
-  &.mobile-bubble{
-    width: 300px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%)
-  }
-
-  & .event-title{
-    line-height: 1.4rem;
-    font-weight: 500;
-
-    & .icon{
-      color: green;
-      pointer-events: none
-    }
-  }
-
-  & .label{
-    text-align: center;
-    background-color: #3788d8;
-    color: #fff;
-    border-radius: 50px;
-    display: block;
-    font-size: 14px;
-    padding: 0.15rem 0
-  }
-
-  & .desc{
-    background-color: #555;
-    border-radius: 50px;
-    color: #fff;
-    padding: 0 1rem;
-    font-size: 17px;
-    height: 100%
-  }
-
-  & .where{
-    font-size: 13px
-  }
+.label, .desc{
+  text-align: center;
+  background-color: #3788d8;
+  color: #fff;
+  border-radius: 50px;
+  display: block;
+  font-size: 14px;
+  padding: 0.1rem 0;
+  margin-bottom: 0.3rem
+}
+.desc{
+  width: 100px;
+  background-color: #555
 }
 table td, table th{
   vertical-align: middle !important
-}
-.event-bubble .bubble-close, .year-mark, .faq{
-  border-radius: 50px;
-  width: 35px;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  float: right;
-  font-size: 20px;
-  cursor: pointer;
-  margin-left: 0.7rem;
-  color: #888;
-  pointer-events: all
-}
-.event-bubble .bubble-close:hover, .year-mark, .faq:hover{
-  background: #f1f1f1
 }
 .edit-time{
   padding: 0.2rem;
@@ -265,7 +219,8 @@ table td, table th{
   top: 0;
   left: 20px;
   transform: translateY(-50%);
-  font-weight: 500
+  font-weight: 500;
+  text-transform: uppercase
 }
 .circle-btn{
   border-radius: 50px;
@@ -375,4 +330,33 @@ table td, table th{
     width: 145px !important;
     margin: 0 !important 
   }
+}
+.edited{
+  position: relative;
+  z-index: 1;
+
+  &:after{
+    display: block;
+    content: "";
+    height: 100%;
+    width: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(8, 218, 54, 0.2);
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    animation: changed 1s ease forwards
+  }
+}
+.top-info{
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 16px
+}
+
+@keyframes changed{
+  20%{ width: 100% }
+  100%{ width: 100%; opacity: 0 }
 }

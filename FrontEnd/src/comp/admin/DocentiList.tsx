@@ -23,7 +23,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/reg/api?docenti&corso=1").then((response) => {
+        Axios.get(siteUrl+"/api/docenti").then((response) => {
             this.setState({
                 docenti: response.data as IDocente[]
             })
@@ -32,8 +32,8 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
 
     showDeleteConfirm = (student: IDocente) => {
         Modal.confirm({
-            title: 'Confermi di voler eliminare questo docente dal corso? (' + student.nome + ' ' + student.cognome + ')',
-            content: 'Insieme al docente verranno cancellate anche tutte le entrate e le uscite relative al docente.',
+            title: 'Confermi di voler rimuovere questo docente dal corso? (' + student.nome + ' ' + student.cognome + ')',
+            content: 'I dati del docente verranno comunque mantenuti, ma il docente non sarà più visualizzabile in questa lista.',
             okText: 'Confermo',
             okType: 'danger',
             cancelText: 'Annulla',
@@ -94,9 +94,9 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                                             </button>
                                         </Tooltip>
                                         
-                                        <Tooltip title="Elimina">
+                                        <Tooltip title="Rimuovi">
                                             <button type="button" className="btn btn-danger circle-btn" onClick={() => this.showDeleteConfirm(d)}>
-                                                <i className="fa fa-trash"></i>
+                                                <i className="fa fa-user-times"></i>
                                             </button>
                                         </Tooltip>
                                     </td>

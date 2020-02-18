@@ -1,7 +1,8 @@
 import React from "react"
 import { Modal } from "antd";
 import { routerHistory } from "../..";
-import { isValidData } from "../../utilities";
+import { isValidData, siteUrl } from "../../utilities";
+import Axios from "axios";
 
 export interface IProps{
     readonly corso: number
@@ -12,8 +13,8 @@ export interface IState{
     readonly gNascita: string
     readonly mNascita: string
     readonly aNascita: string
-    readonly luogoNascita: string
-    readonly CF: string
+    readonly cf: string
+    readonly email: string
     readonly annoScolastico: number
 }
 
@@ -28,9 +29,9 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
             gNascita: "",
             mNascita: "",
             aNascita: "",
-            luogoNascita: "",
-            CF: "",
-            annoScolastico: 1
+            cf: "",
+            annoScolastico: 1,
+            email: ""
         }
     }
 
@@ -47,6 +48,14 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
 
         this.setState({
             cognome: cognome
+        })
+    }
+
+    changeEmail = (event: any) => {
+        let email = event.target.value
+
+        this.setState({
+            email: email
         })
     }
 
@@ -74,14 +83,6 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
         })
     }
 
-    changeLuogo = (event: any) => {
-        let luogo = event.target.value
-
-        this.setState({
-            luogoNascita: luogo
-        })
-    }
-
     changeAnnoScolastico = (event: any) => {
         let annoS = event.target.value
 
@@ -94,17 +95,17 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
         let CF = event.target.value
 
         this.setState({
-            CF: CF
+            cf: CF
         })
     }
 
     aggiungiStudente = () => {
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, annoScolastico } = this.state
-        let giorno = Number(gNascita),
-        mese = Number(mNascita),
-        anno = Number(aNascita)
+        const { nome, cognome, gNascita, mNascita, aNascita, cf, annoScolastico, email } = this.state
+        let giorno = parseInt(gNascita),
+        mese = parseInt(mNascita),
+        anno = parseInt(aNascita)
 
-        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || CF === ""){
+        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || cf === "" || !annoScolastico || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -122,7 +123,7 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
             return
         }
 
-        if(CF.length !== 16){
+        if(cf.length !== 16){
             Modal.error({
                 title: "Errore!",
                 content: "Codice Fiscale non valido."
@@ -131,22 +132,31 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
             return
         }
 
-        /*************************************************/
-        /* CREAZIONE NUOVO STUDENTE E POI MOSTRARE MODAL */
-        /*************************************************/
+        let students = [{
+            nome: nome,
+            cognome: cognome,
+            cf: cf,
+            password: cf,
+            email: email,
+            annoIscrizione: annoScolastico,
+            dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
+            idCorso: this.props.corso
+        }]
 
-        Modal.success({
-            title: "Complimenti!",
-            content: "Studente creato con successo.",
-            onOk: () => {
-                routerHistory.push("/adminpanel/studenti")
-            }
+        Axios.post(siteUrl+"/api/studenti", students).then(response => {
+            Modal.success({
+                title: "Complimenti!",
+                content: "Studente creato con successo.",
+                onOk: () => {
+                    routerHistory.push("/adminpanel/studenti")
+                }
+            })
         })
 
     }
 
     render(): JSX.Element{
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF } = this.state
+        const { nome, cognome, gNascita, mNascita, aNascita, cf, email } = this.state
 
         return <div className="col-9 px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo studente</h3>
@@ -160,6 +170,13 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
                         <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
+                    </div>
+                    <div className="col">
+                        <label className="text-secondary">Anno frequentato</label>
+                        <select onChange={this.changeAnnoScolastico} className="custom-select">
+                            <option value={1}>Primo anno</option>
+                            <option value={2}>Secondo anno</option>
+                        </select>
                     </div>
                 </div>
 
@@ -180,19 +197,12 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
                 
                 <div className="form-group row">
                     <div className="col">
-                        <label className="text-secondary">Luogo di nascita</label>
-                        <input type="text" className="form-control" value={luogoNascita} onChange={this.changeLuogo} />
+                        <label className="text-secondary">E-mail</label>
+                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Codice Fiscale</label>
-                        <input type="text" className="form-control" maxLength={16} value={CF} onChange={this.changeCF} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">Anno frequentato</label>
-                        <select onChange={this.changeAnnoScolastico} className="custom-select">
-                            <option value={1}>Primo anno</option>
-                            <option value={2}>Secondo anno</option>
-                        </select>
+                        <input type="text" className="form-control" maxLength={16} value={cf} onChange={this.changeCF} />
                     </div>
                 </div>
 

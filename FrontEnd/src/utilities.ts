@@ -1,4 +1,4 @@
-export const siteUrl = "https://localhost:44336"
+export const siteUrl = "http://mygraphic.altervista.org"
 
 export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n
@@ -60,7 +60,13 @@ export const formattaData = (d: string, convert?: boolean) => {
     let from = d.split(/[/-]/g),
     date = convert ? new Date(Number(from[2]), Number(from[1]) - 1, Number(from[0])) : new Date(d)
 
-    return Digits2(date.getDate()) + "-" + Digits2(date.getMonth() + 1) + "-" + date.getFullYear()
+    return `${date.getFullYear()}-${Digits2(date.getMonth() + 1)}-${Digits2(date.getDate())}`
+}
+
+export const formatItalian = (d: string) => {
+    let date = new Date(d)
+
+    return `${Digits2(date.getDate())}-${Digits2(date.getMonth() + 1)}-${date.getFullYear()}` 
 }
 
 export const getDateDay = (d: string) => {
@@ -114,18 +120,6 @@ export const fixTotPresenze = (time: string) => {
     prop = mins / 60
 
     return (Number(pieces[0]) + prop)
-}
-
-window.onclick = (event: any) => {
-    let html = event.target as HTMLElement
-
-    if(!html.classList.contains("fc-day-grid-event") && !html.classList.contains("event-bubble")){
-        let current = document.getElementById("bubble"),
-        body = document.getElementsByTagName("body")[0]
-        
-        if(current)
-            body.removeChild(current)
-    }
 }
 
 export const mountLogin = () => {

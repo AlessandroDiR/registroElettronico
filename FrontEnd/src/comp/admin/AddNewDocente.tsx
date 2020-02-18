@@ -129,9 +129,9 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
 
     aggiungiDocente = () => {
         const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, email, materieSel, corsiSel } = this.state
-        let giorno = Number(gNascita),
-        mese = Number(mNascita),
-        anno = Number(aNascita)
+        let giorno = parseInt(gNascita),
+        mese = parseInt(mNascita),
+        anno = parseInt(aNascita)
 
         if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || CF === "" || email === "" || !materieSel.length || !corsiSel.length){
             Modal.error({
@@ -160,16 +160,22 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             return
         }
 
-        /*************************************************/
-        /* CREAZIONE NUOVO DOCENTE E POI MOSTRARE MODAL */
-        /*************************************************/
-
-        Modal.success({
-            title: "Complimenti!",
-            content: "Docente creato con successo.",
-            onOk: () => {
-                routerHistory.push("/adminpanel/docenti")
-            }
+        Axios.post(siteUrl+"/api/docenti", {
+            nome: nome,
+            cognome: cognome,
+            cf: CF,
+            password: CF,
+            email: email,
+            dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
+            luogoNascita: luogoNascita
+        }).then(_ => {
+            Modal.success({
+                title: "Complimenti!",
+                content: "Docente creato con successo.",
+                onOk: () => {
+                    routerHistory.push("/adminpanel/docenti")
+                }
+            })
         })
 
     }
@@ -217,7 +223,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
                         <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
                     </div>
                     <div className="col">
-                        <label className="text-secondary">Cognome</label>
+                        <label className="text-secondary">E-mail</label>
                         <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                 </div>

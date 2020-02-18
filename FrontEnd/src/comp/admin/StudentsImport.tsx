@@ -1,16 +1,16 @@
 import React from "react"
 import Dragger from "antd/lib/upload/Dragger"
 import { IStudent } from "../../models/IStudent"
-import { Checkbox, Modal, Tooltip, Icon } from "antd"
+import { Modal, Tooltip, Icon } from "antd"
 import { routerHistory } from "../.."
-import { formattaData, capitalizeFirst } from "../../utilities"
+import { formattaData, capitalizeFirst, siteUrl } from "../../utilities"
+import Axios from "axios"
 
 export interface IProps{
     readonly corso: number
 }
 export interface IState{
     readonly addList: IStudent[]
-    readonly jumpFirstLine: boolean
     readonly fileContent: string
     readonly fields: any
 }
@@ -24,9 +24,6 @@ const fields = [{
 },{
     label: "Codice Fiscale",
     field: "cf"
-},{
-    label: "Anno di iscrizione",
-    field: "annoIscrizione"
 },{
     label: "Data di nascita",
     field: "dataNascita"
@@ -42,7 +39,6 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
 
         this.state = {
             addList: [],
-            jumpFirstLine: false,
             fileContent: "",
             fields: {
                 nome: 0,
@@ -50,7 +46,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 cf: 0,
                 dataNascita: 0,
                 email: 0,
-                annoIscrizione: 0
+                annoIscrizione: 1
             }
         }
     }
@@ -100,6 +96,17 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 title: "Selezionare i campi da abbinare",
                 icon: <Icon type="api" style={{ color: "var(--success)" }} />,
                 content: <div style={{ marginLeft: -38 }}>
+                    <div className="row mt-3 px-0">
+                        <div className="col-4">
+                            <label className="mt-2">Classe: </label>
+                        </div>
+                        <div className="col">
+                            <select className="custom-select pointer" style={{ height: 35 }} onChange={(e) => this.changeVarPos(e, "annoIscrizione")}>
+                                <option value="1">Primo anno</option>
+                                <option value="2">Secondo anno</option>
+                            </select>
+                        </div>
+                    </div>
                     {
                         fields.map(f => {
                             return <div className="row mt-3 px-0">
@@ -126,28 +133,24 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
     }
 
     showImportPreview = () => {
-        const { jumpFirstLine, fileContent, fields} = this.state
+        const { fileContent, fields} = this.state
 
         let rows = fileContent.split("\n"),
         list: IStudent[] = [],
         popup = document.getElementById("popup")
 
         rows.forEach((r, i) => {
-            
-            if(i === 0 && jumpFirstLine)
-                return
-
             let cells = this.splitCSV(r)
 
             let student: IStudent = {
                 idCorso: this.props.corso,
                 nome: capitalizeFirst(cells[fields['nome']]),
                 cognome: capitalizeFirst(cells[fields['cognome']]),
-                annoIscrizione: Number(cells[fields['annoIscrizione']]),
+                annoIscrizione: parseInt(fields['annoIscrizione']),
                 cf: cells[fields['cf']],
                 dataNascita: formattaData(cells[fields['dataNascita']], true),
-                luogoNascita: "",
-                email: cells[fields['email']]
+                email: cells[fields['email']],
+                password: cells[fields['cf']]
             }
 
             list.push(student)
@@ -158,12 +161,6 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
         })
 
         popup.classList.add("show")
-    }
-
-    checkUncheck = () => {
-        this.setState({
-            jumpFirstLine: !this.state.jumpFirstLine
-        })
     }
 
     hidePopup = () => {
@@ -185,16 +182,14 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
     }
 
     confirmImport = () => {
-        /*************************************/
-        /* INSERIMENTO DI this.state.addList */
-        /*************************************/
-
-        Modal.success({
-            title: "Congratulazioni!",
-            content: "Importazione eseguita con successo.",
-            onOk: () => {
-                routerHistory.push("/adminpanel/studenti")
-            }
+        Axios.post(siteUrl+"/api/studenti", this.state.addList).then(response => {
+            Modal.success({
+                title: "Congratulazioni!",
+                content: "Importazione eseguita con successo.",
+                onOk: () => {
+                    routerHistory.push("/adminpanel/studenti")
+                }
+            })
         })
     }
 
@@ -204,9 +199,8 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
         return <div className="col-9 p-5 right-block" id="mainBlock" style={{flexDirection: "column"}}>
             <h3 className="text-center w-100">Importa studenti da CSV</h3>
 
-            <label className="pointer">
-                <Checkbox checked={this.state.jumpFirstLine} onChange={this.checkUncheck} className="mr-2" />
-                Saltare la prima riga del file (solo se contiene i nomi dei campi della tabella)
+            <label>
+                Prima di proseguire, esportare il CSV da <strong>Sifer</strong>.
             </label>
 
             <div className="uploader mt-2 w-100">

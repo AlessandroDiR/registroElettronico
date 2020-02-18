@@ -24,6 +24,7 @@
     ".NETCoreApp,Version=v2.1": {
       "ProjectWork/1.0.0": {
         "dependencies": {
+          "Google.Apis.Calendar.v3": "1.43.0.1858",
           "Microsoft.AspNetCore.App": "2.1.1",
           "Microsoft.AspNetCore.Razor.Design": "2.1.2",
           "Microsoft.NETCore.App": "2.1.0",
@@ -35,6 +36,70 @@
         },
         "compile": {
           "ProjectWork.dll": {}
+        }
+      },
+      "Google.Apis/1.43.0": {
+        "dependencies": {
+          "Google.Apis.Core": "1.43.0",
+          "Newtonsoft.Json": "12.0.3"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.dll": {
+            "assemblyVersion": "1.43.0.0",
+            "fileVersion": "1.43.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.dll": {}
+        }
+      },
+      "Google.Apis.Auth/1.43.0": {
+        "dependencies": {
+          "Google.Apis": "1.43.0",
+          "Google.Apis.Core": "1.43.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll": {
+            "assemblyVersion": "1.43.0.0",
+            "fileVersion": "1.43.0.0"
+          },
+          "lib/netstandard2.0/Google.Apis.Auth.dll": {
+            "assemblyVersion": "1.43.0.0",
+            "fileVersion": "1.43.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll": {},
+          "lib/netstandard2.0/Google.Apis.Auth.dll": {}
+        }
+      },
+      "Google.Apis.Calendar.v3/1.43.0.1858": {
+        "dependencies": {
+          "Google.Apis": "1.43.0",
+          "Google.Apis.Auth": "1.43.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Calendar.v3.dll": {
+            "assemblyVersion": "1.43.0.1858",
+            "fileVersion": "1.43.0.1858"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.Calendar.v3.dll": {}
+        }
+      },
+      "Google.Apis.Core/1.43.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Core.dll": {
+            "assemblyVersion": "1.43.0.0",
+            "fileVersion": "1.43.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.Core.dll": {}
         }
       },
       "Microsoft.AspNetCore.Razor.Design/2.1.2": {},
@@ -3477,6 +3542,34 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Google.Apis/1.43.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-obrhmOs3G1NdKb6vJukj5nls3FJ8qcheSugvUDA5fHA+4sb9hOvSgtR4rzSiBFTSn30d8C9aJAUFlBtcFi4ltA==",
+      "path": "google.apis/1.43.0",
+      "hashPath": "google.apis.1.43.0.nupkg.sha512"
+    },
+    "Google.Apis.Auth/1.43.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-612MnDeSfltoLztQnlG78ndEJn4kCKP/tnqKMI4l0biZoVJb9l+H1KtU1tTLW1ftiq+mgSoGfAR4jS2JGGOJRA==",
+      "path": "google.apis.auth/1.43.0",
+      "hashPath": "google.apis.auth.1.43.0.nupkg.sha512"
+    },
+    "Google.Apis.Calendar.v3/1.43.0.1858": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cD/4V9MQyTgJ8GREVjlrAz1yj7kKxopYQXoX4Pzvbps6fS3G45lYzrEsBjOHq6NRadvSyLbRIK2hFw9Ut6j9XQ==",
+      "path": "google.apis.calendar.v3/1.43.0.1858",
+      "hashPath": "google.apis.calendar.v3.1.43.0.1858.nupkg.sha512"
+    },
+    "Google.Apis.Core/1.43.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Y5uzXQP58JFV1VKENO+/IALD1ID8PSff8jFVL9jYUdiXKCI82/1hR8PAx4sQcAenFrFgCNAPSwYJRFJ46OvtBQ==",
+      "path": "google.apis.core/1.43.0",
+      "hashPath": "google.apis.core.1.43.0.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Razor.Design/2.1.2": {
       "type": "package",

@@ -12,9 +12,6 @@ import DocenteDetails from "./DocenteDetails";
 import EditDocente from "./EditDocente";
 import EditStudente from "./EditStudente";
 import StudentsImport from "./StudentsImport";
-import CorsiList from "./CorsiList";
-import AddNewCorso from "./AddNewCorso";
-import EditCorso from "./EditCorso";
 import MaterieList from "./MaterieList";
 import ConfigCalendar from "./ConfigCalendar";
 
@@ -47,9 +44,6 @@ export default class Dashboard extends React.Component{
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/adminpanel/docenti")} to="/adminpanel/docenti">
                             <span>Docenti</span>
                         </NavLink>
-                        <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/adminpanel/corsi")} to="/adminpanel/corsi">
-                            <span>Corsi</span>
-                        </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/adminpanel/materie")} to="/adminpanel/materie">
                             <span>Materie</span>
                         </NavLink>
@@ -57,7 +51,7 @@ export default class Dashboard extends React.Component{
                             <span>Configura calendario</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => {
-                            sessionStorage.removeItem("session")
+                            sessionStorage.removeItem("adminSession")
                             routerHistory.push("/adminpanel")
                         }} exact to="/adminpanel/login">
                             <span>Esci</span>
@@ -106,18 +100,6 @@ export default class Dashboard extends React.Component{
 
                             <Route exact path="/adminpanel/docenti/edit/:id" render={(routeProps) => (
                                 <EditDocente {...routeProps} corso={admin.corso} />
-                            )} />
-
-                            <Route exact path="/adminpanel/corsi" render={() => (
-                                <CorsiList />
-                            )} />
-
-                            <Route exact path="/adminpanel/corsi/new" render={() => (
-                                <AddNewCorso />
-                            )} />
-
-                            <Route exact path="/adminpanel/corsi/edit/:id" render={(routeProps) => (
-                                <EditCorso {...routeProps} />
                             )} />
 
                             <Route exact path="/adminpanel/materie" render={() => (

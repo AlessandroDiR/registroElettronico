@@ -58,7 +58,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push("/adminpanel")
 
-        Axios.get(siteUrl+"/reg/api?docente&id=" + id).then((response) => {
+        Axios.get(siteUrl+"/api/docenti/GetDocentiById/" + id).then((response) => {
             let doc = response.data as IDocente
 
             this.setState({
@@ -69,12 +69,14 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                 gNascita: getDateDay(doc.dataNascita),
                 mNascita: getDateMonth(doc.dataNascita),
                 aNascita: getDateYear(doc.dataNascita),
+                email: doc.email,
                 luogoNascita: doc.luogoNascita,
-                materieSel: doc.insegnare.map(m => { return m.idMateria })
+                materieSel: doc.materie.length ? doc.materie : [],
+                corsiSel: doc.corsi.length ? doc.corsi : []
             })
         })
         
-        Axios.get(siteUrl+"/reg/api?materie").then((response) => {
+        Axios.get(siteUrl+"/api/materie").then((response) => {
             let materie = response.data as IMateria[]
             
             this.setState({
@@ -82,7 +84,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             })
         })
 
-        Axios.get(siteUrl+"/reg/api?corsi").then((response) => {
+        Axios.get(siteUrl+"/api/corsi").then((response) => {
             let corsi = response.data as ICorso[]
             
             this.setState({

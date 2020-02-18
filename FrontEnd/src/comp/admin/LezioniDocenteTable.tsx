@@ -1,7 +1,8 @@
 import React from "react"
 import { IPresenze } from "../../models/IPresenze"
-import { Tooltip, Icon, Spin } from "antd"
-import { hideAll } from "../../utilities"
+import { Tooltip, Icon, Spin, Modal } from "antd"
+import { hideAll, siteUrl, formatItalian } from "../../utilities"
+import Axios from "axios"
 
 export interface IProps{
     readonly docente: number
@@ -25,9 +26,9 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
     }
 
     componentDidMount = () => {
-        /*******************************/
-        /* CARICAMENTO LEZIONI DOCENTE */
-        /*******************************/
+        /*************************************************************/
+        /* CARICAMENTO PRESENZE (che sono le lezioni tenute) DOCENTE */
+        /*************************************************************/
     }
 
     changeEntrata = (event: any) => {
@@ -70,26 +71,61 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
         })
     }
 
+    animateSpans = (span1: HTMLElement, span2: HTMLElement) => {
+        let node1 = span1.parentNode as HTMLElement,
+        node2 = span2.parentNode as HTMLElement
+
+        node1.classList.add("edited")
+        node2.classList.add("edited")
+
+        setTimeout(() => {
+            node1.classList.remove("edited")
+            node2.classList.remove("edited")
+        }, 1000)
+    }
+
     confirmEdit = (id: number) => {
-        let entrataInput = document.getElementById("entrataInput_" + id) as HTMLInputElement,
-        uscitaInput = document.getElementById("uscitaInput_" + id) as HTMLInputElement,
-        entrataSpan = document.getElementById("entrataSpan_" + id),
-        uscitaSpan = document.getElementById("uscitaSpan_" + id),
-        editBtn = document.getElementById("editBtn_" + id),
-        confirmBtn = document.getElementById("confirmBtn_" + id)
+        const { entrataEdit, uscitaEdit, presenze } = this.state
 
-        /*********************************************/
-        /* MODIFICA DEGLI ORARI DI ENTRATA ED USCITA */
-        /* NUOVA ENTRATA: this.state.entrataEdit     */
-        /* NUOVA USCITA: this.state.uscitaEdit       */
-        /*********************************************/
+        let entrataSpan = document.getElementById("entrataSpan_" + id),
+        uscitaSpan = document.getElementById("uscitaSpan_" + id)
 
-        entrataSpan.style.display = "block"
-        uscitaSpan.style.display = "block"
-        editBtn.style.display = "inline-block"
-        entrataInput.style.display = "none"
-        uscitaInput.style.display = "none"
-        confirmBtn.style.display = "none"
+        Axios.post(siteUrl+"/reg/api.php", {
+            modificaPresenza: {
+                idPresenza: id,
+                ingresso: entrataEdit,
+                uscita: uscitaEdit
+            }
+        }).then(response => {
+            let output = response.data
+
+            if(output === "success"){
+                let newPresenze = presenze.map(p => {
+                    if(p.idPresenza === id){
+                        let newP = p as any
+                        newP.ingresso = entrataEdit
+                        newP.uscita = uscitaEdit
+
+                        return newP as IPresenze
+                    }
+
+                    return p
+                })
+
+                this.setState({
+                    presenze: newPresenze
+                })
+
+                hideAll()
+                
+                this.animateSpans(entrataSpan, uscitaSpan)
+            }else{
+                Modal.error({
+                    title: "Errore!",
+                    content: output
+                })
+            }
+        })
     }
 
     render(): JSX.Element{
@@ -116,7 +152,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
                 {
                     presenze.map(p => {
                         return <tr>
-                            <td style={{maxWidth: 0}} className="text-truncate">{p.data}</td>
+                            <td style={{maxWidth: 0}} className="text-truncate">{formatItalian(p.data)}</td>
                             <td style={{maxWidth: 0}} className="text-truncate">
                                 <span id={"entrataSpan_"+p.idPresenza}>{p.ingresso}</span>
                                 <input type="text" className="form-control edit-time" value={entrataEdit} style={{display: "none"}} onChange={this.changeEntrata} id={"entrataInput_"+p.idPresenza} />

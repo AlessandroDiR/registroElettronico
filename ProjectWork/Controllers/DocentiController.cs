@@ -36,18 +36,44 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            var docenti = await _context.Docenti.FindAsync(id);
+            var docente = await _context.Docenti.FindAsync(id);
 
-            if (docenti == null)
+            if (docente == null)
             {
                 return NotFound();
             }
 
+            var getCorsi = _context.Tenere.Where(c => c.IdDocente == id);
+            var idCorsi = new List<int>();
+            foreach(var corso in getCorsi)
+            {
+                idCorsi.Add(corso.IdCorso);
+            }
 
-            return Ok(docenti);
+            var materie = _context.Insegnare.Where(i => i.IdDocente == id);
+            var idMaterie = new List<int>();
+            foreach (var m in materie)
+            {
+                idMaterie.Add(m.IdMateria);
+            }
+
+            var result = new
+            {
+                nome = docente.Nome,
+                cognome = docente.Cognome,
+                email = docente.Email,
+                dataNascita = docente.DataNascita,
+                luogoNascita = docente.LuogoNascita,
+                cf = docente.Cf,
+                corsi = idCorsi,
+                materie = idMaterie
+            };
+
+
+            return Ok(result);
         }
 
-        // GET: api/Docenti/GetDocentiByCf/5
+        // GET: api/Docenti/GetDocentiByCf/cf
         [HttpGet("[action]/{Cf}")]
         public async Task<IActionResult> GetDocentiByCf([FromRoute] string cf)
         {
@@ -66,18 +92,18 @@ namespace ProjectWork.Controllers
             return Ok(docenti);
         }
 
-        [HttpGet("[action]/{idDocente}")]
-        public async Task<IActionResult> GetLezioniDocente([FromRoute] int idDocente)
-        {
-            var materie = _context.Insegnare.Where(i => i.IdDocente == idDocente);
-            var lezioni = new List<object>();
-            foreach(var m in materie)
-            {
-                lezioni.Add(_context.Lezioni.Where(l => l.IdMateria == m.IdMateria && l.Data < DateTime.Now));
-            }
+        //[HttpGet("[action]/{idDocente}")]
+        //public async Task<IActionResult> GetLezioniDocente([FromRoute] int idDocente)
+        //{
+        //    var materie = _context.Insegnare.Where(i => i.IdDocente == idDocente);
+        //    var lezioni = new List<object>();
+        //    foreach(var m in materie)
+        //    {
+        //        lezioni.Add(_context.Lezioni.Where(l => l.IdMateria == m.IdMateria && l.Data < DateTime.Now));
+        //    }
 
-            return Ok(lezioni);
-        }
+        //    return Ok(lezioni);
+        //}
 
         // PUT: api/Docenti/5
         [HttpPut("{id}")]
@@ -147,6 +173,7 @@ namespace ProjectWork.Controllers
             docente.DataNascita = d.DataNascita;
             docente.LuogoNascita = d.LuogoNascita;
             docente.Password = d.Cf;
+            docente.Email = d.Email;
 
             var doc = _context.Docenti.Last();
             if (doc == null)

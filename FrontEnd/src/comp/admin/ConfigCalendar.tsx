@@ -1,5 +1,4 @@
 import React from "react"
-import { ICorso } from "../../models/ICorso";
 import Axios from "axios";
 import { siteUrl } from "../../utilities";
 import { Icon, Spin, Modal, Tooltip } from "antd";
@@ -11,6 +10,8 @@ export interface IProps{
 export interface IState{
     readonly calendarId: string
     readonly apiKey: string
+    readonly calendarId_2: string
+    readonly apiKey_2: string
 }
 
 export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
@@ -19,7 +20,9 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
 
         this.state = {
             calendarId: "",
-            apiKey: ""
+            apiKey: "",
+            calendarId_2: "",
+            apiKey_2: ""
         }
     }
 
@@ -40,7 +43,7 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
             okText: "Ho capito",
             content: <div className="text-justify">
                 <strong>Dove mi trovo?</strong>
-                <p>In questa pagina potrai configurare il calendario che vedranno gli studenti nel loro profilo.</p>
+                <p>In questa pagina potrai configurare il calendario dal quale verranno caricate le lezioni del corso.</p>
                 <strong>Come si configura il calendario?</strong>
                 <p>Per configurare il calendario avrai bisogno di due codici univoci, che ti permetteranno di collegare il calendario al sito.</p>
                 <strong>API Key</strong>
@@ -73,10 +76,26 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
         })
     }
 
-    saveConfig = () => {
-        const { calendarId, apiKey } = this.state
+    changeID_2 = (event: any) => {
+        let id = event.target.value
 
-        if(calendarId === "" || apiKey === ""){
+        this.setState({
+            calendarId_2: id
+        })
+    }
+
+    changeApi_2 = (event: any) => {
+        let key = event.target.value
+
+        this.setState({
+            apiKey_2: key
+        })
+    }
+
+    saveConfig = () => {
+        const { calendarId, apiKey, apiKey_2, calendarId_2 } = this.state
+
+        if(calendarId === "" || apiKey === "" || calendarId_2 === "" || apiKey_2 === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -96,7 +115,7 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { calendarId, apiKey } = this.state
+        const { calendarId, apiKey, calendarId_2, apiKey_2 } = this.state
 
         return <div className="col-9 px-5 py-4 right-block">
             <h3 className="mb-2 text-center">
@@ -110,6 +129,7 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
             </h3>
 
             <form>
+                <h5>Calendario primo anno</h5>
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">ID Calendario</label>
@@ -118,6 +138,18 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
                     <div className="col">
                         <label className="text-secondary">Chiave API</label>
                         <input type="text" className="form-control" value={apiKey} onChange={this.changeApi} />
+                    </div>
+                </div>
+
+                <h5>Calendario secondo anno</h5>
+                <div className="form-group row">
+                    <div className="col">
+                        <label className="text-secondary">ID Calendario</label>
+                        <input type="text" className="form-control" value={calendarId_2} onChange={this.changeID_2} />
+                    </div>
+                    <div className="col">
+                        <label className="text-secondary">Chiave API</label>
+                        <input type="text" className="form-control" value={apiKey_2} onChange={this.changeApi_2} />
                     </div>
                 </div>
 

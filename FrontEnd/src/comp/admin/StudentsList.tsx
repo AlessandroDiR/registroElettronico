@@ -1,9 +1,10 @@
 import React from "react"
 import { IStudent } from "../../models/IStudent";
 import { routerHistory } from "../..";
-import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse } from "antd"
+import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse, DatePicker } from "antd"
 import Axios from "axios";
-import { siteUrl } from "../../utilities";
+import { siteUrl, formattaData } from "../../utilities";
+import locale from 'antd/es/date-picker/locale/it_IT';
 
 export interface IProps{
     readonly corso: number
@@ -36,17 +37,36 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         })
     }
 
+    changeDate = () => {
+        
+    }
+
     showDeleteConfirm = (student: IStudent) => {
+        let date: string = ""
+
         Modal.confirm({
-            title: 'Confermi di voler eliminare questo studente dal corso? (' + student.nome + ' ' + student.cognome + ')',
-            content: 'Insieme allo studente verranno cancellate anche tutte le entrate e le uscite relative allo studente.',
-            okText: 'Confermo',
+            title: 'Ritiro di uno studente: (' + student.nome + ' ' + student.cognome + ')',
+            content: <div style={{ marginLeft: -38 }}>
+                <p>I dati identificativi dello studente e le sue frequenze verranno comunque mantenuti.</p>
+                <label className="text-secondary">Data di ritiro</label>
+                <DatePicker locale={locale} className="w-100" onChange={(_, d2) => date = d2} format="DD-MM-YYYY" />
+            </div>,
+            okText: 'Conferma ritiro',
             okType: 'danger',
             cancelText: 'Annulla',
             onOk() {
-                /*************************/
-                /* ELIMINAZIONE STUDENTE */
-                /*************************/
+                if(date === ""){
+                    Modal.error({
+                        title: "Errore!",
+                        content: "Seleziona una data valida."
+                    })
+
+                    return true
+                }
+
+                let dataRitiro = formattaData(date, true)
+
+                alert(dataRitiro)
             }
         })
     }
@@ -61,9 +81,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     selectAll = (anno: number, event: any) => {
-        let selectionList = event.target.checked ? this.state.students.filter(s => s.annoIscrizione === anno).map(s => {
-            return s
-        }) : []
+        let selectionList = event.target.checked ? this.state.students.filter(s => s.annoIscrizione === anno) : this.state.selection.filter(s => s.annoIscrizione !== anno)
 
         this.setState({
             selection: selectionList
@@ -87,7 +105,14 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
 
     moveStudents = () => {
         let select = document.getElementById("moveToClass") as HTMLSelectElement,
-        value = select.value
+        value = parseInt(select.value)
+
+        if(value !== 1 && value !== 2){
+            Modal.error({
+                title: "Errore!",
+                content: "L'anno selezionato non è valido."
+            })
+        }
 
         /*******************************************************/
         /* SPOSTARE STUDENTI NEL NUOVO ANNO E RIFARE RICHIESTA */
@@ -108,8 +133,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             </div>
         }
         
-        let firstYear = students.filter(s => s.annoIscrizione === 2018),
-        secondYear = students.filter(s => s.annoIscrizione === 2019),
+        let firstYear = students.filter(s => s.annoIscrizione === 1).sort((a, _) => a.ritirato ? 1 : -1),
+        secondYear = students.filter(s => s.annoIscrizione === 2).sort((a, _) => a.ritirato ? 1 : -1),
         groups = [firstYear, secondYear]
 
         return <div className="col-9 px-5 py-4 right-block">
@@ -123,7 +148,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 <i className="fa fa-arrows-alt"></i> Sposta studenti
             </button>
 
-            <button className="btn btn-primary float-right mb-3 mr-2" type="button" onClick={() => routerHistory.push("/adminpanel/studenti/import")}>
+            <button className="btn btn-blue float-right mb-3 mr-2" type="button" onClick={() => routerHistory.push("/adminpanel/studenti/import")}>
                 <i className="fa fa-file-csv"></i> Importa da CSV
             </button>
 
@@ -146,7 +171,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                             
                             <tr className="thead-light">
                                 <th colSpan={7}>
-                                    { g[0].annoIscrizione === 2018 ? "Primo" : "Secondo" } anno
+                                    { g[0].annoIscrizione === 1 ? "Primo" : "Secondo" } anno
                                 </th>
                             </tr>
 
@@ -159,42 +184,56 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                 <th>Nome</th>
                                 <th>Cognome</th>
                                 <th>Codice Fiscale</th>
-                                <th>Corso</th>
-                                <th style={{width: "18%"}}>Anno scolastico</th>
+                                <th style={{width: "15%"}}>Tot. Giornate</th>
                                 <th style={{width: "20%"}}>Azioni</th>
                             </tr>
                 
                             {
                                 g.map(s => {
-                                    let checked = this.state.selection.find(n => n === s) ? true : false
+                                    let checked = this.state.selection.find(n => n === s) ? true : false,
+                                    bg = s.ritirato ? "light font-italic" : "white"
             
-                                    return <tr>
+                                    return <tr className={"bg-"+bg}>
                                         <td>
-                                            <Checkbox onChange={() => this.changeSelection(s)} checked={checked} />
+                                            {
+                                                s.ritirato ? <Checkbox disabled={true} /> : <Checkbox onChange={() => this.changeSelection(s)} checked={checked} />
+                                            }
                                         </td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.nome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cognome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
-                                        <td style={{maxWidth: 0}} className="text-truncate">{s.idCorso}</td>
-                                        <td style={{maxWidth: 0}} className="text-truncate">{s.annoIscrizione}-{s.annoIscrizione + 1}</td>
+                                        <td style={{maxWidth: 0}} className="text-truncate">{s.giornate}</td>
+                                        
                                         <td>
                                             <Tooltip title="Dettagli">
-                                                <button type="button" className="btn btn-info circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/studenti/" + s.idStudente)}>
+                                                <button type="button" className="btn btn-info circle-btn" onClick={() => routerHistory.push("/adminpanel/studenti/" + s.idStudente)}>
                                                     <i className="fa fa-info"></i>
                                                 </button>
                                             </Tooltip>
-
-                                            <Tooltip title="Modifica">
-                                                <button type="button" className="btn btn-warning text-white circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/studenti/edit/" + s.idStudente)}>
-                                                    <i className="fa fa-pen"></i>
-                                                </button>
-                                            </Tooltip>
                                             
-                                            <Tooltip title="Elimina">
-                                                <button type="button" className="btn btn-danger circle-btn" onClick={() => this.showDeleteConfirm(s)}>
-                                                    <i className="fa fa-trash"></i>
-                                                </button>
-                                            </Tooltip>
+                                            {
+                                                !s.ritirato && <Tooltip title="Modifica">
+                                                    <button type="button" className="btn btn-warning text-white circle-btn ml-2" onClick={() => routerHistory.push("/adminpanel/studenti/edit/" + s.idStudente)}>
+                                                        <i className="fa fa-pen"></i>
+                                                    </button>
+                                                </Tooltip>
+                                            }
+                                            {
+                                                !s.ritirato && <Tooltip title="Segna come ritirato">
+                                                    <button type="button" className="btn btn-danger circle-btn ml-2" onClick={() => this.showDeleteConfirm(s)}>
+                                                        <i className="fa fa-user-times"></i>
+                                                    </button>
+                                                </Tooltip>
+                                            }
+
+                                            {
+                                                s.ritirato && <Tooltip title="Studente ritirato">
+                                                    <button type="button" className="circle-btn ml-2 border-0">
+                                                        <i className="fa fa-user-slash"></i>
+                                                    </button>
+                                                </Tooltip>
+                                            }
+                                            
                                         </td>
                                     </tr>
                                 })
