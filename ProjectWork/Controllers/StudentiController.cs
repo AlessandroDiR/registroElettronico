@@ -243,7 +243,6 @@ namespace ProjectWork.Controllers
                 return BadRequest();
             }
 
-            studenti.Ritirato = studenti.Ritirato;
             _context.Entry(studenti).State = EntityState.Modified;
 
             try
@@ -259,6 +258,38 @@ namespace ProjectWork.Controllers
                 else
                 {
                     throw;
+                }
+            }
+
+            return Ok(studenti);
+        }
+
+        // PUT: api/Studenti
+        [HttpPut()]
+        public async Task<IActionResult> PutStudentiArray([FromBody] Studenti[] studenti)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            foreach (var item in studenti)
+            {
+                _context.Entry(item).State = EntityState.Modified;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!StudentiExists(item.IdStudente))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
 
