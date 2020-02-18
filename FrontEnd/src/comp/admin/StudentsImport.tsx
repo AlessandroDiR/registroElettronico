@@ -1,7 +1,7 @@
 import React from "react"
 import Dragger from "antd/lib/upload/Dragger"
 import { IStudent } from "../../models/IStudent"
-import { Checkbox, Modal, Tooltip, Icon } from "antd"
+import { Modal, Tooltip, Icon } from "antd"
 import { routerHistory } from "../.."
 import { formattaData, capitalizeFirst, siteUrl } from "../../utilities"
 import Axios from "axios"
@@ -11,7 +11,6 @@ export interface IProps{
 }
 export interface IState{
     readonly addList: IStudent[]
-    readonly jumpFirstLine: boolean
     readonly fileContent: string
     readonly fields: any
 }
@@ -40,7 +39,6 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
 
         this.state = {
             addList: [],
-            jumpFirstLine: false,
             fileContent: "",
             fields: {
                 nome: 0,
@@ -135,17 +133,13 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
     }
 
     showImportPreview = () => {
-        const { jumpFirstLine, fileContent, fields} = this.state
+        const { fileContent, fields} = this.state
 
         let rows = fileContent.split("\n"),
         list: IStudent[] = [],
         popup = document.getElementById("popup")
 
         rows.forEach((r, i) => {
-            
-            if(i === 0 && jumpFirstLine)
-                return
-
             let cells = this.splitCSV(r)
 
             let student: IStudent = {
@@ -155,7 +149,6 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 annoIscrizione: parseInt(fields['annoIscrizione']),
                 cf: cells[fields['cf']],
                 dataNascita: formattaData(cells[fields['dataNascita']], true),
-                luogoNascita: "",
                 email: cells[fields['email']],
                 password: cells[fields['cf']]
             }
@@ -168,12 +161,6 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
         })
 
         popup.classList.add("show")
-    }
-
-    checkUncheck = () => {
-        this.setState({
-            jumpFirstLine: !this.state.jumpFirstLine
-        })
     }
 
     hidePopup = () => {
@@ -212,9 +199,8 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
         return <div className="col-9 p-5 right-block" id="mainBlock" style={{flexDirection: "column"}}>
             <h3 className="text-center w-100">Importa studenti da CSV</h3>
 
-            <label className="pointer">
-                <Checkbox checked={this.state.jumpFirstLine} onChange={this.checkUncheck} className="mr-2" />
-                Saltare la prima riga del file (solo se contiene i nomi dei campi della tabella)
+            <label>
+                Prima di proseguire, esportare il CSV da <strong>Sifer</strong>.
             </label>
 
             <div className="uploader mt-2 w-100">

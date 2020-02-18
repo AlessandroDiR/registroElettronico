@@ -64,7 +64,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
                 <p className="mb-0"><strong>E-mail</strong>: {docente.email}</p>
             </div>
 
-            <h3 className="my-3">Lezioni tenute dal docente</h3>
+            <h3 className="mt-3">Lezioni tenute dal docente</h3>
             <LezioniDocenteTable docente={docente.idDocente} />
         </div>
     }

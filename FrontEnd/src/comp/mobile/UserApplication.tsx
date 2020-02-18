@@ -16,7 +16,6 @@ export default class UserApplication extends React.Component{
             annoIscrizione: 1,
             cf: "GRNLRD99D17L219L",
             dataNascita: "17-04-1999",
-            luogoNascita: "Torino",
             code: "CIAO-GGG"
         }))
     }

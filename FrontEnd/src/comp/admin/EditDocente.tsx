@@ -69,9 +69,10 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                 gNascita: getDateDay(doc.dataNascita),
                 mNascita: getDateMonth(doc.dataNascita),
                 aNascita: getDateYear(doc.dataNascita),
+                email: doc.email,
                 luogoNascita: doc.luogoNascita,
-                materieSel: doc.insegnare.length ? doc.insegnare.map(m => { return m.idMateria }) : [],
-                corsiSel: doc.tenere.length ? this.state.docente.tenere.map(c => { return c.idCorso }) : []
+                materieSel: doc.materie.length ? doc.materie : [],
+                corsiSel: doc.corsi.length ? doc.corsi : []
             })
         })
         
