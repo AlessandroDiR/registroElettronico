@@ -117,13 +117,20 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             })
         }
 
+        this.setState({
+            students: null
+        })
+
         Axios.put(siteUrl+"/api/studenti", studenti).then(response => {
+            let studenti = response.data as IStudent[]
+
+            this.setState({
+                students: studenti
+            })
+            
             Modal.success({
                 title: "Complimenti!",
-                content: "Studenti spostati con successo.",
-                onOk: () => {
-                    routerHistory.push("/adminpanel/studenti")
-                }
+                content: "Studenti spostati con successo."
             })
 
         })
