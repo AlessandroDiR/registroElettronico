@@ -24,6 +24,7 @@
     ".NETCoreApp,Version=v2.1": {
       "ProjectWork/1.0.0": {
         "dependencies": {
+          "BCrypt.Net-Next": "3.2.1",
           "Google.Apis.Calendar.v3": "1.43.0.1858",
           "Microsoft.AspNetCore.App": "2.1.1",
           "Microsoft.AspNetCore.Razor.Design": "2.1.2",
@@ -36,6 +37,17 @@
         },
         "compile": {
           "ProjectWork.dll": {}
+        }
+      },
+      "BCrypt.Net-Next/3.2.1": {
+        "runtime": {
+          "lib/netstandard2.0/BCrypt.Net-Next.dll": {
+            "assemblyVersion": "3.2.1.0",
+            "fileVersion": "3.2.1.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/BCrypt.Net-Next.dll": {}
         }
       },
       "Google.Apis/1.43.0": {
@@ -3542,6 +3554,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "BCrypt.Net-Next/3.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tu4GTLU2QMeWxJZP/WDtiVK98QjvUqGABctT9XLKbIFJrp8ETMA3igWKdkZVkRunikBhWao6o3EsrbDWxPyaSw==",
+      "path": "bcrypt.net-next/3.2.1",
+      "hashPath": "bcrypt.net-next.3.2.1.nupkg.sha512"
     },
     "Google.Apis/1.43.0": {
       "type": "package",

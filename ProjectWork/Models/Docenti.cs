@@ -9,7 +9,6 @@ namespace ProjectWork.Models
         {
             Insegnare = new HashSet<Insegnare>();
             Tenere = new HashSet<Tenere>();
-            Valutazioni = new HashSet<Valutazioni>();
         }
 
         public int IdDocente { get; set; }
@@ -18,12 +17,10 @@ namespace ProjectWork.Models
         public string Password { get; set; }
         public string Cf { get; set; }
         public DateTime DataNascita { get; set; }
-        public string LuogoNascita { get; set; }
         public string Ritirato { get; set; }
         public string Email { get; set; }
 
         public ICollection<Insegnare> Insegnare { get; set; }
         public ICollection<Tenere> Tenere { get; set; }
-        public ICollection<Valutazioni> Valutazioni { get; set; }
     }
 }

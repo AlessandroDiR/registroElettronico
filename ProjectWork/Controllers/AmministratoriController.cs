@@ -81,6 +81,36 @@ namespace ProjectWork.Controllers
             return NoContent();
         }
 
+        // POST: api/Amministratori/LoginAdmin
+        [HttpPost("[action]")]
+        public async Task<IActionResult> LoginAdmin([FromBody] Amministratori amministratore)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var admin = _context.Amministratori.Where(d => d.Password == amministratore.Password);
+
+            if (admin == null)
+            {
+                return CreatedAtAction("GetDocenti", false);
+            }
+            else
+            {
+                foreach (var item in admin)
+                {
+                    if (item.Password == amministratore.Password)
+                    {
+                        return CreatedAtAction("GetAmministratori", true);
+                    }
+                }
+            }
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetAmministratori", false);
+        }
+
         // POST: api/Amministratori
         [HttpPost]
         public async Task<IActionResult> PostAmministratori([FromBody] Amministratori amministratori)
@@ -96,9 +126,9 @@ namespace ProjectWork.Controllers
             return CreatedAtAction("GetAmministratori", new { id = amministratori.IdAdmin }, amministratori);
         }
 
-        // POST: api/Amministratori/LoginAdmin
+        // POST: api/Amministratori/LoginAmministratore
         [HttpPost("[action]")]
-        public async Task<IActionResult> LoginAdmin([FromBody] Amministratori amministratori)
+        public async Task<IActionResult> LoginAmministratore([FromBody] Amministratori amministratori)
         {
             if (!ModelState.IsValid)
             {
