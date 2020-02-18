@@ -59,12 +59,14 @@ namespace ProjectWork.Controllers
 
             var result = new
             {
+                id = docente.IdDocente,
                 nome = docente.Nome,
                 cognome = docente.Cognome,
                 email = docente.Email,
                 dataNascita = docente.DataNascita,
-                luogoNascita = docente.LuogoNascita,
                 cf = docente.Cf,
+                password = docente.Password,
+                ritirato = bool.Parse(docente.Ritirato),
                 corsi = idCorsi,
                 materie = idMaterie
             };
@@ -92,18 +94,18 @@ namespace ProjectWork.Controllers
             return Ok(docenti);
         }
 
-        //[HttpGet("[action]/{idDocente}")]
-        //public async Task<IActionResult> GetLezioniDocente([FromRoute] int idDocente)
-        //{
-        //    var materie = _context.Insegnare.Where(i => i.IdDocente == idDocente);
-        //    var lezioni = new List<object>();
-        //    foreach(var m in materie)
-        //    {
-        //        lezioni.Add(_context.Lezioni.Where(l => l.IdMateria == m.IdMateria && l.Data < DateTime.Now));
-        //    }
+        [HttpGet("[action]/{idDocente}")]
+        public async Task<IActionResult> GetLezioniDocente([FromRoute] int idDocente)
+        {
+            var materie = _context.Insegnare.Where(i => i.IdDocente == idDocente);
+            var lezioni = new List<object>();
+            foreach (var m in materie)
+            {
+                lezioni.Add(_context.Lezioni.Where(l => l.IdMateria == m.IdMateria && l.Data < DateTime.Now));
+            }
 
-        //    return Ok(lezioni);
-        //}
+            return Ok(lezioni);
+        }
 
         // PUT: api/Docenti/5
         [HttpPut("{id}")]
@@ -171,7 +173,6 @@ namespace ProjectWork.Controllers
             docente.Cognome = d.Cognome;
             docente.Cf = d.Cf;
             docente.DataNascita = d.DataNascita;
-            docente.LuogoNascita = d.LuogoNascita;
             docente.Password = d.Cf;
             docente.Email = d.Email;
 

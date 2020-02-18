@@ -164,12 +164,6 @@ namespace ProjectWork.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.LuogoNascita)
-                    .IsRequired()
-                    .HasColumnName("luogo_nascita")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Nome)
                     .IsRequired()
                     .HasColumnName("nome")

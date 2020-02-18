@@ -35,13 +35,14 @@ namespace ProjectWork.Controllers
                 var json = new
                 {
                     idStudente = s.IdStudente,
+                    idCorso = s.IdCorso,
                     nome = s.Nome,
                     cognome = s.Cognome,
                     email = s.Email,
                     dataNascita = s.DataNascita,
                     cf = s.Cf,
                     password = s.Password,
-                    ritirato = s.Ritirato,
+                    ritirato = bool.Parse(s.Ritirato),
                     annoFrequentazione = s.AnnoFrequentazione,
                     giornate = GetDaysAmount(s.IdStudente),
                     frequenza = GetPercentualeFrequenza(s.IdStudente)
@@ -61,14 +62,30 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            var studenti = await _context.Studenti.FindAsync(id);
+            var s = await _context.Studenti.FindAsync(id);
 
-            if (studenti == null)
+            if (s == null)
             {
                 return NotFound();
             }
 
-            return Ok(studenti);
+            var json = new
+            {
+                idStudente = s.IdStudente,
+                idCorso = s.IdCorso,
+                nome = s.Nome,
+                cognome = s.Cognome,
+                email = s.Email,
+                dataNascita = s.DataNascita,
+                cf = s.Cf,
+                password = s.Password,
+                ritirato = bool.Parse(s.Ritirato),
+                annoFrequentazione = s.AnnoFrequentazione,
+                giornate = GetDaysAmount(s.IdStudente),
+                frequenza = GetPercentualeFrequenza(s.IdStudente)
+            };
+
+            return Ok(json);
         }
 
         // GET: api/Studenti/GetStudentiByCf/5
@@ -167,6 +184,7 @@ namespace ProjectWork.Controllers
                     idPresenza = p.IdPresenza,
                     idStudente = p.IdStudente,
                     data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).Data,
+                    idLezione = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).IdLezione,
                     lezione = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).Titolo,
                     ingresso = p.Ingresso,
                     uscita = p.Uscita
@@ -175,6 +193,12 @@ namespace ProjectWork.Controllers
                 result.Add(json);
             }
             return Ok(result);
+        }
+
+        [HttpGet("[action]")]
+        public double GetTotaleOreLezioni()
+        {
+            return TotaleOreLezioni();
         }
 
         //Crea studente
@@ -295,14 +319,14 @@ namespace ProjectWork.Controllers
                     var presenza = _context.Presenze.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdStudente == s.IdStudente);
                     if (l.OraFine < time)
                     {
-                        if (presenza != null && presenza.Ingresso != null && presenza.Uscita == null)
+                        if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
                         {
                             presenza.Uscita = time;
                             _context.SaveChanges();
                             return OutputMsg.generateMessage("Ok",$"Arrivederci {s.Nome}!");
                         }
                     }
-                    else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == null)
+                    else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0,0,0))
                     {
                         presenza.Uscita = time;
                         _context.SaveChanges();
@@ -346,22 +370,16 @@ namespace ProjectWork.Controllers
         public double GetPercentualeFrequenza(int idStudente)
         {
             // la percentuale viene calcolata in relazione alle ore di lezione svolte ed alle ore di presenza effettive dello studente
-            var lezioni = _context.Lezioni.Where(l => l.Data <= DateTime.Now && l.OraInizio > DateTime.Now.TimeOfDay);
-            TimeSpan totOreLezioni = new TimeSpan();
-
-            foreach (var l in lezioni)
-            {
-                totOreLezioni += l.OraFine - l.OraInizio;
-            }
+            var totOreLezioni = TotaleOreLezioni();
 
             var oreEffettiveStudente = HoursAmount(idStudente);
 
-            var percentualePresenza = oreEffettiveStudente.TotalHours * 100 / totOreLezioni.TotalHours;
+            var percentualePresenza = oreEffettiveStudente * 100 / totOreLezioni;
 
             return Math.Round(percentualePresenza, 0);
         }
 
-        public TimeSpan HoursAmount(int idStudente)
+        public double HoursAmount(int idStudente)
         {
             var presenzeTotali = _context.Presenze.Where(p => p.IdStudente == idStudente);
             TimeSpan hoursAmount = new TimeSpan();
@@ -375,7 +393,20 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return hoursAmount;
+            return hoursAmount.TotalHours;
+        }
+
+        public double TotaleOreLezioni()
+        {
+            var lezioni = _context.Lezioni.Where(l => l.Data <= DateTime.Now);
+            TimeSpan totOreLezioni = new TimeSpan();
+
+            foreach (var l in lezioni)
+            {
+                totOreLezioni += l.OraFine - l.OraInizio;
+            }
+
+            return totOreLezioni.TotalHours;
         }
     }
 }
