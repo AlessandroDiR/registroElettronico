@@ -1,4 +1,5 @@
-export const siteUrl = "https://10.62.3.209:44336"
+export const siteUrl = "http://mygraphic.altervista.org"
+// export const siteUrl = "https://10.62.3.209:44336"
 
 export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n

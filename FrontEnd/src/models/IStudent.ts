@@ -1,5 +1,5 @@
 export interface IStudent{
-    readonly idStudente: number
+    readonly idStudente?: number
     readonly email: string
     readonly idCorso: number
     readonly nome: string
