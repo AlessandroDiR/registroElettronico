@@ -4,7 +4,9 @@ import Axios from "axios";
 import { siteUrl } from "../../utilities";
 import { IMateria } from "../../models/IMateria";
 
-export interface IProps{}
+export interface IProps{
+    readonly corso: number
+}
 export interface IState{
     readonly materie: IMateria[]
     readonly showModal: boolean
@@ -12,6 +14,8 @@ export interface IState{
     readonly showEditModal: boolean
     readonly materiaEdit: IMateria
     readonly nomeEdit: string
+    readonly descEdit: string
+    readonly descMateria: string
 }
 
 export default class MaterieList extends React.PureComponent<IProps, IState>{
@@ -23,14 +27,16 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             materie: null,
             showModal: false,
             nomeMateria: "",
+            descMateria: "",
             showEditModal: false,
             materiaEdit: null,
-            nomeEdit: ""
+            nomeEdit: "",
+            descEdit: ""
         }
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/api/materie").then((response) => {
+        Axios.get(siteUrl+"/api/materie/getmateriebycorso/" + this.props.corso).then((response) => {
             this.setState({
                 materie: response.data as IMateria[]
             })
@@ -39,7 +45,9 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
 
     showHideModal = () => {
         this.setState({
-            showModal: !this.state.showModal
+            showModal: !this.state.showModal,
+            nomeMateria: "",
+            descMateria: ""
         })
     }
 
@@ -55,39 +63,39 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
         this.setState({
             showEditModal: true,
             nomeEdit: materia.nome,
+            descEdit: materia.descrizione,
             materiaEdit: materia
         })
     }
 
     aggiungiMateria = () => {
-        const { nomeMateria } = this.state
+        const { nomeMateria, descMateria } = this.state
 
-        if(nomeMateria === ""){
+        if(nomeMateria === "" || descMateria === ""){
             Modal.error({
                 title: "Errore!",
-                content: "Scrivere un nome per la materia."
+                content: "Riempire tutti i campi."
             })
 
            return
         }
 
-        this.setState({
-            materie: null,
-            showModal: false
-        })
-
-        Axios.post(siteUrl+"/api/materie", {
-            nome: nomeMateria
+        Axios.post(siteUrl+"/api/materie/"+this.props.corso, {
+            nome: nomeMateria,
+            descrizione: descMateria
         }).then(response => {
+            console.log(response.data)
             let materie = response.data as IMateria[]
 
             this.setState({
                 materie: materie
+
             })
 
             Modal.success({
                 title: "Complimenti!",
-                content: "Materia aggiunta con successo."
+                content: "Materia aggiunta con successo.",
+                onOk: () => this.showHideModal()
             })
 
         })
@@ -95,12 +103,12 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
     }
 
     modificaMateria = () => {
-        const { nomeEdit, materiaEdit } = this.state
+        const { nomeEdit, materiaEdit, descEdit } = this.state
 
-        if(nomeEdit === ""){
+        if(nomeEdit === "" || descEdit === ""){
             Modal.error({
                 title: "Errore!",
-                content: "Scrivere un nome per la materia."
+                content: "Riempire tutti i campi."
             })
 
            return
@@ -113,19 +121,21 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
 
         Axios.put(siteUrl+"/api/materie", {
             idMateria: materiaEdit.idMateria,
-            nome: nomeEdit
+            nome: nomeEdit,
+            descrizione: descEdit
         }).then(response => {
             let materie = response.data as IMateria[]
 
             this.setState({
                 materie: materie,
                 materiaEdit: null,
-                nomeEdit: ""
+                nomeEdit: "",
+                descEdit: ""
             })
 
             Modal.success({
                 title: "Complimenti!",
-                content: "Materia aggiunta con successo."
+                content: "Materia modificata con successo."
             })
 
         })
@@ -148,8 +158,24 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
         })
     }
 
+    changeDesc = (event: any) => {
+        let desc = event.target.value
+
+        this.setState({
+            descMateria: desc
+        })
+    }
+
+    changeDescEdit = (event: any) => {
+        let desc = event.target.value
+
+        this.setState({
+            descEdit: desc
+        })
+    }
+
     render(): JSX.Element{
-        const { materie, nomeMateria, showModal, showEditModal, materiaEdit, nomeEdit } = this.state
+        const { materie, nomeMateria, showModal, showEditModal, materiaEdit, nomeEdit, descMateria, descEdit } = this.state
         
         if(!materie){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
@@ -170,7 +196,8 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                 
                     <tbody>
                         <tr>
-                            <th>Nome della materia</th>
+                            <th>Nome</th>
+                            <th>Descrizione</th>
                             <th style={{width: "10%"}}>Azioni</th>
                         </tr>
 
@@ -178,6 +205,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                             materie.map(m => {        
                                 return <tr>
                                     <td style={{maxWidth: 0}} className="text-truncate">{m.nome}</td>
+                                    <td style={{maxWidth: 0}} className="text-truncate">{m.descrizione}</td>
                                     <td>
                                         <Tooltip title="Modifica">
                                             <button type="button" className="btn btn-warning text-white circle-btn" onClick={() => this.showEditModal(m)}>
@@ -192,14 +220,26 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             </table>
 
             <Modal title="Aggiungi una materia" visible={showModal} onCancel={this.showHideModal} cancelText="Annulla" okText="Aggiungi" onOk={this.aggiungiMateria}>
-                <label className="text-secondary">Nome della materia</label>
-                <input type="text" value={nomeMateria} onChange={this.changeNome} className="form-control" />
+                <div className="form-group">
+                    <label className="text-secondary">Nome della materia</label>
+                    <input type="text" value={nomeMateria} onChange={this.changeNome} className="form-control" />
+                </div>
+                <div className="form-group">
+                    <label className="text-secondary">Descrizione della materia</label>
+                    <input type="text" value={descMateria} onChange={this.changeDesc} className="form-control" />
+                </div>
             </Modal>
 
             {
                 materiaEdit && <Modal title="Modifica di una materia" visible={showEditModal} onCancel={this.hideEditModal} cancelText="Annulla" okText="Modifica" onOk={this.modificaMateria}>
-                    <label className="text-secondary">Nome della materia</label>
-                    <input type="text" value={nomeEdit} onChange={this.changeNomeEdit} className="form-control" />
+                    <div className="form-group">
+                        <label className="text-secondary">Nome della materia</label>
+                        <input type="text" value={nomeEdit} onChange={this.changeNomeEdit} className="form-control" />
+                    </div>
+                    <div className="form-group">
+                        <label className="text-secondary">Descrizione della materia</label>
+                        <input type="text" value={descEdit} onChange={this.changeDescEdit} className="form-control" />
+                    </div>
                 </Modal>
             }
         </div>

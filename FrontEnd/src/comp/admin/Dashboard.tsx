@@ -103,7 +103,7 @@ export default class Dashboard extends React.Component{
                             )} />
 
                             <Route exact path="/adminpanel/materie" render={() => (
-                                <MaterieList />
+                                <MaterieList corso={admin.corso} />
                             )} />
 
                             <Route exact path="/adminpanel/config" render={() => (

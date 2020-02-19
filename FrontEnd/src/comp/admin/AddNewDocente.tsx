@@ -1,10 +1,8 @@
 import React from "react"
-import { Modal, Spin, Icon, Checkbox } from "antd";
+import { Modal } from "antd";
 import { routerHistory } from "../..";
 import { isValidData, siteUrl } from "../../utilities";
 import Axios from "axios";
-import { IMateria } from "../../models/IMateria";
-import { ICorso } from "../../models/ICorso";
 
 export interface IProps{
     readonly corso: number

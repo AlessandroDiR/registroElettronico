@@ -139,7 +139,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
         list: IStudent[] = [],
         popup = document.getElementById("popup")
 
-        rows.forEach((r, i) => {
+        rows.forEach(r => {
             let cells = this.splitCSV(r)
 
             let student: IStudent = {

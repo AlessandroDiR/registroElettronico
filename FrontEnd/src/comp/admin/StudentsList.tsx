@@ -30,7 +30,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/api/studenti").then((response) => {
+        Axios.get(siteUrl+"/api/studenti/"+this.props.corso).then((response) => {
             this.setState({
                 students: response.data as IStudent[]
             })
@@ -77,7 +77,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     selectAll = (anno: number, event: any) => {
-        let selectionList = event.target.checked ? this.state.students.filter(s => s.annoFrequentazione === anno) : this.state.selection.filter(s => s.annoFrequentazione !== anno)
+        let selectionList = event.target.checked ? this.state.students.filter(s => s.annoFrequentazione === anno && !s.ritirato) : this.state.selection.filter(s => s.annoFrequentazione !== anno)
 
         this.setState({
             selection: selectionList
@@ -122,6 +122,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         })
 
         Axios.put(siteUrl+"/api/studenti", studenti).then(response => {
+            console.log(response)
             let studenti = response.data as IStudent[]
 
             this.setState({
@@ -134,6 +135,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             })
 
         })
+
 
         this.showHideModal()
     }
@@ -149,8 +151,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             </div>
         }
         
-        let firstYear = students.filter(s => s.annoFrequentazione === 1).sort((a, _) => a.ritirato ? 1 : -1),
-        secondYear = students.filter(s => s.annoFrequentazione === 2).sort((a, _) => a.ritirato ? 1 : -1),
+        let firstYear = students.filter(s => s.annoFrequentazione === 1).sort((a, _) => a.ritirato ? 0 : -1),
+        secondYear = students.filter(s => s.annoFrequentazione === 2).sort((a, _) => a.ritirato ? 0 : -1),
         groups = [firstYear, secondYear]
 
         return <div className="col-9 px-5 py-4 right-block">
@@ -179,7 +181,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                         let checkedAll = true
 
                         g.forEach(element => {
-                            if(selection.indexOf(element) === -1)
+                            if(selection.indexOf(element) === -1 && !element.ritirato)
                                 checkedAll = false
                         })
 

@@ -73,7 +73,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             })
         })
         
-        Axios.get(siteUrl+"/api/materie").then((response) => {
+        Axios.get(siteUrl+"/api/materie/getmateriebycorso/"+this.props.corso).then((response) => {
             let materie = response.data as IMateria[]
             
             this.setState({
@@ -208,7 +208,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             insegnare: materieSel.map(m => { return { idMateria: m, idDocente: docente.idDocente } }),
             password: docente.password,
             ritirato: docente.ritirato
-        }).then(response => {
+        }).then(_ => {
             Modal.success({
                 title: "Complimenti!",
                 content: "Docente modificato con successo.",
