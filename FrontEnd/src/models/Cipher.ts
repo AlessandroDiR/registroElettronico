@@ -1,5 +1,5 @@
 export class Cipher{
-    private maximum = 65535 //KVRPVH==H5;P65=P
+    private maximum = 65535
 
     public encode(msg: string, shift: number = -4){
         let finalMessage = ""
