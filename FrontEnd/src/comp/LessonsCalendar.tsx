@@ -4,7 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
 import { Digits2 } from '../utilities';
 import { Modal, Icon, Spin } from 'antd';
-import { ICalendar } from './ICalendar';
+import { ICalendar } from '../models/ICalendar';
 
 import '@fullcalendar/core/main.css'
 import '@fullcalendar/timegrid/main.css';

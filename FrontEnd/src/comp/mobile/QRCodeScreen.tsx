@@ -2,6 +2,7 @@ import React from "react"
 import { Spin, Icon } from "antd";
 import QRCode from "qrcode.react"
 import Axios from "axios";
+import { Cipher } from "../../models/Cipher";
 
 export interface IProps{
     studentId: number
