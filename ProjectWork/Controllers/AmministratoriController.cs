@@ -83,32 +83,29 @@ namespace ProjectWork.Controllers
 
         // POST: api/Amministratori/LoginAdmin
         [HttpPost("[action]")]
-        public async Task<IActionResult> LoginAdmin([FromBody] Amministratori amministratore)
+        public async Task<IActionResult> LoginAdmin([FromBody] string username, string password)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var admin = _context.Amministratori.Where(d => d.Password == amministratore.Password);
+            var admin = await _context.Amministratori.SingleOrDefaultAsync(d => d.Cf == username && d.Password == password);
+            var corsoAmministrato = await _context.Amministrare.SingleOrDefaultAsync(c => c.IdAdmin == admin.IdAdmin);
 
             if (admin == null)
             {
-                return CreatedAtAction("GetDocenti", false);
+                return NotFound("error");
             }
-            else
-            {
-                foreach (var item in admin)
-                {
-                    if (item.Password == amministratore.Password)
-                    {
-                        return CreatedAtAction("GetAmministratori", true);
-                    }
-                }
-            }
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAmministratori", false);
+            var json = new
+            {
+                idCorso = corsoAmministrato.IdCorso,
+                nome = admin.Nome,
+                cognome = admin.Cognome
+            };
+
+            return Ok(json);
         }
 
         // POST: api/Amministratori

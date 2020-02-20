@@ -73,6 +73,11 @@ namespace ProjectWork.Models
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
+                entity.Property(e => e.Cf)
+                    .HasColumnName("cf")
+                    .HasMaxLength(16)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Cognome)
                     .IsRequired()
                     .HasColumnName("cognome")

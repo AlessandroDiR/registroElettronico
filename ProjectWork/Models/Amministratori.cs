@@ -13,6 +13,7 @@ namespace ProjectWork.Models
         public string IdAdmin { get; set; }
         public string Nome { get; set; }
         public string Cognome { get; set; }
+        public string Cf { get; set; }
         public string Password { get; set; }
         public string UltimoLog { get; set; }
 
