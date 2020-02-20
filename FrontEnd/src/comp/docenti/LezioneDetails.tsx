@@ -34,13 +34,13 @@ export default class LezioneDetails extends React.PureComponent<IProps, IState>{
             this.setState({
                 lezione: lezione
             })
-        })
 
-        Axios.get(siteUrl+"/api/studenti").then(response => {
-            let studenti = response.data as IStudent[]
-
-            this.setState({
-                studenti: studenti
+            Axios.get(siteUrl+"/api/studenti/"+lezione.idCorso).then(response => {
+                let studenti = response.data as IStudent[]
+    
+                this.setState({
+                    studenti: studenti
+                })
             })
         })
     }
@@ -55,8 +55,6 @@ export default class LezioneDetails extends React.PureComponent<IProps, IState>{
                 <Spin indicator={icon} />
             </div>
         }
-
-        console.log(lezione.frequentata, studenti)
 
         return <div className="col-9 px-5 py-4 right-block">
             <h3 className="mb-3 text-center">Lezione del {lezione.data}</h3>
