@@ -38,7 +38,9 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     showDeleteConfirm = (student: IStudent) => {
-        let date: string = ""
+        const { students } = this.state
+        let date: string = "",
+        context = this
 
         Modal.confirm({
             title: 'Ritiro di uno studente: (' + student.nome + ' ' + student.cognome + ')',
@@ -60,9 +62,22 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                     return true
                 }
 
-                let dataRitiro = formattaData(date, true)
+                let dataRitiro = formattaData(date, true),
+                studente = student as any
+                studente.ritirato = "true"
+                studente.dataRitiro = dataRitiro
 
-                alert(dataRitiro)
+                Axios.put(siteUrl+"/api/studenti/"+student.idStudente, {...studente}).then(response => {
+                    let stu = response.data as IStudent,
+                    currentList = students as any,
+                    editingStudent = students.indexOf(student)
+                    
+                    currentList[editingStudent] = stu
+
+                    context.setState({
+                        students: currentList as IStudent[]
+                    })
+                })
             }
         })
     }
@@ -122,8 +137,6 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         })
 
         Axios.put(siteUrl+"/api/studenti", studenti).then(response => {
-            let output = response.data
-
             this.setState({
                 students: null
             })

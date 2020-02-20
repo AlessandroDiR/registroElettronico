@@ -10,6 +10,7 @@ export interface IStudent{
     readonly dataNascita: string
     readonly code?: string
     readonly ritirato?: boolean
+    readonly dataRitiro?: string
     readonly giornate?: number
     readonly frequenza?: number
 }
