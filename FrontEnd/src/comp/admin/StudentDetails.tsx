@@ -15,7 +15,7 @@ export interface IProps extends RouteComponentProps<IRouteParams>{
 }
 export interface IState{
     readonly student: IStudent
-    readonly totPresenze: string
+    readonly totPresenze: number
     readonly oreTotali: number
 }
 
@@ -45,7 +45,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
 
         Axios.get(siteUrl+"/api/studenti/gethoursamount/" + id).then((response) => {
             this.setState({
-                totPresenze: response.data as string
+                totPresenze: response.data as number
             })
         })
 
@@ -63,7 +63,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
     render(): JSX.Element{
         const { student, totPresenze, oreTotali } = this.state
 
-        if(!student || !totPresenze || !oreTotali){
+        if(!student || totPresenze === null || oreTotali === null){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
             return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
