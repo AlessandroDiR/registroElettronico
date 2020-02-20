@@ -5,8 +5,8 @@ export interface IAdmin{
 }
 export const isAdmin = (obj: any) => {
     try{
-        return "idCorso" in obj && "nome" in obj && "cognome" in obj;
+        return "idCorso" in obj && "nome" in obj && "cognome" in obj
     }catch{
-        return false;
+        return false
     }
 }
