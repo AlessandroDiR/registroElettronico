@@ -1,9 +1,10 @@
 import React from "react"
-import axios from "axios"
 import { routerHistory } from "../.."
-import { Admin } from "../../models/AdminModel"
-import { message } from "antd"
-import { mountLogin, unmountLogin } from "../../utilities"
+import { message, Modal } from "antd"
+import { mountLogin, unmountLogin, siteUrl } from "../../utilities"
+import Axios from "axios"
+import { Cipher } from "../../models/Cipher"
+import { isAdmin } from "../../models/IAdmin"
 
 export interface IProps{}
 export interface IState{
@@ -47,17 +48,27 @@ export default class LoginComponent extends React.PureComponent<IProps, IState>{
 
     tryLogin = () => {
         const { adminName, adminPsw } = this.state
+        let cipher = new Cipher(),
+        password = cipher.encode(adminPsw)
 
-        if(adminName === "admin" && adminPsw === "admin"){
-            sessionStorage.setItem("adminSession", JSON.stringify(new Admin(1, "Luca", "Arcangeli")))
-            routerHistory.push("/adminpanel/")
-            message.success("Login effettuato con successo!")
-        }
+        Axios.post(siteUrl+"/api/logintutor", {
+            username: adminName,
+            password: password
+        }).then(response => {
+            let data = response.data
 
-        /*************************************************/
-        /* FARE RICHIESTA PER CONTROLLARE SE adminName   */
-        /* a adminPsw CORRISPONDONO AD UN AMMINISTRATORE */
-        /*************************************************/
+            if(isAdmin(data)){
+                sessionStorage.setItem("adminSession", JSON.stringify(data))
+                routerHistory.push("/adminpanel/")
+                message.success("Login effettuato con successo!")
+            }
+            else{
+                Modal.error({
+                    title: "Errore!",
+                    content: "Username o Password errati!"
+                })
+            }
+        })
     }
 
     render(): JSX.Element{

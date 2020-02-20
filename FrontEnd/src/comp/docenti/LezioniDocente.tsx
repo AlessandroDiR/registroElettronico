@@ -6,7 +6,6 @@ import Axios from "axios";
 import { siteUrl, formatItalian } from "../../utilities";
 
 export interface IProps{
-    readonly idCorso: number
     readonly idDocente: number
 }
 export interface IState{
@@ -23,9 +22,11 @@ export default class LezioniDocente extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        const { idCorso, idDocente } = this.props
+        const { idDocente } = this.props
 
-        Axios.get(siteUrl+"/api/lezioni/"+idDocente+"/"+idCorso).then(response => {
+        //LEZIONI VANNO PRESE TUTTE QUELLE TENUTE E DIVISE IN BASE AI CORSI
+
+        Axios.get(siteUrl+"/api/lezioni/"+idDocente).then(response => {
             let lezioni = response.data as ILezione[]
 
             this.setState({

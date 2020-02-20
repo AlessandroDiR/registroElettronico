@@ -1,10 +1,10 @@
 import React from "react"
 import { NavLink, Route, Router, Switch } from 'react-router-dom';
 import { routerHistory } from "../.."
-import { Docente } from "../../models/DocenteModel";
 import LoginDocenti from "./LoginDocenti";
 import LezioniDocente from "./LezioniDocente";
 import LezioneDetails from "./LezioneDetails";
+import { IAdminDocente } from "../../models/IAdminDocente";
 
 export default class DocentiDashboard extends React.Component{
 
@@ -19,7 +19,7 @@ export default class DocentiDashboard extends React.Component{
         if(!session)
             return <LoginDocenti />
 
-        let admin = JSON.parse(session) as Docente
+        let admin = JSON.parse(session) as IAdminDocente
 
         return <div className="container-fluid">
             <Router history={routerHistory}>
@@ -49,11 +49,11 @@ export default class DocentiDashboard extends React.Component{
                             }} />
 
                             <Route exact path="/docentipanel/lezioni/:id" render={(routeProps) => (
-                                <LezioneDetails {...routeProps} corso={admin.corso} />
+                                <LezioneDetails {...routeProps} />
                             )} />
 
                             <Route exact path="/docentipanel/lezioni" render={() => 
-                                <LezioniDocente idCorso={admin.corso} idDocente={admin.id}/>
+                                <LezioniDocente idDocente={admin.idDocente}/>
                             } />
                         </Switch>
                         

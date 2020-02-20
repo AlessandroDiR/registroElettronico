@@ -9,9 +9,7 @@ import { IStudent } from "../../models/IStudent";
 export interface IRouteParams{
     readonly id: string
 }
-export interface IProps extends RouteComponentProps<IRouteParams>{
-    readonly corso: number
-}
+export interface IProps extends RouteComponentProps<IRouteParams>{}
 export interface IState{
     readonly lezione: ILezione
     readonly studenti: IStudent[]
