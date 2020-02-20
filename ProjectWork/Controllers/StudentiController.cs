@@ -282,7 +282,8 @@ namespace ProjectWork.Controllers
             {
                 try
                 {
-                    _context.Entry(item).State = EntityState.Modified;
+                    _context.Studenti.Update(item);
+                   // _context.Entry(item).State = EntityState.Modified;
                 }
                 catch
                 {
@@ -297,8 +298,8 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            await _context.SaveChangesAsync();            
-            return RedirectToAction("GetStudenti", new { idCorso = 1 });
+            _context.SaveChanges();
+            return Ok("success");
         }
 
         // DELETE: api/Studenti/5
