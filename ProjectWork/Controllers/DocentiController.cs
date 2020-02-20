@@ -59,7 +59,7 @@ namespace ProjectWork.Controllers
 
             var result = new
             {
-                id = docente.IdDocente,
+                idDocente = id,
                 nome = docente.Nome,
                 cognome = docente.Cognome,
                 email = docente.Email,

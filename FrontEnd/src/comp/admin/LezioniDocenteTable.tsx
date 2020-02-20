@@ -26,7 +26,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"api/docenti/getlezionidocente/"+this.props.docente).then(response => {
+        Axios.get(siteUrl+"/api/docenti/getlezionidocente/"+this.props.docente).then(response => {
             let presenze = response.data as IPresenzaDocente[]
 
             this.setState({
