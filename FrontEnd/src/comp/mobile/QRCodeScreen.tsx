@@ -2,6 +2,7 @@ import React from "react"
 import { Spin, Icon } from "antd";
 import QRCode from "qrcode.react"
 import Axios from "axios";
+import { Cipher } from "../../models/Cipher";
 
 export interface IProps{
     studentId: number
@@ -36,7 +37,7 @@ export default class QRCodeScreen extends React.PureComponent<IProps, IState>{
             let date = new Date()
 
             this.setState({
-                code: response.data + date.getMilliseconds()
+                code: response.data
             })
         })
     }

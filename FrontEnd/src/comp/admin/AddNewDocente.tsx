@@ -1,10 +1,8 @@
 import React from "react"
-import { Modal, Spin, Icon, Checkbox } from "antd";
+import { Modal } from "antd";
 import { routerHistory } from "../..";
 import { isValidData, siteUrl } from "../../utilities";
 import Axios from "axios";
-import { IMateria } from "../../models/IMateria";
-import { ICorso } from "../../models/ICorso";
 
 export interface IProps{
     readonly corso: number
@@ -15,13 +13,8 @@ export interface IState{
     readonly gNascita: string
     readonly mNascita: string
     readonly aNascita: string
-    readonly luogoNascita: string
     readonly CF: string
     readonly email: string
-    readonly materie: IMateria[]
-    readonly corsi: ICorso[]
-    readonly materieSel: number[]
-    readonly corsiSel: number[]
 }
 
 export default class AddNewDocente extends React.PureComponent<IProps, IState>{
@@ -35,32 +28,9 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             gNascita: "",
             mNascita: "",
             aNascita: "",
-            luogoNascita: "",
             CF: "",
-            email: "",
-            materie: [],
-            materieSel: [],
-            corsi: [],
-            corsiSel: []
+            email: ""
         }
-    }
-
-    componentDidMount = () => {
-        Axios.get(siteUrl+"/api/materie").then((response) => {
-            let materie = response.data as IMateria[]
-            
-            this.setState({
-                materie: materie
-            })
-        })
-
-        Axios.get(siteUrl+"/api/corsi").then((response) => {
-            let corsi = response.data as ICorso[]
-            
-            this.setState({
-                corsi: corsi
-            })
-        })
     }
 
     changeNome = (event: any) => {
@@ -111,14 +81,6 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         })
     }
 
-    changeLuogo = (event: any) => {
-        let luogo = event.target.value
-
-        this.setState({
-            luogoNascita: luogo
-        })
-    }
-
     changeCF = (event: any) => {
         let CF = event.target.value
 
@@ -128,12 +90,12 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
     }
 
     aggiungiDocente = () => {
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, email, materieSel, corsiSel } = this.state
+        const { nome, cognome, gNascita, mNascita, aNascita, CF, email } = this.state
         let giorno = parseInt(gNascita),
         mese = parseInt(mNascita),
         anno = parseInt(aNascita)
 
-        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || CF === "" || email === "" || !materieSel.length || !corsiSel.length){
+        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || CF === "" || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -167,7 +129,8 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             password: CF,
             email: email,
             dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
-            luogoNascita: luogoNascita
+            tenere: [],
+            insegnare: []
         }).then(_ => {
             Modal.success({
                 title: "Complimenti!",
@@ -180,34 +143,8 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
 
     }
 
-    switchMateria = (materiaId: number) => {
-        let find = this.state.materieSel.find(m => m === materiaId),
-        newList = find ? this.state.materieSel.filter(m => m !== materiaId) : this.state.materieSel.concat(materiaId)
-
-        this.setState({
-            materieSel: newList
-        })
-    }
-
-    switchCorso = (corsoId: number) => {
-        let find = this.state.corsiSel.find(m => m === corsoId),
-        newList = find ? this.state.corsiSel.filter(m => m !== corsoId) : this.state.corsiSel.concat(corsoId)
-
-        this.setState({
-            corsiSel: newList
-        })
-    }
-
     render(): JSX.Element{
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, email, materie, materieSel, corsiSel, corsi } = this.state
-
-        if(!materie.length || !corsi.length){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
-
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
-                <Spin indicator={icon} />
-            </div>
-        }
+        const { nome, cognome, gNascita, mNascita, aNascita, CF, email } = this.state
 
         return <div className="col-9 px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo docente</h3>
@@ -221,10 +158,6 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
                         <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">E-mail</label>
-                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                 </div>
 
@@ -245,48 +178,12 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
                 
                 <div className="form-group row">
                     <div className="col">
-                        <label className="text-secondary">Luogo di nascita</label>
-                        <input type="text" className="form-control" value={luogoNascita} onChange={this.changeLuogo} />
+                        <label className="text-secondary">E-mail</label>
+                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Codice Fiscale</label>
                         <input type="text" className="form-control" maxLength={16} value={CF} onChange={this.changeCF} />
-                    </div>
-                </div>
-                
-                <div className="form-group row">
-                    <div className="col">
-                        <label className="text-secondary">Materie insegnate dal docente</label>
-                        <div className="multiselect form-control p-0">
-                            {
-                                materie.map(m => {
-                                    let find = materieSel.find(f => f === m.idMateria),
-                                    checked = find ? true : false,
-                                    classname = checked ? "checked" : ""
-
-                                    return <label className={"option " + classname}>
-                                        <Checkbox className="mr-2" onChange={() => this.switchMateria(m.idMateria)} checked={checked} /> {m.nome}
-                                    </label>
-                                })
-                            }
-                        </div>
-                    </div>
-
-                    <div className="col">
-                        <label className="text-secondary">Corsi del docente</label>
-                        <div className="multiselect form-control p-0">
-                            {
-                                corsi.map(m => {
-                                    let find = corsiSel.find(f => f === m.idCorso),
-                                    checked = find ? true : false,
-                                    classname = checked ? "checked" : ""
-
-                                    return <label className={"option " + classname}>
-                                        <Checkbox className="mr-2" onChange={() => this.switchCorso(m.idCorso)} checked={checked} /> {m.nome}
-                                    </label>
-                                })
-                            }
-                        </div>
                     </div>
                 </div>
 

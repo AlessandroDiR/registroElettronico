@@ -114,14 +114,6 @@ export const capitalizeQuote = (name: string) => {
     return splitStr.join("'"); 
 }
 
-export const fixTotPresenze = (time: string) => {
-    let pieces = time.split(":"),
-    mins = Number(pieces[1]),
-    prop = mins / 60
-
-    return (Number(pieces[0]) + prop)
-}
-
 export const mountLogin = () => {
     let body = document.getElementsByTagName("body")[0]
 

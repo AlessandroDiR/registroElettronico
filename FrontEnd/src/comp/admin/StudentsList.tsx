@@ -30,15 +30,11 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/api/studenti").then((response) => {
+        Axios.get(siteUrl+"/api/studenti/"+this.props.corso).then((response) => {
             this.setState({
                 students: response.data as IStudent[]
             })
         })
-    }
-
-    changeDate = () => {
-        
     }
 
     showDeleteConfirm = (student: IStudent) => {
@@ -81,7 +77,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     selectAll = (anno: number, event: any) => {
-        let selectionList = event.target.checked ? this.state.students.filter(s => s.annoIscrizione === anno) : this.state.selection.filter(s => s.annoIscrizione !== anno)
+        let selectionList = event.target.checked ? this.state.students.filter(s => s.annoFrequentazione === anno && !s.ritirato) : this.state.selection.filter(s => s.annoFrequentazione !== anno)
 
         this.setState({
             selection: selectionList
@@ -105,7 +101,14 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
 
     moveStudents = () => {
         let select = document.getElementById("moveToClass") as HTMLSelectElement,
-        value = parseInt(select.value)
+        value = parseInt(select.value),
+        studenti = this.state.selection.map(s => {
+            let stu = s as any
+            stu.idCorso = this.props.corso
+            stu.annoFrequentazione = value
+
+            return stu
+        })
 
         if(value !== 1 && value !== 2){
             Modal.error({
@@ -114,10 +117,25 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             })
         }
 
-        /*******************************************************/
-        /* SPOSTARE STUDENTI NEL NUOVO ANNO E RIFARE RICHIESTA */
-        /* (OPPURE RESTITUIRE GIA' I DATI DOPO AVER CAMBIATO)  */
-        /*******************************************************/
+        this.setState({
+            students: null
+        })
+
+        Axios.put(siteUrl+"/api/studenti", studenti).then(response => {
+            console.log(response)
+            let studenti = response.data as IStudent[]
+
+            this.setState({
+                students: studenti
+            })
+            
+            Modal.success({
+                title: "Complimenti!",
+                content: "Studenti spostati con successo."
+            })
+
+        })
+
 
         this.showHideModal()
     }
@@ -133,8 +151,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             </div>
         }
         
-        let firstYear = students.filter(s => s.annoIscrizione === 1).sort((a, _) => a.ritirato ? 1 : -1),
-        secondYear = students.filter(s => s.annoIscrizione === 2).sort((a, _) => a.ritirato ? 1 : -1),
+        let firstYear = students.filter(s => s.annoFrequentazione === 1).sort((a, _) => a.ritirato ? 0 : -1),
+        secondYear = students.filter(s => s.annoFrequentazione === 2).sort((a, _) => a.ritirato ? 0 : -1),
         groups = [firstYear, secondYear]
 
         return <div className="col-9 px-5 py-4 right-block">
@@ -163,7 +181,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                         let checkedAll = true
 
                         g.forEach(element => {
-                            if(selection.indexOf(element) === -1)
+                            if(selection.indexOf(element) === -1 && !element.ritirato)
                                 checkedAll = false
                         })
 
@@ -171,20 +189,20 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                             
                             <tr className="thead-light">
                                 <th colSpan={7}>
-                                    { g[0].annoIscrizione === 1 ? "Primo" : "Secondo" } anno
+                                    { g[0].annoFrequentazione === 1 ? "Primo" : "Secondo" } anno
                                 </th>
                             </tr>
 
                             <tr>
                                 <th style={{width: "5%"}}>
                                     <Tooltip title="Seleziona tutti">
-                                        <Checkbox onChange={(e) => this.selectAll(g[0].annoIscrizione, e)} checked={checkedAll} />
+                                        <Checkbox onChange={(e) => this.selectAll(g[0].annoFrequentazione, e)} checked={checkedAll} />
                                     </Tooltip>
                                 </th>
                                 <th>Nome</th>
                                 <th>Cognome</th>
                                 <th>Codice Fiscale</th>
-                                <th style={{width: "15%"}}>Tot. Giornate</th>
+                                <th style={{width: "15%"}}>Frequenza</th>
                                 <th style={{width: "20%"}}>Azioni</th>
                             </tr>
                 
@@ -202,7 +220,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.nome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cognome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
-                                        <td style={{maxWidth: 0}} className="text-truncate">{s.giornate}</td>
+                                        <td style={{maxWidth: 0}} className="text-truncate">{s.frequenza}%</td>
                                         
                                         <td>
                                             <Tooltip title="Dettagli">
@@ -255,7 +273,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                         { 
                             selection.map(s => {
                                 return <span className="d-block">
-                                    <strong>{s.nome} {s.cognome}</strong> ({s.annoIscrizione}° anno)
+                                    <strong>{s.nome} {s.cognome}</strong> ({s.annoFrequentazione}° anno)
                                 </span>
                             })
                         }

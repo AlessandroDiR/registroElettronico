@@ -10,4 +10,5 @@ export interface IDocente{
     readonly materie: number[]
     readonly corsi: number[]
     readonly password?: string
+    readonly ritirato?: boolean
 }

@@ -46,7 +46,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 cf: 0,
                 dataNascita: 0,
                 email: 0,
-                annoIscrizione: 1
+                annoFrequentazione: 1
             }
         }
     }
@@ -101,7 +101,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                             <label className="mt-2">Classe: </label>
                         </div>
                         <div className="col">
-                            <select className="custom-select pointer" style={{ height: 35 }} onChange={(e) => this.changeVarPos(e, "annoIscrizione")}>
+                            <select className="custom-select pointer" style={{ height: 35 }} onChange={(e) => this.changeVarPos(e, "annoFrequentazione")}>
                                 <option value="1">Primo anno</option>
                                 <option value="2">Secondo anno</option>
                             </select>
@@ -139,14 +139,14 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
         list: IStudent[] = [],
         popup = document.getElementById("popup")
 
-        rows.forEach((r, i) => {
+        rows.forEach(r => {
             let cells = this.splitCSV(r)
 
             let student: IStudent = {
                 idCorso: this.props.corso,
                 nome: capitalizeFirst(cells[fields['nome']]),
                 cognome: capitalizeFirst(cells[fields['cognome']]),
-                annoIscrizione: parseInt(fields['annoIscrizione']),
+                annoFrequentazione: parseInt(fields['annoFrequentazione']),
                 cf: cells[fields['cf']],
                 dataNascita: formattaData(cells[fields['dataNascita']], true),
                 email: cells[fields['email']],
@@ -174,7 +174,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 cf: 0,
                 dataNascita: 0,
                 email: 0,
-                annoIscrizione: 0
+                annoFrequentazione: 0
             }
         })
 
@@ -239,7 +239,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                                             <Tooltip title={s.cognome}>
                                                 <td style={{maxWidth: 0}} className="text-truncate">{s.cognome}</td>
                                             </Tooltip>
-                                            <td style={{maxWidth: 0}} className="text-truncate">{s.annoIscrizione}</td>
+                                            <td style={{maxWidth: 0}} className="text-truncate">{s.annoFrequentazione}</td>
                                             <Tooltip title={s.cf}>
                                                 <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
                                             </Tooltip>

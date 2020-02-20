@@ -4,6 +4,7 @@ export interface IPresenze{
     readonly ingresso: string
     readonly uscita: string
     readonly lezione: string
+    readonly idLezione?: number
     readonly idStudente: number
     readonly anno?: number // SOLO PER DOCENTE
 }

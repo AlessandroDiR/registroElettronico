@@ -21,7 +21,6 @@ export interface IState{
     readonly gNascita: string
     readonly mNascita: string
     readonly aNascita: string
-    readonly luogoNascita: string
     readonly CF: string
     readonly email: string
     readonly materie: IMateria[]
@@ -42,7 +41,6 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             gNascita: "",
             mNascita: "",
             aNascita: "",
-            luogoNascita: "",
             CF: "",
             email: "",
             materie: [],
@@ -70,13 +68,12 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                 mNascita: getDateMonth(doc.dataNascita),
                 aNascita: getDateYear(doc.dataNascita),
                 email: doc.email,
-                luogoNascita: doc.luogoNascita,
                 materieSel: doc.materie.length ? doc.materie : [],
                 corsiSel: doc.corsi.length ? doc.corsi : []
             })
         })
         
-        Axios.get(siteUrl+"/api/materie").then((response) => {
+        Axios.get(siteUrl+"/api/materie/getmateriebycorso/"+this.props.corso).then((response) => {
             let materie = response.data as IMateria[]
             
             this.setState({
@@ -141,14 +138,6 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         })
     }
 
-    changeLuogo = (event: any) => {
-        let luogo = event.target.value
-
-        this.setState({
-            luogoNascita: luogo
-        })
-    }
-
     changeCF = (event: any) => {
         let CF = event.target.value
 
@@ -158,12 +147,12 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
     }
 
     modificaDocente = () => {
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, email, corsiSel, materieSel } = this.state
+        const { docente, nome, cognome, gNascita, mNascita, aNascita, CF, email, corsiSel, materieSel } = this.state
         let giorno = Number(gNascita),
         mese = Number(mNascita),
         anno = Number(aNascita)
 
-        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || CF === "" || email === ""){
+        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || CF === "" || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -208,16 +197,26 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             return
         }
 
-        /******************************************/
-        /* MODIFICA DOCENTE E POI MOSTRARE MODAL */
-        /*****************************************/
+        Axios.put(siteUrl+"/api/docenti/" + this.props.match.params.id, {
+            idDocente: parseInt(this.props.match.params.id),
+            nome: nome,
+            cognome: cognome,
+            email: email,
+            cf: CF,
+            dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
+            tenere: corsiSel.map(c => { return { idCorso: c, idDocente: docente.idDocente } }),
+            insegnare: materieSel.map(m => { return { idMateria: m, idDocente: docente.idDocente } }),
+            password: docente.password,
+            ritirato: docente.ritirato
+        }).then(_ => {
+            Modal.success({
+                title: "Complimenti!",
+                content: "Docente modificato con successo.",
+                onOk: () => {
+                    routerHistory.push("/adminpanel/docenti")
+                }
+            })
 
-        Modal.success({
-            title: "Complimenti!",
-            content: "Docente modificato con successo.",
-            onOk: () => {
-                routerHistory.push("/adminpanel/docenti")
-            }
         })
 
     }
@@ -241,7 +240,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, docente, email, materie, materieSel, corsi, corsiSel } = this.state
+        const { nome, cognome, gNascita, mNascita, aNascita, CF, docente, email, materie, materieSel, corsi, corsiSel } = this.state
 
         if(!docente || !materie.length || !corsi.length){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
@@ -264,10 +263,6 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                         <label className="text-secondary">Cognome</label>
                         <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
                     </div>
-                    <div className="col">
-                        <label className="text-secondary">E-mail</label>
-                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
-                    </div>
                 </div>
 
                 <div className="form-group row">
@@ -287,8 +282,8 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                 
                 <div className="form-group row">
                     <div className="col">
-                        <label className="text-secondary">Luogo di nascita</label>
-                        <input type="text" className="form-control" value={luogoNascita} onChange={this.changeLuogo} />
+                        <label className="text-secondary">E-mail</label>
+                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Codice Fiscale</label>
