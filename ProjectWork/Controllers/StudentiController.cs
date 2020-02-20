@@ -43,6 +43,7 @@ namespace ProjectWork.Controllers
                     cf = s.Cf,
                     password = s.Password,
                     ritirato = bool.Parse(s.Ritirato),
+                    dataRitiro = s.DataRitiro,
                     annoFrequentazione = s.AnnoFrequentazione,
                     giornate = GetDaysAmount(s.IdStudente),
                     frequenza = GetPercentualeFrequenza(s.IdStudente)
@@ -80,6 +81,7 @@ namespace ProjectWork.Controllers
                 cf = s.Cf,
                 password = s.Password,
                 ritirato = bool.Parse(s.Ritirato),
+                dataRitiro = s.DataRitiro,
                 annoFrequentazione = s.AnnoFrequentazione,
                 giornate = GetDaysAmount(s.IdStudente),
                 frequenza = GetPercentualeFrequenza(s.IdStudente)

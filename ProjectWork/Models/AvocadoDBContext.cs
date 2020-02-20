@@ -329,6 +329,10 @@ namespace ProjectWork.Models
                     .HasColumnName("data_nascita")
                     .HasColumnType("date");
 
+                entity.Property(e => e.DataRitiro)
+                    .HasColumnName("data_ritiro")
+                    .HasColumnType("date");
+
                 entity.Property(e => e.Email)
                     .HasColumnName("email")
                     .HasMaxLength(50)
