@@ -8,6 +8,7 @@ namespace ProjectWork.Models
         public Lezioni()
         {
             Presenze = new HashSet<Presenze>();
+            PresenzeDocente = new HashSet<PresenzeDocente>();
         }
 
         public int IdLezione { get; set; }
@@ -19,5 +20,6 @@ namespace ProjectWork.Models
 
         public Materie IdMateriaNavigation { get; set; }
         public ICollection<Presenze> Presenze { get; set; }
+        public ICollection<PresenzeDocente> PresenzeDocente { get; set; }
     }
 }
