@@ -4,5 +4,9 @@ export interface IAdmin{
     readonly cognome: string
 }
 export const isAdmin = (obj: any) => {
-    return "idCorso" in obj && "nome" in obj && "cognome" in obj
+    try{
+        return "idCorso" in obj && "nome" in obj && "cognome" in obj;
+    }catch{
+        return false;
+    }
 }

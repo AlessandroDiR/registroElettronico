@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using ProjectWork.Models;
 
 namespace ProjectWork.Controllers
@@ -83,21 +84,21 @@ namespace ProjectWork.Controllers
 
         // POST: api/Amministratori/LoginAdmin
         [HttpPost("[action]")]
-        public async Task<IActionResult> LoginAdmin([FromBody] string username, string password)
+        public async Task<IActionResult> LoginAdmin([FromBody] CredenzialiModel cred)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var admin = await _context.Amministratori.SingleOrDefaultAsync(d => d.Cf == username && d.Password == password);
-            var corsoAmministrato = await _context.Amministrare.SingleOrDefaultAsync(c => c.IdAdmin == admin.IdAdmin);
-
+            var admin = await _context.Amministratori.SingleOrDefaultAsync(d => d.Cf == cred.username && d.Password == cred.password);
+            
             if (admin == null)
             {
-                return NotFound("error");
+                return Ok("error");
             }
 
+            var corsoAmministrato = await _context.Amministrare.SingleOrDefaultAsync(c => c.IdAdmin == admin.IdAdmin);
             var json = new
             {
                 idCorso = corsoAmministrato.IdCorso,
