@@ -45,7 +45,7 @@ export default class SceltaCorso extends React.PureComponent<IProps, IState>{
         const { corsi } = this.state
 
         if(!corsi){
-            const icon = <Icon type="loading" style={{ fontSize: 50, color: "#fff" }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50, color: "#fff" }} spin />
 
             return <div className="col-12 px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />

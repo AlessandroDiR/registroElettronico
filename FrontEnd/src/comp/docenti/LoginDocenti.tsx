@@ -1,9 +1,10 @@
 import React from "react"
-import axios from "axios"
 import { routerHistory } from "../.."
-import { message } from "antd"
-import { Docente } from "../../models/DocenteModel"
-import { mountLogin, unmountLogin } from "../../utilities"
+import { message, Modal } from "antd"
+import { mountLogin, unmountLogin, siteUrl } from "../../utilities"
+import { Cipher } from "../../models/Cipher"
+import Axios from "axios"
+import { isAdminDocente } from "../../models/IAdminDocente"
 
 export interface IProps{}
 export interface IState{
@@ -47,17 +48,27 @@ export default class LoginDocenti extends React.PureComponent<IProps, IState>{
 
     tryLogin = () => {
         const { adminName, adminPsw } = this.state
+        let cipher = new Cipher(),
+        password = cipher.encode(adminPsw)
 
-        if(adminName === "doc" && adminPsw === "doc"){
-            sessionStorage.setItem("docenteSession", JSON.stringify(new Docente(1, 1, "Luca", "Arcangeli")))
-            routerHistory.push("/docentipanel/")
-            message.success("Login effettuato con successo!")
-        }
+        Axios.post(siteUrl+"/api/logindocente", {
+            username: adminName,
+            password: password
+        }).then(response => {
+            let data = response.data
 
-        /*************************************************/
-        /* FARE RICHIESTA PER CONTROLLARE SE adminName   */
-        /* a adminPsw CORRISPONDONO AD UN Docente        */
-        /*************************************************/
+            if(isAdminDocente(data)){
+                sessionStorage.setItem("docenteSession", JSON.stringify(data))
+                routerHistory.push("/docentipanel/")
+                message.success("Login effettuato con successo!")
+            }
+            else{
+                Modal.error({
+                    title: "Errore!",
+                    content: "Username o Password errati!"
+                })
+            }
+        })
     }
 
     render(): JSX.Element{

@@ -1,8 +1,8 @@
 import React from "react"
-import { Modal } from "antd";
-import { routerHistory } from "../..";
-import { isValidData, siteUrl } from "../../utilities";
-import Axios from "axios";
+import { Modal } from "antd"
+import { routerHistory } from "../.."
+import { isValidData, siteUrl } from "../../utilities"
+import Axios from "axios"
 
 export interface IProps{
     readonly corso: number

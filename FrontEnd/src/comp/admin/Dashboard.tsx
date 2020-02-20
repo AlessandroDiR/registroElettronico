@@ -2,7 +2,6 @@ import React from "react"
 import { NavLink, Route, Router, Switch } from 'react-router-dom';
 import { routerHistory } from "../.."
 import LoginComponent from "./LoginComponent";
-import { Admin } from "../../models/AdminModel";
 import StudentsList from "./StudentsList";
 import AddNewStudent from "./AddNewStudent";
 import StudentDetails from "./StudentDetails";
@@ -14,6 +13,7 @@ import EditStudente from "./EditStudente";
 import StudentsImport from "./StudentsImport";
 import MaterieList from "./MaterieList";
 import ConfigCalendar from "./ConfigCalendar";
+import { IAdmin } from "../../models/IAdmin";
 
 export default class Dashboard extends React.Component{
 
@@ -28,7 +28,7 @@ export default class Dashboard extends React.Component{
         if(!session)
             return <LoginComponent />
 
-        let admin = JSON.parse(session) as Admin
+        let admin = JSON.parse(session) as IAdmin
 
         return <div className="container-fluid">
             <Router history={routerHistory}>
@@ -67,47 +67,47 @@ export default class Dashboard extends React.Component{
                             }} />
 
                             <Route exact path="/adminpanel/studenti" render={() => (
-                                <StudentsList corso={admin.corso} />
+                                <StudentsList corso={admin.idCorso} />
                             )} />
 
                             <Route exact path="/adminpanel/studenti/new" render={() => (
-                                <AddNewStudent corso={admin.corso} />
+                                <AddNewStudent corso={admin.idCorso} />
                             )} />
 
                             <Route exact path="/adminpanel/studenti/import" render={() => (
-                                <StudentsImport corso={admin.corso} />
+                                <StudentsImport corso={admin.idCorso} />
                             )} />
 
                             <Route exact path="/adminpanel/studenti/:id" render={(routeProps) => (
-                                <StudentDetails {...routeProps} corso={admin.corso} />
+                                <StudentDetails {...routeProps} corso={admin.idCorso} />
                             )} />
 
                             <Route exact path="/adminpanel/studenti/edit/:id" render={(routeProps) => (
-                                <EditStudente {...routeProps} corso={admin.corso} />
+                                <EditStudente {...routeProps} corso={admin.idCorso} />
                             )} />
 
                             <Route exact path="/adminpanel/docenti" render={() => (
-                                <DocentiList corso={admin.corso} />
+                                <DocentiList corso={admin.idCorso} />
                             )} />
 
                             <Route exact path="/adminpanel/docenti/new" render={() => (
-                                <AddNewDocente corso={admin.corso} />
+                                <AddNewDocente corso={admin.idCorso} />
                             )} />
 
                             <Route exact path="/adminpanel/docenti/:id" render={(routeProps) => (
-                                <DocenteDetails {...routeProps} corso={admin.corso} />
+                                <DocenteDetails {...routeProps} corso={admin.idCorso} />
                             )} />
 
                             <Route exact path="/adminpanel/docenti/edit/:id" render={(routeProps) => (
-                                <EditDocente {...routeProps} corso={admin.corso} />
+                                <EditDocente {...routeProps} corso={admin.idCorso} />
                             )} />
 
                             <Route exact path="/adminpanel/materie" render={() => (
-                                <MaterieList corso={admin.corso} />
+                                <MaterieList corso={admin.idCorso} />
                             )} />
 
                             <Route exact path="/adminpanel/config" render={() => (
-                                <ConfigCalendar corso={admin.corso} />
+                                <ConfigCalendar corso={admin.idCorso} />
                             )} />
 
                         </Switch>

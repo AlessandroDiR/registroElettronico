@@ -84,7 +84,6 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             nome: nomeMateria,
             descrizione: descMateria
         }).then(response => {
-            console.log(response.data)
             let materie = response.data as IMateria[]
 
             this.setState({

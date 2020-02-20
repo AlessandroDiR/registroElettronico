@@ -70,7 +70,6 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                             <th>Nome</th>
                             <th>Cognome</th>
                             <th>Codice Fiscale</th>
-                            <th>Corso</th>
                             <th style={{width: "20%"}}>Azioni</th>
                         </tr>
 
@@ -80,7 +79,6 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.nome}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.cognome}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.cf}</td>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{d.corso}</td>
                                     <td>
                                         <Tooltip title="Dettagli">
                                             <button type="button" className="btn btn-info circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/docenti/" + d.idDocente)}>

@@ -1,13 +1,13 @@
-import React from 'react';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import googleCalendarPlugin from '@fullcalendar/google-calendar';
-import { Digits2 } from '../utilities';
-import { Modal, Icon, Spin } from 'antd';
-import { ICalendar } from '../models/ICalendar';
+import React from 'react'
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import googleCalendarPlugin from '@fullcalendar/google-calendar'
+import { Digits2 } from '../utilities'
+import { Modal, Icon, Spin } from 'antd'
+import { ICalendar } from '../models/ICalendar'
 
 import '@fullcalendar/core/main.css'
-import '@fullcalendar/timegrid/main.css';
+import '@fullcalendar/timegrid/main.css'
 
 export interface IProps{
     readonly corso?: number
@@ -40,7 +40,7 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
         const { calendar } = this.state
     
         if(!calendar){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
@@ -64,7 +64,7 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
                 locale={'it'}
                 eventClick={
                     function(info){
-                        info.jsEvent.preventDefault();
+                        info.jsEvent.preventDefault()
                         let event = info.event
                         
                         Modal.info({
