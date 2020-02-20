@@ -15,11 +15,12 @@ namespace ProjectWork.Models
         public string Cognome { get; set; }
         public string Password { get; set; }
         public string Cf { get; set; }
+        public string Email { get; set; }
         public DateTime DataNascita { get; set; }
         public int AnnoFrequentazione { get; set; }
         public int IdCorso { get; set; }
         public string Ritirato { get; set; }
-        public string Email { get; set; }
+        public DateTime? DataRitiro { get; set; }
 
         public Corsi IdCorsoNavigation { get; set; }
         public ICollection<Presenze> Presenze { get; set; }
