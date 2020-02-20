@@ -1,9 +1,9 @@
 import React from "react"
-import { Modal, Upload, Icon } from "antd";
-import { routerHistory } from "../..";
-import { siteUrl, imageFileToBase64 } from "../../utilities";
-import Axios from "axios";
-import { ICorso } from "../../models/ICorso";
+import { Modal, Upload, Icon } from "antd"
+import { routerHistory } from "../.."
+import { siteUrl, imageFileToBase64 } from "../../utilities"
+import Axios from "axios"
+import { ICorso } from "../../models/ICorso"
 
 export interface IProps{}
 export interface IState{

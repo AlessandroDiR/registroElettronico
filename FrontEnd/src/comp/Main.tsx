@@ -1,10 +1,10 @@
 import React from "react"
-import { NavLink, Route, Router, Switch } from 'react-router-dom';
+import { NavLink, Route, Router, Switch } from 'react-router-dom'
 import { routerHistory } from ".."
-import FirmaComponent from "./FirmaComponent";
-import LessonsCalendar from "./LessonsCalendar";
-import SceltaCorso from "./SceltaCorso";
-import SceltaClasse from "./SceltaClasse";
+import FirmaComponent from "./FirmaComponent"
+import LessonsCalendar from "./LessonsCalendar"
+import SceltaCorso from "./SceltaCorso"
+import SceltaClasse from "./SceltaClasse"
 
 export default class Main extends React.Component{
 
