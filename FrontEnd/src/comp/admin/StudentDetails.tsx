@@ -89,7 +89,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                 <div className="col-6 pr-0">
                     <div className="p-3 bg-white border rounded">
                         <Progress type="circle" percent={perc} width={80} className="float-left mr-3" strokeColor={color} />
-                        <Statistic title="Presenze totali (ore)" value={tot} suffix={"/ "+oreTotali} decimalSeparator="," groupSeparator="." />
+                        <Statistic title="Presenze totali (ore)" value={totPresenze} suffix={"/ "+tot} decimalSeparator="," groupSeparator="." />
                         <div className="clearfix"></div>
                     </div>
                 </div>
