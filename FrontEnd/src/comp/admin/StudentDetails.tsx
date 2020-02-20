@@ -64,6 +64,9 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
         const { student, totPresenze, oreTotali } = this.state
 
         if(!student || !totPresenze || !oreTotali){
+            console.log(student);
+            console.log(totPresenze);
+            console.log(oreTotali);
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
             return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
