@@ -5,6 +5,7 @@ import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse, DatePicker } from "antd
 import Axios from "axios";
 import { siteUrl, formattaData } from "../../utilities";
 import locale from 'antd/es/date-picker/locale/it_IT';
+import { unstable_batchedUpdates } from "react-dom";
 
 export interface IProps{
     readonly corso: number
@@ -66,8 +67,11 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 studente = student as any
                 studente.ritirato = "true"
                 studente.dataRitiro = dataRitiro
-
+                
                 Axios.put(siteUrl+"/api/studenti/"+student.idStudente, {...studente}).then(response => {
+                    context.setState({
+                        students : null
+                    })
                     let stu = response.data as IStudent,
                     currentList = students as any,
                     editingStudent = students.indexOf(student)
