@@ -75,6 +75,27 @@ namespace ProjectWork.Controllers
             return Ok(result);
         }
 
+        // GET: api/Docenti/GetDocentiByCorso/5
+        [HttpGet("[action]/{idc}")]
+        public async Task<IActionResult> GetDocentiByCorso([FromRoute] int idc)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var tenere = _context.Tenere.Where(t => t.IdCorso == idc);
+
+            var docenti = _context.Docenti.Where(d => tenere.Any(t => t.IdDocente == d.IdDocente));
+
+            if (docenti == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(docenti);
+        }
+
         // GET: api/Docenti/GetDocentiByCf/cf
         [HttpGet("[action]/{Cf}")]
         public async Task<IActionResult> GetDocentiByCf([FromRoute] string cf)
@@ -94,17 +115,30 @@ namespace ProjectWork.Controllers
             return Ok(docenti);
         }
 
+        // GET: api/docenti/getlezionidocente/1
         [HttpGet("[action]/{idDocente}")]
         public async Task<IActionResult> GetLezioniDocente([FromRoute] int idDocente)
         {
-            var materie = _context.Insegnare.Where(i => i.IdDocente == idDocente);
-            var lezioni = new List<object>();
-            foreach (var m in materie)
+            var lezioniTenute = _context.PresenzeDocente.Where(p => p.IdDocente == idDocente);
+            var result = new List<object>();
+
+            foreach(var lezione in lezioniTenute)
             {
-                lezioni.Add(_context.Lezioni.Where(l => l.IdMateria == m.IdMateria && l.Data < DateTime.Now));
+                lezione.IdLezioneNavigation = _context.Lezioni.Find(lezione.IdLezione);
+                var json = new
+                {
+                    idPresenza = lezione.IdPresenza,
+                    idDocente = lezione.IdDocente,
+                    data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == lezione.IdLezioneNavigation.IdLezione).Data,
+                    idLezione = lezione.IdLezioneNavigation.IdLezione,
+                    lezione = lezione.IdLezioneNavigation.Titolo,
+                    ingresso = lezione.Ingresso,
+                    uscita = lezione.Uscita
+                };
+                result.Add(json);
             }
 
-            return Ok(lezioni);
+            return Ok(result);
         }
 
         // PUT: api/Docenti/5

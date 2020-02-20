@@ -23,11 +23,11 @@ namespace ProjectWork.Controllers
             _context = context;
         }
 
-        // GET: api/Studenti
-        [HttpGet]
-        public IActionResult GetStudenti()
+        // GET: api/Studenti/1
+        [HttpGet("{idCorso}")]
+        public async Task<IActionResult> GetStudenti([FromRoute] int idCorso)
         {
-            var studenti = _context.Studenti;
+            var studenti = _context.Studenti.Where(s => s.IdCorso == idCorso);
             var result = new List<object>();
 
             foreach(var s in studenti)
@@ -98,25 +98,6 @@ namespace ProjectWork.Controllers
             }
 
             var studenti = await _context.Studenti.FirstOrDefaultAsync(s => s.Cf == cf);
-
-            if (studenti == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(studenti);
-        }
-
-        // GET: api/Studenti/GetStudentiByCorso/5
-        [HttpGet("[action]/{idc}")]
-        public async Task<IActionResult> GetStudentiByCorso([FromRoute] int idc)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var studenti =  _context.Studenti.Where(s => s.IdCorso == idc);
 
             if (studenti == null)
             {
@@ -250,7 +231,7 @@ namespace ProjectWork.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("GetStudenti");
+            return RedirectToAction("GetStudenti", new { idCorso = 1 });
         }
 
         // PUT: api/Studenti/5
@@ -289,7 +270,7 @@ namespace ProjectWork.Controllers
         }
 
         // PUT: api/Studenti
-        [HttpPut()]
+        [HttpPut]
         public async Task<IActionResult> PutStudentiArray([FromBody] Studenti[] studenti)
         {
             if (!ModelState.IsValid)
@@ -299,12 +280,11 @@ namespace ProjectWork.Controllers
 
             foreach (var item in studenti)
             {
-                _context.Entry(item).State = EntityState.Modified;
                 try
                 {
-                    await _context.SaveChangesAsync();
+                    _context.Entry(item).State = EntityState.Modified;
                 }
-                catch (DbUpdateConcurrencyException)
+                catch
                 {
                     if (!StudentiExists(item.IdStudente))
                     {
@@ -317,7 +297,8 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return Ok(studenti);
+            await _context.SaveChangesAsync();            
+            return RedirectToAction("GetStudenti", new { idCorso = 1 });
         }
 
         // DELETE: api/Studenti/5

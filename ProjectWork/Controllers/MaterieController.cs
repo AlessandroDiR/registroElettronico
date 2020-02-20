@@ -96,14 +96,7 @@ namespace ProjectWork.Controllers
             }
             var mat = _context.Comprende.Where(c => c.IdCorso == IdCor);
 
-            var materie = new List<Tuple<int, string>>();
-
-
-            foreach (var item in mat)
-            {
-                var c = await _context.Materie.FindAsync(item.IdMateria);
-                materie.Add(new Tuple<int, string>(item.IdMateria, c.Nome));
-            }
+            var materie = _context.Materie.Where(m => mat.Any(c => c.IdMateria == m.IdMateria));
 
             return Ok(materie);
         }
@@ -154,34 +147,41 @@ namespace ProjectWork.Controllers
         }
 
         // POST: api/Materie
-        [HttpPost]
-        public async Task<IActionResult> PostMaterie([FromBody] Materie materie)
+        [HttpPost("{idCorso}")]
+        public async Task<IActionResult> PostMaterie([FromRoute] int idCorso, [FromBody] Materie materie)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var mat = _context.Materie.Last();
-            if (mat == null)
-            {
-                return CreatedAtAction("GetMaterie", "Materia inesistente");
-            }
-            foreach (var item in materie.Comprende)
-            {
-                item.IdMateria = mat.IdMateria;
-            }
-            _context.Comprende.AddRange(materie.Comprende);
-            foreach (var item in materie.Insegnare)
-            {
-                item.IdMateria = mat.IdMateria;
-            }
-            _context.Insegnare.AddRange(materie.Insegnare);
+            //var mat = _context.Materie.Last();
+            //if (mat == null)
+            //{
+            //    return CreatedAtAction("GetMaterie", "Materia inesistente");
+            //}
+            //foreach (var item in materie.Comprende)
+            //{
+            //    item.IdMateria = mat.IdMateria;
+            //}
+            //_context.Comprende.AddRange(materie.Comprende);
+            //foreach (var item in materie.Insegnare)
+            //{
+            //    item.IdMateria = mat.IdMateria;
+            //}
+            //_context.Insegnare.AddRange(materie.Insegnare);
             _context.Materie.Add(materie);
+
+            var newComprende = new Comprende
+            {
+                IdCorso = idCorso,
+                IdMateria = materie.IdMateria
+            };
+            _context.Comprende.Add(newComprende);
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMaterie", new { id = materie.IdMateria }, materie);
+            return RedirectToAction("GetMaterieByCorso", new { IdCor = idCorso });
         }
 
         // DELETE: api/Materie/5

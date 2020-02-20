@@ -24,6 +24,7 @@ namespace ProjectWork.Models
         public virtual DbSet<Lezioni> Lezioni { get; set; }
         public virtual DbSet<Materie> Materie { get; set; }
         public virtual DbSet<Presenze> Presenze { get; set; }
+        public virtual DbSet<PresenzeDocente> PresenzeDocente { get; set; }
         public virtual DbSet<Studenti> Studenti { get; set; }
         public virtual DbSet<Tenere> Tenere { get; set; }
 
@@ -32,7 +33,7 @@ namespace ProjectWork.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 
@@ -150,7 +151,6 @@ namespace ProjectWork.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Cognome)
-                    .IsRequired()
                     .HasColumnName("cognome")
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -271,6 +271,33 @@ namespace ProjectWork.Models
                     .HasForeignKey(d => d.IdStudente)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Presenze_Studenti");
+            });
+
+            modelBuilder.Entity<PresenzeDocente>(entity =>
+            {
+                entity.HasKey(e => e.IdPresenza);
+
+                entity.Property(e => e.IdPresenza).HasColumnName("id_presenza");
+
+                entity.Property(e => e.IdDocente).HasColumnName("id_docente");
+
+                entity.Property(e => e.IdLezione).HasColumnName("id_lezione");
+
+                entity.Property(e => e.Ingresso).HasColumnName("ingresso");
+
+                entity.Property(e => e.Uscita).HasColumnName("uscita");
+
+                entity.HasOne(d => d.IdDocenteNavigation)
+                    .WithMany(p => p.PresenzeDocente)
+                    .HasForeignKey(d => d.IdDocente)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PresenzeDocente_Docenti");
+
+                entity.HasOne(d => d.IdLezioneNavigation)
+                    .WithMany(p => p.PresenzeDocente)
+                    .HasForeignKey(d => d.IdLezione)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PresenzeDocente_Lezioni");
             });
 
             modelBuilder.Entity<Studenti>(entity =>
