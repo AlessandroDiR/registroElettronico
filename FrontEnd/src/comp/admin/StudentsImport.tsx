@@ -1,7 +1,7 @@
 import React from "react"
 import Dragger from "antd/lib/upload/Dragger"
 import { IStudent } from "../../models/IStudent"
-import { Modal, Tooltip, Icon } from "antd"
+import { Modal, Tooltip, Icon, message } from "antd"
 import { routerHistory } from "../.."
 import { formattaData, capitalizeFirst, siteUrl } from "../../utilities"
 import Axios from "axios"
@@ -183,13 +183,8 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
 
     confirmImport = () => {
         Axios.post(siteUrl+"/api/studenti", this.state.addList).then(response => {
-            Modal.success({
-                title: "Congratulazioni!",
-                content: "Importazione eseguita con successo.",
-                onOk: () => {
-                    routerHistory.push("/adminpanel/studenti")
-                }
-            })
+            message.success("Importazione eseguita con successo!")
+            routerHistory.push("/adminpanel/studenti")
         })
     }
 

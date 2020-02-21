@@ -1,5 +1,5 @@
 import React from "react"
-import { Modal, Upload, Icon } from "antd"
+import { Modal, Upload, Icon, message } from "antd"
 import { routerHistory } from "../.."
 import { siteUrl, imageFileToBase64 } from "../../utilities"
 import Axios from "axios"
@@ -67,13 +67,8 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
         /* CREAZIONE NUOVO CORSO E POI MOSTRARE MODAL    */
         /*************************************************/
 
-        Modal.success({
-            title: "Complimenti!",
-            content: "Corso creato con successo.",
-            onOk: () => {
-                routerHistory.push("/adminpanel/corsi")
-            }
-        })
+        message.success("Corso creato con successo!")
+        routerHistory.push("/adminpanel/corsi")
 
     }
 

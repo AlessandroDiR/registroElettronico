@@ -1,7 +1,7 @@
 import React from "react"
 import Axios from "axios";
 import { siteUrl } from "../../utilities";
-import { Icon, Spin, Modal, Tooltip } from "antd";
+import { Icon, Spin, Modal, Tooltip, message } from "antd";
 import ImageScale from "../ImageScale";
 
 export interface IProps{
@@ -108,10 +108,7 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
         /* CHIAMATA AXIOS PER SALVARE LA CONFIGURAZIONE */
         /************************************************/
 
-        Modal.success({
-            title: "Complimenti!",
-            content: "Configurazione salvata."
-        })
+        message.success("Configurazione calendario salvata!")
     }
 
     render(): JSX.Element{

@@ -1,5 +1,5 @@
 import React from "react"
-import { Tooltip, Spin, Icon, Modal } from "antd"
+import { Tooltip, Spin, Icon, Modal, message } from "antd"
 import Axios from "axios";
 import { siteUrl } from "../../utilities";
 import { IMateria } from "../../models/IMateria";
@@ -91,11 +91,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
 
             })
 
-            Modal.success({
-                title: "Complimenti!",
-                content: "Materia aggiunta con successo.",
-                onOk: () => this.showHideModal()
-            })
+            message.success("Materia aggiunta con successo!")
 
         })
 
@@ -132,11 +128,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                 descEdit: ""
             })
 
-            Modal.success({
-                title: "Complimenti!",
-                content: "Materia modificata con successo."
-            })
-
+            message.success("Materia modificata con successo!")
         })
 
     }
