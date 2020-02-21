@@ -1,11 +1,10 @@
 import React from "react"
 import { IStudent } from "../../models/IStudent";
 import { routerHistory } from "../..";
-import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse, DatePicker } from "antd"
+import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse, DatePicker, message } from "antd"
 import Axios from "axios";
 import { siteUrl, formattaData } from "../../utilities";
 import locale from 'antd/es/date-picker/locale/it_IT';
-import { unstable_batchedUpdates } from "react-dom";
 
 export interface IProps{
     readonly corso: number
@@ -71,8 +70,9 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 Axios.put(siteUrl+"/api/studenti/"+student.idStudente, {...studente}).then(response => {
                     console.log(response.data)
                     context.setState({
-                        students : null
+                        students: null
                     })
+
                     let stu = response.data as IStudent,
                     currentList = students as any,
                     editingStudent = students.indexOf(student)
@@ -150,10 +150,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 this.setState({
                     students: risposta.data as IStudent[]
                 })
-                Modal.success({
-                    title: "Complimenti!",
-                    content: "Studenti spostati con successo."
-                })
+
+                message.success("Studenti spostati con successo!")
             })
 
         })

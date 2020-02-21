@@ -12,7 +12,7 @@ export interface IState{
     readonly adminPsw: string
 }
 
-export default class LoginComponent extends React.PureComponent<IProps, IState>{
+export default class LoginTutor extends React.PureComponent<IProps, IState>{
     constructor(props: IProps){
         super(props)
 
@@ -46,7 +46,9 @@ export default class LoginComponent extends React.PureComponent<IProps, IState>{
         })
     }
 
-    tryLogin = () => {
+    tryLogin = (e: any) => {
+        e.preventDefault()
+
         const { adminName, adminPsw } = this.state
         let cipher = new Cipher(),
         password = cipher.encode(adminPsw)
@@ -65,7 +67,8 @@ export default class LoginComponent extends React.PureComponent<IProps, IState>{
             else{
                 Modal.error({
                     title: "Errore!",
-                    content: "Username o Password errati!"
+                    content: "Username o Password errati!",
+                    centered: true
                 })
             }
         })

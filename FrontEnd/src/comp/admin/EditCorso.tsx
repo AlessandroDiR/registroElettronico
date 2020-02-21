@@ -1,5 +1,5 @@
 import React from "react"
-import { Modal, Icon, Spin, Upload } from "antd";
+import { Modal, Icon, Spin, Upload, message } from "antd";
 import { routerHistory } from "../..";
 import { siteUrl, imageFileToBase64 } from "../../utilities";
 import Axios from "axios";
@@ -90,14 +90,8 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         /***************************************/
         /* MODIFICA CORSO E POI MOSTRARE MODAL */
         /***************************************/
-
-        Modal.success({
-            title: "Complimenti!",
-            content: "Corso modificato con successo.",
-            onOk: () => {
-                routerHistory.push("/adminpanel/corsi")
-            }
-        })
+        message.success("Corso modificato con successo!")
+        routerHistory.push("/adminpanel/corsi")
 
     }
 

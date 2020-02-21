@@ -1,7 +1,7 @@
 import React from "react"
 import { NavLink, Route, Router, Switch } from 'react-router-dom';
 import { routerHistory } from "../.."
-import LoginComponent from "./LoginComponent";
+import LoginTutor from "./LoginTutor";
 import StudentsList from "./StudentsList";
 import AddNewStudent from "./AddNewStudent";
 import StudentDetails from "./StudentDetails";
@@ -26,7 +26,7 @@ export default class Dashboard extends React.Component{
         let session = sessionStorage.getItem("adminSession")
         
         if(!session)
-            return <LoginComponent />
+            return <LoginTutor />
 
         let admin = JSON.parse(session) as IAdmin
 

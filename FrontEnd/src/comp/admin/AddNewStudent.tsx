@@ -1,5 +1,5 @@
 import React from "react"
-import { Modal } from "antd"
+import { Modal, message } from "antd"
 import { routerHistory } from "../.."
 import { isValidData, siteUrl } from "../../utilities"
 import Axios from "axios"
@@ -144,13 +144,8 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
         }]
 
         Axios.post(siteUrl+"/api/studenti", students).then(response => {
-            Modal.success({
-                title: "Complimenti!",
-                content: "Studente creato con successo.",
-                onOk: () => {
-                    routerHistory.push("/adminpanel/studenti")
-                }
-            })
+            message.success("Studente creato con successo!")
+            routerHistory.push("/adminpanel/studenti")
         })
 
     }

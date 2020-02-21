@@ -1,5 +1,5 @@
 import React from "react"
-import { Modal, Icon, Spin, Checkbox } from "antd";
+import { Modal, Icon, Spin, Checkbox, message } from "antd";
 import { routerHistory } from "../..";
 import { getDateDay, getDateMonth, getDateYear, isValidData, siteUrl } from "../../utilities";
 import { IDocente } from "../../models/IDocente";
@@ -209,13 +209,9 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             password: docente.password,
             ritirato: docente.ritirato
         }).then(_ => {
-            Modal.success({
-                title: "Complimenti!",
-                content: "Docente modificato con successo.",
-                onOk: () => {
-                    routerHistory.push("/adminpanel/docenti")
-                }
-            })
+            message.success("Docente modificato con successo!")
+            routerHistory.push("/adminpanel/docenti")
+
 
         })
 

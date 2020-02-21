@@ -1,5 +1,5 @@
 import React from "react"
-import { Modal, Icon, Spin } from "antd";
+import { Modal, Icon, Spin, message } from "antd";
 import { routerHistory } from "../..";
 import { getDateDay, getDateMonth, getDateYear, isValidData, siteUrl } from "../../utilities";
 import Axios from "axios";
@@ -163,13 +163,8 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
             ritirato: this.state.studente.ritirato
         }).then(response => {
-            Modal.success({
-                title: "Complimenti!",
-                content: "Studente modificato con successo.",
-                onOk: () => {
-                    routerHistory.push("/adminpanel/studenti")
-                }
-            })
+            message.success("Studente modificato con successo!")
+            routerHistory.push("/adminpanel/studenti")
 
         })
         
