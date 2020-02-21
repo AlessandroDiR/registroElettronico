@@ -5,7 +5,7 @@ import { Icon, Spin } from 'antd';
 import Axios from 'axios';
 import { IDocente } from '../../models/IDocente';
 import LezioniDocenteTable from './LezioniDocenteTable';
-import { formatItalian, siteUrl } from '../../utilities';
+import { siteUrl } from '../../utilities';
 
 export interface IRouteParams{
     readonly id: string
@@ -38,7 +38,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
         /* CONTROLLARE ANCHE SE FA PARTE DEL CORSO          */
         /****************************************************/
 
-        Axios.get(siteUrl+"/api/docenti/GetDocentiById/" + id).then((response) => {
+        Axios.get(siteUrl+"/api/docenti/getdocentibyid/" + id).then((response) => {
             this.setState({
                 docente: response.data as IDocente
             })
@@ -60,7 +60,6 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
             <div className="col-5 mr-4 p-3 bg-white border" style={{borderRadius: 5}}>
                 <h4 className="text-uppercase mb-2 text-truncate">{docente.nome} {docente.cognome}</h4>
                 <p className="mb-0"><strong>Codice Fiscale</strong>: {docente.cf}</p>
-                <p className="mb-0"><strong>Nascita</strong>: {docente.luogoNascita}, {formatItalian(docente.dataNascita)}</p>
                 <p className="mb-0"><strong>E-mail</strong>: {docente.email}</p>
             </div>
 

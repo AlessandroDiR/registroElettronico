@@ -1,7 +1,7 @@
 import React from "react"
 import { Modal, message } from "antd"
 import { routerHistory } from "../.."
-import { isValidData, siteUrl } from "../../utilities"
+import { siteUrl } from "../../utilities"
 import Axios from "axios"
 
 export interface IProps{
@@ -10,9 +10,6 @@ export interface IProps{
 export interface IState{
     readonly nome: string
     readonly cognome: string
-    readonly gNascita: string
-    readonly mNascita: string
-    readonly aNascita: string
     readonly CF: string
     readonly email: string
 }
@@ -25,9 +22,6 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         this.state = {
             nome: "",
             cognome: "",
-            gNascita: "",
-            mNascita: "",
-            aNascita: "",
             CF: "",
             email: ""
         }
@@ -57,30 +51,6 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         })
     }
 
-    changeGiorno = (event: any) => {
-        let giorno = event.target.value
-
-        this.setState({
-            gNascita: giorno
-        })
-    }
-
-    changeMese = (event: any) => {
-        let mese = event.target.value
-
-        this.setState({
-            mNascita: mese
-        })
-    }
-
-    changeAnno = (event: any) => {
-        let anno = event.target.value
-
-        this.setState({
-            aNascita: anno
-        })
-    }
-
     changeCF = (event: any) => {
         let CF = event.target.value
 
@@ -90,24 +60,12 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
     }
 
     aggiungiDocente = () => {
-        const { nome, cognome, gNascita, mNascita, aNascita, CF, email } = this.state
-        let giorno = parseInt(gNascita),
-        mese = parseInt(mNascita),
-        anno = parseInt(aNascita)
+        const { nome, cognome,CF, email } = this.state
 
-        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || CF === "" || email === ""){
+        if(nome === "" || cognome === "" || CF === "" || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
-            })
-
-            return
-        }
-
-        if(!isValidData(giorno, mese, anno)){
-            Modal.error({
-                title: "Errore!",
-                content: "Data di nascita non valida."
             })
 
             return
@@ -128,7 +86,6 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             cf: CF,
             password: CF,
             email: email,
-            dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
             tenere: [],
             insegnare: []
         }).then(_ => {
@@ -139,7 +96,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { nome, cognome, gNascita, mNascita, aNascita, CF, email } = this.state
+        const { nome, cognome, CF, email } = this.state
 
         return <div className="col-9 px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo docente</h3>
@@ -153,21 +110,6 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
                         <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
-                    </div>
-                </div>
-
-                <div className="form-group row">
-                    <div className="col">
-                        <label className="text-secondary">Giorno nascita</label>
-                        <input type="text" className="form-control" maxLength={2} value={gNascita} onChange={this.changeGiorno} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">Mese nascita</label>
-                        <input type="text" className="form-control" maxLength={2} value={mNascita} onChange={this.changeMese} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">Anno nascita</label>
-                        <input type="text" className="form-control" maxLength={4} value={aNascita} onChange={this.changeAnno} />
                     </div>
                 </div>
                 
