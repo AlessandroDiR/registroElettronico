@@ -3,12 +3,15 @@ import axios from "axios"
 import { IMessage, genericError } from "../models/IMessage"
 import { siteUrl } from "../utilities"
 import { routerHistory } from ".."
-import { Divider, Tooltip } from "antd"
+import { Divider, Tooltip, Spin } from "antd"
+import { ICorso } from "../models/ICorso"
+import Axios from "axios"
 
 export interface IProps{}
 export interface IState{
     readonly code: string
     readonly popup: IMessage
+    readonly corso: ICorso
 }
 
 export default class FirmaComponent extends React.PureComponent<IProps, IState>{
@@ -17,8 +20,21 @@ export default class FirmaComponent extends React.PureComponent<IProps, IState>{
 
         this.state = {
             code: "",
-            popup: genericError
+            popup: genericError,
+            corso: null
         }
+    }
+    
+    componentDidMount = () => {
+        let id = parseInt(sessionStorage.getItem("corso"))
+
+        Axios.get(siteUrl+"/api/corsi/"+id).then(response => {
+            let corso = response.data as ICorso
+
+            this.setState({
+                corso: corso
+            })
+        })
     }
 
     changeCode = (event: any) => {
@@ -74,7 +90,7 @@ export default class FirmaComponent extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { popup } = this.state
+        const { popup, corso } = this.state
 
         return <div className="col-9" id="mainBlock">
             <div className="text-center w-100">
@@ -82,7 +98,9 @@ export default class FirmaComponent extends React.PureComponent<IProps, IState>{
                 <input autoFocus type="password" className="form-control text-center mx-auto shadow-sm font-weight-normal" value={this.state.code} onChange={this.changeCode} maxLength={24} id="mainInput" />
 
                 <div className="top-info">
-                        {sessionStorage.getItem("corso")}
+                        {
+                            corso ? corso.nome : <Spin />
+                        }
                     <Divider type="vertical" style={{ height: 20 }} />
                         {
                             parseInt(sessionStorage.getItem("classe")) === 1 ? "Primo anno" : "Secondo anno"

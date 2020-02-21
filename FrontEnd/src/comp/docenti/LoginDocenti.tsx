@@ -46,7 +46,9 @@ export default class LoginDocenti extends React.PureComponent<IProps, IState>{
         })
     }
 
-    tryLogin = () => {
+    tryLogin = (e: any) => {
+        e.preventDefault()
+        
         const { adminName, adminPsw } = this.state
         let cipher = new Cipher(),
         password = cipher.encode(adminPsw)
