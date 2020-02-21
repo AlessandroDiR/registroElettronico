@@ -23,9 +23,16 @@ namespace ProjectWork.Controllers
             _context = context;
         }
 
+        // GET: api/Studenti
+        [HttpGet]
+        public IEnumerable<Studenti> GetStudenti()
+        {
+            return _context.Studenti;
+        }
+
         // GET: api/Studenti/1
         [HttpGet("{idCorso}")]
-        public async Task<IActionResult> GetStudenti([FromRoute] int idCorso)
+        public IActionResult GetStudenti([FromRoute] int idCorso)
         {
             var studenti = _context.Studenti.Where(s => s.IdCorso == idCorso);
             var result = new List<object>();
@@ -127,23 +134,23 @@ namespace ProjectWork.Controllers
         }
 
         // GET: api/studenti/coderequest/2
-        [HttpGet("[action]/{idStudente}")]
-        public async Task<IActionResult> CodeRequest([FromRoute] int idStudente)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //[HttpGet("[action]/{idStudente}")]
+        //public async Task<IActionResult> CodeRequest([FromRoute] int idStudente)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            var studente = await _context.Studenti.SingleOrDefaultAsync(s => s.IdStudente == idStudente);
+        //    var studente = await _context.Studenti.SingleOrDefaultAsync(s => s.IdStudente == idStudente);
 
-            if (studente == null)
-            {
-                return NotFound();
-            }
+        //    if (studente == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(Encoder.encode(studente.Cf));
-        }
+        //    return Ok(Encoder.encode(studente.Cf));
+        //}
 
         [HttpGet("[action]/{idStudente}")]
         public async Task<IActionResult> GetHoursAmount([FromRoute] int idStudente)
@@ -166,7 +173,7 @@ namespace ProjectWork.Controllers
         }
 
         [HttpGet("[action]/{idStudente}")]
-        public async Task<IActionResult> GetDetailedPresences([FromRoute] int idStudente)
+        public IActionResult GetDetailedPresences([FromRoute] int idStudente)
         {
             var presences = _context.Presenze.Where(p => p.IdStudente == idStudente);
 
@@ -289,8 +296,8 @@ namespace ProjectWork.Controllers
         }
 
         // PUT: api/Studenti
-        [HttpPut]
-        public async Task<IActionResult> PutStudentiArray([FromBody] Studenti[] studenti)
+        [HttpPut("{idCorso}")]
+        public IActionResult PutStudentiArray([FromRoute] int idCorso, [FromBody] Studenti[] studenti)
         {
             if (!ModelState.IsValid)
             {
@@ -301,8 +308,7 @@ namespace ProjectWork.Controllers
             {
                 try
                 {
-                    _context.Studenti.Update(item);
-                   // _context.Entry(item).State = EntityState.Modified;
+                   _context.Entry(item).State = EntityState.Modified;
                 }
                 catch
                 {
@@ -318,7 +324,7 @@ namespace ProjectWork.Controllers
             }
 
             _context.SaveChanges();
-            return Ok("success");
+            return GetStudenti(idCorso);
         }
 
         // DELETE: api/Studenti/5
