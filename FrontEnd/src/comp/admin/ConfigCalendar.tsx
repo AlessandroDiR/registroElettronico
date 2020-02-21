@@ -1,7 +1,5 @@
 import React from "react"
-import Axios from "axios";
-import { siteUrl } from "../../utilities";
-import { Icon, Spin, Modal, Tooltip, message } from "antd";
+import { Icon, Modal, Tooltip, message } from "antd";
 import ImageScale from "../ImageScale";
 
 export interface IProps{
@@ -27,10 +25,9 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-
-        /******************************************************/
-        /* CARICARE LA CONFIGURAZIONE CORRENTE DEL CALENDARIO */
-        /******************************************************/
+        /*****************************************************/
+        /* CARICARE LA CONFIGURAZIONE CORRENTE DEI CALENDARI */
+        /*****************************************************/
     }
 
     showHideModal = () => {
@@ -113,6 +110,8 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
 
     render(): JSX.Element{
         const { calendarId, apiKey, calendarId_2, apiKey_2 } = this.state
+
+        // SE IL CALENDARIO NON È CARICATO SPIN
 
         return <div className="col-9 px-5 py-4 right-block">
             <h3 className="mb-2 text-center">
