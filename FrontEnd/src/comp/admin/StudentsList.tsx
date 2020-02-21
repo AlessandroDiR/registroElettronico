@@ -68,7 +68,6 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 studente.dataRitiro = dataRitiro
                 
                 Axios.put(siteUrl+"/api/studenti/"+student.idStudente, {...studente}).then(response => {
-                    console.log(response.data)
                     context.setState({
                         students: null
                     })
@@ -137,15 +136,12 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             })
         }
 
-        this.setState({
-            students: null
-        })
-
         Axios.put(siteUrl+"/api/studenti", studenti).then(response => {
             this.setState({
                 students: response.data as IStudent[]
             })
 
+            message.success("Studenti spostati con successo!")
         })
 
 
