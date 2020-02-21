@@ -63,9 +63,6 @@ namespace ProjectWork.Controllers
                 nome = docente.Nome,
                 cognome = docente.Cognome,
                 email = docente.Email,
-                dataNascita = docente.DataNascita,
-                cf = docente.Cf,
-                password = docente.Password,
                 ritirato = bool.Parse(docente.Ritirato),
                 corsi = idCorsi,
                 materie = idMaterie
@@ -206,7 +203,6 @@ namespace ProjectWork.Controllers
             docente.Nome = d.Nome;
             docente.Cognome = d.Cognome;
             docente.Cf = d.Cf;
-            docente.DataNascita = d.DataNascita;
             docente.Password = d.Cf;
             docente.Email = d.Email;
 

@@ -395,7 +395,11 @@ namespace ProjectWork.Controllers
                         _context.Presenze.Add(newPresenza);
                         _context.SaveChanges();
                         return OutputMsg.generateMessage("Ok", $"Ben arrivato {s.Nome}!");
-                    };
+                    }
+                    else if(presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0))
+                    {
+                        return OutputMsg.generateMessage("Attenzione!", "Hai già la firmato la lezione!", true);
+                    }
                 }
             }
 

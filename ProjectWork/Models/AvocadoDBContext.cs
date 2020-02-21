@@ -160,10 +160,6 @@ namespace ProjectWork.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.DataNascita)
-                    .HasColumnName("data_nascita")
-                    .HasColumnType("date");
-
                 entity.Property(e => e.Email)
                     .HasColumnName("email")
                     .HasMaxLength(50)
