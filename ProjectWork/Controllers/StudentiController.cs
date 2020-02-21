@@ -268,7 +268,24 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return Ok(studenti);
+            var json = new
+            {
+                idStudente = studenti.IdStudente,
+                idCorso = studenti.IdCorso,
+                nome = studenti.Nome,
+                cognome = studenti.Cognome,
+                email = studenti.Email,
+                dataNascita = studenti.DataNascita,
+                cf = studenti.Cf,
+                password = studenti.Password,
+                ritirato = bool.Parse(studenti.Ritirato),
+                dataRitiro = studenti.DataRitiro,
+                annoFrequentazione = studenti.AnnoFrequentazione,
+                giornate = GetDaysAmount(studenti.IdStudente),
+                frequenza = GetPercentualeFrequenza(studenti.IdStudente)
+            };
+
+            return Ok(json);
         }
 
         // PUT: api/Studenti
@@ -355,7 +372,7 @@ namespace ProjectWork.Controllers
                     {
                         if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
                         {
-                            presenza.Uscita = time;
+                            presenza.Uscita = l.OraFine;
                             _context.SaveChanges();
                             return OutputMsg.generateMessage("Ok",$"Arrivederci {s.Nome}!");
                         }
@@ -366,18 +383,22 @@ namespace ProjectWork.Controllers
                         _context.SaveChanges();
                         return OutputMsg.generateMessage("Ok", $"Arrivederci {s.Nome}!");
                     }
-                    else if (presenza == null && l.OraInizio <= time && l.OraFine >= time)
+                    else if (presenza == null && l.OraFine >= time)
                     {
                         var newPresenza = new Presenze
                         {
                             IdLezione = l.IdLezione,
                             IdStudente = s.IdStudente,
-                            Ingresso = time
+                            Ingresso = time <= (l.OraInizio + new TimeSpan(0, 10, 0)) ? l.OraInizio : time
                         };
   
                         _context.Presenze.Add(newPresenza);
                         _context.SaveChanges();
                         return OutputMsg.generateMessage("Ok", $"Ben arrivato {s.Nome}!");
+                    }
+                    else if(presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0))
+                    {
+                        return OutputMsg.generateMessage("Attenzione!", "Hai già la firmato la lezione!", true);
                     }
                 }
             }
@@ -415,7 +436,7 @@ namespace ProjectWork.Controllers
 
         public double HoursAmount(int idStudente)
         {
-            var presenzeTotali = _context.Presenze.Where(p => p.IdStudente == idStudente);
+            var presenzeTotali = _context.Presenze.Where(p => p.IdStudente == idStudente && p.Uscita != new TimeSpan(0,0,0));
             TimeSpan hoursAmount = new TimeSpan();
 
             foreach (var p in presenzeTotali)

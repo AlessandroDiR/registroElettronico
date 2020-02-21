@@ -68,6 +68,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 studente.dataRitiro = dataRitiro
                 
                 Axios.put(siteUrl+"/api/studenti/"+student.idStudente, {...studente}).then(response => {
+                    console.log(response.data)
                     context.setState({
                         students: null
                     })
