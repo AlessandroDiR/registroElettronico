@@ -39,7 +39,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
             cancelText: 'Annulla',
             onOk() {
                 /*************************/
-                /* ELIMINAZIONE DOCENTE */
+                /* RITIRO DOCENTE */
                 /*************************/
             }
         })

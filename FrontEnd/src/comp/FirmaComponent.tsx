@@ -3,7 +3,7 @@ import axios from "axios"
 import { IMessage, genericError } from "../models/IMessage"
 import { siteUrl } from "../utilities"
 import { routerHistory } from ".."
-import { Divider, Tooltip, Spin } from "antd"
+import { Divider, Tooltip, Spin, Icon } from "antd"
 import { ICorso } from "../models/ICorso"
 import Axios from "axios"
 
@@ -91,6 +91,7 @@ export default class FirmaComponent extends React.PureComponent<IProps, IState>{
 
     render(): JSX.Element{
         const { popup, corso } = this.state
+        let icon = <Icon type="loading"  spin />
 
         return <div className="col-9" id="mainBlock">
             <div className="text-center w-100">
@@ -99,7 +100,7 @@ export default class FirmaComponent extends React.PureComponent<IProps, IState>{
 
                 <div className="top-info">
                         {
-                            corso ? corso.nome : <Spin />
+                            corso ? corso.nome : <Spin indicator={icon} />
                         }
                     <Divider type="vertical" style={{ height: 20 }} />
                         {

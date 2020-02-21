@@ -1,7 +1,7 @@
 import React from "react"
 import { Modal, Icon, Spin, Checkbox, message } from "antd";
 import { routerHistory } from "../..";
-import { getDateDay, getDateMonth, getDateYear, isValidData, siteUrl } from "../../utilities";
+import { siteUrl } from "../../utilities";
 import { IDocente } from "../../models/IDocente";
 import Axios from "axios";
 import { RouteComponentProps } from "react-router-dom";
@@ -18,9 +18,6 @@ export interface IState{
     readonly docente: IDocente
     readonly nome: string
     readonly cognome: string
-    readonly gNascita: string
-    readonly mNascita: string
-    readonly aNascita: string
     readonly CF: string
     readonly email: string
     readonly materie: IMateria[]
@@ -38,9 +35,6 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             docente: null,
             nome: "",
             cognome: "",
-            gNascita: "",
-            mNascita: "",
-            aNascita: "",
             CF: "",
             email: "",
             materie: [],
@@ -56,7 +50,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push("/adminpanel")
 
-        Axios.get(siteUrl+"/api/docenti/GetDocentiById/" + id).then((response) => {
+        Axios.get(siteUrl+"/api/docenti/getdocentibyid/" + id).then((response) => {
             let doc = response.data as IDocente
 
             this.setState({
@@ -64,12 +58,9 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                 nome: doc.nome,
                 cognome: doc.cognome,
                 CF: doc.cf,
-                gNascita: getDateDay(doc.dataNascita),
-                mNascita: getDateMonth(doc.dataNascita),
-                aNascita: getDateYear(doc.dataNascita),
                 email: doc.email,
-                materieSel: doc.materie.length ? doc.materie : [],
-                corsiSel: doc.corsi.length ? doc.corsi : []
+                materieSel: doc.materie && doc.materie.length ? doc.materie : [],
+                corsiSel: doc.corsi && doc.corsi.length ? doc.corsi : []
             })
         })
         
@@ -114,30 +105,6 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         })
     }
 
-    changeGiorno = (event: any) => {
-        let giorno = event.target.value
-
-        this.setState({
-            gNascita: giorno
-        })
-    }
-
-    changeMese = (event: any) => {
-        let mese = event.target.value
-
-        this.setState({
-            mNascita: mese
-        })
-    }
-
-    changeAnno = (event: any) => {
-        let anno = event.target.value
-
-        this.setState({
-            aNascita: anno
-        })
-    }
-
     changeCF = (event: any) => {
         let CF = event.target.value
 
@@ -147,12 +114,9 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
     }
 
     modificaDocente = () => {
-        const { docente, nome, cognome, gNascita, mNascita, aNascita, CF, email, corsiSel, materieSel } = this.state
-        let giorno = Number(gNascita),
-        mese = Number(mNascita),
-        anno = Number(aNascita)
+        const { docente, nome, cognome, CF, email, corsiSel, materieSel } = this.state
 
-        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || CF === "" || email === ""){
+        if(nome === "" || cognome === "" || CF === "" || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -179,15 +143,6 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             return
         }
 
-        if(!isValidData(giorno, mese, anno)){
-            Modal.error({
-                title: "Errore!",
-                content: "Data di nascita non valida."
-            })
-
-            return
-        }
-
         if(CF.length !== 16){
             Modal.error({
                 title: "Errore!",
@@ -203,7 +158,6 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             cognome: cognome,
             email: email,
             cf: CF,
-            dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
             tenere: corsiSel.map(c => { return { idCorso: c, idDocente: docente.idDocente } }),
             insegnare: materieSel.map(m => { return { idMateria: m, idDocente: docente.idDocente } }),
             password: docente.password,
@@ -236,7 +190,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { nome, cognome, gNascita, mNascita, aNascita, CF, docente, email, materie, materieSel, corsi, corsiSel } = this.state
+        const { nome, cognome, CF, docente, email, materie, materieSel, corsi, corsiSel } = this.state
 
         if(!docente || !materie.length || !corsi.length){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
@@ -258,21 +212,6 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
                         <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
-                    </div>
-                </div>
-
-                <div className="form-group row">
-                    <div className="col">
-                        <label className="text-secondary">Giorno nascita</label>
-                        <input type="text" className="form-control" maxLength={2} value={gNascita} onChange={this.changeGiorno} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">Mese nascita</label>
-                        <input type="text" className="form-control" maxLength={2} value={mNascita} onChange={this.changeMese} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">Anno nascita</label>
-                        <input type="text" className="form-control" maxLength={4} value={aNascita} onChange={this.changeAnno} />
                     </div>
                 </div>
                 

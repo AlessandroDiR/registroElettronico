@@ -4,8 +4,6 @@ export interface IDocente{
     readonly nome: string
     readonly cognome: string
     readonly cf: string
-    readonly dataNascita: string
-    readonly luogoNascita: string
     readonly materie: number[]
     readonly corsi: number[]
     readonly password?: string

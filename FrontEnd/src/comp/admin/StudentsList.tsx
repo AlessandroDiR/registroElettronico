@@ -142,15 +142,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
 
         Axios.put(siteUrl+"/api/studenti", studenti).then(response => {
             this.setState({
-                students: null
-            })
-
-            Axios.get(siteUrl+"/api/studenti/"+this.props.corso).then((risposta) => {
-                this.setState({
-                    students: risposta.data as IStudent[]
-                })
-
-                message.success("Studenti spostati con successo!")
+                students: response.data as IStudent[]
             })
 
         })
