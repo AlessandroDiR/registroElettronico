@@ -33,7 +33,7 @@ export default class Dashboard extends React.Component{
         return <div className="container-fluid">
             <Router history={routerHistory}>
                 <div className="row">
-                    <div className="col-12 col-lg-3 bg-blue p-0 menu">
+                    <div className="col-3 bg-blue p-0 menu">
                         <div className="logo-block px-3 py-4">
                             <img src="https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png" height="100" className="mx-auto d-block logo" alt="logo" />
                         </div>
@@ -57,62 +57,61 @@ export default class Dashboard extends React.Component{
                             <span>Esci</span>
                         </NavLink>
                     </div>
+  
+                    <Switch>
+                        <Route exact path="/adminpanel/" render={() => {
+                            routerHistory.push("/adminpanel/studenti")
 
-                    
-                        <Switch>
-                            <Route exact path="/adminpanel/" render={() => {
-                                routerHistory.push("/adminpanel/studenti")
+                            return null
+                        }} />
 
-                                return null
-                            }} />
+                        <Route exact path="/adminpanel/studenti" render={() => (
+                            <StudentsList corso={admin.idCorso} />
+                        )} />
 
-                            <Route exact path="/adminpanel/studenti" render={() => (
-                                <StudentsList corso={admin.idCorso} />
-                            )} />
+                        <Route exact path="/adminpanel/studenti/new" render={() => (
+                            <AddNewStudent corso={admin.idCorso} />
+                        )} />
 
-                            <Route exact path="/adminpanel/studenti/new" render={() => (
-                                <AddNewStudent corso={admin.idCorso} />
-                            )} />
+                        <Route exact path="/adminpanel/studenti/import" render={() => (
+                            <StudentsImport corso={admin.idCorso} />
+                        )} />
 
-                            <Route exact path="/adminpanel/studenti/import" render={() => (
-                                <StudentsImport corso={admin.idCorso} />
-                            )} />
+                        <Route exact path="/adminpanel/studenti/:id" render={(routeProps) => (
+                            <StudentDetails {...routeProps} corso={admin.idCorso} />
+                        )} />
 
-                            <Route exact path="/adminpanel/studenti/:id" render={(routeProps) => (
-                                <StudentDetails {...routeProps} corso={admin.idCorso} />
-                            )} />
+                        <Route exact path="/adminpanel/studenti/edit/:id" render={(routeProps) => (
+                            <EditStudente {...routeProps} corso={admin.idCorso} />
+                        )} />
 
-                            <Route exact path="/adminpanel/studenti/edit/:id" render={(routeProps) => (
-                                <EditStudente {...routeProps} corso={admin.idCorso} />
-                            )} />
+                        <Route exact path="/adminpanel/docenti" render={() => (
+                            <DocentiList corso={admin.idCorso} />
+                        )} />
 
-                            <Route exact path="/adminpanel/docenti" render={() => (
-                                <DocentiList corso={admin.idCorso} />
-                            )} />
+                        <Route exact path="/adminpanel/docenti/new" render={() => (
+                            <AddNewDocente corso={admin.idCorso} />
+                        )} />
 
-                            <Route exact path="/adminpanel/docenti/new" render={() => (
-                                <AddNewDocente corso={admin.idCorso} />
-                            )} />
+                        <Route exact path="/adminpanel/docenti/:id" render={(routeProps) => (
+                            <DocenteDetails {...routeProps} corso={admin.idCorso} />
+                        )} />
 
-                            <Route exact path="/adminpanel/docenti/:id" render={(routeProps) => (
-                                <DocenteDetails {...routeProps} corso={admin.idCorso} />
-                            )} />
+                        <Route exact path="/adminpanel/docenti/edit/:id" render={(routeProps) => (
+                            <EditDocente {...routeProps} corso={admin.idCorso} />
+                        )} />
 
-                            <Route exact path="/adminpanel/docenti/edit/:id" render={(routeProps) => (
-                                <EditDocente {...routeProps} corso={admin.idCorso} />
-                            )} />
+                        <Route exact path="/adminpanel/materie" render={() => (
+                            <MaterieList corso={admin.idCorso} />
+                        )} />
 
-                            <Route exact path="/adminpanel/materie" render={() => (
-                                <MaterieList corso={admin.idCorso} />
-                            )} />
+                        <Route exact path="/adminpanel/config" render={() => (
+                            <ConfigCalendar corso={admin.idCorso} />
+                        )} />
 
-                            <Route exact path="/adminpanel/config" render={() => (
-                                <ConfigCalendar corso={admin.idCorso} />
-                            )} />
-
-                        </Switch>
+                    </Switch>
                         
-                    </div>
+                </div>
             </Router>
         </div>
     }

@@ -43,39 +43,46 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
             })
         })
 
-        Axios.get(siteUrl+"/api/studenti/gethoursamount/" + id).then((response) => {
+        Axios.get(siteUrl+"/api/studenti/gettotaleorelezioni").then((response) => {
             this.setState({
-                totPresenze: response.data as number
+                oreTotali: this.roundToTwo(response.data as number)
             })
         })
 
-        Axios.get(siteUrl+"/api/studenti/gettotaleorelezioni").then((response) => {
+        this.loadTotali()
+    }
+
+    loadTotali = () => {
+        this.setState({
+            totPresenze: null
+        })
+
+        Axios.get(siteUrl+"/api/studenti/gethoursamount/" + this.props.match.params.id).then((response) => {
             this.setState({
-                oreTotali: response.data as number
+                totPresenze: this.roundToTwo(response.data as number)
             })
         })
     }
 
-    roundToTwo = (total: number, current: number) => {    
-        return Number((Math.round((100 * current / total) * 100) / 100));
+    roundToTwo = (total: number) => {    
+        return Math.round(total * 100) / 100
     }
 
     render(): JSX.Element{
         const { student, totPresenze, oreTotali } = this.state
+        
+        if(!student){
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
-        if(!student || totPresenze === null || oreTotali === null){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
-
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }
 
-        let tot = oreTotali.toFixed(2),
-        perc = student.frequenza,
+        let perc = student.frequenza ? this.roundToTwo(100 * totPresenze / oreTotali) : null,
         color = perc >= 80 ? "var(--success)" : "var(--danger)"
 
-        return <div className="col-9 px-5 py-4 right-block">
+        return <div className="col px-5 py-4 right-block">
             <div className="row mx-0">
                 <div className="col-6 pl-0">
                     <div className="p-3 bg-white border position-relative rounded">
@@ -88,15 +95,21 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                 </div>
                 <div className="col-6 pr-0">
                     <div className="p-3 bg-white border rounded">
-                        <Progress type="circle" percent={perc} width={80} className="float-left mr-3" strokeColor={color} />
-                        <Statistic title="Presenze totali (ore)" value={totPresenze} suffix={"/ "+tot} decimalSeparator="," groupSeparator="." />
+                        {
+                            perc !== null ? <Progress type="circle" percent={perc} width={80} className="float-left mr-3" strokeColor={color} format={percent => `${percent}%`}  /> : <Spin indicator={<Icon type="loading" spin />} />
+                        }
+
+                        {
+                            oreTotali !== null && totPresenze !== null ? <Statistic title="Presenze totali (ore)" value={totPresenze} suffix={"/ "+oreTotali} decimalSeparator="," groupSeparator="." /> : <Spin indicator={<Icon type="loading" spin />} />
+                        }
+                        
                         <div className="clearfix"></div>
                     </div>
                 </div>
             </div>
 
             <h3 className="mt-3">Presenze dello studente</h3>
-            <PresenzeTable studente={student.idStudente} />
+            <PresenzeTable studente={student.idStudente} reloadTotali={this.loadTotali} />
             
         </div>
     }

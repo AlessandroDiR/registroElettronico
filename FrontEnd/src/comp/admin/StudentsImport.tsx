@@ -3,7 +3,7 @@ import Dragger from "antd/lib/upload/Dragger"
 import { IStudent } from "../../models/IStudent"
 import { Modal, Tooltip, Icon, message } from "antd"
 import { routerHistory } from "../.."
-import { formattaData, capitalizeFirst, siteUrl } from "../../utilities"
+import { formattaData, capitalizeFirst, siteUrl, resizePopup } from "../../utilities"
 import Axios from "axios"
 
 export interface IProps{
@@ -49,6 +49,10 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 annoFrequentazione: 1
             }
         }
+    }
+
+    componentDidMount = () => {
+        resizePopup()
     }
 
     splitCSV = (data: string) => {
@@ -191,7 +195,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
     render(): JSX.Element{
         const { addList } = this.state
 
-        return <div className="col-9 p-5 right-block" id="mainBlock" style={{flexDirection: "column"}}>
+        return <div className="col p-5 right-block" id="mainBlock" style={{flexDirection: "column"}}>
             <h3 className="text-center w-100">Importa studenti da CSV</h3>
 
             <label>
@@ -199,7 +203,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
             </label>
 
             <div className="uploader mt-2 w-100">
-                <Dragger accept=".csv" beforeUpload={file => this.readFile(file)} style={{width: "100%"}}>
+                <Dragger accept=".csv" beforeUpload={file => this.readFile(file)}>
                     <p className="ant-upload-drag-icon">
                         <i className="fa fa-file-csv fa-5x"></i>
                     </p>
@@ -210,7 +214,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 </Dragger>
             </div>
 
-            <div id="popup" className="col-9 preview px-0">
+            <div id="popup" className="col preview px-0">
                 <div className="w-100 h-100 inner overflow-auto px-5 py-4">
                     <h3 className="mb-3 text-center">Anteprima dati da importare</h3>
                     {

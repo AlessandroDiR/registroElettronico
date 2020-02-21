@@ -117,12 +117,12 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         if(!corso){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }
 
-        return <div className="col-9 px-5 py-4 right-block">
+        return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Modifica di un corso</h3>
 
             <form className="row">

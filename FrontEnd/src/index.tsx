@@ -10,6 +10,11 @@ import Dashboard from './comp/admin/Dashboard'
 import UserApplication from './comp/mobile/UserApplication'
 import DocentiDashboard from './comp/docenti/DocentiDashboard'
 import Page404 from './comp/Page404'
+import moment from 'moment';
+import 'moment/locale/it';
+
+moment.locale('it')
+
 export const routerHistory = createHashHistory()
 
 

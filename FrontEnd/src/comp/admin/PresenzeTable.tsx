@@ -6,6 +6,7 @@ import Axios from "axios"
 
 export interface IProps{
     readonly studente: number
+    reloadTotali(): void
 }
 export interface IState{
     readonly presenze: IPresenze[]
@@ -89,8 +90,21 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
         }, 1000)
     }
 
+    validateTime = (time: string) => {
+        return /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(time)
+    }
+
     confirmEdit = (id: number) => {
         const { entrataEdit, uscitaEdit, presenze } = this.state
+
+        if(!this.validateTime(entrataEdit) || !this.validateTime(uscitaEdit)){
+            Modal.error({
+                title: "Errore!",
+                content: "Orari non validi!"
+            })
+
+            return
+        }
 
         let entrataSpan = document.getElementById("entrataSpan_" + id),
         uscitaSpan = document.getElementById("uscitaSpan_" + id),
@@ -125,6 +139,8 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
                 hideAll()
                 
                 this.animateSpans(entrataSpan, uscitaSpan)
+
+                this.props.reloadTotali()
             }else{
                 Modal.error({
                     title: "Errore!",

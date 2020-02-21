@@ -195,12 +195,12 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         if(!docente || !materie.length || !corsi.length){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }
 
-        return <div className="col-9 px-5 py-4 right-block">
+        return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Modifica di un docente</h3>
 
             <form>

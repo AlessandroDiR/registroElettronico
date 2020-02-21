@@ -91,7 +91,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
             </div>
         )
 
-        return <div className="col-9 px-5 py-4 right-block">
+        return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo corso</h3>
 
             <form className="row">

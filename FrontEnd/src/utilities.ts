@@ -4,30 +4,6 @@ export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n
 }
 
-export const isValidMeseGiorno = (g: number, m: number, a: number) => {
-
-    if(m < 0 || g < 0 || m > 12)
-        return false
-
-    switch(m){
-        case 4 || 6 || 9 || 11:
-            if(g > 30)
-                return false
-            break
-        case 2:
-            if((a % 400 === 0 || a % 4 === 0) && g > 29)
-                return false
-            else if(g > 28 && a % 400 !== 0 && a % 4 !== 0)
-                return false
-            break
-        default:
-            if(g > 31)
-                return false
-    }
-
-    return true
-}
-
 export const hideAll = () => {
     let entrataInputs = document.querySelectorAll("input[id^='entrataInput_']"),
     uscitaInputs = document.querySelectorAll("input[id^='uscitaInput_']"),
@@ -87,13 +63,6 @@ export const getDateYear = (d: string) => {
     return date.getFullYear().toString()
 }
 
-export const isValidData = (g: number, m: number, a: number) => {
-    if(isNaN(g) || isNaN(m) || isNaN(a) || String(a).length !== 4 || !isValidMeseGiorno(g, m, a))
-        return false
-
-    return true
-}
-
 export const capitalizeFirst = (name: string) => {
     let splitStr = capitalizeQuote(name.toLowerCase()).split(' ')
 
@@ -145,3 +114,15 @@ export const imageFileToBase64 = async (file: any) => {
 
     return readImageFile(file)
 }
+
+export const resizePopup = () => {
+    let mainBlock = document.getElementById("mainBlock"),
+    popup = document.getElementById("popup"),
+    width = mainBlock ? mainBlock.clientWidth : 0
+
+    if(mainBlock && popup)
+        popup.style.width = width + "px"
+}
+
+window.addEventListener("load", resizePopup)
+window.addEventListener("resize", resizePopup)

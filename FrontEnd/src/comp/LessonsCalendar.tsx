@@ -42,24 +42,30 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
         if(!calendar){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }
 
-        return <FullCalendar
+        return <div className="col px-5 py-3" id="mainBlock">
+            <FullCalendar
                 plugins={[ googleCalendarPlugin, dayGridPlugin ]}
                 events={ { googleCalendarId: calendar.calendarId} }
                 googleCalendarApiKey={calendar.apiKey}
                 defaultView="dayGridMonth"
                 fixedWeekCount={false}
-                header={false}
                 firstDay={1}
                 themeSystem={'bootstrap'}
                 eventTimeFormat={{
                     hour: '2-digit',
                     minute: '2-digit',
                     meridiem: false
+                }}
+                buttonText={{
+                    today: "Mese corrente"
+                }}
+                header={{
+                    right: 'prev, next'
                 }}
                 locale={'it'}
                 eventClick={
@@ -108,6 +114,7 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
                     }
                 }
             />
+        </div>
     }
   
   }

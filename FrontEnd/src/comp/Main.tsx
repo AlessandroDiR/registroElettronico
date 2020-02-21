@@ -1,7 +1,7 @@
 import React from "react"
 import { NavLink, Route, Router, Switch } from 'react-router-dom'
 import { routerHistory } from ".."
-import FirmaComponent from "./FirmaComponent"
+import Firma from "./Firma"
 import LessonsCalendar from "./LessonsCalendar"
 import SceltaCorso from "./SceltaCorso"
 import SceltaClasse from "./SceltaClasse"
@@ -21,7 +21,7 @@ export default class Main extends React.Component{
 
             <Router history={routerHistory}>
                 <div className="row">
-                    <div className="col-12 col-lg-3 bg-blue p-0 menu">
+                    <div className="col-3 bg-blue p-0 menu">
                         <div className="logo-block px-3 py-4">
                             <img src="https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png" height="100" className="mx-auto d-block logo" alt="logo" />
                         </div>
@@ -30,7 +30,7 @@ export default class Main extends React.Component{
                             <span>Home</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/calendar")} exact to="/firme/calendar">
-                            <span>Lezioni</span>
+                            <span>Calendario</span>
                         </NavLink>
                     </div>
 
@@ -46,16 +46,11 @@ export default class Main extends React.Component{
                                 if(!classe)
                                     return <SceltaClasse />
 
-                                return <FirmaComponent />
+                                return <Firma />
                             }} />
 
                             <Route exact path="/firme/calendar" render={() => (
-                                <div className="col-9 px-5 py-4" id="mainBlock">
-                                    <div>
-                                        <h3 className="mb-2 text-center">Lezioni di questo mese</h3>
                                         <LessonsCalendar />
-                                    </div>
-                                </div>
                             )} />
                         </Switch>
                         
