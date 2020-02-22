@@ -4,6 +4,24 @@ export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n
 }
 
+export const startEdit = (id: number) => {
+    let entrataInput = document.getElementById("entrataInput_" + id),
+    uscitaInput = document.getElementById("uscitaInput_" + id),
+    entrataSpan = document.getElementById("entrataSpan_" + id),
+    uscitaSpan = document.getElementById("uscitaSpan_" + id),
+    editBtn = document.getElementById("editBtn_" + id),
+    confirmBtn = document.getElementById("confirmBtn_" + id)
+
+    hideAll()
+
+    entrataInput.style.display = "block"
+    uscitaInput.style.display = "block"
+    confirmBtn.style.display = "inline-block"
+    entrataSpan.style.display = "none"
+    uscitaSpan.style.display = "none"
+    editBtn.style.display = "none"
+}
+
 export const hideAll = () => {
     let entrataInputs = document.querySelectorAll("input[id^='entrataInput_']"),
     uscitaInputs = document.querySelectorAll("input[id^='uscitaInput_']"),

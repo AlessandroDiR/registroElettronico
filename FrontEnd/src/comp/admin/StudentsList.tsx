@@ -149,6 +149,17 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         this.showHideModal()
     }
 
+    allRetired = (group: IStudent[]) => {
+        let allRetired = true
+
+        group.forEach(s => {
+            if(!s.ritirato)
+                allRetired = false
+        })
+
+        return !allRetired
+    }
+
     render(): JSX.Element{
         const { students, selection } = this.state
         
@@ -187,7 +198,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                         if(!g[0])
                             return false
                             
-                        let checkedAll = true
+                        let checkedAll = this.allRetired(g)
 
                         g.forEach(element => {
                             if(selection.indexOf(element) === -1 && !element.ritirato)

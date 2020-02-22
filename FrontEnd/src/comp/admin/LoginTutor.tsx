@@ -68,7 +68,8 @@ export default class LoginTutor extends React.PureComponent<IProps, IState>{
                 Modal.error({
                     title: "Errore!",
                     content: "Username o Password errati!",
-                    centered: true
+                    centered: true,
+                    maskClosable: true
                 })
             }
         })

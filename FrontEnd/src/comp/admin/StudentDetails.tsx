@@ -65,7 +65,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
     }
 
     roundToTwo = (total: number) => {    
-        return Math.round(total * 100) / 100
+        return Math.round(total)
     }
 
     render(): JSX.Element{
@@ -86,7 +86,11 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
             <div className="row mx-0">
                 <div className="col-6 pl-0">
                     <div className="p-3 bg-white border position-relative rounded">
-                        <span className="border-text">{student.annoFrequentazione === 1 ? "Primo" : "Secondo"} anno</span>
+                        <span className="border-text">
+                            {
+                                student.ritirato ? "Ritirato: "+student.dataRitiro : student.annoFrequentazione === 1 ? "Primo anno" : "Secondo anno"
+                            }
+                        </span>
                         <h4 className="text-uppercase mb-2 text-truncate">{student.nome} {student.cognome}</h4>
                         <p className="mb-0"><strong>Codice Fiscale</strong>: {student.cf}</p>
                         <p className="mb-0"><strong>Data di nascita</strong>: {formatItalian(student.dataNascita)}</p>

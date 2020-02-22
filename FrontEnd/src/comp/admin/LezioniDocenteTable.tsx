@@ -1,6 +1,6 @@
 import React from "react"
 import { Tooltip, Icon, Spin, Modal } from "antd"
-import { hideAll, siteUrl, formatItalian } from "../../utilities"
+import { hideAll, siteUrl, formatItalian, startEdit } from "../../utilities"
 import Axios from "axios"
 import { IPresenzaDocente } from "../../models/IPresenzaDocente"
 
@@ -52,22 +52,9 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
     }
 
     startTimeEdit = (id: number) => {
-        let entrataInput = document.getElementById("entrataInput_" + id),
-        uscitaInput = document.getElementById("uscitaInput_" + id),
-        entrataSpan = document.getElementById("entrataSpan_" + id),
-        uscitaSpan = document.getElementById("uscitaSpan_" + id),
-        editBtn = document.getElementById("editBtn_" + id),
-        confirmBtn = document.getElementById("confirmBtn_" + id),
-        presenza = this.state.presenze.find(p => p.idPresenza === id)
+        let presenza = this.state.presenze.find(p => p.idPresenza === id)
 
-        hideAll()
-
-        entrataInput.style.display = "block"
-        uscitaInput.style.display = "block"
-        confirmBtn.style.display = "inline-block"
-        entrataSpan.style.display = "none"
-        uscitaSpan.style.display = "none"
-        editBtn.style.display = "none"
+        startEdit(id)
 
         this.setState({
             entrataEdit: presenza.ingresso,
