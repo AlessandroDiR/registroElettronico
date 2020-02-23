@@ -2,10 +2,12 @@ import React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { IStudent } from '../../models/IStudent';
 import { routerHistory } from '../..';
-import { Icon, Spin, Progress, Statistic } from 'antd';
+import { Icon, Spin, Progress, Statistic, Modal, Button } from 'antd';
 import PresenzeTable from './PresenzeTable';
 import Axios from 'axios';
 import { formatItalian, siteUrl } from '../../utilities';
+import { Cipher } from '../../models/Cipher';
+import QRCode from "qrcode.react"
 
 export interface IRouteParams{
     readonly id: string
@@ -17,6 +19,7 @@ export interface IState{
     readonly student: IStudent
     readonly totPresenze: number
     readonly oreTotali: number
+    readonly modal: boolean
 }
 
 export default class StudentDetails extends React.PureComponent<IProps, IState>{
@@ -27,7 +30,8 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
         this.state = {
             student: null,
             totPresenze: null,
-            oreTotali: null
+            oreTotali: null,
+            modal: false
         }
     }
 
@@ -64,12 +68,38 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
         })
     }
 
+    toggleModal = () => {
+        this.setState({
+            modal: !this.state.modal
+        })
+    }
+
+    downloadQR = () => {
+        const { student } = this.state,
+        canvas = document.getElementById("qr-code-image") as any
+        const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream")
+        let downloadLink = document.createElement("a")
+        downloadLink.href = pngUrl
+        downloadLink.download = `qrcode${student.nome}${student.cognome}.png`
+        document.body.appendChild(downloadLink)
+        downloadLink.click()
+        document.body.removeChild(downloadLink)
+    }
+
+    getQRCode = () => {
+        const { student } = this.state
+        let cipher = new Cipher(),
+        code = cipher.encode(student.cf)
+
+        return code
+    }
+
     roundToTwo = (total: number) => {    
         return Math.round(total)
     }
 
     render(): JSX.Element{
-        const { student, totPresenze, oreTotali } = this.state
+        const { student, totPresenze, oreTotali, modal } = this.state
         
         if(!student){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
@@ -92,9 +122,12 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                             }
                         </span>
                         <h4 className="text-uppercase mb-2 text-truncate">{student.nome} {student.cognome}</h4>
-                        <p className="mb-0"><strong>Codice Fiscale</strong>: {student.cf}</p>
                         <p className="mb-0"><strong>Data di nascita</strong>: {formatItalian(student.dataNascita)}</p>
                         <p className="mb-0"><strong>E-mail</strong>: {student.email}</p>
+                        <Button onClick={this.toggleModal} className="float-right" type="link">
+                            Mostra codice QR
+                        </Button>
+                        <div className="clearfix"></div>
                     </div>
                 </div>
                 <div className="col-6 pr-0">
@@ -115,6 +148,24 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
             <h3 className="mt-3">Presenze dello studente</h3>
             <PresenzeTable studente={student.idStudente} reloadTotali={this.loadTotali} />
             
+            <Modal visible={modal} maskClosable={true} centered title={
+                <span>
+                    <i className="far fa-qrcode fa-fw fa-lg text-primary mr-2"></i>Codice QR dello studente
+                </span>
+            } onCancel={this.toggleModal} width={350} onOk={this.downloadQR}
+            footer={[
+                <Button type="primary" onClick={this.downloadQR}>
+                    <i className="far fa-arrow-to-bottom mr-2"></i> Salva codice
+                </Button>,
+                <Button type="default" onClick={this.toggleModal}>Chiudi</Button>
+            ]}>
+                <div className="text-center">
+                    <p>Salva il codice sottostante e condividilo con <strong>{student.nome} {student.cognome}.</strong></p>
+                    <div className="my-2">
+                        <QRCode id="qr-code-image" value={this.getQRCode()} size={200} />
+                    </div>
+                </div>
+            </Modal>
         </div>
     }
 }

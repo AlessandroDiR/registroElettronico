@@ -99,6 +99,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 centered: true,
                 title: "Selezionare i campi da abbinare",
                 icon: <Icon type="api" style={{ color: "var(--success)" }} />,
+                maskClosable: true,
                 content: <div style={{ marginLeft: -38 }}>
                     <div className="row mt-3 px-0">
                         <div className="col-4">
@@ -126,7 +127,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                         })
                     }
                 </div>,
-                onOk: () => this.showImportPreview(),
+                onOk: this.showImportPreview,
                 okText: "Prosegui"
             })
         }
@@ -255,7 +256,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 </div>
 
                 <div className="bottom-side p-3 text-right">
-                    <button className="btn btn-danger mr-2" onClick={() => this.hidePopup()}>Annulla</button>
+                    <button className="btn btn-danger mr-2" onClick={this.hidePopup}>Annulla</button>
                     <button className="btn btn-success" onClick={this.confirmImport}>Conferma importazione</button>
                 </div>
             </div>

@@ -5,6 +5,7 @@ import Firma from "./Firma"
 import LessonsCalendar from "./LessonsCalendar"
 import SceltaCorso from "./SceltaCorso"
 import SceltaClasse from "./SceltaClasse"
+import LogoCorso from "./LogoCorso"
 
 export default class Main extends React.Component{
 
@@ -22,9 +23,8 @@ export default class Main extends React.Component{
             <Router history={routerHistory}>
                 <div className="row">
                     <div className="col-3 bg-blue p-0 menu">
-                        <div className="logo-block px-3 py-4">
-                            <img src="https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png" height="100" className="mx-auto d-block logo" alt="logo" />
-                        </div>
+                        
+                        <LogoCorso idCorso={sessionStorage.getItem("corso")} />
 
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/")} exact to="/firme/">
                             <span>Home</span>
@@ -50,7 +50,7 @@ export default class Main extends React.Component{
                             }} />
 
                             <Route exact path="/firme/calendar" render={() => (
-                                        <LessonsCalendar />
+                                <LessonsCalendar />
                             )} />
                         </Switch>
                         

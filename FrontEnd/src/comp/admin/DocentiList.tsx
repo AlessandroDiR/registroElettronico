@@ -1,7 +1,7 @@
 import React from "react"
 import { IDocente } from "../../models/IDocente";
 import { routerHistory } from "../..";
-import { Modal, Tooltip, Spin, Icon, Checkbox } from "antd"
+import { Modal, Tooltip, Spin, Icon, Switch } from "antd"
 import Axios from "axios";
 import { siteUrl } from "../../utilities";
 
@@ -20,7 +20,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
 
         this.state = {
             docenti: null,
-            showAll: true
+            showAll: false
         }
     }
 
@@ -71,7 +71,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
             <h3 className="mb-3 text-center">Docenti del corso</h3>
 
             <label className="pointer" style={{ transform: "translateY(50%)" }}>
-                <Checkbox checked={!showAll} onChange={this.switchList} className="mr-1" /> Mostra solo i docenti del mio corso
+                <Switch checked={!showAll} onChange={this.switchList} className="mr-1 align-top" /> Mostra solo i docenti del mio corso
             </label>
 
             <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push("/adminpanel/docenti/new")}>

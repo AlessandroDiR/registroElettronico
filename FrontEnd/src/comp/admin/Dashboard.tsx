@@ -14,6 +14,7 @@ import StudentsImport from "./StudentsImport";
 import MaterieList from "./MaterieList";
 import ConfigCalendar from "./ConfigCalendar";
 import { IAdmin } from "../../models/IAdmin";
+import LogoCorso from "../LogoCorso";
 
 export default class Dashboard extends React.Component{
 
@@ -34,9 +35,8 @@ export default class Dashboard extends React.Component{
             <Router history={routerHistory}>
                 <div className="row">
                     <div className="col-3 bg-blue p-0 menu">
-                        <div className="logo-block px-3 py-4">
-                            <img src="https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png" height="100" className="mx-auto d-block logo" alt="logo" />
-                        </div>
+                        
+                        <LogoCorso idCorso={admin.idCorso} />
 
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/adminpanel/studenti")} to="/adminpanel/studenti">
                             <span>Studenti</span>
