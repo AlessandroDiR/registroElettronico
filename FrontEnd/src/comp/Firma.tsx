@@ -1,7 +1,7 @@
 import React from "react"
 import axios from "axios"
 import { IMessage, genericError } from "../models/IMessage"
-import { siteUrl } from "../utilities"
+import { siteUrl, resizePopup } from "../utilities"
 import { routerHistory } from ".."
 import { Divider, Tooltip, Spin, Icon } from "antd"
 import { ICorso } from "../models/ICorso"
@@ -14,7 +14,7 @@ export interface IState{
     readonly corso: ICorso
 }
 
-export default class FirmaComponent extends React.PureComponent<IProps, IState>{
+export default class Firma extends React.PureComponent<IProps, IState>{
     constructor(props: IProps){
         super(props)
 
@@ -35,6 +35,8 @@ export default class FirmaComponent extends React.PureComponent<IProps, IState>{
                 corso: corso
             })
         })
+
+        resizePopup()
     }
 
     changeCode = (event: any) => {
@@ -93,7 +95,7 @@ export default class FirmaComponent extends React.PureComponent<IProps, IState>{
         const { popup, corso } = this.state
         let icon = <Icon type="loading"  spin />
 
-        return <div className="col-9" id="mainBlock">
+        return <div className="col" id="mainBlock">
             <div className="text-center w-100">
                 <h2 className="text-center my-3 font-weight-normal">Scannerizza il codice</h2>
                 <input autoFocus type="password" className="form-control text-center mx-auto shadow-sm font-weight-normal" value={this.state.code} onChange={this.changeCode} maxLength={24} id="mainInput" />
@@ -116,7 +118,7 @@ export default class FirmaComponent extends React.PureComponent<IProps, IState>{
                 </div>
             </div>
 
-            <div id="popup" className="col-9">
+            <div id="popup" className="col">
                 <div className="w-100">
                     <i className={"fal fa-fw fa-lg fa-6x " + popup.icon} style={{ color: popup.iconColor}}></i>
                     <h2 className="mt-5">{popup.title}</h2>

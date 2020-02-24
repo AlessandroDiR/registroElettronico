@@ -43,10 +43,11 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         context = this
 
         Modal.confirm({
-            title: 'Ritiro di uno studente: (' + student.nome + ' ' + student.cognome + ')',
+            title: 'ATTENZIONE: si sta per ritirare uno studente (' + student.nome + ' ' + student.cognome + ')',
             content: <div style={{ marginLeft: -38 }}>
                 <p>I dati identificativi dello studente e le sue frequenze verranno comunque mantenuti.</p>
                 <label className="text-secondary">Data di ritiro</label>
+                
                 <DatePicker locale={locale} className="w-100" onChange={(_, d2) => date = d2} format="DD-MM-YYYY" />
             </div>,
             okText: 'Conferma ritiro',
@@ -148,6 +149,17 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         this.showHideModal()
     }
 
+    allRetired = (group: IStudent[]) => {
+        let allRetired = true
+
+        group.forEach(s => {
+            if(!s.ritirato)
+                allRetired = false
+        })
+
+        return !allRetired
+    }
+
     render(): JSX.Element{
         const { students, selection } = this.state
         
@@ -186,7 +198,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                         if(!g[0])
                             return false
                             
-                        let checkedAll = true
+                        let checkedAll = this.allRetired(g)
 
                         g.forEach(element => {
                             if(selection.indexOf(element) === -1 && !element.ritirato)

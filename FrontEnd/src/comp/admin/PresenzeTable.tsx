@@ -1,11 +1,12 @@
 import React from "react"
 import { IPresenze } from "../../models/IPresenze"
 import { Tooltip, Icon, Spin, Modal } from "antd"
-import { hideAll, siteUrl, formatItalian } from "../../utilities"
+import { hideAll, siteUrl, formatItalian, startEdit } from "../../utilities"
 import Axios from "axios"
 
 export interface IProps{
     readonly studente: number
+    reloadTotali(): void
 }
 export interface IState{
     readonly presenze: IPresenze[]
@@ -53,22 +54,9 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
     }
 
     startTimeEdit = (id: number) => {
-        let entrataInput = document.getElementById("entrataInput_" + id),
-        uscitaInput = document.getElementById("uscitaInput_" + id),
-        entrataSpan = document.getElementById("entrataSpan_" + id),
-        uscitaSpan = document.getElementById("uscitaSpan_" + id),
-        editBtn = document.getElementById("editBtn_" + id),
-        confirmBtn = document.getElementById("confirmBtn_" + id),
-        presenza = this.state.presenze.find(p => p.idPresenza === id)
+        let presenza = this.state.presenze.find(p => p.idPresenza === id)
 
-        hideAll()
-
-        entrataInput.style.display = "block"
-        uscitaInput.style.display = "block"
-        confirmBtn.style.display = "inline-block"
-        entrataSpan.style.display = "none"
-        uscitaSpan.style.display = "none"
-        editBtn.style.display = "none"
+        startEdit(id)
 
         this.setState({
             entrataEdit: presenza.ingresso,
@@ -89,8 +77,22 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
         }, 1000)
     }
 
+    validateTime = (time: string) => {
+        return /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(time)
+    }
+
     confirmEdit = (id: number) => {
         const { entrataEdit, uscitaEdit, presenze } = this.state
+
+        if(!this.validateTime(entrataEdit) || !this.validateTime(uscitaEdit)){
+            Modal.error({
+                title: "Errore!",
+                content: "Orari non validi!",
+                maskClosable: true
+            })
+
+            return
+        }
 
         let entrataSpan = document.getElementById("entrataSpan_" + id),
         uscitaSpan = document.getElementById("uscitaSpan_" + id),
@@ -125,6 +127,8 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
                 hideAll()
                 
                 this.animateSpans(entrataSpan, uscitaSpan)
+
+                this.props.reloadTotali()
             }else{
                 Modal.error({
                     title: "Errore!",

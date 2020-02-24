@@ -43,7 +43,7 @@ export default class UserCalendar extends React.PureComponent<IProps, IState> {
         if(!calendar){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }

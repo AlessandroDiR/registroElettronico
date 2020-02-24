@@ -1,7 +1,7 @@
 import React from "react"
 import { IDocente } from "../../models/IDocente";
 import { routerHistory } from "../..";
-import { Modal, Tooltip, Spin, Icon } from "antd"
+import { Modal, Tooltip, Spin, Icon, Switch } from "antd"
 import Axios from "axios";
 import { siteUrl } from "../../utilities";
 
@@ -10,6 +10,7 @@ export interface IProps{
 }
 export interface IState{
     readonly docenti: IDocente[]
+    readonly showAll: boolean
 }
 
 export default class DocentiList extends React.PureComponent<IProps, IState>{
@@ -18,7 +19,8 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
         super(props)
 
         this.state = {
-            docenti: null
+            docenti: null,
+            showAll: false
         }
     }
 
@@ -27,6 +29,12 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
             this.setState({
                 docenti: response.data as IDocente[]
             })
+        })
+    }
+
+    switchList = () => {
+        this.setState({
+            showAll: !this.state.showAll
         })
     }
 
@@ -46,18 +54,25 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { docenti } = this.state
+        const { docenti, showAll } = this.state
         
         if(!docenti){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }
 
-        return <div className="col-9 px-5 py-4 right-block">
+        let lista = showAll ? docenti : docenti.filter(d => d.corsi.indexOf(this.props.corso) !== -1),
+        docs = lista.sort((a, _) => a.ritirato ? 0 : -1)
+
+        return <div className="col px-5 py-4 right-block">
             <h3 className="mb-3 text-center">Docenti del corso</h3>
+
+            <label className="pointer" style={{ transform: "translateY(50%)" }}>
+                <Switch checked={!showAll} onChange={this.switchList} className="mr-1 align-top" /> Mostra solo i docenti del mio corso
+            </label>
 
             <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push("/adminpanel/docenti/new")}>
                 <i className="fal fa-plus"></i> Aggiungi docente
@@ -74,8 +89,9 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                         </tr>
 
                         {
-                            docenti.map(d => {        
-                                return <tr>
+                            docs.map(d => {   
+                                let bg = d.ritirato ? "light font-italic" : "white"     
+                                return <tr className={"bg"+bg}>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.nome}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.cognome}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.cf}</td>
@@ -86,17 +102,29 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                                             </button>
                                         </Tooltip>
 
-                                        <Tooltip title="Modifica">
-                                            <button type="button" className="btn btn-warning text-white circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/docenti/edit/" + d.idDocente)}>
-                                                <i className="fa fa-pen"></i>
-                                            </button>
-                                        </Tooltip>
+                                        {
+                                            !d.ritirato && <Tooltip title="Modifica">
+                                                <button type="button" className="btn btn-warning text-white circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/docenti/edit/" + d.idDocente)}>
+                                                    <i className="fa fa-pen"></i>
+                                                </button>
+                                            </Tooltip>
+                                        }
                                         
-                                        <Tooltip title="Rimuovi">
-                                            <button type="button" className="btn btn-danger circle-btn" onClick={() => this.showDeleteConfirm(d)}>
-                                                <i className="fa fa-user-times"></i>
-                                            </button>
-                                        </Tooltip>
+                                        {
+                                            !d.ritirato && <Tooltip title="Segna come ritirato">
+                                                <button type="button" className="btn btn-danger circle-btn" onClick={() => this.showDeleteConfirm(d)}>
+                                                    <i className="fa fa-user-times"></i>
+                                                </button>
+                                            </Tooltip>
+                                        }
+
+                                        {
+                                            d.ritirato && <Tooltip title="Docente ritirato">
+                                                <button type="button" className="circle-btn ml-2 border-0">
+                                                    <i className="fa fa-user-slash"></i>
+                                                </button>
+                                            </Tooltip>
+                                        }
                                     </td>
                                 </tr>
                             })

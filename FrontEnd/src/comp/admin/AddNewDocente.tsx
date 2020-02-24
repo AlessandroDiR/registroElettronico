@@ -98,7 +98,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
     render(): JSX.Element{
         const { nome, cognome, CF, email } = this.state
 
-        return <div className="col-9 px-5 py-4 right-block">
+        return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo docente</h3>
 
             <form>

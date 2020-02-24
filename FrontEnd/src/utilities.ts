@@ -1,31 +1,26 @@
-export const siteUrl = "https://localhost:44336"
+export const siteUrl = "http://localhost:5000"
+export const logoUrl = "https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png"
 
 export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n
 }
 
-export const isValidMeseGiorno = (g: number, m: number, a: number) => {
+export const startEdit = (id: number) => {
+    let entrataInput = document.getElementById("entrataInput_" + id),
+    uscitaInput = document.getElementById("uscitaInput_" + id),
+    entrataSpan = document.getElementById("entrataSpan_" + id),
+    uscitaSpan = document.getElementById("uscitaSpan_" + id),
+    editBtn = document.getElementById("editBtn_" + id),
+    confirmBtn = document.getElementById("confirmBtn_" + id)
 
-    if(m < 0 || g < 0 || m > 12)
-        return false
+    hideAll()
 
-    switch(m){
-        case 4 || 6 || 9 || 11:
-            if(g > 30)
-                return false
-            break
-        case 2:
-            if((a % 400 === 0 || a % 4 === 0) && g > 29)
-                return false
-            else if(g > 28 && a % 400 !== 0 && a % 4 !== 0)
-                return false
-            break
-        default:
-            if(g > 31)
-                return false
-    }
-
-    return true
+    entrataInput.style.display = "block"
+    uscitaInput.style.display = "block"
+    confirmBtn.style.display = "inline-block"
+    entrataSpan.style.display = "none"
+    uscitaSpan.style.display = "none"
+    editBtn.style.display = "none"
 }
 
 export const hideAll = () => {
@@ -87,13 +82,6 @@ export const getDateYear = (d: string) => {
     return date.getFullYear().toString()
 }
 
-export const isValidData = (g: number, m: number, a: number) => {
-    if(isNaN(g) || isNaN(m) || isNaN(a) || String(a).length !== 4 || !isValidMeseGiorno(g, m, a))
-        return false
-
-    return true
-}
-
 export const capitalizeFirst = (name: string) => {
     let splitStr = capitalizeQuote(name.toLowerCase()).split(' ')
 
@@ -145,3 +133,15 @@ export const imageFileToBase64 = async (file: any) => {
 
     return readImageFile(file)
 }
+
+export const resizePopup = () => {
+    let mainBlock = document.getElementById("mainBlock"),
+    popup = document.getElementById("popup"),
+    width = mainBlock ? mainBlock.clientWidth : 0
+
+    if(mainBlock && popup)
+        popup.style.width = width + "px"
+}
+
+window.addEventListener("load", resizePopup)
+window.addEventListener("resize", resizePopup)

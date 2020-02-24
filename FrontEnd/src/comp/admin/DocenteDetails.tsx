@@ -51,12 +51,12 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
         if(!docente){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }
 
-        return <div className="col-9 px-5 py-4 right-block">
+        return <div className="col px-5 py-4 right-block">
             <div className="col-5 mr-4 p-3 bg-white border" style={{borderRadius: 5}}>
                 <h4 className="text-uppercase mb-2 text-truncate">{docente.nome} {docente.cognome}</h4>
                 <p className="mb-0"><strong>Codice Fiscale</strong>: {docente.cf}</p>

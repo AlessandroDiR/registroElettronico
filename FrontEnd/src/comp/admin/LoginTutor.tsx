@@ -1,7 +1,7 @@
 import React from "react"
 import { routerHistory } from "../.."
 import { message, Modal } from "antd"
-import { mountLogin, unmountLogin, siteUrl } from "../../utilities"
+import { mountLogin, unmountLogin, siteUrl, logoUrl } from "../../utilities"
 import Axios from "axios"
 import { Cipher } from "../../models/Cipher"
 import { isAdmin } from "../../models/IAdmin"
@@ -68,7 +68,8 @@ export default class LoginTutor extends React.PureComponent<IProps, IState>{
                 Modal.error({
                     title: "Errore!",
                     content: "Username o Password errati!",
-                    centered: true
+                    centered: true,
+                    maskClosable: true
                 })
             }
         })
@@ -79,16 +80,17 @@ export default class LoginTutor extends React.PureComponent<IProps, IState>{
 
         return <div className="col-5 mx-auto" id="loginBlock">
             <form className="w-100 bg-white p-3 rounded shadow" onSubmit={this.tryLogin}>
-                <h3 className="text-center">Effettua il login</h3>
+                <h3 className="d-inline-block">Accesso coordinatori</h3>
+                <img src={logoUrl} height="40" className="float-right logo" alt="logo" />
 
                 <div className="form-group">
                     <label className="text-secondary">Utente di accesso</label>
-                    <input type="text" className="form-control" value={adminName} onChange={this.changeInputName} />
+                    <input name="username" type="text" className="form-control" value={adminName} onChange={this.changeInputName} />
                 </div>
 
                 <div className="form-group">
                     <label className="text-secondary">Password di accesso</label>
-                    <input type="password" className="form-control" value={adminPsw} onChange={this.changeInputPassword} />
+                    <input name="password" type="password" className="form-control" value={adminPsw} onChange={this.changeInputPassword} />
                 </div>
 
                 <input type="submit" value="Accedi" className="btn btn-lg btn-success w-100 text-uppercase"/>
