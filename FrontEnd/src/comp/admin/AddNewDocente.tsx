@@ -114,8 +114,8 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             cf: CF,
             password: CF,
             email: email,
-            tenere: corsiSel.map(c => { return { idCorso: c, idDocente: null } }),
-            insegnare: materieSel.map(m => { return { idMateria: m, idDocente: null } }),
+            tenere: corsiSel.map(c => { return { idCorso: c, idDocente: 0 } }),
+            insegnare: materieSel.map(m => { return { idMateria: m, idDocente: 0 } }),
         }).then(_ => {
             message.success("Docente creato con successo!")
             routerHistory.push("/adminpanel/docenti")
