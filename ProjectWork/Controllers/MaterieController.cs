@@ -155,21 +155,6 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            //var mat = _context.Materie.Last();
-            //if (mat == null)
-            //{
-            //    return CreatedAtAction("GetMaterie", "Materia inesistente");
-            //}
-            //foreach (var item in materie.Comprende)
-            //{
-            //    item.IdMateria = mat.IdMateria;
-            //}
-            //_context.Comprende.AddRange(materie.Comprende);
-            //foreach (var item in materie.Insegnare)
-            //{
-            //    item.IdMateria = mat.IdMateria;
-            //}
-            //_context.Insegnare.AddRange(materie.Insegnare);
             _context.Materie.Add(materie);
 
             var newComprende = new Comprende

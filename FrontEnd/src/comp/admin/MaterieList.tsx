@@ -114,7 +114,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             showEditModal: false
         })
 
-        Axios.put(siteUrl+"/api/materie", {
+        Axios.put(siteUrl+"/api/materie/"+materiaEdit.idMateria, {
             idMateria: materiaEdit.idMateria,
             nome: nomeEdit,
             descrizione: descEdit

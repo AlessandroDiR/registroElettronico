@@ -22,9 +22,28 @@ namespace ProjectWork.Controllers
 
         // GET: api/Docenti
         [HttpGet]
-        public IEnumerable<Docenti> GetDocenti()
+        public IActionResult GetDocenti()
         {
-            return _context.Docenti;
+            var docenti = _context.Docenti;
+            var result = new List<object>();
+            foreach(var d in docenti)
+            {
+                var json = new
+                {
+                    idDocente = d.IdDocente,
+                    nome = d.Nome,
+                    cognome = d.Cognome,
+                    email = d.Email,
+                    password = d.Password,
+                    cf = d.Cf,
+                    ritirato = bool.Parse(d.Ritirato),
+                    corsi = getCorsiDocente(d.IdDocente),
+                    materie = getMaterieocente(d.IdDocente)
+                };
+
+                result.Add(json);
+            }
+            return Ok(result);
         }
 
         // GET: api/Docenti/GetDocentiById/5
@@ -43,20 +62,6 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
-            var getCorsi = _context.Tenere.Where(c => c.IdDocente == id);
-            var idCorsi = new List<int>();
-            foreach(var corso in getCorsi)
-            {
-                idCorsi.Add(corso.IdCorso);
-            }
-
-            var materie = _context.Insegnare.Where(i => i.IdDocente == id);
-            var idMaterie = new List<int>();
-            foreach (var m in materie)
-            {
-                idMaterie.Add(m.IdMateria);
-            }
-
             var result = new
             {
                 idDocente = id,
@@ -64,8 +69,8 @@ namespace ProjectWork.Controllers
                 cognome = docente.Cognome,
                 email = docente.Email,
                 ritirato = bool.Parse(docente.Ritirato),
-                corsi = idCorsi,
-                materie = idMaterie
+                corsi = getCorsiDocente(id),
+                materie = getMaterieocente(id)
             };
 
 
@@ -189,7 +194,6 @@ namespace ProjectWork.Controllers
             return NoContent();
         }
 
-        //Crea docente
         // POST: api/Docenti
         [HttpPost]
         public async Task<IActionResult> PostDocenti([FromBody] Docenti d)
@@ -284,6 +288,30 @@ namespace ProjectWork.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(docenti);
+        }
+
+        private List<int> getCorsiDocente(int idDocente)
+        {
+            var getCorsi = _context.Tenere.Where(c => c.IdDocente == idDocente);
+            var idCorsi = new List<int>();
+            foreach (var corso in getCorsi)
+            {
+                idCorsi.Add(corso.IdCorso);
+            }
+
+            return idCorsi;
+        }
+
+        private List<int> getMaterieocente(int idDocente)
+        {
+            var materie = _context.Insegnare.Where(i => i.IdDocente == idDocente);
+            var idMaterie = new List<int>();
+            foreach (var m in materie)
+            {
+                idMaterie.Add(m.IdMateria);
+            }
+
+            return idMaterie;
         }
 
         private bool DocentiExists(int id)
