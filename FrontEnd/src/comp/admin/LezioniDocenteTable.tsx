@@ -92,7 +92,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
         uscitaSpan = document.getElementById("uscitaSpan_" + id),
         presenza = presenze.find(p => p.idPresenza === id)
 
-        Axios.post(siteUrl+"/reg/api.php", {
+        Axios.put(siteUrl+"/api/presenzedocente/"+id, {
             idPresenza: id,
             ingresso: entrataEdit,
             uscita: uscitaEdit,
@@ -166,10 +166,14 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
                             <td style={{maxWidth: 0}} className="text-truncate">{p.lezione}</td>
                             <td>
                                 <Tooltip title="Modifica orari">
-                                    <button type="button" className="far fa-clock btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p.idPresenza)} id={"editBtn_"+p.idPresenza}></button>
+                                    <button type="button" className="btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p.idPresenza)} id={"editBtn_"+p.idPresenza}>
+                                        <i className="fa fa-user-edit"></i>
+                                    </button>
                                 </Tooltip>
                                 <Tooltip title="Conferma modifiche">
-                                    <button type="button" className="far fa-check btn btn-success circle-btn" onClick={() => this.confirmEdit(p.idPresenza)} id={"confirmBtn_"+p.idPresenza} style={{display: "none"}}></button>
+                                    <button type="button" className="btn btn-success circle-btn" onClick={() => this.confirmEdit(p.idPresenza)} id={"confirmBtn_"+p.idPresenza} style={{display: "none"}}>
+                                        <i className="fa fa-check"></i>
+                                    </button>
                                 </Tooltip>
                             </td>
                         </tr>

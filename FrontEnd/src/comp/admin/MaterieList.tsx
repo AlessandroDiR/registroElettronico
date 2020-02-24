@@ -1,5 +1,5 @@
 import React from "react"
-import { Tooltip, Spin, Icon, Modal, message } from "antd"
+import { Tooltip, Spin, Icon, Modal, message, Button } from "antd"
 import Axios from "axios";
 import { siteUrl } from "../../utilities";
 import { IMateria } from "../../models/IMateria";
@@ -79,6 +79,11 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
 
            return
         }
+        
+        this.setState({
+            materie: null,
+            showModal: false
+        })
 
         Axios.post(siteUrl+"/api/materie/"+this.props.corso, {
             nome: nomeMateria,
@@ -88,11 +93,9 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
 
             this.setState({
                 materie: materie
-
             })
 
             message.success("Materia aggiunta con successo!")
-
         })
 
     }
@@ -210,7 +213,10 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                     </tbody>
             </table>
 
-            <Modal title="Aggiungi una materia" visible={showModal} onCancel={this.showHideModal} cancelText="Annulla" okText="Aggiungi" onOk={this.aggiungiMateria}>
+            <Modal title="Aggiungi una materia" visible={showModal} footer={[
+                <Button type="primary" onClick={this.aggiungiMateria}>Aggiungi</Button>,
+                <Button type="default" onClick={this.showHideModal}>Annulla</Button>
+            ]} onCancel={this.showHideModal}>
                 <div className="form-group">
                     <label className="text-secondary">Nome della materia</label>
                     <input type="text" value={nomeMateria} onChange={this.changeNome} className="form-control" />
@@ -222,7 +228,10 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             </Modal>
 
             {
-                materiaEdit && <Modal title="Modifica di una materia" visible={showEditModal} onCancel={this.hideEditModal} cancelText="Annulla" okText="Modifica" onOk={this.modificaMateria}>
+                materiaEdit && <Modal title="Modifica di una materia" visible={showEditModal} footer={[
+                    <Button type="primary" onClick={this.modificaMateria}>Modifica</Button>,
+                    <Button type="default" onClick={this.hideEditModal}>Annulla</Button>
+                ]} onCancel={this.hideEditModal}>
                     <div className="form-group">
                         <label className="text-secondary">Nome della materia</label>
                         <input type="text" value={nomeEdit} onChange={this.changeNomeEdit} className="form-control" />

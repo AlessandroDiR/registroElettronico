@@ -91,7 +91,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                         {
                             docs.map(d => {   
                                 let bg = d.ritirato ? "light font-italic" : "white"     
-                                return <tr className={"bg"+bg}>
+                                return <tr className={"bg-"+bg}>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.nome}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.cognome}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.monteOre}</td>

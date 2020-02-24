@@ -126,7 +126,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             cf: CF,
             idCorso: this.props.corso,
             annoFrequentazione: this.state.studente.annoFrequentazione,
-            dataNascita: formattaData(dataNascita),
+            dataNascita: formattaData(dataNascita, true),
             ritirato: this.state.studente.ritirato
         }).then(response => {
             message.success("Studente modificato con successo!")

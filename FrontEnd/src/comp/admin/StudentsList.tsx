@@ -37,7 +37,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         })
     }
 
-    showDeleteConfirm = (student: IStudent) => {
+    showConfirm = (student: IStudent) => {
         const { students } = this.state
         let date: string = "",
         context = this
@@ -68,10 +68,11 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 studente.ritirato = "true"
                 studente.dataRitiro = dataRitiro
                 
+                context.setState({
+                    students: null
+                })
+                
                 Axios.put(siteUrl+"/api/studenti/"+student.idStudente, {...studente}).then(response => {
-                    context.setState({
-                        students: null
-                    })
 
                     let stu = response.data as IStudent,
                     currentList = students as any,
@@ -82,6 +83,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                     context.setState({
                         students: currentList as IStudent[]
                     })
+
+                    message.success("Studente ritirato con successo!")
                 })
             }
         })
@@ -136,6 +139,10 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 content: "L'anno selezionato non è valido."
             })
         }
+
+        this.setState({
+            students: null
+        })
 
         Axios.put(siteUrl+"/api/studenti", studenti).then(response => {
             this.setState({
@@ -258,7 +265,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                             }
                                             {
                                                 !s.ritirato && <Tooltip title="Segna come ritirato">
-                                                    <button type="button" className="btn btn-danger circle-btn ml-2" onClick={() => this.showDeleteConfirm(s)}>
+                                                    <button type="button" className="btn btn-danger circle-btn ml-2" onClick={() => this.showConfirm(s)}>
                                                         <i className="fa fa-user-times"></i>
                                                     </button>
                                                 </Tooltip>

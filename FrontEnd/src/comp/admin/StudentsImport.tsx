@@ -3,7 +3,7 @@ import Dragger from "antd/lib/upload/Dragger"
 import { IStudent } from "../../models/IStudent"
 import { Modal, Tooltip, Icon, message } from "antd"
 import { routerHistory } from "../.."
-import { formattaData, capitalizeFirst, siteUrl, resizePopup } from "../../utilities"
+import { formattaData, capitalizeFirst, siteUrl, resizePopup, formatItalian } from "../../utilities"
 import Axios from "axios"
 
 export interface IProps{
@@ -187,7 +187,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
     }
 
     confirmImport = () => {
-        Axios.post(siteUrl+"/api/studenti", this.state.addList).then(response => {
+        Axios.post(siteUrl+"/api/studenti", this.state.addList).then(_ => {
             message.success("Importazione eseguita con successo!")
             routerHistory.push("/adminpanel/studenti")
         })
@@ -243,7 +243,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                                             <Tooltip title={s.cf}>
                                                 <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
                                             </Tooltip>
-                                            <td style={{maxWidth: 0}} className="text-truncate">{s.dataNascita}</td>
+                                            <td style={{maxWidth: 0}} className="text-truncate">{formatItalian(s.dataNascita)}</td>
                                             <Tooltip title={s.email}>
                                                 <td style={{maxWidth: 0}} className="text-truncate">{s.email}</td>
                                             </Tooltip>

@@ -1,20 +1,20 @@
 import React from "react"
-import { NavLink, Route, Router, Switch } from 'react-router-dom';
+import { NavLink, Route, Router, Switch } from 'react-router-dom'
 import { routerHistory } from "../.."
-import LoginTutor from "./LoginTutor";
-import StudentsList from "./StudentsList";
-import AddNewStudent from "./AddNewStudent";
-import StudentDetails from "./StudentDetails";
-import DocentiList from "./DocentiList";
-import AddNewDocente from "./AddNewDocente";
-import DocenteDetails from "./DocenteDetails";
-import EditDocente from "./EditDocente";
-import EditStudente from "./EditStudente";
-import StudentsImport from "./StudentsImport";
-import MaterieList from "./MaterieList";
-import ConfigCalendar from "./ConfigCalendar";
-import { IAdmin } from "../../models/IAdmin";
-import LogoCorso from "../LogoCorso";
+import LoginTutor from "./LoginTutor"
+import StudentsList from "./StudentsList"
+import AddNewStudent from "./AddNewStudent"
+import StudentDetails from "./StudentDetails"
+import DocentiList from "./DocentiList"
+import AddNewDocente from "./AddNewDocente"
+import DocenteDetails from "./DocenteDetails"
+import EditDocente from "./EditDocente"
+import EditStudente from "./EditStudente"
+import StudentsImport from "./StudentsImport"
+import MaterieList from "./MaterieList"
+import ConfigCalendar from "./ConfigCalendar"
+import { IAdmin } from "../../models/IAdmin"
+import LogoCorso from "../LogoCorso"
 
 export default class Dashboard extends React.Component{
 
