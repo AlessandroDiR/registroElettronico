@@ -25,9 +25,9 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        /*****************************************************/
-        /* CARICARE LA CONFIGURAZIONE CORRENTE DEI CALENDARI */
-        /*****************************************************/
+        /*************************************************************************/
+        /* CARICARE LA CONFIGURAZIONE CORRENTE DEI CALENDARI di this.props.corso */
+        /*************************************************************************/
     }
 
     showHideModal = () => {
@@ -101,9 +101,9 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
             return
         }
 
-        /************************************************/
-        /* CHIAMATA AXIOS PER SALVARE LA CONFIGURAZIONE */
-        /************************************************/
+        /********************************************************************/
+        /* CHIAMATA AXIOS PER SALVARE LA CONFIGURAZIONE di this.props.corso */
+        /********************************************************************/
 
         message.success("Configurazione calendario salvata!")
     }
