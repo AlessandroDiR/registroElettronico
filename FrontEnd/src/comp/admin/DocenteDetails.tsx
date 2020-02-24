@@ -84,6 +84,10 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
 
         return <div className="col px-5 py-4 right-block">
             <div className="col-5 mr-4 p-3 bg-white border" style={{borderRadius: 5}}>
+                {
+                    docente.ritirato && <span className="border-text">Ritirato</span>
+                }
+
                 <h4 className="text-uppercase mb-2 text-truncate">{docente.nome} {docente.cognome}</h4>
                 <p className="mb-0"><strong>E-mail</strong>: {docente.email}</p>
                 <Button onClick={this.toggleModal} className="float-right" type="link">

@@ -132,7 +132,8 @@ body{
   height: 95px !important
 }
 .fc-scroller.fc-day-grid-container{
-  height: auto !important
+  height: auto !important;
+  overflow: hidden !important
 }
 .fc-other-month{
   opacity: 0.4
