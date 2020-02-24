@@ -1,11 +1,11 @@
 import React from "react"
 import { Tooltip, Icon, Spin, Modal } from "antd"
-import { hideAll, siteUrl, formatItalian, startEdit } from "../../utilities"
+import { hideAll, siteUrl, formatItalian, startEdit, validateTime } from "../../utilities"
 import Axios from "axios"
 import { IPresenzaDocente } from "../../models/IPresenzaDocente"
 
 export interface IProps{
-    readonly docente: number
+    readonly idDocente: string
 }
 export interface IState{
     readonly presenze: IPresenzaDocente[]
@@ -26,7 +26,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/api/docenti/getlezionidocente/"+this.props.docente).then(response => {
+        Axios.get(siteUrl+"/api/docenti/getlezionidocente/"+this.props.idDocente).then(response => {
             let presenze = response.data as IPresenzaDocente[]
 
             this.setState({
@@ -77,16 +77,27 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
 
     confirmEdit = (id: number) => {
         const { entrataEdit, uscitaEdit, presenze } = this.state
+        
+        if(!validateTime(entrataEdit) || !validateTime(uscitaEdit)){
+            Modal.error({
+                title: "Errore!",
+                content: "Orari non validi!",
+                maskClosable: true
+            })
+
+            return
+        }
 
         let entrataSpan = document.getElementById("entrataSpan_" + id),
-        uscitaSpan = document.getElementById("uscitaSpan_" + id)
+        uscitaSpan = document.getElementById("uscitaSpan_" + id),
+        presenza = presenze.find(p => p.idPresenza === id)
 
         Axios.post(siteUrl+"/reg/api.php", {
-            modificaPresenza: {
-                idPresenza: id,
-                ingresso: entrataEdit,
-                uscita: uscitaEdit
-            }
+            idPresenza: id,
+            ingresso: entrataEdit,
+            uscita: uscitaEdit,
+            idDocente: presenza.idDocente,
+            idLezione: presenza.idLezione
         }).then(response => {
             let output = response.data
 

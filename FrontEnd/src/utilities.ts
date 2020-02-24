@@ -5,6 +5,10 @@ export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n
 }
 
+export const validateTime = (time: string) => {
+    return /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(time)
+}
+
 export const startEdit = (id: number) => {
     let entrataInput = document.getElementById("entrataInput_" + id),
     uscitaInput = document.getElementById("uscitaInput_" + id),

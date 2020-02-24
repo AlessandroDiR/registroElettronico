@@ -40,8 +40,8 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
 
     showDeleteConfirm = (student: IDocente) => {
         Modal.confirm({
-            title: 'Confermi di voler rimuovere questo docente dal corso? (' + student.nome + ' ' + student.cognome + ')',
-            content: 'I dati del docente verranno comunque mantenuti, ma il docente non sarà più visualizzabile in questa lista.',
+            title: 'ATTENZIONE: si sta per ritirare un docente (' + student.nome + ' ' + student.cognome + ')',
+            content: 'I dati identificativi del docente, le lezioni e le presenze verranno comunque mantenuti.',
             okText: 'Confermo',
             okType: 'danger',
             cancelText: 'Annulla',
@@ -84,7 +84,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                         <tr>
                             <th>Nome</th>
                             <th>Cognome</th>
-                            <th>Codice Fiscale</th>
+                            <th style={{width: "15%"}}>Monte ore</th>
                             <th style={{width: "20%"}}>Azioni</th>
                         </tr>
 
@@ -94,7 +94,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                                 return <tr className={"bg"+bg}>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.nome}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.cognome}</td>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{d.cf}</td>
+                                    <td style={{maxWidth: 0}} className="text-truncate">{d.monteOre}</td>
                                     <td>
                                         <Tooltip title="Dettagli">
                                             <button type="button" className="btn btn-info circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/docenti/" + d.idDocente)}>
