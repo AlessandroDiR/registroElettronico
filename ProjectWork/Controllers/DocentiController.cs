@@ -34,11 +34,9 @@ namespace ProjectWork.Controllers
                     nome = d.Nome,
                     cognome = d.Cognome,
                     email = d.Email,
-                    password = d.Password,
                     cf = d.Cf,
                     ritirato = bool.Parse(d.Ritirato),
-                    corsi = getCorsiDocente(d.IdDocente),
-                    materie = getMaterieocente(d.IdDocente)
+                    corsi = getCorsiDocente(d.IdDocente)
                 };
 
                 result.Add(json);
@@ -68,6 +66,8 @@ namespace ProjectWork.Controllers
                 nome = docente.Nome,
                 cognome = docente.Cognome,
                 email = docente.Email,
+                cf = docente.Cf,
+                password = docente.Password,
                 ritirato = bool.Parse(docente.Ritirato),
                 corsi = getCorsiDocente(id),
                 materie = getMaterieocente(id)
@@ -204,32 +204,33 @@ namespace ProjectWork.Controllers
             }
 
             Docenti docente = new Docenti();
+            docente.IdDocente = _context.Docenti.Count() + 1;
             docente.Nome = d.Nome;
             docente.Cognome = d.Cognome;
             docente.Cf = d.Cf;
             docente.Password = d.Cf;
             docente.Email = d.Email;
 
-            var doc = _context.Docenti.Last();
-            if (doc == null)
-            {
-                return CreatedAtAction("GetDocenti", "Docente inesistente");
-            }
+            //var doc = _context.Docenti.Last();
+            //if (doc == null)
+            //{
+            //    return CreatedAtAction("GetDocenti", "Docente inesistente");
+            //}
             foreach (var item in d.Tenere)
             {
-                item.IdDocente = doc.IdDocente;
+                item.IdDocente = docente.IdDocente;
             }
             _context.Tenere.AddRange(d.Tenere);
             foreach (var item in d.Insegnare)
             {
-                item.IdDocente = doc.IdDocente;
+                item.IdDocente = docente.IdDocente;
             }
             _context.Insegnare.AddRange(d.Insegnare);
             _context.Docenti.Add(docente);
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetDocenti", new { id = docente.IdDocente }, docente);
+            return GetDocenti();
         }
 
         // POST: api/Docenti/LoginDocente

@@ -21,9 +21,9 @@ namespace ProjectWork.Controllers
 
         // GET: api/Materie
         [HttpGet]
-        public IEnumerable<Materie> GetMaterie()
+        public IActionResult GetMaterie()
         {
-            return _context.Materie;
+            return Ok(_context.Materie);
         }
 
         // GET: api/Materie/GetMaterieById/5
@@ -115,16 +115,6 @@ namespace ProjectWork.Controllers
                 return BadRequest();
             }
 
-            var c = _context.Comprende.Where(m => m.IdMateria == id);
-            _context.Comprende.RemoveRange(c);
-
-            _context.Comprende.AddRange(materie.Comprende);
-
-            var i = _context.Insegnare.Where(m => m.IdMateria == id);
-            _context.Insegnare.RemoveRange(i);
-
-            _context.Insegnare.AddRange(materie.Insegnare);
-
             _context.Entry(materie).State = EntityState.Modified;
 
             try
@@ -143,7 +133,7 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return NoContent();
+            return GetMaterie();
         }
 
         // POST: api/Materie
