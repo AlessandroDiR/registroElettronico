@@ -191,7 +191,6 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
 
     render(): JSX.Element{
         const { nome, cognome, CF, docente, email, materie, materieSel, corsi, corsiSel } = this.state
-        console.log(docente)
 
         if(!docente || !materie.length || !corsi.length){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
