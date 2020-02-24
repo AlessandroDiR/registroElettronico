@@ -1,4 +1,4 @@
-export const siteUrl = "http://localhost:5000"
+export const siteUrl = "https://localhost:44336"
 export const logoUrl = "https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png"
 
 export const Digits2 = (n: number) => {
