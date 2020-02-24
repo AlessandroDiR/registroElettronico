@@ -296,13 +296,15 @@ namespace ProjectWork.Controllers
         }
 
         // PUT: api/Studenti
-        [HttpPut("{idCorso}")]
-        public IActionResult PutStudentiArray([FromRoute] int idCorso, [FromBody] Studenti[] studenti)
+        [HttpPut]
+        public IActionResult PutStudentiArray([FromBody] Studenti[] studenti)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            var idCorso = studenti[0].IdCorso;
 
             foreach (var item in studenti)
             {
@@ -374,38 +376,41 @@ namespace ProjectWork.Controllers
                 foreach (var l in lesson)
                 {
                     var presenza = _context.Presenze.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdStudente == s.IdStudente);
-                    if (l.OraFine < time)
-                    {
-                        if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
-                        {
-                            presenza.Uscita = l.OraFine;
-                            _context.SaveChanges();
-                            return OutputMsg.generateMessage("Ok",$"Arrivederci {s.Nome}!");
-                        }
-                    }
-                    else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0,0,0))
-                    {
-                        presenza.Uscita = time;
-                        _context.SaveChanges();
-                        return OutputMsg.generateMessage("Ok", $"Arrivederci {s.Nome}!");
-                    }
-                    else if (presenza == null && l.OraFine >= time)
-                    {
-                        var newPresenza = new Presenze
-                        {
-                            IdLezione = l.IdLezione,
-                            IdStudente = s.IdStudente,
-                            Ingresso = time <= (l.OraInizio + new TimeSpan(0, 10, 0)) ? l.OraInizio : time
-                        };
-  
-                        _context.Presenze.Add(newPresenza);
-                        _context.SaveChanges();
-                        return OutputMsg.generateMessage("Ok", $"Ben arrivato {s.Nome}!");
-                    }
-                    else if(presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0))
+                    if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0))
                     {
                         return OutputMsg.generateMessage("Attenzione!", "Hai già la firmato la lezione!", true);
                     }
+                    else
+                    {
+                        if (l.OraFine < time)
+                        {
+                            if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
+                            {
+                                presenza.Uscita = l.OraFine;
+                                _context.SaveChanges();
+                                return OutputMsg.generateMessage("Ok", $"Arrivederci {s.Nome}!");
+                            }
+                        }
+                        else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
+                        {
+                            presenza.Uscita = time;
+                            _context.SaveChanges();
+                            return OutputMsg.generateMessage("Ok", $"Arrivederci {s.Nome}!");
+                        }
+                        else if (presenza == null && l.OraFine >= time)
+                        {
+                            var newPresenza = new Presenze
+                            {
+                                IdLezione = l.IdLezione,
+                                IdStudente = s.IdStudente,
+                                Ingresso = time <= (l.OraInizio + new TimeSpan(0, 10, 0)) ? l.OraInizio : time
+                            };
+
+                            _context.Presenze.Add(newPresenza);
+                            _context.SaveChanges();
+                            return OutputMsg.generateMessage("Ok", $"Ben arrivato {s.Nome}!");
+                        }
+                    }                                  
                 }
             }
 
@@ -454,7 +459,7 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return hoursAmount.TotalHours;
+            return Math.Round(hoursAmount.TotalHours, 2);
         }
 
         public double TotaleOreLezioni()
