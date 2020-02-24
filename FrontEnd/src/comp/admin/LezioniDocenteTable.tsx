@@ -92,7 +92,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
         uscitaSpan = document.getElementById("uscitaSpan_" + id),
         presenza = presenze.find(p => p.idPresenza === id)
 
-        Axios.post(siteUrl+"/reg/api.php", {
+        Axios.put(siteUrl+"/api/presenzedocente/"+id, {
             idPresenza: id,
             ingresso: entrataEdit,
             uscita: uscitaEdit,

@@ -36,7 +36,8 @@ namespace ProjectWork.Controllers
                     email = d.Email,
                     cf = d.Cf,
                     ritirato = bool.Parse(d.Ritirato),
-                    corsi = getCorsiDocente(d.IdDocente)
+                    corsi = getCorsiDocente(d.IdDocente),
+                    monteOre = getMonteOre(d.IdDocente)
                 };
 
                 result.Add(json);
@@ -70,9 +71,9 @@ namespace ProjectWork.Controllers
                 password = docente.Password,
                 ritirato = bool.Parse(docente.Ritirato),
                 corsi = getCorsiDocente(id),
-                materie = getMaterieocente(id)
+                materie = getMaterieocente(id),
+                monteOre = getMonteOre(id)
             };
-
 
             return Ok(result);
         }
@@ -313,6 +314,19 @@ namespace ProjectWork.Controllers
             }
 
             return idMaterie;
+        }
+
+        private double getMonteOre(int idDocente)
+        {
+            var presenze = _context.PresenzeDocente.Where(p => p.IdDocente == idDocente);
+            var totOre = new TimeSpan();
+
+            foreach(var p in presenze)
+            {
+                totOre += p.Uscita - p.Ingresso;
+            }
+
+            return Math.Round(totOre.TotalHours, 2);
         }
 
         private bool DocentiExists(int id)
