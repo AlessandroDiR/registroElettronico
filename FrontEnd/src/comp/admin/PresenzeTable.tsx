@@ -1,7 +1,7 @@
 import React from "react"
 import { IPresenze } from "../../models/IPresenze"
 import { Tooltip, Icon, Spin, Modal } from "antd"
-import { hideAll, siteUrl, formatItalian, startEdit } from "../../utilities"
+import { hideAll, siteUrl, formatItalian, startEdit, validateTime } from "../../utilities"
 import Axios from "axios"
 
 export interface IProps{
@@ -77,14 +77,10 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
         }, 1000)
     }
 
-    validateTime = (time: string) => {
-        return /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(time)
-    }
-
     confirmEdit = (id: number) => {
         const { entrataEdit, uscitaEdit, presenze } = this.state
 
-        if(!this.validateTime(entrataEdit) || !this.validateTime(uscitaEdit)){
+        if(!validateTime(entrataEdit) || !validateTime(uscitaEdit)){
             Modal.error({
                 title: "Errore!",
                 content: "Orari non validi!",

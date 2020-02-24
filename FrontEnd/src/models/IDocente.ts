@@ -1,5 +1,5 @@
 export interface IDocente{
-    readonly idDocente: number
+    readonly idDocente: string
     readonly email: string
     readonly nome: string
     readonly cognome: string
@@ -8,4 +8,5 @@ export interface IDocente{
     readonly corsi: number[]
     readonly password?: string
     readonly ritirato?: boolean
+    readonly monteOre?: number
 }
