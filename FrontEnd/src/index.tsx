@@ -42,7 +42,7 @@ ReactDOM.render(<Router history={routerHistory}>
             <DocentiDashboard />
         )} />
 
-        <Route component={Page404} />
+        <Route render={() => <Page404 goTo="/" />} />
     </Switch>
 </Router>, document.getElementById('root'))
 

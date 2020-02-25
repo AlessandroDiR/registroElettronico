@@ -8,7 +8,8 @@ $theme-colors: (
   "orange": #f57723,
   "warning": #ffbb00,
   "blue": #1e99d5,
-  "white": #fff
+  "white": #fff,
+  "grey": #888
 );
 
 @import "node_modules/bootstrap/scss/bootstrap";
@@ -47,7 +48,34 @@ body{
   overflow: auto;
 
   & .logo{
-    filter: drop-shadow(1.5px 0 0 white) drop-shadow(-0.7px 0px 0 white) drop-shadow(0 -1px 0 white) drop-shadow(0 1.5px 0 white)
+    filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-0.7px 0 0 #fff) drop-shadow(0 -1px 0 #fff) drop-shadow(0 1.5px 0 #fff)
+  }
+
+  & .router-link{
+    text-decoration: none;
+    color: #fff !important;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: block;
+    font-size: 20px;
+    padding: 1rem 1.5rem;
+    position: relative;
+    font-weight: 400;
+    
+    &:hover, &.active{
+      background-color: rgba(0,0,0,0.2);
+      text-decoration: none
+    }
+    
+    &.active:after{
+      display: block;
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 25%;
+      border: 15px solid transparent;
+      border-right-color: $bodycolor
+    }
   }
 }
 #mainBlock, #loginBlock{
@@ -101,32 +129,6 @@ body{
 .right-block{
   overflow: auto;
   max-height: 100vh
-}
-.router-link{
-  text-decoration: none;
-  color: #fff !important;
-  text-transform: uppercase;
-  cursor: pointer;
-  display: block;
-  font-size: 20px;
-  padding: 1rem 1.5rem;
-  position: relative;
-  font-weight: 400;
-  
-  &:hover, &.active{
-    background-color: rgba(0,0,0,0.2);
-    text-decoration: none
-  }
-  
-  &.active:after{
-    display: block;
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 25%;
-    border: 15px solid transparent;
-    border-right-color: $bodycolor
-  }
 }
 .fc-day-grid .fc-row{
   height: 95px !important

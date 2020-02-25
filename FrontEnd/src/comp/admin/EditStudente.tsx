@@ -1,7 +1,7 @@
 import React from "react"
 import { Modal, Icon, Spin, message, DatePicker } from "antd";
 import { routerHistory } from "../..";
-import { siteUrl, formattaData, formatItalian } from "../../utilities";
+import { siteUrl, formattaData, formatItalian, adminRoute } from "../../utilities";
 import Axios from "axios";
 import { RouteComponentProps } from "react-router-dom";
 import { IStudent } from "../../models/IStudent";
@@ -130,7 +130,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             ritirato: this.state.studente.ritirato
         }).then(response => {
             message.success("Studente modificato con successo!")
-            routerHistory.push("/adminpanel/studenti")
+            routerHistory.push(adminRoute+"/studenti")
 
         })
         
@@ -154,11 +154,11 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">Nome</label>
-                        <input type="text" className="form-control" value={nome} onChange={this.changeNome} />
+                        <input name="name" type="text" className="form-control" value={nome} onChange={this.changeNome} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
-                        <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
+                        <input name="surname" type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
                     </div>
                 </div>
                 
@@ -169,11 +169,11 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
                     </div>
                     <div className="col">
                         <label className="text-secondary">E-mail</label>
-                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
+                        <input name="email" type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Codice Fiscale</label>
-                        <input type="text" className="form-control" maxLength={16} value={CF} onChange={this.changeCF} />
+                        <input name="cf" type="text" className="form-control" maxLength={16} value={CF} onChange={this.changeCF} />
                     </div>
                 </div>
 

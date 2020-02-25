@@ -1,7 +1,7 @@
 import React from "react"
 import { routerHistory } from "../.."
 import { message, Modal } from "antd"
-import { mountLogin, unmountLogin, siteUrl, logoUrl } from "../../utilities"
+import { mountLogin, unmountLogin, siteUrl, logoUrl, adminRoute } from "../../utilities"
 import Axios from "axios"
 import { Cipher } from "../../models/Cipher"
 import { isAdmin } from "../../models/IAdmin"
@@ -61,7 +61,7 @@ export default class LoginTutor extends React.PureComponent<IProps, IState>{
 
             if(isAdmin(data)){
                 sessionStorage.setItem("adminSession", JSON.stringify(data))
-                routerHistory.push("/adminpanel/")
+                routerHistory.push(adminRoute)
                 message.success("Login effettuato con successo!")
             }
             else{
@@ -78,7 +78,7 @@ export default class LoginTutor extends React.PureComponent<IProps, IState>{
     render(): JSX.Element{
         const { adminName, adminPsw } = this.state
 
-        return <div className="col-5 mx-auto" id="loginBlock">
+        return <div className="col-11 col-lg-5 mx-auto" id="loginBlock">
             <form className="w-100 bg-white p-3 rounded shadow" onSubmit={this.tryLogin}>
                 <h3 className="d-inline-block">Accesso coordinatori</h3>
                 <img src={logoUrl} height="40" className="float-right logo" alt="logo" />

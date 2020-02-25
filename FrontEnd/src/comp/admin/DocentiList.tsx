@@ -1,9 +1,9 @@
 import React from "react"
 import { IDocente } from "../../models/IDocente";
 import { routerHistory } from "../..";
-import { Modal, Tooltip, Spin, Icon, Switch } from "antd"
+import { Modal, Tooltip, Spin, Icon, Switch, message } from "antd"
 import Axios from "axios";
-import { siteUrl } from "../../utilities";
+import { siteUrl, adminRoute } from "../../utilities";
 
 export interface IProps{
     readonly corso: number
@@ -38,23 +38,54 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
         })
     }
 
-    showDeleteConfirm = (student: IDocente) => {
+    showDeleteConfirm = (docente: IDocente) => {
+        const{ docenti } = this.state
+        let context = this
+
         Modal.confirm({
-            title: 'ATTENZIONE: si sta per ritirare un docente (' + student.nome + ' ' + student.cognome + ')',
+            title: 'ATTENZIONE: si sta per ritirare un docente (' + docente.nome + ' ' + docente.cognome + ')',
             content: 'I dati identificativi del docente, le lezioni e le presenze verranno comunque mantenuti.',
             okText: 'Confermo',
             okType: 'danger',
             cancelText: 'Annulla',
             onOk() {
-                /*************************/
-                /* RITIRO DOCENTE */
-                /*************************/
+                let doc = docente as any
+                doc.ritirato = "true"
+                
+                context.setState({
+                    docenti: null
+                })
+                
+                Axios.put(siteUrl+"/api/docenti/"+docente.idDocente, {...doc}).then(response => {
+
+                    let d = response.data as IDocente,
+                    currentList = docenti as any,
+                    editingDoc = docenti.indexOf(docente)
+                    
+                    currentList[editingDoc] = d
+
+                    context.setState({
+                        docenti: currentList as IDocente[]
+                    })
+
+                    message.success("Docente ritirato con successo!")
+                })
             }
         })
     }
 
+    sortbyId = (a: IDocente, b: IDocente) => { 
+        if(a.idDocente > b.idDocente)
+            return 1
+        if(a.idDocente < b.idDocente)
+            return -1
+
+        return 0
+    }
+
     render(): JSX.Element{
         const { docenti, showAll } = this.state
+
         
         if(!docenti){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
@@ -65,7 +96,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
         }
 
         let lista = showAll ? docenti : docenti.filter(d => d.corsi.indexOf(this.props.corso) !== -1),
-        docs = lista.sort((a, _) => a.ritirato ? 0 : -1)
+        docs = lista.sort(this.sortbyId).sort((a, _) => a.ritirato ? 0 : -1)
 
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-3 text-center">Docenti del corso</h3>
@@ -74,7 +105,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                 <Switch checked={!showAll} onChange={this.switchList} className="mr-1 align-top" /> Mostra solo i docenti del mio corso
             </label>
 
-            <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push("/adminpanel/docenti/new")}>
+            <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push(adminRoute+"/docenti/new")}>
                 <i className="fal fa-plus"></i> Aggiungi docente
             </button>
 
@@ -97,14 +128,14 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.monteOre}</td>
                                     <td>
                                         <Tooltip title="Dettagli">
-                                            <button type="button" className="btn btn-info circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/docenti/" + d.idDocente)}>
+                                            <button type="button" className="btn btn-info circle-btn mr-2" onClick={() => routerHistory.push(adminRoute+"/docenti/" + d.idDocente)}>
                                                 <i className="fa fa-info"></i>
                                             </button>
                                         </Tooltip>
 
                                         {
                                             !d.ritirato && <Tooltip title="Modifica">
-                                                <button type="button" className="btn btn-warning text-white circle-btn mr-2" onClick={() => routerHistory.push("/adminpanel/docenti/edit/" + d.idDocente)}>
+                                                <button type="button" className="btn btn-warning text-white circle-btn mr-2" onClick={() => routerHistory.push(adminRoute+"/docenti/edit/" + d.idDocente)}>
                                                     <i className="fa fa-pen"></i>
                                                 </button>
                                             </Tooltip>

@@ -1,8 +1,8 @@
 import React from "react"
-import { Icon, Spin } from "antd";
-import Axios from "axios";
-import { siteUrl } from "../utilities";
-import { ICorso } from "../models/ICorso";
+import { Icon, Spin } from "antd"
+import Axios from "axios"
+import { siteUrl } from "../utilities"
+import { ICorso } from "../models/ICorso"
 
 export interface IProps{
     readonly idCorso?: string | number
@@ -16,27 +16,30 @@ export default class LogoCorso extends React.PureComponent<IProps, IState>{
         super(props)
 
         this.state = {
-            logo: "https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png" // null
+            logo: null
         }
     }
 
+    catchNull = () => {
+        this.setState({
+            logo: "https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png"
+        })
+    }
+
     componentDidMount = () => {
-        if(!this.props.idCorso){
-            this.setState({
-                logo: "https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png"
-            })
-
-            return
-        }
-
-        return
-
         Axios.get(siteUrl+"/api/corsi/"+this.props.idCorso).then(response => {
             let corso = response.data as ICorso
+
+            if(!corso.logo){
+                this.catchNull()
+                return
+            }
 
             this.setState({
                 logo: corso.logo
             })
+        }).catch(_ =>{
+            this.catchNull()
         })
     }
 

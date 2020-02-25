@@ -129,11 +129,11 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">ID Calendario</label>
-                        <input type="text" className="form-control" value={calendarId} onChange={this.changeID} />
+                        <input name="calendarID" type="text" className="form-control" value={calendarId} onChange={this.changeID} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Chiave API</label>
-                        <input type="text" className="form-control" value={apiKey} onChange={this.changeApi} />
+                        <input name="apiKey" type="text" className="form-control" value={apiKey} onChange={this.changeApi} />
                     </div>
                 </div>
 
@@ -141,11 +141,11 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">ID Calendario</label>
-                        <input type="text" className="form-control" value={calendarId_2} onChange={this.changeID_2} />
+                        <input name="calendarID" type="text" className="form-control" value={calendarId_2} onChange={this.changeID_2} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Chiave API</label>
-                        <input type="text" className="form-control" value={apiKey_2} onChange={this.changeApi_2} />
+                        <input name="apiKey" type="text" className="form-control" value={apiKey_2} onChange={this.changeApi_2} />
                     </div>
                 </div>
 

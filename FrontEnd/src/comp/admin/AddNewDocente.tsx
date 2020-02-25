@@ -1,7 +1,7 @@
 import React from "react"
 import { Modal, message, Icon, Spin, Checkbox } from "antd"
 import { routerHistory } from "../.."
-import { siteUrl } from "../../utilities"
+import { siteUrl, adminRoute } from "../../utilities"
 import Axios from "axios"
 import { IMateria } from "../../models/IMateria"
 import { ICorso } from "../../models/ICorso"
@@ -108,6 +108,24 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             return
         }
 
+        if(!materieSel.length){
+            Modal.error({
+                title: "Errore!",
+                content: "Scegliere almeno una materia."
+            })
+
+            return
+        }
+
+        if(!corsiSel.length){
+            Modal.error({
+                title: "Errore!",
+                content: "Scegliere almeno un corso."
+            })
+
+            return
+        }
+
         Axios.post(siteUrl+"/api/docenti", {
             nome: nome,
             cognome: cognome,
@@ -118,7 +136,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             insegnare: materieSel.map(m => { return { idMateria: m, idDocente: 0 } }),
         }).then(_ => {
             message.success("Docente creato con successo!")
-            routerHistory.push("/adminpanel/docenti")
+            routerHistory.push(adminRoute+"/docenti")
         })
 
     }
@@ -159,22 +177,22 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">Nome</label>
-                        <input type="text" className="form-control" value={nome} onChange={this.changeNome} />
+                        <input name="name" type="text" className="form-control" value={nome} onChange={this.changeNome} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
-                        <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
+                        <input name="surname" type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
                     </div>
                 </div>
                 
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">E-mail</label>
-                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
+                        <input name="email" type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Codice Fiscale</label>
-                        <input type="text" className="form-control" maxLength={16} value={CF} onChange={this.changeCF} />
+                        <input name="cf" type="text" className="form-control" maxLength={16} value={CF} onChange={this.changeCF} />
                     </div>
                 </div>
 

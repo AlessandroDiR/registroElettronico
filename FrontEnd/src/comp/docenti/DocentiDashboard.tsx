@@ -6,6 +6,8 @@ import LezioniDocente from "./LezioniDocente";
 import LezioneDetails from "./LezioneDetails";
 import { IAdminDocente } from "../../models/IAdminDocente";
 import LogoCorso from "../LogoCorso";
+import Page404 from "../Page404";
+import { docentiRoute } from "../../utilities";
 
 export default class DocentiDashboard extends React.Component{
 
@@ -54,6 +56,9 @@ export default class DocentiDashboard extends React.Component{
                         <Route exact path="/docentipanel/lezioni" render={() => 
                             <LezioniDocente idDocente={admin.idDocente}/>
                         } />
+
+                        <Route render={() => <Page404 goTo={docentiRoute} />} />
+
                     </Switch>
                         
                 </div>

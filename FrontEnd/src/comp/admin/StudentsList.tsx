@@ -3,7 +3,7 @@ import { IStudent } from "../../models/IStudent";
 import { routerHistory } from "../..";
 import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse, DatePicker, message } from "antd"
 import Axios from "axios";
-import { siteUrl, formattaData } from "../../utilities";
+import { siteUrl, formattaData, adminRoute } from "../../utilities";
 import locale from 'antd/es/date-picker/locale/it_IT';
 
 export interface IProps{
@@ -167,25 +167,34 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         return !allRetired
     }
 
+    sortbyId = (a: IStudent, b: IStudent) => { 
+        if(a.idStudente > b.idStudente)
+            return -1
+        if(a.idStudente < b.idStudente)
+            return 1
+
+        return 0
+    }
+
     render(): JSX.Element{
         const { students, selection } = this.state
         
         if(!students){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }
         
-        let firstYear = students.filter(s => s.annoFrequentazione === 1).sort((a, _) => a.ritirato ? 0 : -1),
-        secondYear = students.filter(s => s.annoFrequentazione === 2).sort((a, _) => a.ritirato ? 0 : -1),
+        let firstYear = students.filter(s => s.annoFrequentazione === 1).sort(this.sortbyId).sort((a, _) => a.ritirato ? 0 : -1),
+        secondYear = students.filter(s => s.annoFrequentazione === 2).sort(this.sortbyId).sort((a, _) => a.ritirato ? 0 : -1),
         groups = [firstYear, secondYear]
 
-        return <div className="col-9 px-5 py-4 right-block">
+        return <div className="col px-5 py-4 right-block">
             <h3 className="mb-3 text-center">Studenti del corso</h3>
 
-            <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push("/adminpanel/studenti/new")}>
+            <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push(adminRoute+"/studenti/new")}>
                 <i className="fal fa-plus"></i> Aggiungi studente
             </button>
 
@@ -193,7 +202,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 <i className="fa fa-arrows-alt"></i> Sposta studenti
             </button>
 
-            <button className="btn btn-blue float-right mb-3 mr-2" type="button" onClick={() => routerHistory.push("/adminpanel/studenti/import")}>
+            <button className="btn btn-blue float-right mb-3 mr-2" type="button" onClick={() => routerHistory.push(adminRoute+"/studenti/import")}>
                 <i className="fa fa-file-csv"></i> Importa da CSV
             </button>
 
@@ -251,14 +260,14 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                         
                                         <td>
                                             <Tooltip title="Dettagli">
-                                                <button type="button" className="btn btn-info circle-btn" onClick={() => routerHistory.push("/adminpanel/studenti/" + s.idStudente)}>
+                                                <button type="button" className="btn btn-info circle-btn" onClick={() => routerHistory.push(adminRoute+"/studenti/" + s.idStudente)}>
                                                     <i className="fa fa-info"></i>
                                                 </button>
                                             </Tooltip>
                                             
                                             {
                                                 !s.ritirato && <Tooltip title="Modifica">
-                                                    <button type="button" className="btn btn-warning text-white circle-btn ml-2" onClick={() => routerHistory.push("/adminpanel/studenti/edit/" + s.idStudente)}>
+                                                    <button type="button" className="btn btn-warning text-white circle-btn ml-2" onClick={() => routerHistory.push(adminRoute+"/studenti/edit/" + s.idStudente)}>
                                                         <i className="fa fa-pen"></i>
                                                     </button>
                                                 </Tooltip>

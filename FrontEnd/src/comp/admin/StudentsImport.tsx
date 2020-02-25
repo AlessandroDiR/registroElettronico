@@ -3,7 +3,7 @@ import Dragger from "antd/lib/upload/Dragger"
 import { IStudent } from "../../models/IStudent"
 import { Modal, Tooltip, Icon, message } from "antd"
 import { routerHistory } from "../.."
-import { formattaData, capitalizeFirst, siteUrl, resizePopup, formatItalian } from "../../utilities"
+import { formattaData, capitalizeFirst, siteUrl, resizePopup, formatItalian, adminRoute } from "../../utilities"
 import Axios from "axios"
 
 export interface IProps{
@@ -189,7 +189,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
     confirmImport = () => {
         Axios.post(siteUrl+"/api/studenti", this.state.addList).then(_ => {
             message.success("Importazione eseguita con successo!")
-            routerHistory.push("/adminpanel/studenti")
+            routerHistory.push(adminRoute+"/studenti")
         })
     }
 

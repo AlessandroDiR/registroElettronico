@@ -1,7 +1,7 @@
 import React from "react"
 import { Modal, Upload, Icon, message } from "antd"
 import { routerHistory } from "../.."
-import { siteUrl, imageFileToBase64 } from "../../utilities"
+import { siteUrl, imageFileToBase64, adminRoute } from "../../utilities"
 import Axios from "axios"
 import { ICorso } from "../../models/ICorso"
 
@@ -68,7 +68,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
         /*************************************************/
 
         message.success("Corso creato con successo!")
-        routerHistory.push("/adminpanel/corsi")
+        routerHistory.push(adminRoute+"/corsi")
 
     }
 
@@ -107,18 +107,18 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
                     <div className="form-group row">
                         <div className="col">
                             <label className="text-secondary">Nome</label>
-                            <input type="text" className="form-control" value={nome} onChange={this.changeNome} />
+                            <input name="nomecorso" type="text" className="form-control" value={nome} onChange={this.changeNome} />
                         </div>
                         <div className="col pr-0">
                             <label className="text-secondary">Luogo</label>
-                            <input type="text" className="form-control" value={luogo} onChange={this.changeLuogo} />
+                            <input name="luogo" type="text" className="form-control" value={luogo} onChange={this.changeLuogo} />
                         </div>
                     </div>
 
                     <div className="form-group row">
                         <div className="col pr-0">
                             <label className="text-secondary">Breve descrizione</label>
-                            <textarea className="form-control" rows={2} onChange={this.changeDesc}>{descrizione}</textarea>
+                            <textarea name="description" className="form-control" rows={2} onChange={this.changeDesc}>{descrizione}</textarea>
                         </div>
                     </div>
                 </div>

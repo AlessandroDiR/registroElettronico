@@ -1,7 +1,7 @@
 import React from "react"
 import { Modal, message, DatePicker } from "antd"
 import { routerHistory } from "../.."
-import { siteUrl, formattaData } from "../../utilities"
+import { siteUrl, formattaData, adminRoute } from "../../utilities"
 import Axios from "axios"
 import locale from 'antd/es/date-picker/locale/it_IT';
 
@@ -112,7 +112,7 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
 
         Axios.post(siteUrl+"/api/studenti", students).then(response => {
             message.success("Studente creato con successo!")
-            routerHistory.push("/adminpanel/studenti")
+            routerHistory.push(adminRoute+"/studenti")
         })
 
     }
@@ -127,15 +127,15 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">Nome</label>
-                        <input type="text" className="form-control" value={nome} onChange={this.changeNome} />
+                        <input name="name" type="text" className="form-control" value={nome} onChange={this.changeNome} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
-                        <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
+                        <input name="surname" type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Anno frequentato</label>
-                        <select onChange={this.changeAnnoScolastico} className="custom-select">
+                        <select name="anno" onChange={this.changeAnnoScolastico} className="custom-select">
                             <option value={1}>Primo anno</option>
                             <option value={2}>Secondo anno</option>
                         </select>
@@ -149,11 +149,11 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
                     </div>
                     <div className="col">
                         <label className="text-secondary">E-mail</label>
-                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
+                        <input name="email" type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Codice Fiscale</label>
-                        <input type="text" className="form-control" maxLength={16} value={cf} onChange={this.changeCF} />
+                        <input name="cf" type="text" className="form-control" maxLength={16} value={cf} onChange={this.changeCF} />
                     </div>
                 </div>
 
