@@ -1,7 +1,7 @@
 import React from "react"
 import { Icon, Spin } from "antd"
 import Axios from "axios"
-import { siteUrl } from "../utilities"
+import { siteUrl, logoUrl } from "../utilities"
 import { ICorso } from "../models/ICorso"
 
 export interface IProps{
@@ -22,7 +22,7 @@ export default class LogoCorso extends React.PureComponent<IProps, IState>{
 
     catchNull = () => {
         this.setState({
-            logo: "https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png"
+            logo: logoUrl
         })
     }
 
