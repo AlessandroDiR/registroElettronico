@@ -114,8 +114,8 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
 
         return <div className="col px-5 py-4 right-block">
             <div className="row mx-0">
-                <div className="col-6 pl-0">
-                    <div className="p-3 bg-white border position-relative rounded">
+                <div className="col-12 col-md-6 pl-md-0 mb-2 mb-md-0">
+                    <div className="p-3 bg-white border rounded">
                         <span className="border-text">
                             {
                                 student.ritirato ? "Ritirato: "+student.dataRitiro : student.annoFrequentazione === 1 ? "Primo anno" : "Secondo anno"
@@ -130,7 +130,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                         <div className="clearfix"></div>
                     </div>
                 </div>
-                <div className="col-6 pr-0">
+                <div className="col-12 col-md-6 pr-md-0">
                     <div className="p-3 bg-white border rounded">
                         {
                             perc !== null ? <Progress type="circle" percent={perc} width={80} className="float-left mr-3" strokeColor={color} format={percent => `${percent}%`}  /> : <Spin indicator={<Icon type="loading" spin />} />

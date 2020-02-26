@@ -1,7 +1,7 @@
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
 import { routerHistory } from '../..'
-import { Icon, Spin, Modal, Button } from 'antd'
+import { Icon, Spin, Modal, Button, Statistic } from 'antd'
 import Axios from 'axios'
 import { IDocente } from '../../models/IDocente'
 import LezioniDocenteTable from './LezioniDocenteTable'
@@ -83,17 +83,28 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
         }
 
         return <div className="col px-5 py-4 right-block">
-            <div className="col-5 mr-4 p-3 bg-white border" style={{borderRadius: 5}}>
-                {
-                    docente.ritirato && <span className="border-text">Ritirato</span>
-                }
+            <div className="row mx-0">
+                <div className="col-12 col-md-6 pl-md-0 mb-2 mb-md-0">
 
-                <h4 className="text-uppercase mb-2 text-truncate">{docente.nome} {docente.cognome}</h4>
-                <p className="mb-0"><strong>E-mail</strong>: {docente.email}</p>
-                <Button onClick={this.toggleModal} className="float-right" type="link">
-                    Mostra codice QR
-                </Button>
-                <div className="clearfix"></div>
+                    <div className="p-3 bg-white border">
+                        {
+                            docente.ritirato && <span className="border-text">Ritirato</span>
+                        }
+
+                        <h4 className="text-uppercase mb-2 text-truncate">{docente.nome} {docente.cognome}</h4>
+                        <p className="mb-0"><strong>E-mail</strong>: {docente.email}</p>
+                        <Button onClick={this.toggleModal} className="float-right" type="link">
+                            Mostra codice QR
+                        </Button>
+                        <div className="clearfix"></div>
+                    </div>
+                </div>
+
+                <div className="col-12 col-md-3 pr-md-0">
+                    <div className="p-3 bg-white border rounded text-center" style={{ display: "flex", height: "100%", alignItems: "center", justifyContent: "center" }}>
+                        <Statistic title="Ore tenute" value={docente.monteOre} />
+                    </div>
+                </div>
             </div>
 
             <h3 className="mt-3">Lezioni tenute dal docente</h3>
