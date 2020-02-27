@@ -66,14 +66,10 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                     ritirato: docente.ritirato
                 }).then(response => {
 
-                    let d = response.data as IDocente,
-                    currentList = docenti as any,
-                    editingDoc = docenti.indexOf(docente)
-                    
-                    currentList[editingDoc] = d
+                    let docenti = response.data as IDocente[]
 
                     context.setState({
-                        docenti: currentList as IDocente[]
+                        docenti: docenti
                     })
 
                     message.success("Docente ritirato con successo!")
