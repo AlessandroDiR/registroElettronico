@@ -53,7 +53,7 @@ export default class LoginTutor extends React.PureComponent<IProps, IState>{
         let cipher = new Cipher(),
         password = cipher.encode(adminPsw)
 
-        Axios.post(siteUrl+"/api/amministratori/loginadmin", {
+        Axios.post(siteUrl+"/api/coordinatori/logincoordinatore", {
             username: adminName,
             password: password
         }).then(response => {
