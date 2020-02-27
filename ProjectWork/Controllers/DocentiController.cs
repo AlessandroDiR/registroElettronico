@@ -36,6 +36,7 @@ namespace ProjectWork.Controllers
                     cognome = d.Cognome,
                     email = d.Email,
                     cf = d.Cf,
+                    password = d.Password,
                     ritirato = bool.Parse(d.Ritirato),
                     corsi = getCorsiDocente(d.IdDocente),
                     monteOre = getMonteOre(d.IdDocente)
@@ -269,7 +270,7 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return NoContent();
+            return GetDocenti();
         }
 
         // POST: api/Docenti

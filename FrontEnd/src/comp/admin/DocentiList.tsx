@@ -56,7 +56,15 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                     docenti: null
                 })
                 
-                Axios.put(siteUrl+"/api/docenti/"+docente.idDocente, {...doc}).then(response => {
+                Axios.put(siteUrl+"/api/docenti/"+docente.idDocente, {
+                    idDocente: docente.idDocente,
+                    nome: docente.nome,
+                    cognome: docente.cognome,
+                    email: docente.email,
+                    cf: docente.cf,
+                    password: docente.password,
+                    ritirato: docente.ritirato
+                }).then(response => {
 
                     let d = response.data as IDocente,
                     currentList = docenti as any,
