@@ -14,6 +14,7 @@ namespace ProjectWork.Controllers
     public class DocentiController : ControllerBase
     {
         private readonly AvocadoDBContext _context;
+        private readonly utilities _ut = new utilities();
 
         public DocentiController(AvocadoDBContext context)
         {
@@ -142,6 +143,82 @@ namespace ProjectWork.Controllers
             }
 
             return Ok(result);
+        }
+
+        // GET: api/Docenti/firma/codice
+        [HttpGet("[action]/{code}")]
+        public string Firma([FromRoute] string code)
+        {
+            if (_ut.CheckCode(Encoder.encode(code)) != "docente")
+            {
+                return OutputMsg.generateMessage("Errore", "Il codice non è valido!", true);
+            }
+
+            var docente = _context.Docenti.SingleOrDefault(d => d.Cf == code);
+
+            return SalvaFirma(docente);
+        }
+
+        private string SalvaFirma(Docenti docente)
+        {
+            var date = DateTime.Now;
+            var time = TimeSpan.Parse(date.TimeOfDay.ToString().Split('.')[0]);
+
+            var lesson = _context.Lezioni.Where(l => l.Data == date);
+
+            if(lesson != null)
+            {
+                foreach(var l in lesson)
+                {
+                    var presenza = _context.PresenzeDocente.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdDocente == docente.IdDocente);
+                    if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0))
+                    {
+                        return OutputMsg.generateMessage("Attenzione!", "Hai già la firmato la lezione!", true);
+                    }
+                    else
+                    {
+                        if(l.OraFine < time)
+                        {
+                            if(presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
+                            {
+                                presenza.Uscita = l.OraFine;
+                                _context.SaveChanges();
+                                return OutputMsg.generateMessage("Ok", $"Arrivederci {docente.Nome}!");
+                            }
+                            else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
+                            {
+                                presenza.Uscita = time;
+                                _context.SaveChanges();
+                                return OutputMsg.generateMessage("Ok", $"Arrivederci {docente.Nome}!");
+                            }
+                            else if (presenza == null && l.OraFine >= time)
+                            {
+                                var newPresenza = new PresenzeDocente
+                                {
+                                    IdLezione = l.IdLezione,
+                                    IdDocente = docente.IdDocente,
+                                    Ingresso = time <= (l.OraInizio + new TimeSpan(0, 10, 0)) ? l.OraInizio : time
+                                };
+
+                                _context.PresenzeDocente.Add(newPresenza);
+                                _context.SaveChanges();
+                                return OutputMsg.generateMessage("Ok", $"Ben arrivato {docente.Nome}!");
+                            }
+                        }
+                    }
+                }
+            }
+
+            return OutputMsg.generateMessage("Spiacente", "Non ci sono lezioni oggi!", true);
+
+        }
+
+        private bool CheckCode(string code)
+        {
+            var decoded = Encoder.decode(code);
+            var docente = _context.Docenti.FirstOrDefault(d => d.Cf == decoded);
+
+            return docente != null ? true : false;
         }
 
         // PUT: api/Docenti/5

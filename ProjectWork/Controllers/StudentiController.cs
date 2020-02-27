@@ -17,6 +17,7 @@ namespace ProjectWork.Controllers
     public class StudentiController : ControllerBase
     {
         private readonly AvocadoDBContext _context;
+        private readonly utilities _ut = new utilities();
 
         public StudentiController(AvocadoDBContext context)
         {
@@ -118,11 +119,11 @@ namespace ProjectWork.Controllers
 
         // GET: api/Studenti/firma/codice
         [HttpGet("[action]/{code}")]
-        public string Firma([FromRoute] string code)
+        public IActionResult Firma([FromRoute] string code)
         {
-            if (!CheckCode(Encoder.encode(code)))
+            if (_ut.CheckCode(Encoder.encode(code)) != "studente")
             {
-                return OutputMsg.generateMessage("Errore", "Il codice non è valido!", true);
+                return RedirectToAction("Firma","Docenti", new { code });
             }
 
             // recupero lo studente, controllo se è ingresso o uscita e 
@@ -130,7 +131,7 @@ namespace ProjectWork.Controllers
 
             var studente = _context.Studenti.SingleOrDefault(s => s.Cf == code);
 
-            return SalvaFirma(studente);
+            return Ok(SalvaFirma(studente));
         }
 
         // GET: api/studenti/coderequest/2
@@ -354,14 +355,6 @@ namespace ProjectWork.Controllers
         private bool StudentiExists(int id)
         {
             return _context.Studenti.Any(e => e.IdStudente == id);
-        }
-
-        private bool CheckCode(string code)
-        {
-            var decoded = Encoder.decode(code);
-            var studente = _context.Studenti.FirstOrDefault(s => s.Cf == decoded);
-
-            return studente != null ? true : false;
         }
 
         private string SalvaFirma(Studenti s)
