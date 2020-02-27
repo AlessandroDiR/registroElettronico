@@ -39,7 +39,6 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
     }
 
     showDeleteConfirm = (docente: IDocente) => {
-        const{ docenti } = this.state
         let context = this
 
         Modal.confirm({
