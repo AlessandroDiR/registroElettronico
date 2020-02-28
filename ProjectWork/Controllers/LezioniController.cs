@@ -29,6 +29,33 @@ namespace ProjectWork.Controllers
             //return CalendarApi.GetCalendarEvents();
         }
 
+
+        // GET: api/Lezioni/GetLezioniDocente/IdDoc
+        [HttpGet("[action]/{idDocente}")]
+        public async Task<IActionResult> GetLezioniDocente([FromRoute] int idDocente)
+        {
+            var lezioniTenute = _context.PresenzeDocente.Where(p => p.IdDocente == idDocente);
+            var result = new List<object>();
+
+            foreach (var lezione in lezioniTenute)
+            {
+                lezione.IdLezioneNavigation = _context.Lezioni.Find(lezione.IdLezione);
+                var json = new
+                {
+                    idPresenza = lezione.IdPresenza,
+                    idDocente = lezione.IdDocente,
+                    data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == lezione.IdLezioneNavigation.IdLezione).Data,
+                    idLezione = lezione.IdLezioneNavigation.IdLezione,
+                    lezione = lezione.IdLezioneNavigation.Titolo,
+                    ingresso = lezione.Ingresso,
+                    uscita = lezione.Uscita
+                };
+                result.Add(json);
+            }
+
+            return Ok(result);
+        }
+
         public void SaveEventsInContext()
         {
             var events = CalendarApi.GetCalendarEvents();
