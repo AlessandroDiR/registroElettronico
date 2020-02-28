@@ -1,7 +1,5 @@
 import React from "react"
-import Axios from "axios";
-import { siteUrl } from "../../utilities";
-import { Icon, Spin, Modal, Tooltip } from "antd";
+import { Icon, Modal, Tooltip, message } from "antd";
 import ImageScale from "../ImageScale";
 
 export interface IProps{
@@ -27,10 +25,9 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-
-        /******************************************************/
-        /* CARICARE LA CONFIGURAZIONE CORRENTE DEL CALENDARIO */
-        /******************************************************/
+        /*************************************************************************/
+        /* CARICARE LA CONFIGURAZIONE CORRENTE DEI CALENDARI di this.props.corso */
+        /*************************************************************************/
     }
 
     showHideModal = () => {
@@ -104,20 +101,19 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
             return
         }
 
-        /************************************************/
-        /* CHIAMATA AXIOS PER SALVARE LA CONFIGURAZIONE */
-        /************************************************/
+        /********************************************************************/
+        /* CHIAMATA AXIOS PER SALVARE LA CONFIGURAZIONE di this.props.corso */
+        /********************************************************************/
 
-        Modal.success({
-            title: "Complimenti!",
-            content: "Configurazione salvata."
-        })
+        message.success("Configurazione calendario salvata!")
     }
 
     render(): JSX.Element{
         const { calendarId, apiKey, calendarId_2, apiKey_2 } = this.state
 
-        return <div className="col-9 px-5 py-4 right-block">
+        // SE IL CALENDARIO NON È CARICATO SPIN
+
+        return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">
                 Configurazione calendario
                 <Tooltip title="Informazioni">
@@ -133,11 +129,11 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">ID Calendario</label>
-                        <input type="text" className="form-control" value={calendarId} onChange={this.changeID} />
+                        <input name="calendarID" type="text" className="form-control" value={calendarId} onChange={this.changeID} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Chiave API</label>
-                        <input type="text" className="form-control" value={apiKey} onChange={this.changeApi} />
+                        <input name="apiKey" type="text" className="form-control" value={apiKey} onChange={this.changeApi} />
                     </div>
                 </div>
 
@@ -145,11 +141,11 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">ID Calendario</label>
-                        <input type="text" className="form-control" value={calendarId_2} onChange={this.changeID_2} />
+                        <input name="calendarID" type="text" className="form-control" value={calendarId_2} onChange={this.changeID_2} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Chiave API</label>
-                        <input type="text" className="form-control" value={apiKey_2} onChange={this.changeApi_2} />
+                        <input name="apiKey" type="text" className="form-control" value={apiKey_2} onChange={this.changeApi_2} />
                     </div>
                 </div>
 

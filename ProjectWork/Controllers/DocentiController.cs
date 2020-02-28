@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectWork.Models;
-using BCrypt;
 
 namespace ProjectWork.Controllers
 {
@@ -15,6 +14,7 @@ namespace ProjectWork.Controllers
     public class DocentiController : ControllerBase
     {
         private readonly AvocadoDBContext _context;
+        private readonly utilities _ut = new utilities();
 
         public DocentiController(AvocadoDBContext context)
         {
@@ -23,9 +23,28 @@ namespace ProjectWork.Controllers
 
         // GET: api/Docenti
         [HttpGet]
-        public IEnumerable<Docenti> GetDocenti()
+        public IActionResult GetDocenti()
         {
-            return _context.Docenti;
+            var docenti = _context.Docenti;
+            var result = new List<object>();
+            foreach(var d in docenti)
+            {
+                var json = new
+                {
+                    idDocente = d.IdDocente,
+                    nome = d.Nome,
+                    cognome = d.Cognome,
+                    email = d.Email,
+                    cf = d.Cf,
+                    password = d.Password,
+                    ritirato = bool.Parse(d.Ritirato),
+                    corsi = getCorsiDocente(d.IdDocente),
+                    monteOre = getMonteOre(d.IdDocente)
+                };
+
+                result.Add(json);
+            }
+            return Ok(result);
         }
 
         // GET: api/Docenti/GetDocentiById/5
@@ -44,32 +63,19 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
-            var getCorsi = _context.Tenere.Where(c => c.IdDocente == id);
-            var idCorsi = new List<int>();
-            foreach(var corso in getCorsi)
-            {
-                idCorsi.Add(corso.IdCorso);
-            }
-
-            var materie = _context.Insegnare.Where(i => i.IdDocente == id);
-            var idMaterie = new List<int>();
-            foreach (var m in materie)
-            {
-                idMaterie.Add(m.IdMateria);
-            }
-
             var result = new
             {
+                idDocente = id,
                 nome = docente.Nome,
                 cognome = docente.Cognome,
                 email = docente.Email,
-                dataNascita = docente.DataNascita,
-                luogoNascita = docente.LuogoNascita,
                 cf = docente.Cf,
-                corsi = idCorsi,
-                materie = idMaterie
+                password = docente.Password,
+                ritirato = bool.Parse(docente.Ritirato),
+                corsi = getCorsiDocente(id),
+                materie = getMaterieocente(id),
+                monteOre = getMonteOre(id)
             };
-
 
             return Ok(result);
         }
@@ -114,18 +120,107 @@ namespace ProjectWork.Controllers
             return Ok(docenti);
         }
 
-        //[HttpGet("[action]/{idDocente}")]
-        //public async Task<IActionResult> GetLezioniDocente([FromRoute] int idDocente)
-        //{
-        //    var materie = _context.Insegnare.Where(i => i.IdDocente == idDocente);
-        //    var lezioni = new List<object>();
-        //    foreach(var m in materie)
-        //    {
-        //        lezioni.Add(_context.Lezioni.Where(l => l.IdMateria == m.IdMateria && l.Data < DateTime.Now));
-        //    }
+        // GET: api/docenti/getlezionidocente/1
+        [HttpGet("[action]/{idDocente}")]
+        public async Task<IActionResult> GetLezioniDocente([FromRoute] int idDocente)
+        {
+            var lezioniTenute = _context.PresenzeDocente.Where(p => p.IdDocente == idDocente);
+            var result = new List<object>();
 
-        //    return Ok(lezioni);
-        //}
+            foreach(var lezione in lezioniTenute)
+            {
+                lezione.IdLezioneNavigation = _context.Lezioni.Find(lezione.IdLezione);
+                var json = new
+                {
+                    idPresenza = lezione.IdPresenza,
+                    idDocente = lezione.IdDocente,
+                    data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == lezione.IdLezioneNavigation.IdLezione).Data,
+                    idLezione = lezione.IdLezioneNavigation.IdLezione,
+                    lezione = lezione.IdLezioneNavigation.Titolo,
+                    ingresso = lezione.Ingresso,
+                    uscita = lezione.Uscita
+                };
+                result.Add(json);
+            }
+
+            return Ok(result);
+        }
+
+        // GET: api/Docenti/firma/codice
+        [HttpGet("[action]/{code}")]
+        public string Firma([FromRoute] string code)
+        {
+            if (_ut.CheckCode(Encoder.encode(code)) != "docente")
+            {
+                return OutputMsg.generateMessage("Errore", "Il codice non è valido!", true);
+            }
+
+            var docente = _context.Docenti.SingleOrDefault(d => d.Cf == code);
+
+            return SalvaFirma(docente);
+        }
+
+        private string SalvaFirma(Docenti docente)
+        {
+            var date = DateTime.Now;
+            var time = TimeSpan.Parse(date.TimeOfDay.ToString().Split('.')[0]);
+
+            var lesson = _context.Lezioni.Where(l => l.Data == date);
+
+            if(lesson != null)
+            {
+                foreach(var l in lesson)
+                {
+                    var presenza = _context.PresenzeDocente.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdDocente == docente.IdDocente);
+                    if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0))
+                    {
+                        return OutputMsg.generateMessage("Attenzione!", "Hai già la firmato la lezione!", true);
+                    }
+                    else
+                    {
+                        if(l.OraFine < time)
+                        {
+                            if(presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
+                            {
+                                presenza.Uscita = l.OraFine;
+                                _context.SaveChanges();
+                                return OutputMsg.generateMessage("Ok", $"Arrivederci {docente.Nome}!");
+                            }
+                            else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
+                            {
+                                presenza.Uscita = time;
+                                _context.SaveChanges();
+                                return OutputMsg.generateMessage("Ok", $"Arrivederci {docente.Nome}!");
+                            }
+                            else if (presenza == null && l.OraFine >= time)
+                            {
+                                var newPresenza = new PresenzeDocente
+                                {
+                                    IdLezione = l.IdLezione,
+                                    IdDocente = docente.IdDocente,
+                                    Ingresso = time <= (l.OraInizio + new TimeSpan(0, 10, 0)) ? l.OraInizio : time
+                                };
+
+                                _context.PresenzeDocente.Add(newPresenza);
+                                _context.SaveChanges();
+                                return OutputMsg.generateMessage("Ok", $"Ben arrivato {docente.Nome}!");
+                            }
+                        }
+                    }
+                }
+            }
+
+            return OutputMsg.generateMessage("Spiacente", "Non ci sono lezioni oggi!", true);
+
+        }
+
+        private bool CheckCode(string code)
+        {
+            var decoded = Encoder.decode(code);
+            var docente = _context.Docenti.FirstOrDefault(d => d.Cf == decoded);
+
+            return docente != null ? true : false;
+        }
 
         // PUT: api/Docenti/5
         [HttpPut("{id}")]
@@ -175,10 +270,9 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return NoContent();
+            return GetDocenti();
         }
 
-        //Crea docente
         // POST: api/Docenti
         [HttpPost]
         public async Task<IActionResult> PostDocenti([FromBody] Docenti d)
@@ -189,34 +283,33 @@ namespace ProjectWork.Controllers
             }
 
             Docenti docente = new Docenti();
+            docente.IdDocente = _context.Docenti.Count() + 1;
             docente.Nome = d.Nome;
             docente.Cognome = d.Cognome;
             docente.Cf = d.Cf;
-            docente.DataNascita = d.DataNascita;
-            docente.LuogoNascita = d.LuogoNascita;
-            docente.Password = BCrypt.Net.BCrypt.HashPassword(d.Cf);
+            docente.Password = d.Cf;
             docente.Email = d.Email;
 
-            var doc = _context.Docenti.Last();
-            if (doc == null)
-            {
-                return CreatedAtAction("GetDocenti", "Docente inesistente");
-            }
+            //var doc = _context.Docenti.Last();
+            //if (doc == null)
+            //{
+            //    return CreatedAtAction("GetDocenti", "Docente inesistente");
+            //}
             foreach (var item in d.Tenere)
             {
-                item.IdDocente = doc.IdDocente;
+                item.IdDocente = docente.IdDocente;
             }
             _context.Tenere.AddRange(d.Tenere);
             foreach (var item in d.Insegnare)
             {
-                item.IdDocente = doc.IdDocente;
+                item.IdDocente = docente.IdDocente;
             }
             _context.Insegnare.AddRange(d.Insegnare);
             _context.Docenti.Add(docente);
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetDocenti", new { id = docente.IdDocente }, docente);
+            return GetDocenti();
         }
 
         // POST: api/Docenti/LoginDocente
@@ -275,6 +368,43 @@ namespace ProjectWork.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(docenti);
+        }
+
+        private List<int> getCorsiDocente(int idDocente)
+        {
+            var getCorsi = _context.Tenere.Where(c => c.IdDocente == idDocente);
+            var idCorsi = new List<int>();
+            foreach (var corso in getCorsi)
+            {
+                idCorsi.Add(corso.IdCorso);
+            }
+
+            return idCorsi;
+        }
+
+        private List<int> getMaterieocente(int idDocente)
+        {
+            var materie = _context.Insegnare.Where(i => i.IdDocente == idDocente);
+            var idMaterie = new List<int>();
+            foreach (var m in materie)
+            {
+                idMaterie.Add(m.IdMateria);
+            }
+
+            return idMaterie;
+        }
+
+        private double getMonteOre(int idDocente)
+        {
+            var presenze = _context.PresenzeDocente.Where(p => p.IdDocente == idDocente);
+            var totOre = new TimeSpan();
+
+            foreach(var p in presenze)
+            {
+                totOre += p.Uscita - p.Ingresso;
+            }
+
+            return Math.Round(totOre.TotalHours, 2);
         }
 
         private bool DocentiExists(int id)

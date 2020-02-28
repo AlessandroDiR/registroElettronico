@@ -1,14 +1,14 @@
 import React from "react"
-import { IPresenze } from "../../models/IPresenze"
 import { Tooltip, Icon, Spin, Modal } from "antd"
-import { hideAll, siteUrl, formatItalian } from "../../utilities"
+import { hideAll, siteUrl, formatItalian, startEdit, validateTime } from "../../utilities"
 import Axios from "axios"
+import { IPresenzaDocente } from "../../models/IPresenzaDocente"
 
 export interface IProps{
-    readonly docente: number
+    readonly idDocente: string
 }
 export interface IState{
-    readonly presenze: IPresenze[]
+    readonly presenze: IPresenzaDocente[]
     readonly entrataEdit: string
     readonly uscitaEdit: string
 }
@@ -26,9 +26,13 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
     }
 
     componentDidMount = () => {
-        /*************************************************************/
-        /* CARICAMENTO PRESENZE (che sono le lezioni tenute) DOCENTE */
-        /*************************************************************/
+        Axios.get(siteUrl+"/api/docenti/getlezionidocente/"+this.props.idDocente).then(response => {
+            let presenze = response.data as IPresenzaDocente[]
+
+            this.setState({
+                presenze: presenze
+            })
+        })
     }
 
     changeEntrata = (event: any) => {
@@ -48,22 +52,9 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
     }
 
     startTimeEdit = (id: number) => {
-        let entrataInput = document.getElementById("entrataInput_" + id),
-        uscitaInput = document.getElementById("uscitaInput_" + id),
-        entrataSpan = document.getElementById("entrataSpan_" + id),
-        uscitaSpan = document.getElementById("uscitaSpan_" + id),
-        editBtn = document.getElementById("editBtn_" + id),
-        confirmBtn = document.getElementById("confirmBtn_" + id),
-        presenza = this.state.presenze.find(p => p.idPresenza === id)
+        let presenza = this.state.presenze.find(p => p.idPresenza === id)
 
-        hideAll()
-
-        entrataInput.style.display = "block"
-        uscitaInput.style.display = "block"
-        confirmBtn.style.display = "inline-block"
-        entrataSpan.style.display = "none"
-        uscitaSpan.style.display = "none"
-        editBtn.style.display = "none"
+        startEdit(id)
 
         this.setState({
             entrataEdit: presenza.ingresso,
@@ -86,16 +77,27 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
 
     confirmEdit = (id: number) => {
         const { entrataEdit, uscitaEdit, presenze } = this.state
+        
+        if(!validateTime(entrataEdit) || !validateTime(uscitaEdit)){
+            Modal.error({
+                title: "Errore!",
+                content: "Orari non validi!",
+                maskClosable: true
+            })
+
+            return
+        }
 
         let entrataSpan = document.getElementById("entrataSpan_" + id),
-        uscitaSpan = document.getElementById("uscitaSpan_" + id)
+        uscitaSpan = document.getElementById("uscitaSpan_" + id),
+        presenza = presenze.find(p => p.idPresenza === id)
 
-        Axios.post(siteUrl+"/reg/api.php", {
-            modificaPresenza: {
-                idPresenza: id,
-                ingresso: entrataEdit,
-                uscita: uscitaEdit
-            }
+        Axios.put(siteUrl+"/api/presenzedocente/"+id, {
+            idPresenza: id,
+            ingresso: entrataEdit,
+            uscita: uscitaEdit,
+            idDocente: presenza.idDocente,
+            idLezione: presenza.idLezione
         }).then(response => {
             let output = response.data
 
@@ -106,7 +108,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
                         newP.ingresso = entrataEdit
                         newP.uscita = uscitaEdit
 
-                        return newP as IPresenze
+                        return newP as IPresenzaDocente
                     }
 
                     return p
@@ -164,10 +166,14 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
                             <td style={{maxWidth: 0}} className="text-truncate">{p.lezione}</td>
                             <td>
                                 <Tooltip title="Modifica orari">
-                                    <button type="button" className="far fa-clock btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p.idPresenza)} id={"editBtn_"+p.idPresenza}></button>
+                                    <button type="button" className="btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p.idPresenza)} id={"editBtn_"+p.idPresenza}>
+                                        <i className="fa fa-user-edit"></i>
+                                    </button>
                                 </Tooltip>
                                 <Tooltip title="Conferma modifiche">
-                                    <button type="button" className="far fa-check btn btn-success circle-btn" onClick={() => this.confirmEdit(p.idPresenza)} id={"confirmBtn_"+p.idPresenza} style={{display: "none"}}></button>
+                                    <button type="button" className="btn btn-success circle-btn" onClick={() => this.confirmEdit(p.idPresenza)} id={"confirmBtn_"+p.idPresenza} style={{display: "none"}}>
+                                        <i className="fa fa-check"></i>
+                                    </button>
                                 </Tooltip>
                             </td>
                         </tr>

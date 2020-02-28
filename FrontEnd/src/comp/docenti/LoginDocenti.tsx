@@ -1,9 +1,10 @@
 import React from "react"
-import axios from "axios"
 import { routerHistory } from "../.."
-import { message } from "antd"
-import { Docente } from "../../models/DocenteModel"
-import { mountLogin, unmountLogin } from "../../utilities"
+import { message, Modal } from "antd"
+import { mountLogin, unmountLogin, siteUrl, logoUrl } from "../../utilities"
+import { Cipher } from "../../models/Cipher"
+import Axios from "axios"
+import { isAdminDocente } from "../../models/IAdminDocente"
 
 export interface IProps{}
 export interface IState{
@@ -45,36 +46,49 @@ export default class LoginDocenti extends React.PureComponent<IProps, IState>{
         })
     }
 
-    tryLogin = () => {
+    tryLogin = (e: any) => {
+        e.preventDefault()
+        
         const { adminName, adminPsw } = this.state
+        let cipher = new Cipher(),
+        password = cipher.encode(adminPsw)
 
-        if(adminName === "doc" && adminPsw === "doc"){
-            sessionStorage.setItem("docenteSession", JSON.stringify(new Docente(1, 1, "Luca", "Arcangeli")))
-            routerHistory.push("/docentipanel/")
-            message.success("Login effettuato con successo!")
-        }
+        Axios.post(siteUrl+"/api/logindocente", {
+            username: adminName,
+            password: password
+        }).then(response => {
+            let data = response.data
 
-        /*************************************************/
-        /* FARE RICHIESTA PER CONTROLLARE SE adminName   */
-        /* a adminPsw CORRISPONDONO AD UN Docente        */
-        /*************************************************/
+            if(isAdminDocente(data)){
+                sessionStorage.setItem("docenteSession", JSON.stringify(data))
+                routerHistory.push("/docentipanel/")
+                message.success("Login effettuato con successo!")
+            }
+            else{
+                Modal.error({
+                    title: "Errore!",
+                    content: "Username o Password errati!"
+                })
+            }
+        })
     }
 
     render(): JSX.Element{
         const { adminName, adminPsw } = this.state
 
-        return <div className="col-5 mx-auto" id="loginBlock">
+        return <div className="col-11 col-lg-5 mx-auto" id="loginBlock">
             <form className="w-100 bg-white p-3 rounded shadow" onSubmit={this.tryLogin}>
-                <h3 className="text-center">Effettua il login</h3>
+                <h3 className="d-inline-block">Accesso docenti</h3>
+                <img src={logoUrl} height="40" className="float-right logo" alt="logo" />
 
                 <div className="form-group">
                     <label className="text-secondary">Utente di accesso</label>
-                    <input type="text" className="form-control" value={adminName} onChange={this.changeInputName} />
+                    <input name="username" type="text" className="form-control" value={adminName} onChange={this.changeInputName} />
                 </div>
 
                 <div className="form-group">
                     <label className="text-secondary">Password di accesso</label>
-                    <input type="password" className="form-control" value={adminPsw} onChange={this.changeInputPassword} />
+                    <input name="password" type="password" className="form-control" value={adminPsw} onChange={this.changeInputPassword} />
                 </div>
 
                 <input type="submit" value="Accedi" className="btn btn-lg btn-success w-100 text-uppercase"/>

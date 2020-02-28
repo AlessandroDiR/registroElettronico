@@ -1,7 +1,7 @@
 import React from "react"
-import { Modal, Icon, Spin, Upload } from "antd";
+import { Modal, Icon, Spin, Upload, message } from "antd";
 import { routerHistory } from "../..";
-import { siteUrl, imageFileToBase64 } from "../../utilities";
+import { siteUrl, imageFileToBase64, adminRoute } from "../../utilities";
 import Axios from "axios";
 import { RouteComponentProps } from "react-router-dom";
 import { ICorso } from "../../models/ICorso";
@@ -90,14 +90,8 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         /***************************************/
         /* MODIFICA CORSO E POI MOSTRARE MODAL */
         /***************************************/
-
-        Modal.success({
-            title: "Complimenti!",
-            content: "Corso modificato con successo.",
-            onOk: () => {
-                routerHistory.push("/adminpanel/corsi")
-            }
-        })
+        message.success("Corso modificato con successo!")
+        routerHistory.push(adminRoute+"/corsi")
 
     }
 
@@ -123,12 +117,12 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         if(!corso){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }
 
-        return <div className="col-9 px-5 py-4 right-block">
+        return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Modifica di un corso</h3>
 
             <form className="row">
@@ -143,18 +137,18 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
                     <div className="form-group row">
                         <div className="col">
                             <label className="text-secondary">Nome</label>
-                            <input type="text" className="form-control" value={nome} onChange={this.changeNome} />
+                            <input name="nomecorso" type="text" className="form-control" value={nome} onChange={this.changeNome} />
                         </div>
                         <div className="col">
                             <label className="text-secondary">Luogo</label>
-                            <input type="text" className="form-control" value={luogo} onChange={this.changeLuogo} />
+                            <input name="luogo" type="text" className="form-control" value={luogo} onChange={this.changeLuogo} />
                         </div>
                     </div>
 
                     <div className="form-group row">
                         <div className="col">
                             <label className="text-secondary">Breve descrizione</label>
-                            <textarea className="form-control" rows={2} onChange={this.changeDesc}>{descrizione}</textarea>
+                            <textarea name="description" className="form-control" rows={2} onChange={this.changeDesc}>{descrizione}</textarea>
                         </div>
                     </div>
                 </div>

@@ -4,7 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import { Digits2 } from "../../utilities";
 import googleCalendarPlugin from '@fullcalendar/google-calendar';
 import { Modal, Icon, Spin } from "antd";
-import { ICalendar } from "../ICalendar";
+import { ICalendar } from "../../models/ICalendar";
 import { IStudent } from "../../models/IStudent";
 
 import '@fullcalendar/core/main.css'
@@ -33,7 +33,7 @@ export default class UserCalendar extends React.PureComponent<IProps, IState> {
         /*************************************/
         /* CARICAMENTO CALENDARIO IN BASE A  */
         /* this.props.student.idCorso        */
-        /* this.props.student.annoIScrizione */
+        /* this.props.student.annoFrequentazione */
         /*************************************/
     }
     
@@ -43,7 +43,7 @@ export default class UserCalendar extends React.PureComponent<IProps, IState> {
         if(!calendar){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }

@@ -1,9 +1,9 @@
 import React from "react"
-import { Modal, Upload, Icon } from "antd";
-import { routerHistory } from "../..";
-import { siteUrl, imageFileToBase64 } from "../../utilities";
-import Axios from "axios";
-import { ICorso } from "../../models/ICorso";
+import { Modal, Upload, Icon, message } from "antd"
+import { routerHistory } from "../.."
+import { siteUrl, imageFileToBase64, adminRoute } from "../../utilities"
+import Axios from "axios"
+import { ICorso } from "../../models/ICorso"
 
 export interface IProps{}
 export interface IState{
@@ -67,13 +67,8 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
         /* CREAZIONE NUOVO CORSO E POI MOSTRARE MODAL    */
         /*************************************************/
 
-        Modal.success({
-            title: "Complimenti!",
-            content: "Corso creato con successo.",
-            onOk: () => {
-                routerHistory.push("/adminpanel/corsi")
-            }
-        })
+        message.success("Corso creato con successo!")
+        routerHistory.push(adminRoute+"/corsi")
 
     }
 
@@ -96,7 +91,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
             </div>
         )
 
-        return <div className="col-9 px-5 py-4 right-block">
+        return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo corso</h3>
 
             <form className="row">
@@ -112,18 +107,18 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
                     <div className="form-group row">
                         <div className="col">
                             <label className="text-secondary">Nome</label>
-                            <input type="text" className="form-control" value={nome} onChange={this.changeNome} />
+                            <input name="nomecorso" type="text" className="form-control" value={nome} onChange={this.changeNome} />
                         </div>
                         <div className="col pr-0">
                             <label className="text-secondary">Luogo</label>
-                            <input type="text" className="form-control" value={luogo} onChange={this.changeLuogo} />
+                            <input name="luogo" type="text" className="form-control" value={luogo} onChange={this.changeLuogo} />
                         </div>
                     </div>
 
                     <div className="form-group row">
                         <div className="col pr-0">
                             <label className="text-secondary">Breve descrizione</label>
-                            <textarea className="form-control" rows={2} onChange={this.changeDesc}>{descrizione}</textarea>
+                            <textarea name="description" className="form-control" rows={2} onChange={this.changeDesc}>{descrizione}</textarea>
                         </div>
                     </div>
                 </div>

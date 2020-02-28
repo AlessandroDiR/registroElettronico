@@ -1,8 +1,9 @@
 import React from "react"
-import { Modal } from "antd";
-import { routerHistory } from "../..";
-import { isValidData, siteUrl } from "../../utilities";
-import Axios from "axios";
+import { Modal, message, DatePicker } from "antd"
+import { routerHistory } from "../.."
+import { siteUrl, formattaData, adminRoute } from "../../utilities"
+import Axios from "axios"
+import locale from 'antd/es/date-picker/locale/it_IT';
 
 export interface IProps{
     readonly corso: number
@@ -10,9 +11,7 @@ export interface IProps{
 export interface IState{
     readonly nome: string
     readonly cognome: string
-    readonly gNascita: string
-    readonly mNascita: string
-    readonly aNascita: string
+    readonly dataNascita: string
     readonly cf: string
     readonly email: string
     readonly annoScolastico: number
@@ -26,12 +25,10 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
         this.state = {
             nome: "",
             cognome: "",
-            gNascita: "",
-            mNascita: "",
-            aNascita: "",
             cf: "",
             annoScolastico: 1,
-            email: ""
+            email: "",
+            dataNascita: ""
         }
     }
 
@@ -58,28 +55,10 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
             email: email
         })
     }
-
-    changeGiorno = (event: any) => {
-        let giorno = event.target.value
-
+    
+    changeData = (data: string) => {
         this.setState({
-            gNascita: giorno
-        })
-    }
-
-    changeMese = (event: any) => {
-        let mese = event.target.value
-
-        this.setState({
-            mNascita: mese
-        })
-    }
-
-    changeAnno = (event: any) => {
-        let anno = event.target.value
-
-        this.setState({
-            aNascita: anno
+            dataNascita: data
         })
     }
 
@@ -100,24 +79,12 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
     }
 
     aggiungiStudente = () => {
-        const { nome, cognome, gNascita, mNascita, aNascita, cf, annoScolastico, email } = this.state
-        let giorno = parseInt(gNascita),
-        mese = parseInt(mNascita),
-        anno = parseInt(aNascita)
+        const { nome, cognome, dataNascita, cf, annoScolastico, email } = this.state
 
-        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || cf === "" || !annoScolastico || email === ""){
+        if(nome === "" || cognome === "" || dataNascita === "" || cf === "" || !annoScolastico || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
-            })
-
-            return
-        }
-
-        if(!isValidData(giorno, mese, anno)){
-            Modal.error({
-                title: "Errore!",
-                content: "Data di nascita non valida."
             })
 
             return
@@ -138,71 +105,55 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
             cf: cf,
             password: cf,
             email: email,
-            annoIscrizione: annoScolastico,
-            dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
+            annoFrequentazione: annoScolastico,
+            dataNascita: formattaData(dataNascita, true),
             idCorso: this.props.corso
         }]
 
         Axios.post(siteUrl+"/api/studenti", students).then(response => {
-            Modal.success({
-                title: "Complimenti!",
-                content: "Studente creato con successo.",
-                onOk: () => {
-                    routerHistory.push("/adminpanel/studenti")
-                }
-            })
+            message.success("Studente creato con successo!")
+            routerHistory.push(adminRoute+"/studenti")
         })
 
     }
 
     render(): JSX.Element{
-        const { nome, cognome, gNascita, mNascita, aNascita, cf, email } = this.state
+        const { nome, cognome, cf, email } = this.state
 
-        return <div className="col-9 px-5 py-4 right-block">
+        return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo studente</h3>
 
             <form>
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">Nome</label>
-                        <input type="text" className="form-control" value={nome} onChange={this.changeNome} />
+                        <input name="name" type="text" className="form-control" value={nome} onChange={this.changeNome} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
-                        <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
+                        <input name="surname" type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Anno frequentato</label>
-                        <select onChange={this.changeAnnoScolastico} className="custom-select">
+                        <select name="anno" onChange={this.changeAnnoScolastico} className="custom-select">
                             <option value={1}>Primo anno</option>
                             <option value={2}>Secondo anno</option>
                         </select>
                     </div>
                 </div>
-
-                <div className="form-group row">
-                    <div className="col">
-                        <label className="text-secondary">Giorno nascita</label>
-                        <input type="text" className="form-control" maxLength={2} value={gNascita} onChange={this.changeGiorno} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">Mese nascita</label>
-                        <input type="text" className="form-control" maxLength={2} value={mNascita} onChange={this.changeMese} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">Anno nascita</label>
-                        <input type="text" className="form-control" maxLength={4} value={aNascita} onChange={this.changeAnno} />
-                    </div>
-                </div>
                 
                 <div className="form-group row">
                     <div className="col">
+                        <label className="text-secondary">Data di nascita</label>
+                        <DatePicker locale={locale} className="w-100 select-date" onChange={(_, d2) => this.changeData(d2)} format="DD-MM-YYYY" />
+                    </div>
+                    <div className="col">
                         <label className="text-secondary">E-mail</label>
-                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
+                        <input name="email" type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Codice Fiscale</label>
-                        <input type="text" className="form-control" maxLength={16} value={cf} onChange={this.changeCF} />
+                        <input name="cf" type="text" className="form-control" maxLength={16} value={cf} onChange={this.changeCF} />
                     </div>
                 </div>
 

@@ -1,24 +1,42 @@
 import React from "react"
 import axios from "axios"
 import { IMessage, genericError } from "../models/IMessage"
-import { siteUrl } from "../utilities"
+import { siteUrl, resizePopup } from "../utilities"
 import { routerHistory } from ".."
-import { Divider, Tooltip } from "antd"
+import { Divider, Tooltip, Spin, Icon } from "antd"
+import { ICorso } from "../models/ICorso"
+import Axios from "axios"
 
 export interface IProps{}
 export interface IState{
     readonly code: string
     readonly popup: IMessage
+    readonly corso: ICorso
 }
 
-export default class FirmaComponent extends React.PureComponent<IProps, IState>{
+export default class Firma extends React.PureComponent<IProps, IState>{
     constructor(props: IProps){
         super(props)
 
         this.state = {
             code: "",
-            popup: genericError
+            popup: genericError,
+            corso: null
         }
+    }
+    
+    componentDidMount = () => {
+        let id = parseInt(sessionStorage.getItem("corso"))
+
+        Axios.get(siteUrl+"/api/corsi/"+id).then(response => {
+            let corso = response.data as ICorso
+
+            this.setState({
+                corso: corso
+            })
+        })
+
+        resizePopup()
     }
 
     changeCode = (event: any) => {
@@ -32,6 +50,8 @@ export default class FirmaComponent extends React.PureComponent<IProps, IState>{
     }
 
     tryToLog = (code: string) => {
+        if(code.length < 16) return false
+        
         axios.get(siteUrl + "/api/studenti/firma/" + code).then((response) => {
             this.setState({
                 popup: response.data as IMessage
@@ -72,15 +92,18 @@ export default class FirmaComponent extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { popup } = this.state
+        const { popup, corso } = this.state
+        let icon = <Icon type="loading"  spin />
 
-        return <div className="col-9" id="mainBlock">
+        return <div className="col" id="mainBlock">
             <div className="text-center w-100">
                 <h2 className="text-center my-3 font-weight-normal">Scannerizza il codice</h2>
                 <input autoFocus type="password" className="form-control text-center mx-auto shadow-sm font-weight-normal" value={this.state.code} onChange={this.changeCode} maxLength={24} id="mainInput" />
 
                 <div className="top-info">
-                        {sessionStorage.getItem("corso")}
+                        {
+                            corso ? corso.nome : <Spin indicator={icon} />
+                        }
                     <Divider type="vertical" style={{ height: 20 }} />
                         {
                             parseInt(sessionStorage.getItem("classe")) === 1 ? "Primo anno" : "Secondo anno"
@@ -95,7 +118,7 @@ export default class FirmaComponent extends React.PureComponent<IProps, IState>{
                 </div>
             </div>
 
-            <div id="popup" className="col-9">
+            <div id="popup" className="col">
                 <div className="w-100">
                     <i className={"fal fa-fw fa-lg fa-6x " + popup.icon} style={{ color: popup.iconColor}}></i>
                     <h2 className="mt-5">{popup.title}</h2>

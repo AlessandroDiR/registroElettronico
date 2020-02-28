@@ -1,7 +1,7 @@
 import React from "react"
 import { ICorso } from "../../models/ICorso";
 import Axios from "axios";
-import { siteUrl } from "../../utilities";
+import { siteUrl, adminRoute } from "../../utilities";
 import { Icon, Spin, Tooltip } from "antd";
 import { routerHistory } from "../..";
 
@@ -35,15 +35,15 @@ export default class CorsiList extends React.PureComponent<IProps, IState>{
         if(!corsi){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }
 
-        return <div className="col-9 px-5 py-4 right-block">
+        return <div className="col px-5 py-4 right-block">
             <h3 className="mb-3 text-center">Lista dei corsi</h3>
 
-            <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push("/adminpanel/corsi/new")}>
+            <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push(adminRoute+"/corsi/new")}>
                 <i className="fal fa-plus"></i> Aggiungi corso
             </button>
 
@@ -65,7 +65,7 @@ export default class CorsiList extends React.PureComponent<IProps, IState>{
                                     <td style={{maxWidth: 0}} className="text-truncate">{c.luogo}</td>
                                     <td>
                                         <Tooltip title="Modifica">
-                                            <button type="button" className="btn btn-warning text-white circle-btn" onClick={() => routerHistory.push("/adminpanel/corsi/edit/" + c.idCorso)}>
+                                            <button type="button" className="btn btn-warning text-white circle-btn" onClick={() => routerHistory.push(adminRoute+"/corsi/edit/" + c.idCorso)}>
                                                 <i className="fa fa-pen"></i>
                                             </button>
                                         </Tooltip>

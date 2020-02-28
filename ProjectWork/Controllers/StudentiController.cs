@@ -17,6 +17,7 @@ namespace ProjectWork.Controllers
     public class StudentiController : ControllerBase
     {
         private readonly AvocadoDBContext _context;
+        private readonly utilities _ut = new utilities();
 
         public StudentiController(AvocadoDBContext context)
         {
@@ -25,9 +26,16 @@ namespace ProjectWork.Controllers
 
         // GET: api/Studenti
         [HttpGet]
-        public IActionResult GetStudenti()
+        public IEnumerable<Studenti> GetStudenti()
         {
-            var studenti = _context.Studenti;
+            return _context.Studenti;
+        }
+
+        // GET: api/Studenti/1
+        [HttpGet("{idCorso}")]
+        public IActionResult GetStudenti([FromRoute] int idCorso)
+        {
+            var studenti = _context.Studenti.Where(s => s.IdCorso == idCorso);
             var result = new List<object>();
 
             foreach(var s in studenti)
@@ -35,13 +43,15 @@ namespace ProjectWork.Controllers
                 var json = new
                 {
                     idStudente = s.IdStudente,
+                    idCorso = s.IdCorso,
                     nome = s.Nome,
                     cognome = s.Cognome,
                     email = s.Email,
                     dataNascita = s.DataNascita,
                     cf = s.Cf,
                     password = s.Password,
-                    ritirato = s.Ritirato,
+                    ritirato = bool.Parse(s.Ritirato),
+                    dataRitiro = s.DataRitiro,
                     annoFrequentazione = s.AnnoFrequentazione,
                     giornate = GetDaysAmount(s.IdStudente),
                     frequenza = GetPercentualeFrequenza(s.IdStudente)
@@ -61,14 +71,31 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            var studenti = await _context.Studenti.FindAsync(id);
+            var s = await _context.Studenti.FindAsync(id);
 
-            if (studenti == null)
+            if (s == null)
             {
                 return NotFound();
             }
 
-            return Ok(studenti);
+            var json = new
+            {
+                idStudente = s.IdStudente,
+                idCorso = s.IdCorso,
+                nome = s.Nome,
+                cognome = s.Cognome,
+                email = s.Email,
+                dataNascita = s.DataNascita,
+                cf = s.Cf,
+                password = s.Password,
+                ritirato = bool.Parse(s.Ritirato),
+                dataRitiro = s.DataRitiro,
+                annoFrequentazione = s.AnnoFrequentazione,
+                giornate = GetDaysAmount(s.IdStudente),
+                frequenza = GetPercentualeFrequenza(s.IdStudente)
+            };
+
+            return Ok(json);
         }
 
         // GET: api/Studenti/GetStudentiByCf/5
@@ -90,32 +117,13 @@ namespace ProjectWork.Controllers
             return Ok(studenti);
         }
 
-        // GET: api/Studenti/GetStudentiByCorso/5
-        [HttpGet("[action]/{idc}")]
-        public async Task<IActionResult> GetStudentiByCorso([FromRoute] int idc)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var studenti =  _context.Studenti.Where(s => s.IdCorso == idc);
-
-            if (studenti == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(studenti);
-        }
-
         // GET: api/Studenti/firma/codice
         [HttpGet("[action]/{code}")]
-        public string Firma([FromRoute] string code)
+        public IActionResult Firma([FromRoute] string code)
         {
-            if (!CheckCode(Encoder.encode(code)))
+            if (_ut.CheckCode(Encoder.encode(code)) != "studente")
             {
-                return OutputMsg.generateMessage("Errore", "Il codice non è valido!", true);
+                return RedirectToAction("Firma","Docenti", new { code });
             }
 
             // recupero lo studente, controllo se è ingresso o uscita e 
@@ -123,27 +131,27 @@ namespace ProjectWork.Controllers
 
             var studente = _context.Studenti.SingleOrDefault(s => s.Cf == code);
 
-            return SalvaFirma(studente);
+            return Ok(SalvaFirma(studente));
         }
 
         // GET: api/studenti/coderequest/2
-        [HttpGet("[action]/{idStudente}")]
-        public async Task<IActionResult> CodeRequest([FromRoute] int idStudente)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //[HttpGet("[action]/{idStudente}")]
+        //public async Task<IActionResult> CodeRequest([FromRoute] int idStudente)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            var studente = await _context.Studenti.SingleOrDefaultAsync(s => s.IdStudente == idStudente);
+        //    var studente = await _context.Studenti.SingleOrDefaultAsync(s => s.IdStudente == idStudente);
 
-            if (studente == null)
-            {
-                return NotFound();
-            }
+        //    if (studente == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(Encoder.encode(studente.Cf));
-        }
+        //    return Ok(Encoder.encode(studente.Cf));
+        //}
 
         [HttpGet("[action]/{idStudente}")]
         public async Task<IActionResult> GetHoursAmount([FromRoute] int idStudente)
@@ -166,7 +174,7 @@ namespace ProjectWork.Controllers
         }
 
         [HttpGet("[action]/{idStudente}")]
-        public async Task<IActionResult> GetDetailedPresences([FromRoute] int idStudente)
+        public IActionResult GetDetailedPresences([FromRoute] int idStudente)
         {
             var presences = _context.Presenze.Where(p => p.IdStudente == idStudente);
 
@@ -186,6 +194,7 @@ namespace ProjectWork.Controllers
                     idPresenza = p.IdPresenza,
                     idStudente = p.IdStudente,
                     data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).Data,
+                    idLezione = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).IdLezione,
                     lezione = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).Titolo,
                     ingresso = p.Ingresso,
                     uscita = p.Uscita
@@ -194,6 +203,12 @@ namespace ProjectWork.Controllers
                 result.Add(json);
             }
             return Ok(result);
+        }
+
+        [HttpGet("[action]")]
+        public double GetTotaleOreLezioni()
+        {
+            return TotaleOreLezioni();
         }
 
         //Crea studente
@@ -226,7 +241,7 @@ namespace ProjectWork.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("GetStudenti");
+            return RedirectToAction("GetStudenti", new { idCorso = 1 });
         }
 
         // PUT: api/Studenti/5
@@ -261,26 +276,44 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return Ok(studenti);
+            var json = new
+            {
+                idStudente = studenti.IdStudente,
+                idCorso = studenti.IdCorso,
+                nome = studenti.Nome,
+                cognome = studenti.Cognome,
+                email = studenti.Email,
+                dataNascita = studenti.DataNascita,
+                cf = studenti.Cf,
+                password = studenti.Password,
+                ritirato = bool.Parse(studenti.Ritirato),
+                dataRitiro = studenti.DataRitiro,
+                annoFrequentazione = studenti.AnnoFrequentazione,
+                giornate = GetDaysAmount(studenti.IdStudente),
+                frequenza = GetPercentualeFrequenza(studenti.IdStudente)
+            };
+
+            return Ok(json);
         }
 
         // PUT: api/Studenti
-        [HttpPut()]
-        public async Task<IActionResult> PutStudentiArray([FromBody] Studenti[] studenti)
+        [HttpPut]
+        public IActionResult PutStudentiArray([FromBody] Studenti[] studenti)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            var idCorso = studenti[0].IdCorso;
+
             foreach (var item in studenti)
             {
-                _context.Entry(item).State = EntityState.Modified;
                 try
                 {
-                    await _context.SaveChangesAsync();
+                   _context.Entry(item).State = EntityState.Modified;
                 }
-                catch (DbUpdateConcurrencyException)
+                catch
                 {
                     if (!StudentiExists(item.IdStudente))
                     {
@@ -293,7 +326,8 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return Ok(studenti);
+            _context.SaveChanges();
+            return GetStudenti(idCorso);
         }
 
         // DELETE: api/Studenti/5
@@ -323,14 +357,6 @@ namespace ProjectWork.Controllers
             return _context.Studenti.Any(e => e.IdStudente == id);
         }
 
-        private bool CheckCode(string code)
-        {
-            var decoded = Encoder.decode(code);
-            var studente = _context.Studenti.FirstOrDefault(s => s.Cf == decoded);
-
-            return studente != null ? true : false;
-        }
-
         private string SalvaFirma(Studenti s)
         {
             var date = DateTime.Now;
@@ -343,34 +369,41 @@ namespace ProjectWork.Controllers
                 foreach (var l in lesson)
                 {
                     var presenza = _context.Presenze.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdStudente == s.IdStudente);
-                    if (l.OraFine < time)
+                    if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0))
                     {
-                        if (presenza != null && presenza.Ingresso != null && presenza.Uscita == null)
+                        return OutputMsg.generateMessage("Attenzione!", "Hai già la firmato la lezione!", true);
+                    }
+                    else
+                    {
+                        if (l.OraFine < time)
+                        {
+                            if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
+                            {
+                                presenza.Uscita = l.OraFine;
+                                _context.SaveChanges();
+                                return OutputMsg.generateMessage("Ok", $"Arrivederci {s.Nome}!");
+                            }
+                        }
+                        else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
                         {
                             presenza.Uscita = time;
                             _context.SaveChanges();
-                            return OutputMsg.generateMessage("Ok",$"Arrivederci {s.Nome}!");
+                            return OutputMsg.generateMessage("Ok", $"Arrivederci {s.Nome}!");
                         }
-                    }
-                    else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == null)
-                    {
-                        presenza.Uscita = time;
-                        _context.SaveChanges();
-                        return OutputMsg.generateMessage("Ok", $"Arrivederci {s.Nome}!");
-                    }
-                    else if (presenza == null && l.OraInizio <= time && l.OraFine >= time)
-                    {
-                        var newPresenza = new Presenze
+                        else if (presenza == null && l.OraFine >= time)
                         {
-                            IdLezione = l.IdLezione,
-                            IdStudente = s.IdStudente,
-                            Ingresso = time
-                        };
-  
-                        _context.Presenze.Add(newPresenza);
-                        _context.SaveChanges();
-                        return OutputMsg.generateMessage("Ok", $"Ben arrivato {s.Nome}!");
-                    }
+                            var newPresenza = new Presenze
+                            {
+                                IdLezione = l.IdLezione,
+                                IdStudente = s.IdStudente,
+                                Ingresso = time <= (l.OraInizio + new TimeSpan(0, 10, 0)) ? l.OraInizio : time
+                            };
+
+                            _context.Presenze.Add(newPresenza);
+                            _context.SaveChanges();
+                            return OutputMsg.generateMessage("Ok", $"Ben arrivato {s.Nome}!");
+                        }
+                    }                                  
                 }
             }
 
@@ -396,24 +429,18 @@ namespace ProjectWork.Controllers
         public double GetPercentualeFrequenza(int idStudente)
         {
             // la percentuale viene calcolata in relazione alle ore di lezione svolte ed alle ore di presenza effettive dello studente
-            var lezioni = _context.Lezioni.Where(l => l.Data <= DateTime.Now && l.OraInizio > DateTime.Now.TimeOfDay);
-            TimeSpan totOreLezioni = new TimeSpan();
-
-            foreach (var l in lezioni)
-            {
-                totOreLezioni += l.OraFine - l.OraInizio;
-            }
+            var totOreLezioni = TotaleOreLezioni();
 
             var oreEffettiveStudente = HoursAmount(idStudente);
 
-            var percentualePresenza = oreEffettiveStudente.TotalHours * 100 / totOreLezioni.TotalHours;
+            var percentualePresenza = oreEffettiveStudente * 100 / totOreLezioni;
 
             return Math.Round(percentualePresenza, 0);
         }
 
-        public TimeSpan HoursAmount(int idStudente)
+        public double HoursAmount(int idStudente)
         {
-            var presenzeTotali = _context.Presenze.Where(p => p.IdStudente == idStudente);
+            var presenzeTotali = _context.Presenze.Where(p => p.IdStudente == idStudente && p.Uscita != new TimeSpan(0,0,0));
             TimeSpan hoursAmount = new TimeSpan();
 
             foreach (var p in presenzeTotali)
@@ -425,7 +452,20 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return hoursAmount;
+            return Math.Round(hoursAmount.TotalHours, 2);
+        }
+
+        public double TotaleOreLezioni()
+        {
+            var lezioni = _context.Lezioni.Where(l => l.Data <= DateTime.Now);
+            TimeSpan totOreLezioni = new TimeSpan();
+
+            foreach (var l in lezioni)
+            {
+                totOreLezioni += l.OraFine - l.OraInizio;
+            }
+
+            return totOreLezioni.TotalHours;
         }
     }
 }

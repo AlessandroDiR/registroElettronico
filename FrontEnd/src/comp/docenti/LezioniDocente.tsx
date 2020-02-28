@@ -6,7 +6,6 @@ import Axios from "axios";
 import { siteUrl, formatItalian } from "../../utilities";
 
 export interface IProps{
-    readonly idCorso: number
     readonly idDocente: number
 }
 export interface IState{
@@ -23,9 +22,11 @@ export default class LezioniDocente extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        const { idCorso, idDocente } = this.props
+        const { idDocente } = this.props
 
-        Axios.get(siteUrl+"/api/lezioni/"+idDocente+"/"+idCorso).then(response => {
+        //LEZIONI VANNO PRESE TUTTE QUELLE TENUTE E DIVISE IN BASE AI CORSI
+
+        Axios.get(siteUrl+"/api/lezioni/"+idDocente).then(response => {
             let lezioni = response.data as ILezione[]
 
             this.setState({
@@ -40,12 +41,12 @@ export default class LezioniDocente extends React.PureComponent<IProps, IState>{
         if(!lezioni){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }
 
-        return <div className="col-9 px-5 py-4 right-block">
+        return <div className="col px-5 py-4 right-block">
             <h3 className="mb-3 text-center">Lezioni tenute</h3>
 
             <table className="table table-bordered text-center">

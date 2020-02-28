@@ -1,10 +1,10 @@
 import React from "react"
-import { Modal, Spin, Icon, Checkbox } from "antd";
-import { routerHistory } from "../..";
-import { isValidData, siteUrl } from "../../utilities";
-import Axios from "axios";
-import { IMateria } from "../../models/IMateria";
-import { ICorso } from "../../models/ICorso";
+import { Modal, message, Icon, Spin, Checkbox } from "antd"
+import { routerHistory } from "../.."
+import { siteUrl, adminRoute } from "../../utilities"
+import Axios from "axios"
+import { IMateria } from "../../models/IMateria"
+import { ICorso } from "../../models/ICorso"
 
 export interface IProps{
     readonly corso: number
@@ -12,16 +12,12 @@ export interface IProps{
 export interface IState{
     readonly nome: string
     readonly cognome: string
-    readonly gNascita: string
-    readonly mNascita: string
-    readonly aNascita: string
-    readonly luogoNascita: string
     readonly CF: string
     readonly email: string
     readonly materie: IMateria[]
     readonly corsi: ICorso[]
     readonly materieSel: number[]
-    readonly corsiSel: number[]
+    readonly corsiSel: number[] 
 }
 
 export default class AddNewDocente extends React.PureComponent<IProps, IState>{
@@ -32,33 +28,29 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         this.state = {
             nome: "",
             cognome: "",
-            gNascita: "",
-            mNascita: "",
-            aNascita: "",
-            luogoNascita: "",
             CF: "",
             email: "",
-            materie: [],
-            materieSel: [],
-            corsi: [],
-            corsiSel: []
+            corsi: null,
+            materie: null,
+            corsiSel: [],
+            materieSel: []
         }
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/api/materie").then((response) => {
-            let materie = response.data as IMateria[]
-            
+        Axios.get(siteUrl+"/api/corsi").then(response => {
+            let corsi = response.data as ICorso[]
+
             this.setState({
-                materie: materie
+                corsi: corsi
             })
         })
 
-        Axios.get(siteUrl+"/api/corsi").then((response) => {
-            let corsi = response.data as ICorso[]
-            
+        Axios.get(siteUrl+"/api/materie/getmateriebycorso/"+this.props.corso).then(response => {
+            let materie = response.data as IMateria[]
+
             this.setState({
-                corsi: corsi
+                materie: materie
             })
         })
     }
@@ -87,38 +79,6 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         })
     }
 
-    changeGiorno = (event: any) => {
-        let giorno = event.target.value
-
-        this.setState({
-            gNascita: giorno
-        })
-    }
-
-    changeMese = (event: any) => {
-        let mese = event.target.value
-
-        this.setState({
-            mNascita: mese
-        })
-    }
-
-    changeAnno = (event: any) => {
-        let anno = event.target.value
-
-        this.setState({
-            aNascita: anno
-        })
-    }
-
-    changeLuogo = (event: any) => {
-        let luogo = event.target.value
-
-        this.setState({
-            luogoNascita: luogo
-        })
-    }
-
     changeCF = (event: any) => {
         let CF = event.target.value
 
@@ -128,24 +88,12 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
     }
 
     aggiungiDocente = () => {
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, email, materieSel, corsiSel } = this.state
-        let giorno = parseInt(gNascita),
-        mese = parseInt(mNascita),
-        anno = parseInt(aNascita)
+        const { nome, cognome,CF, email, corsiSel, materieSel } = this.state
 
-        if(nome === "" || cognome === "" || gNascita === "" || mNascita === "" || aNascita === "" || luogoNascita === "" || CF === "" || email === "" || !materieSel.length || !corsiSel.length){
+        if(nome === "" || cognome === "" || CF === "" || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
-            })
-
-            return
-        }
-
-        if(!isValidData(giorno, mese, anno)){
-            Modal.error({
-                title: "Errore!",
-                content: "Data di nascita non valida."
             })
 
             return
@@ -160,22 +108,35 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             return
         }
 
+        if(!materieSel.length){
+            Modal.error({
+                title: "Errore!",
+                content: "Scegliere almeno una materia."
+            })
+
+            return
+        }
+
+        if(!corsiSel.length){
+            Modal.error({
+                title: "Errore!",
+                content: "Scegliere almeno un corso."
+            })
+
+            return
+        }
+
         Axios.post(siteUrl+"/api/docenti", {
             nome: nome,
             cognome: cognome,
             cf: CF,
             password: CF,
             email: email,
-            dataNascita: `${aNascita}-${mNascita}-${gNascita}`,
-            luogoNascita: luogoNascita
+            tenere: corsiSel.map(c => { return { idCorso: c, idDocente: 0 } }),
+            insegnare: materieSel.map(m => { return { idMateria: m, idDocente: 0 } }),
         }).then(_ => {
-            Modal.success({
-                title: "Complimenti!",
-                content: "Docente creato con successo.",
-                onOk: () => {
-                    routerHistory.push("/adminpanel/docenti")
-                }
-            })
+            message.success("Docente creato con successo!")
+            routerHistory.push(adminRoute+"/docenti")
         })
 
     }
@@ -199,61 +160,42 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { nome, cognome, gNascita, mNascita, aNascita, luogoNascita, CF, email, materie, materieSel, corsiSel, corsi } = this.state
+        const { nome, cognome, CF, email, materie, materieSel, corsi, corsiSel } = this.state
 
-        if(!materie.length || !corsi.length){
+        if(!materie || !corsi){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }
 
-        return <div className="col-9 px-5 py-4 right-block">
+        return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo docente</h3>
 
             <form>
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">Nome</label>
-                        <input type="text" className="form-control" value={nome} onChange={this.changeNome} />
+                        <input name="name" type="text" className="form-control" value={nome} onChange={this.changeNome} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Cognome</label>
-                        <input type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">E-mail</label>
-                        <input type="email" className="form-control" value={email} onChange={this.changeEmail} />
-                    </div>
-                </div>
-
-                <div className="form-group row">
-                    <div className="col">
-                        <label className="text-secondary">Giorno nascita</label>
-                        <input type="text" className="form-control" maxLength={2} value={gNascita} onChange={this.changeGiorno} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">Mese nascita</label>
-                        <input type="text" className="form-control" maxLength={2} value={mNascita} onChange={this.changeMese} />
-                    </div>
-                    <div className="col">
-                        <label className="text-secondary">Anno nascita</label>
-                        <input type="text" className="form-control" maxLength={4} value={aNascita} onChange={this.changeAnno} />
+                        <input name="surname" type="text" className="form-control" value={cognome} onChange={this.changeCognome} />
                     </div>
                 </div>
                 
                 <div className="form-group row">
                     <div className="col">
-                        <label className="text-secondary">Luogo di nascita</label>
-                        <input type="text" className="form-control" value={luogoNascita} onChange={this.changeLuogo} />
+                        <label className="text-secondary">E-mail</label>
+                        <input name="email" type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Codice Fiscale</label>
-                        <input type="text" className="form-control" maxLength={16} value={CF} onChange={this.changeCF} />
+                        <input name="cf" type="text" className="form-control" maxLength={16} value={CF} onChange={this.changeCF} />
                     </div>
                 </div>
-                
+
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">Materie insegnate dal docente</label>

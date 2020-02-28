@@ -1,9 +1,9 @@
 import React from "react"
 import { IStudent } from "../../models/IStudent";
 import { routerHistory } from "../..";
-import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse, DatePicker } from "antd"
+import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse, DatePicker, message } from "antd"
 import Axios from "axios";
-import { siteUrl, formattaData } from "../../utilities";
+import { siteUrl, formattaData, adminRoute } from "../../utilities";
 import locale from 'antd/es/date-picker/locale/it_IT';
 
 export interface IProps{
@@ -30,25 +30,24 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/api/studenti").then((response) => {
+        Axios.get(siteUrl+"/api/studenti/"+this.props.corso).then((response) => {
             this.setState({
                 students: response.data as IStudent[]
             })
         })
     }
 
-    changeDate = () => {
-        
-    }
-
-    showDeleteConfirm = (student: IStudent) => {
-        let date: string = ""
+    showConfirm = (student: IStudent) => {
+        const { students } = this.state
+        let date: string = "",
+        context = this
 
         Modal.confirm({
-            title: 'Ritiro di uno studente: (' + student.nome + ' ' + student.cognome + ')',
+            title: 'ATTENZIONE: si sta per ritirare uno studente (' + student.nome + ' ' + student.cognome + ')',
             content: <div style={{ marginLeft: -38 }}>
                 <p>I dati identificativi dello studente e le sue frequenze verranno comunque mantenuti.</p>
                 <label className="text-secondary">Data di ritiro</label>
+                
                 <DatePicker locale={locale} className="w-100" onChange={(_, d2) => date = d2} format="DD-MM-YYYY" />
             </div>,
             okText: 'Conferma ritiro',
@@ -64,9 +63,29 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                     return true
                 }
 
-                let dataRitiro = formattaData(date, true)
+                let dataRitiro = formattaData(date, true),
+                studente = student as any
+                studente.ritirato = "true"
+                studente.dataRitiro = dataRitiro
+                
+                context.setState({
+                    students: null
+                })
+                
+                Axios.put(siteUrl+"/api/studenti/"+student.idStudente, {...studente}).then(response => {
 
-                alert(dataRitiro)
+                    let stu = response.data as IStudent,
+                    currentList = students as any,
+                    editingStudent = students.indexOf(student)
+                    
+                    currentList[editingStudent] = stu
+
+                    context.setState({
+                        students: currentList as IStudent[]
+                    })
+
+                    message.success("Studente ritirato con successo!")
+                })
             }
         })
     }
@@ -81,7 +100,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     selectAll = (anno: number, event: any) => {
-        let selectionList = event.target.checked ? this.state.students.filter(s => s.annoIscrizione === anno) : this.state.selection.filter(s => s.annoIscrizione !== anno)
+        let selectionList = event.target.checked ? this.state.students.filter(s => s.annoFrequentazione === anno && !s.ritirato) : this.state.selection.filter(s => s.annoFrequentazione !== anno)
 
         this.setState({
             selection: selectionList
@@ -105,7 +124,14 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
 
     moveStudents = () => {
         let select = document.getElementById("moveToClass") as HTMLSelectElement,
-        value = parseInt(select.value)
+        value = parseInt(select.value),
+        studenti = this.state.selection.map(s => {
+            let stu = s as any
+            stu.idCorso = this.props.corso
+            stu.annoFrequentazione = value
+
+            return stu
+        })
 
         if(value !== 1 && value !== 2){
             Modal.error({
@@ -114,12 +140,40 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             })
         }
 
-        /*******************************************************/
-        /* SPOSTARE STUDENTI NEL NUOVO ANNO E RIFARE RICHIESTA */
-        /* (OPPURE RESTITUIRE GIA' I DATI DOPO AVER CAMBIATO)  */
-        /*******************************************************/
+        this.setState({
+            students: null
+        })
+
+        Axios.put(siteUrl+"/api/studenti", studenti).then(response => {
+            this.setState({
+                students: response.data as IStudent[]
+            })
+
+            message.success("Studenti spostati con successo!")
+        })
+
 
         this.showHideModal()
+    }
+
+    allRetired = (group: IStudent[]) => {
+        let allRetired = true
+
+        group.forEach(s => {
+            if(!s.ritirato)
+                allRetired = false
+        })
+
+        return !allRetired
+    }
+
+    sortbyId = (a: IStudent, b: IStudent) => { 
+        if(a.idStudente > b.idStudente)
+            return -1
+        if(a.idStudente < b.idStudente)
+            return 1
+
+        return 0
     }
 
     render(): JSX.Element{
@@ -128,19 +182,19 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         if(!students){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }
         
-        let firstYear = students.filter(s => s.annoIscrizione === 1).sort((a, _) => a.ritirato ? 1 : -1),
-        secondYear = students.filter(s => s.annoIscrizione === 2).sort((a, _) => a.ritirato ? 1 : -1),
+        let firstYear = students.filter(s => s.annoFrequentazione === 1).sort(this.sortbyId).sort((a, _) => a.ritirato ? 0 : -1),
+        secondYear = students.filter(s => s.annoFrequentazione === 2).sort(this.sortbyId).sort((a, _) => a.ritirato ? 0 : -1),
         groups = [firstYear, secondYear]
 
-        return <div className="col-9 px-5 py-4 right-block">
+        return <div className="col px-5 py-4 right-block">
             <h3 className="mb-3 text-center">Studenti del corso</h3>
 
-            <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push("/adminpanel/studenti/new")}>
+            <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push(adminRoute+"/studenti/new")}>
                 <i className="fal fa-plus"></i> Aggiungi studente
             </button>
 
@@ -148,7 +202,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 <i className="fa fa-arrows-alt"></i> Sposta studenti
             </button>
 
-            <button className="btn btn-blue float-right mb-3 mr-2" type="button" onClick={() => routerHistory.push("/adminpanel/studenti/import")}>
+            <button className="btn btn-blue float-right mb-3 mr-2" type="button" onClick={() => routerHistory.push(adminRoute+"/studenti/import")}>
                 <i className="fa fa-file-csv"></i> Importa da CSV
             </button>
 
@@ -160,10 +214,10 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                         if(!g[0])
                             return false
                             
-                        let checkedAll = true
+                        let checkedAll = this.allRetired(g)
 
                         g.forEach(element => {
-                            if(selection.indexOf(element) === -1)
+                            if(selection.indexOf(element) === -1 && !element.ritirato)
                                 checkedAll = false
                         })
 
@@ -171,20 +225,20 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                             
                             <tr className="thead-light">
                                 <th colSpan={7}>
-                                    { g[0].annoIscrizione === 1 ? "Primo" : "Secondo" } anno
+                                    { g[0].annoFrequentazione === 1 ? "Primo" : "Secondo" } anno
                                 </th>
                             </tr>
 
                             <tr>
                                 <th style={{width: "5%"}}>
                                     <Tooltip title="Seleziona tutti">
-                                        <Checkbox onChange={(e) => this.selectAll(g[0].annoIscrizione, e)} checked={checkedAll} />
+                                        <Checkbox onChange={(e) => this.selectAll(g[0].annoFrequentazione, e)} checked={checkedAll} />
                                     </Tooltip>
                                 </th>
                                 <th>Nome</th>
                                 <th>Cognome</th>
                                 <th>Codice Fiscale</th>
-                                <th style={{width: "15%"}}>Tot. Giornate</th>
+                                <th style={{width: "15%"}}>Frequenza</th>
                                 <th style={{width: "20%"}}>Azioni</th>
                             </tr>
                 
@@ -202,25 +256,25 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.nome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cognome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
-                                        <td style={{maxWidth: 0}} className="text-truncate">{s.giornate}</td>
+                                        <td style={{maxWidth: 0}} className="text-truncate">{s.frequenza}%</td>
                                         
                                         <td>
                                             <Tooltip title="Dettagli">
-                                                <button type="button" className="btn btn-info circle-btn" onClick={() => routerHistory.push("/adminpanel/studenti/" + s.idStudente)}>
+                                                <button type="button" className="btn btn-info circle-btn" onClick={() => routerHistory.push(adminRoute+"/studenti/" + s.idStudente)}>
                                                     <i className="fa fa-info"></i>
                                                 </button>
                                             </Tooltip>
                                             
                                             {
                                                 !s.ritirato && <Tooltip title="Modifica">
-                                                    <button type="button" className="btn btn-warning text-white circle-btn ml-2" onClick={() => routerHistory.push("/adminpanel/studenti/edit/" + s.idStudente)}>
+                                                    <button type="button" className="btn btn-warning text-white circle-btn ml-2" onClick={() => routerHistory.push(adminRoute+"/studenti/edit/" + s.idStudente)}>
                                                         <i className="fa fa-pen"></i>
                                                     </button>
                                                 </Tooltip>
                                             }
                                             {
                                                 !s.ritirato && <Tooltip title="Segna come ritirato">
-                                                    <button type="button" className="btn btn-danger circle-btn ml-2" onClick={() => this.showDeleteConfirm(s)}>
+                                                    <button type="button" className="btn btn-danger circle-btn ml-2" onClick={() => this.showConfirm(s)}>
                                                         <i className="fa fa-user-times"></i>
                                                     </button>
                                                 </Tooltip>
@@ -255,7 +309,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                         { 
                             selection.map(s => {
                                 return <span className="d-block">
-                                    <strong>{s.nome} {s.cognome}</strong> ({s.annoIscrizione}° anno)
+                                    <strong>{s.nome} {s.cognome}</strong> ({s.annoFrequentazione}° anno)
                                 </span>
                             })
                         }

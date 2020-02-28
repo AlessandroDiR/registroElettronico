@@ -32,11 +32,9 @@ export default class QRCodeScreen extends React.PureComponent<IProps, IState>{
     }
 
     reloadCode = () => {
-        Axios.get("http://localhost/reg/api?codice&studente="+this.props.studentId).then((response) => {
-            let date = new Date()
-
+        Axios.get("http://mygraphic.altervista.org/reg/api?codice&studente="+this.props.studentId).then((response) => {
             this.setState({
-                code: response.data + date.getMilliseconds()
+                code: response.data
             })
         })
     }

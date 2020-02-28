@@ -1,13 +1,13 @@
-import React from 'react';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import googleCalendarPlugin from '@fullcalendar/google-calendar';
-import { Digits2 } from '../utilities';
-import { Modal, Icon, Spin } from 'antd';
-import { ICalendar } from './ICalendar';
+import React from 'react'
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import googleCalendarPlugin from '@fullcalendar/google-calendar'
+import { Digits2 } from '../utilities'
+import { Modal, Icon, Spin } from 'antd'
+import { ICalendar } from '../models/ICalendar'
 
 import '@fullcalendar/core/main.css'
-import '@fullcalendar/timegrid/main.css';
+import '@fullcalendar/timegrid/main.css'
 
 export interface IProps{
     readonly corso?: number
@@ -40,20 +40,20 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
         const { calendar } = this.state
     
         if(!calendar){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
-            return <div className="col-9 px-5 py-4 right-block" id="mainBlock">
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
             </div>
         }
 
-        return <FullCalendar
+        return <div className="col px-5 py-3" id="mainBlock">
+            <FullCalendar
                 plugins={[ googleCalendarPlugin, dayGridPlugin ]}
                 events={ { googleCalendarId: calendar.calendarId} }
                 googleCalendarApiKey={calendar.apiKey}
                 defaultView="dayGridMonth"
                 fixedWeekCount={false}
-                header={false}
                 firstDay={1}
                 themeSystem={'bootstrap'}
                 eventTimeFormat={{
@@ -61,10 +61,16 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
                     minute: '2-digit',
                     meridiem: false
                 }}
+                buttonText={{
+                    today: "Mese corrente"
+                }}
+                header={{
+                    right: 'prev, next'
+                }}
                 locale={'it'}
                 eventClick={
                     function(info){
-                        info.jsEvent.preventDefault();
+                        info.jsEvent.preventDefault()
                         let event = info.event
                         
                         Modal.info({
@@ -108,6 +114,7 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
                     }
                 }
             />
+        </div>
     }
   
   }

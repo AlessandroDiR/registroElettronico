@@ -1,9 +1,9 @@
 import React from "react"
 import Dragger from "antd/lib/upload/Dragger"
 import { IStudent } from "../../models/IStudent"
-import { Modal, Tooltip, Icon } from "antd"
+import { Modal, Tooltip, Icon, message } from "antd"
 import { routerHistory } from "../.."
-import { formattaData, capitalizeFirst, siteUrl } from "../../utilities"
+import { formattaData, capitalizeFirst, siteUrl, resizePopup, formatItalian, adminRoute } from "../../utilities"
 import Axios from "axios"
 
 export interface IProps{
@@ -46,9 +46,13 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 cf: 0,
                 dataNascita: 0,
                 email: 0,
-                annoIscrizione: 1
+                annoFrequentazione: 1
             }
         }
+    }
+
+    componentDidMount = () => {
+        resizePopup()
     }
 
     splitCSV = (data: string) => {
@@ -95,13 +99,14 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 centered: true,
                 title: "Selezionare i campi da abbinare",
                 icon: <Icon type="api" style={{ color: "var(--success)" }} />,
+                maskClosable: true,
                 content: <div style={{ marginLeft: -38 }}>
                     <div className="row mt-3 px-0">
                         <div className="col-4">
                             <label className="mt-2">Classe: </label>
                         </div>
                         <div className="col">
-                            <select className="custom-select pointer" style={{ height: 35 }} onChange={(e) => this.changeVarPos(e, "annoIscrizione")}>
+                            <select className="custom-select pointer" style={{ height: 35 }} onChange={(e) => this.changeVarPos(e, "annoFrequentazione")}>
                                 <option value="1">Primo anno</option>
                                 <option value="2">Secondo anno</option>
                             </select>
@@ -122,7 +127,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                         })
                     }
                 </div>,
-                onOk: () => this.showImportPreview(),
+                onOk: this.showImportPreview,
                 okText: "Prosegui"
             })
         }
@@ -139,14 +144,14 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
         list: IStudent[] = [],
         popup = document.getElementById("popup")
 
-        rows.forEach((r, i) => {
+        rows.forEach(r => {
             let cells = this.splitCSV(r)
 
             let student: IStudent = {
                 idCorso: this.props.corso,
                 nome: capitalizeFirst(cells[fields['nome']]),
                 cognome: capitalizeFirst(cells[fields['cognome']]),
-                annoIscrizione: parseInt(fields['annoIscrizione']),
+                annoFrequentazione: parseInt(fields['annoFrequentazione']),
                 cf: cells[fields['cf']],
                 dataNascita: formattaData(cells[fields['dataNascita']], true),
                 email: cells[fields['email']],
@@ -174,7 +179,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 cf: 0,
                 dataNascita: 0,
                 email: 0,
-                annoIscrizione: 0
+                annoFrequentazione: 0
             }
         })
 
@@ -182,21 +187,16 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
     }
 
     confirmImport = () => {
-        Axios.post(siteUrl+"/api/studenti", this.state.addList).then(response => {
-            Modal.success({
-                title: "Congratulazioni!",
-                content: "Importazione eseguita con successo.",
-                onOk: () => {
-                    routerHistory.push("/adminpanel/studenti")
-                }
-            })
+        Axios.post(siteUrl+"/api/studenti", this.state.addList).then(_ => {
+            message.success("Importazione eseguita con successo!")
+            routerHistory.push(adminRoute+"/studenti")
         })
     }
 
     render(): JSX.Element{
         const { addList } = this.state
 
-        return <div className="col-9 p-5 right-block" id="mainBlock" style={{flexDirection: "column"}}>
+        return <div className="col p-5 right-block" id="mainBlock" style={{flexDirection: "column"}}>
             <h3 className="text-center w-100">Importa studenti da CSV</h3>
 
             <label>
@@ -204,7 +204,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
             </label>
 
             <div className="uploader mt-2 w-100">
-                <Dragger accept=".csv" beforeUpload={file => this.readFile(file)} style={{width: "100%"}}>
+                <Dragger accept=".csv" beforeUpload={file => this.readFile(file)}>
                     <p className="ant-upload-drag-icon">
                         <i className="fa fa-file-csv fa-5x"></i>
                     </p>
@@ -215,7 +215,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 </Dragger>
             </div>
 
-            <div id="popup" className="col-9 preview px-0">
+            <div id="popup" className="col preview px-0">
                 <div className="w-100 h-100 inner overflow-auto px-5 py-4">
                     <h3 className="mb-3 text-center">Anteprima dati da importare</h3>
                     {
@@ -239,11 +239,11 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                                             <Tooltip title={s.cognome}>
                                                 <td style={{maxWidth: 0}} className="text-truncate">{s.cognome}</td>
                                             </Tooltip>
-                                            <td style={{maxWidth: 0}} className="text-truncate">{s.annoIscrizione}</td>
+                                            <td style={{maxWidth: 0}} className="text-truncate">{s.annoFrequentazione}</td>
                                             <Tooltip title={s.cf}>
                                                 <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
                                             </Tooltip>
-                                            <td style={{maxWidth: 0}} className="text-truncate">{s.dataNascita}</td>
+                                            <td style={{maxWidth: 0}} className="text-truncate">{formatItalian(s.dataNascita)}</td>
                                             <Tooltip title={s.email}>
                                                 <td style={{maxWidth: 0}} className="text-truncate">{s.email}</td>
                                             </Tooltip>
@@ -256,7 +256,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 </div>
 
                 <div className="bottom-side p-3 text-right">
-                    <button className="btn btn-danger mr-2" onClick={() => this.hidePopup()}>Annulla</button>
+                    <button className="btn btn-danger mr-2" onClick={this.hidePopup}>Annulla</button>
                     <button className="btn btn-success" onClick={this.confirmImport}>Conferma importazione</button>
                 </div>
             </div>
