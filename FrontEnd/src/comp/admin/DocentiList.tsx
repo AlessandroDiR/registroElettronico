@@ -47,7 +47,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
             okText: 'Confermo',
             okType: 'danger',
             cancelText: 'Annulla',
-            onOk() {
+            onOk: () => {
                 let doc = docente as any
                 doc.ritirato = "true"
                 
@@ -86,6 +86,21 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
         return 0
     }
 
+    backRetire = (doc: IDocente) => {
+        let context = this
+
+        Modal.confirm({
+            title: `${doc.nome} ${doc.cognome}`,
+            content: "Questo docente verrà reintegrato all'interno del corso.",
+            okText: 'Confermo',
+            okType: 'danger',
+            cancelText: 'Annulla',
+            onOk: () => {
+                // ANNULLARE RITIRO DOCENTE
+            }
+        })
+    }
+
     render(): JSX.Element{
         const { docenti, showAll } = this.state
 
@@ -118,7 +133,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                         <tr>
                             <th>Nome</th>
                             <th>Cognome</th>
-                            <th style={{width: "15%"}}>Monte ore</th>
+                            <th style={{width: "15%"}}>Ore svolte</th>
                             <th style={{width: "20%"}}>Azioni</th>
                         </tr>
 
@@ -153,9 +168,9 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                                         }
 
                                         {
-                                            d.ritirato && <Tooltip title="Docente ritirato">
-                                                <button type="button" className="circle-btn ml-2 border-0">
-                                                    <i className="fa fa-user-slash"></i>
+                                            d.ritirato && <Tooltip title="Reintegra nel corso">
+                                                <button type="button" className="btn btn-danger circle-btn ml-2" onClick={() => this.backRetire(d)}>
+                                                    <i className="fa fa-reply"></i>
                                                 </button>
                                             </Tooltip>
                                         }
