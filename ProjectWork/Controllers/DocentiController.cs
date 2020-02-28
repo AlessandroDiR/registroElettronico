@@ -120,31 +120,6 @@ namespace ProjectWork.Controllers
             return Ok(docenti);
         }
 
-        // GET: api/docenti/getlezionidocente/1
-        [HttpGet("[action]/{idDocente}")]
-        public async Task<IActionResult> GetLezioniDocente([FromRoute] int idDocente)
-        {
-            var lezioniTenute = _context.PresenzeDocente.Where(p => p.IdDocente == idDocente);
-            var result = new List<object>();
-
-            foreach(var lezione in lezioniTenute)
-            {
-                lezione.IdLezioneNavigation = _context.Lezioni.Find(lezione.IdLezione);
-                var json = new
-                {
-                    idPresenza = lezione.IdPresenza,
-                    idDocente = lezione.IdDocente,
-                    data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == lezione.IdLezioneNavigation.IdLezione).Data,
-                    idLezione = lezione.IdLezioneNavigation.IdLezione,
-                    lezione = lezione.IdLezioneNavigation.Titolo,
-                    ingresso = lezione.Ingresso,
-                    uscita = lezione.Uscita
-                };
-                result.Add(json);
-            }
-
-            return Ok(result);
-        }
 
         // GET: api/Docenti/firma/codice
         [HttpGet("[action]/{code}")]
