@@ -15,9 +15,9 @@ namespace ProjectWork.Models
         {
         }
 
+        public virtual DbSet<Amministrare> Amministrare { get; set; }
+        public virtual DbSet<Amministratori> Amministratori { get; set; }
         public virtual DbSet<Comprende> Comprende { get; set; }
-        public virtual DbSet<Coordina> Coordina { get; set; }
-        public virtual DbSet<Coordinatori> Coordinatori { get; set; }
         public virtual DbSet<Corsi> Corsi { get; set; }
         public virtual DbSet<Docenti> Docenti { get; set; }
         public virtual DbSet<Insegnare> Insegnare { get; set; }
@@ -33,63 +33,42 @@ namespace ProjectWork.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Comprende>(entity =>
+            modelBuilder.Entity<Amministrare>(entity =>
             {
-                entity.HasKey(e => new { e.IdMateria, e.IdCorso });
+                entity.HasKey(e => new { e.IdAdmin, e.IdCorso });
 
-                entity.Property(e => e.IdMateria).HasColumnName("id_materia");
-
-                entity.Property(e => e.IdCorso).HasColumnName("id_corso");
-
-                entity.HasOne(d => d.IdCorsoNavigation)
-                    .WithMany(p => p.Comprende)
-                    .HasForeignKey(d => d.IdCorso)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Comprendere_Corsi");
-
-                entity.HasOne(d => d.IdMateriaNavigation)
-                    .WithMany(p => p.Comprende)
-                    .HasForeignKey(d => d.IdMateria)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Comprendere_Materie");
-            });
-
-            modelBuilder.Entity<Coordina>(entity =>
-            {
-                entity.HasKey(e => new { e.IdCoordinatore, e.IdCorso });
-
-                entity.Property(e => e.IdCoordinatore)
-                    .HasColumnName("id_coordinatore")
+                entity.Property(e => e.IdAdmin)
+                    .HasColumnName("id_admin")
                     .HasMaxLength(25)
                     .IsUnicode(false);
 
                 entity.Property(e => e.IdCorso).HasColumnName("id_corso");
 
-                entity.HasOne(d => d.IdCoordinatoreNavigation)
-                    .WithMany(p => p.Coordina)
-                    .HasForeignKey(d => d.IdCoordinatore)
+                entity.HasOne(d => d.IdAdminNavigation)
+                    .WithMany(p => p.Amministrare)
+                    .HasForeignKey(d => d.IdAdmin)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Coordina_Coordinatori");
+                    .HasConstraintName("FK_Amministrare_Amministratori");
 
                 entity.HasOne(d => d.IdCorsoNavigation)
-                    .WithMany(p => p.Coordina)
+                    .WithMany(p => p.Amministrare)
                     .HasForeignKey(d => d.IdCorso)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Coordina_Corsi");
+                    .HasConstraintName("FK_Amministrare_Corsi");
             });
 
-            modelBuilder.Entity<Coordinatori>(entity =>
+            modelBuilder.Entity<Amministratori>(entity =>
             {
-                entity.HasKey(e => e.IdCoordinatore);
+                entity.HasKey(e => e.IdAdmin);
 
-                entity.Property(e => e.IdCoordinatore)
-                    .HasColumnName("id_coordinatore")
+                entity.Property(e => e.IdAdmin)
+                    .HasColumnName("id_admin")
                     .HasMaxLength(25)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
@@ -122,6 +101,27 @@ namespace ProjectWork.Models
                     .HasColumnType("text");
             });
 
+            modelBuilder.Entity<Comprende>(entity =>
+            {
+                entity.HasKey(e => new { e.IdMateria, e.IdCorso });
+
+                entity.Property(e => e.IdMateria).HasColumnName("id_materia");
+
+                entity.Property(e => e.IdCorso).HasColumnName("id_corso");
+
+                entity.HasOne(d => d.IdCorsoNavigation)
+                    .WithMany(p => p.Comprende)
+                    .HasForeignKey(d => d.IdCorso)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Comprendere_Corsi");
+
+                entity.HasOne(d => d.IdMateriaNavigation)
+                    .WithMany(p => p.Comprende)
+                    .HasForeignKey(d => d.IdMateria)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Comprendere_Materie");
+            });
+
             modelBuilder.Entity<Corsi>(entity =>
             {
                 entity.HasKey(e => e.IdCorso);
@@ -147,11 +147,10 @@ namespace ProjectWork.Models
             {
                 entity.HasKey(e => e.IdDocente);
 
-                entity.Property(e => e.IdDocente)
-                    .HasColumnName("id_docente")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.IdDocente).HasColumnName("id_docente");
 
                 entity.Property(e => e.Cf)
+                    .IsRequired()
                     .HasColumnName("CF")
                     .HasMaxLength(16)
                     .IsUnicode(false);
