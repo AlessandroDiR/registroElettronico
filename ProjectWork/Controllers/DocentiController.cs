@@ -161,40 +161,33 @@ namespace ProjectWork.Controllers
                                 _context.SaveChanges();
                                 return OutputMsg.generateMessage("Ok", $"Arrivederci {docente.Nome}!");
                             }
-                            else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
-                            {
-                                presenza.Uscita = time;
-                                _context.SaveChanges();
-                                return OutputMsg.generateMessage("Ok", $"Arrivederci {docente.Nome}!");
-                            }
-                            else if (presenza == null && l.OraFine >= time)
-                            {
-                                var newPresenza = new PresenzeDocente
-                                {
-                                    IdLezione = l.IdLezione,
-                                    IdDocente = docente.IdDocente,
-                                    Ingresso = time <= (l.OraInizio + new TimeSpan(0, 10, 0)) ? l.OraInizio : time
-                                };
-
-                                _context.PresenzeDocente.Add(newPresenza);
-                                _context.SaveChanges();
-                                return OutputMsg.generateMessage("Ok", $"Ben arrivato {docente.Nome}!");
-                            }
                         }
+                        else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
+                        {
+                            presenza.Uscita = time;
+                            _context.SaveChanges();
+                            return OutputMsg.generateMessage("Ok", $"Arrivederci {docente.Nome}!");
+                        }
+                        else if (presenza == null && l.OraFine >= time)
+                        {
+                            var newPresenza = new PresenzeDocente
+                            {
+                                IdLezione = l.IdLezione,
+                                IdDocente = docente.IdDocente,
+                                Ingresso = time <= (l.OraInizio + new TimeSpan(0, 10, 0)) ? l.OraInizio : time
+                            };
+
+                            _context.PresenzeDocente.Add(newPresenza);
+                            _context.SaveChanges();
+                            return OutputMsg.generateMessage("Ok", $"Ben arrivato {docente.Nome}!");
+                        }
+                        
                     }
                 }
             }
 
             return OutputMsg.generateMessage("Spiacente", "Non ci sono lezioni oggi!", true);
 
-        }
-
-        private bool CheckCode(string code)
-        {
-            var decoded = Encoder.decode(code);
-            var docente = _context.Docenti.FirstOrDefault(d => d.Cf == decoded);
-
-            return docente != null ? true : false;
         }
 
         // PUT: api/Docenti/5
@@ -265,11 +258,6 @@ namespace ProjectWork.Controllers
             docente.Password = d.Cf;
             docente.Email = d.Email;
 
-            //var doc = _context.Docenti.Last();
-            //if (doc == null)
-            //{
-            //    return CreatedAtAction("GetDocenti", "Docente inesistente");
-            //}
             foreach (var item in d.Tenere)
             {
                 item.IdDocente = docente.IdDocente;
@@ -334,11 +322,6 @@ namespace ProjectWork.Controllers
 
             docenti.Ritirato = "True";
 
-            //var t = _context.Tenere.Where(d => d.IdDocente == id);
-            //_context.Tenere.RemoveRange(t);
-            //var i = _context.Insegnare.Where(d => d.IdDocente == id);
-            //_context.Insegnare.RemoveRange(i);
-            //_context.Docenti.Remove(docenti);
             _context.Entry(docenti).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
@@ -371,7 +354,7 @@ namespace ProjectWork.Controllers
 
         private double getMonteOre(int idDocente)
         {
-            var presenze = _context.PresenzeDocente.Where(p => p.IdDocente == idDocente);
+            var presenze = _context.PresenzeDocente.Where(p => p.IdDocente == idDocente && p.Uscita != new TimeSpan(0, 0, 0));
             var totOre = new TimeSpan();
 
             foreach(var p in presenze)
