@@ -36,7 +36,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
     }
 
     changeEntrata = (event: any) => {
-        let entrata = event.target.value
+        let entrata = event.target.value.trim()
 
         this.setState({
             entrataEdit: entrata
@@ -44,7 +44,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
     }
 
     changeUscita = (event: any) => {
-        let uscita = event.target.value
+        let uscita = event.target.value.trim()
 
         this.setState({
             uscitaEdit: uscita
@@ -81,7 +81,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
         if(!validateTime(entrataEdit) || !validateTime(uscitaEdit)){
             Modal.error({
                 title: "Errore!",
-                content: "Orari non validi!",
+                content: "Orari non validi! (ore:minuti:secondi)",
                 maskClosable: true
             })
 

@@ -87,9 +87,11 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
             return
         }
 
+        // TRIM DATI
         /***************************************/
         /* MODIFICA CORSO E POI MOSTRARE MODAL */
         /***************************************/
+
         message.success("Corso modificato con successo!")
         routerHistory.push(adminRoute+"/corsi")
 

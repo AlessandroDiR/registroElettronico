@@ -89,7 +89,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
     }
 
     changeCF = (event: any) => {
-        let CF = event.target.value
+        let CF = event.target.value.trim()
 
         this.setState({
             CF: CF
@@ -97,7 +97,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
     }
 
     modificaStudente = () => {
-        const { nome, cognome, dataNascita, CF, email } = this.state
+        const { nome, cognome, dataNascita, CF, email, studente } = this.state
 
         if(nome === "" || cognome === "" || dataNascita === "" || CF === "" || email === ""){
             Modal.error({
@@ -117,21 +117,20 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.put(siteUrl+"/api/studenti/" + this.state.studente.idStudente, {
-            idStudente: this.state.studente.idStudente,
-            nome: nome,
-            cognome: cognome,
-            email: email,
-            password: this.state.studente.password,
+        Axios.put(siteUrl+"/api/studenti/" + studente.idStudente, {
+            idStudente: studente.idStudente,
+            nome: nome.trim(),
+            cognome: cognome.trim(),
+            email: email.trim(),
+            password: studente.password,
             cf: CF,
             idCorso: this.props.corso,
-            annoFrequentazione: this.state.studente.annoFrequentazione,
+            annoFrequentazione: studente.annoFrequentazione,
             dataNascita: formattaData(dataNascita, true),
-            ritirato: this.state.studente.ritirato
-        }).then(response => {
+            ritirato: studente.ritirato
+        }).then(_ => {
             message.success("Studente modificato con successo!")
             routerHistory.push(adminRoute+"/studenti")
-
         })
         
     }

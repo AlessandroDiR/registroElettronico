@@ -80,7 +80,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
     }
 
     changeCF = (event: any) => {
-        let CF = event.target.value
+        let CF = event.target.value.trim()
 
         this.setState({
             CF: CF
@@ -127,11 +127,11 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         }
 
         Axios.post(siteUrl+"/api/docenti", {
-            nome: nome,
-            cognome: cognome,
+            nome: nome.trim(),
+            cognome: cognome.trim(),
             cf: CF,
             password: CF,
-            email: email,
+            email: email.trim(),
             tenere: corsiSel.map(c => { return { idCorso: c, idDocente: 0 } }),
             insegnare: materieSel.map(m => { return { idMateria: m, idDocente: 0 } }),
         }).then(_ => {
