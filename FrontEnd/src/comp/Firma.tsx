@@ -93,7 +93,7 @@ export default class Firma extends React.PureComponent<IProps, IState>{
 
     render(): JSX.Element{
         const { popup, corso } = this.state
-        let icon = <Icon type="loading"  spin />
+        let icon = <Icon type="loading" spin />
 
         return <div className="col" id="mainBlock">
             <div className="text-center w-100">

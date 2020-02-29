@@ -34,7 +34,6 @@ export default class Main extends React.Component{
                         </NavLink>
                     </div>
 
-                    
                         <Switch>
                             <Route exact path="/firme/" render={() => {
                                 let corso = sessionStorage.getItem("corso"),

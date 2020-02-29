@@ -47,23 +47,12 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
             okText: 'Confermo',
             okType: 'danger',
             cancelText: 'Annulla',
-            onOk() {
-                let doc = docente as any
-                doc.ritirato = "true"
-                
+            onOk: () => {
                 context.setState({
                     docenti: null
                 })
                 
-                Axios.put(siteUrl+"/api/docenti/"+docente.idDocente, {
-                    idDocente: docente.idDocente,
-                    nome: docente.nome,
-                    cognome: docente.cognome,
-                    email: docente.email,
-                    cf: docente.cf,
-                    password: docente.password,
-                    ritirato: docente.ritirato
-                }).then(response => {
+                Axios.delete(siteUrl+"/api/docenti/"+docente.idDocente).then(response => {
 
                     let docenti = response.data as IDocente[]
 
@@ -86,6 +75,38 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
         return 0
     }
 
+    backRetire = (doc: IDocente) => {
+        let context = this
+
+        Modal.confirm({
+            title: `${doc.nome} ${doc.cognome}`,
+            content: "Questo docente verrà reintegrato all'interno del corso.",
+            okText: 'Confermo',
+            okType: 'danger',
+            cancelText: 'Annulla',
+            onOk: () => {
+                context.setState({
+                    docenti: null
+                })
+
+                Axios.delete(siteUrl+"/api/docenti/"+doc.idDocente).then(response => {
+
+                    let docenti = response.data as IDocente[]
+
+                    context.setState({
+                        docenti: docenti
+                    })
+
+                    message.success("Docente reintegrato con successo!")
+                })
+            }
+        })
+    }
+
+    isInCorso = (doc: IDocente) => {
+        return doc.corsi.indexOf(this.props.corso) !== -1
+    }
+
     render(): JSX.Element{
         const { docenti, showAll } = this.state
 
@@ -98,7 +119,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
             </div>
         }
 
-        let lista = showAll ? docenti : docenti.filter(d => d.corsi.indexOf(this.props.corso) !== -1),
+        let lista = showAll ? docenti : docenti.filter(d => this.isInCorso(d)),
         docs = lista.sort(this.sortbyId).sort((a, _) => a.ritirato ? 0 : -1)
 
         return <div className="col px-5 py-4 right-block">
@@ -118,7 +139,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                         <tr>
                             <th>Nome</th>
                             <th>Cognome</th>
-                            <th style={{width: "15%"}}>Monte ore</th>
+                            <th style={{width: "15%"}}>Ore svolte</th>
                             <th style={{width: "20%"}}>Azioni</th>
                         </tr>
 
@@ -153,9 +174,9 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                                         }
 
                                         {
-                                            d.ritirato && <Tooltip title="Docente ritirato">
-                                                <button type="button" className="circle-btn ml-2 border-0">
-                                                    <i className="fa fa-user-slash"></i>
+                                            d.ritirato && <Tooltip title="Reintegra nel corso">
+                                                <button type="button" className="btn btn-danger circle-btn ml-2" onClick={() => this.backRetire(d)}>
+                                                    <i className="fa fa-reply"></i>
                                                 </button>
                                             </Tooltip>
                                         }
