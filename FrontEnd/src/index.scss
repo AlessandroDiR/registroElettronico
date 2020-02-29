@@ -85,7 +85,11 @@ body{
   align-items: center;
   height: 100vh;
   flex-wrap: wrap;
-  overflow: auto
+  overflow: auto;
+
+  &#loginBlock{
+    overflow: inherit
+  }
 }
 #mainInput{
   font-size: 25px !important;

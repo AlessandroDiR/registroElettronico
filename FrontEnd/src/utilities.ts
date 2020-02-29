@@ -2,6 +2,7 @@ export const siteUrl = "http://localhost:5000"
 export const logoUrl = "https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png"
 
 export const adminRoute = "/adminpanel"
+export const superAdminRoute = "/superpanel"
 export const docentiRoute = "/docentipanel"
 
 export const Digits2 = (n: number) => {

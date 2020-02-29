@@ -1,38 +1,38 @@
 import React from "react"
-import { ICorso } from "../../models/ICorso";
 import Axios from "axios";
-import { siteUrl, adminRoute } from "../../utilities";
+import { siteUrl, superAdminRoute } from "../../utilities";
 import { Icon, Spin, Tooltip } from "antd";
 import { routerHistory } from "../..";
+import { ITutor } from "../../models/ITutor";
 
 export interface IProps{}
 export interface IState{
-    readonly corsi: ICorso[]
+    readonly tutor: ITutor[]
 }
 
-export default class CorsiList extends React.PureComponent<IProps, IState>{
+export default class TutorList extends React.PureComponent<IProps, IState>{
     constructor(props: IProps){
         super(props)
 
         this.state = {
-            corsi: null
+            tutor: null
         }
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/api/corsi").then(response => {
-            let corsi = response.data as ICorso[]
+        Axios.get(siteUrl+"/api/tutor").then(response => {
+            let tutor = response.data as ITutor[]
 
             this.setState({
-                corsi: corsi
+                tutor: tutor
             })
         })
     }
 
     render(): JSX.Element{
-        const { corsi } = this.state
+        const { tutor } = this.state
         
-        if(!corsi){
+        if(!tutor){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
@@ -41,10 +41,10 @@ export default class CorsiList extends React.PureComponent<IProps, IState>{
         }
 
         return <div className="col px-5 py-4 right-block">
-            <h3 className="mb-3 text-center">Lista dei corsi</h3>
+            <h3 className="mb-3 text-center">Lista dei coordinatori</h3>
 
-            <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push(adminRoute+"/corsi/new")}>
-                <i className="fal fa-plus"></i> Aggiungi corso
+            <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push(superAdminRoute+"/tutor/new")}>
+                <i className="fal fa-plus"></i> Aggiungi coordinatore
             </button>
 
             <table className="table table-bordered text-center">
@@ -52,20 +52,20 @@ export default class CorsiList extends React.PureComponent<IProps, IState>{
                     <tbody>
                         <tr>
                             <th>Nome</th>
-                            <th>Descrizione</th>
-                            <th>Luogo</th>
+                            <th>Cognome</th>
+                            <th style={{width: "30%"}}>Corso</th>
                             <th style={{width: "10%"}}>Azioni</th>
                         </tr>
 
                         {
-                            corsi.map(c => {        
+                            tutor.map(t => {        
                                 return <tr>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{c.nome}</td>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{c.descrizione}</td>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{c.luogo}</td>
+                                    <td style={{maxWidth: 0}} className="text-truncate">{t.nome}</td>
+                                    <td style={{maxWidth: 0}} className="text-truncate">{t.cognome}</td>
+                                    <td style={{maxWidth: 0}} className="text-truncate">{t.corso}</td>
                                     <td>
                                         <Tooltip title="Modifica">
-                                            <button type="button" className="btn btn-warning text-white circle-btn" onClick={() => routerHistory.push(adminRoute+"/corsi/edit/" + c.idCorso)}>
+                                            <button type="button" className="btn btn-warning text-white circle-btn" onClick={() => routerHistory.push(superAdminRoute+"/tutor/edit/" + t.idTutor)}>
                                                 <i className="fa fa-pen"></i>
                                             </button>
                                         </Tooltip>

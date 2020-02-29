@@ -48,7 +48,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         let id = Number(this.props.match.params.id)
 
         if(isNaN(id))
-            routerHistory.push("/adminpanel")
+            routerHistory.push(adminRoute)
 
         Axios.get(siteUrl+"/api/docenti/getdocentibyid/" + id).then((response) => {
             let doc = response.data as IDocente

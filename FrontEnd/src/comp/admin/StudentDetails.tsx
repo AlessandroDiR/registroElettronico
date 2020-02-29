@@ -5,7 +5,7 @@ import { routerHistory } from '../..';
 import { Icon, Spin, Progress, Statistic, Modal, Button } from 'antd';
 import PresenzeTable from './PresenzeTable';
 import Axios from 'axios';
-import { formatItalian, siteUrl } from '../../utilities';
+import { formatItalian, siteUrl, adminRoute } from '../../utilities';
 import { Cipher } from '../../models/Cipher';
 import QRCode from "qrcode.react"
 
@@ -39,7 +39,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
         let id = Number(this.props.match.params.id)
 
         if(isNaN(id))
-            routerHistory.push("/adminpanel")
+            routerHistory.push(adminRoute)
 
         Axios.get(siteUrl+"/api/studenti/getstudentibyid/" + id).then((response) => {
             this.setState({

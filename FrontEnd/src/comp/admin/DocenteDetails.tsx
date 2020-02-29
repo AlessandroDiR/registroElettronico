@@ -5,7 +5,7 @@ import { Icon, Spin, Modal, Button, Statistic } from 'antd'
 import Axios from 'axios'
 import { IDocente } from '../../models/IDocente'
 import LezioniDocenteTable from './LezioniDocenteTable'
-import { siteUrl } from '../../utilities'
+import { siteUrl, adminRoute } from '../../utilities'
 import { Cipher } from '../../models/Cipher'
 import QRCode from "qrcode.react"
 
@@ -36,7 +36,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
         let id = Number(this.props.match.params.id)
 
         if(isNaN(id))
-            routerHistory.push("/adminpanel")
+            routerHistory.push(adminRoute)
 
         Axios.get(siteUrl+"/api/docenti/getdocentibyid/" + id).then((response) => {
             this.setState({

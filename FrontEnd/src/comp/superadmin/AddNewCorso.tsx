@@ -1,9 +1,7 @@
 import React from "react"
 import { Modal, Upload, Icon, message } from "antd"
 import { routerHistory } from "../.."
-import { siteUrl, imageFileToBase64, adminRoute } from "../../utilities"
-import Axios from "axios"
-import { ICorso } from "../../models/ICorso"
+import { imageFileToBase64, superAdminRoute } from "../../utilities"
 
 export interface IProps{}
 export interface IState{
@@ -51,8 +49,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
     }
 
     aggiungiCorso = () => {
-        const { nome, descrizione, luogo } = this.state
-        let corso = {...this.state} as ICorso
+        const { nome, descrizione, luogo, logo } = this.state
 
         if(nome === "" || descrizione === "" || luogo === ""){
             Modal.error({
@@ -70,7 +67,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
         /*************************************************/
 
         message.success("Corso creato con successo!")
-        routerHistory.push(adminRoute+"/corsi")
+        routerHistory.push(superAdminRoute+"/corsi")
 
     }
 

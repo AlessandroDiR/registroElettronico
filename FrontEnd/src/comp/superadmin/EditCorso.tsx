@@ -1,7 +1,7 @@
 import React from "react"
 import { Modal, Icon, Spin, Upload, message } from "antd";
 import { routerHistory } from "../..";
-import { siteUrl, imageFileToBase64, adminRoute } from "../../utilities";
+import { siteUrl, imageFileToBase64, superAdminRoute } from "../../utilities";
 import Axios from "axios";
 import { RouteComponentProps } from "react-router-dom";
 import { ICorso } from "../../models/ICorso";
@@ -36,7 +36,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         let id = Number(this.props.match.params.id)
 
         if(isNaN(id))
-            routerHistory.push("/adminpanel")
+            routerHistory.push(superAdminRoute)
 
         Axios.get(siteUrl+"/api/corsi/" + id).then((response) => {
             let corso = response.data as ICorso
@@ -93,7 +93,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         /***************************************/
 
         message.success("Corso modificato con successo!")
-        routerHistory.push(adminRoute+"/corsi")
+        routerHistory.push(superAdminRoute+"/corsi")
 
     }
 

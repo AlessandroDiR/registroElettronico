@@ -11,6 +11,8 @@ import DocentiDashboard from './comp/docenti/DocentiDashboard'
 import Page404 from './comp/Page404'
 import moment from 'moment';
 import 'moment/locale/it';
+import SuperDashboard from './comp/superadmin/SuperDashboard'
+import { superAdminRoute, adminRoute, docentiRoute } from './utilities'
 
 moment.locale('it')
 
@@ -29,7 +31,7 @@ ReactDOM.render(<Router history={routerHistory}>
             <Main />
         )} />
 
-        <Route path="/adminpanel" render={() => (
+        <Route path={adminRoute} render={() => (
             <Dashboard />
         )} />
 
@@ -37,8 +39,12 @@ ReactDOM.render(<Router history={routerHistory}>
             <UserApplication />
         )} />
 
-        <Route path="/docentipanel" render={() => (
+        <Route path={docentiRoute} render={() => (
             <DocentiDashboard />
+        )} />
+
+        <Route path={superAdminRoute} render={() => (
+            <SuperDashboard />
         )} />
 
         <Route render={() => <Page404 goTo="/" />} />
