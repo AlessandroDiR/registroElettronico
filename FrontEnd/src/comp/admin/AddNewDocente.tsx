@@ -163,7 +163,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         const { nome, cognome, CF, email, materie, materieSel, corsi, corsiSel } = this.state
 
         if(!materie || !corsi){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />

@@ -10,3 +10,10 @@ export const isAdmin = (obj: any) => {
         return false
     }
 }
+export const isSuperAdmin = (obj: any) => {
+    try{
+        return "nome" in obj && "cognome" in obj
+    }catch{
+        return false
+    }
+}

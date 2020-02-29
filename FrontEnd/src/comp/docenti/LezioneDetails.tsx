@@ -1,10 +1,10 @@
 import React from "react"
-import { RouteComponentProps } from "react-router-dom";
-import { ILezione } from "../../models/ILezione";
-import Axios from "axios";
-import { siteUrl } from "../../utilities";
-import { Icon, Spin } from "antd";
-import { IStudent } from "../../models/IStudent";
+import { RouteComponentProps } from "react-router-dom"
+import { ILezione } from "../../models/ILezione"
+import Axios from "axios"
+import { siteUrl } from "../../utilities"
+import { Icon, Spin } from "antd"
+import { IStudent } from "../../models/IStudent"
 
 export interface IRouteParams{
     readonly id: string
@@ -47,7 +47,7 @@ export default class LezioneDetails extends React.PureComponent<IProps, IState>{
         const { lezione, studenti } = this.state
 
         if(!lezione || !studenti){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />

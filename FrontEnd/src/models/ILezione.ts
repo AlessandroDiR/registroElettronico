@@ -1,4 +1,4 @@
-import { IStudent } from "./IStudent";
+import { IStudent } from "./IStudent"
 
 export interface ILezione{
     readonly idLezione: number

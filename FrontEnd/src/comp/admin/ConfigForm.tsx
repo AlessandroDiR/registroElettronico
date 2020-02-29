@@ -28,7 +28,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
     }
 
     changeID = (e: any) => {
-        let calendarId = e.target.value.trim()
+        let calendarId = e.target.value
 
         this.setState({
             calendarId: calendarId
@@ -36,7 +36,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
     }
 
     changeKey = (e: any) => {
-        let apiKey = e.target.value.trim()
+        let apiKey = e.target.value
 
         this.setState({
             apiKey: apiKey
@@ -56,7 +56,8 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
             return
         }
 
-        // SALVARE LA CONFIGURAZIONE
+        // SALVARE LA CONFIGURAZIONE this.props.corso e this.props.anno
+        
         message.success("Configurazione calendario salvata!")
     }
     render(): JSX.Element{
@@ -64,7 +65,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
 
         // SE IL CALENDARIO NON È CARICATO SPIN
 
-        return <form className="p-1">
+        return <form>
             <div className="form-group row">
                 <div className="col">
                     <label className="text-secondary">ID Calendario</label>
@@ -76,8 +77,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
                 </div>
             </div>
 
-            <button type="button" className="btn btn-success float-right" onClick={this.saveConfig}>Salva configurazione</button>
-            <div className="clearfix"></div>
+            <button type="button" className="btn btn-success float-right mr-1 mb-1" onClick={this.saveConfig}>Salva configurazione</button>
         </form>
     }
 }

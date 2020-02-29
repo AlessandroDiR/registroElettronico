@@ -134,7 +134,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
         const { presenze, entrataEdit, uscitaEdit } = this.state
 
         if(!presenze){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div>
                 <Spin indicator={icon} />

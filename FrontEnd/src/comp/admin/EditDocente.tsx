@@ -1,12 +1,12 @@
 import React from "react"
-import { Modal, Icon, Spin, Checkbox, message } from "antd";
-import { routerHistory } from "../..";
-import { siteUrl, adminRoute } from "../../utilities";
-import { IDocente } from "../../models/IDocente";
-import Axios from "axios";
-import { RouteComponentProps } from "react-router-dom";
-import { IMateria } from "../../models/IMateria";
-import { ICorso } from "../../models/ICorso";
+import { Modal, Icon, Spin, Checkbox, message } from "antd"
+import { routerHistory } from "../.."
+import { siteUrl, adminRoute } from "../../utilities"
+import { IDocente } from "../../models/IDocente"
+import Axios from "axios"
+import { RouteComponentProps } from "react-router-dom"
+import { IMateria } from "../../models/IMateria"
+import { ICorso } from "../../models/ICorso"
 
 export interface IRouteParams{
     readonly id: string
@@ -48,7 +48,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         let id = Number(this.props.match.params.id)
 
         if(isNaN(id))
-            routerHistory.push("/adminpanel")
+            routerHistory.push(adminRoute)
 
         Axios.get(siteUrl+"/api/docenti/getdocentibyid/" + id).then((response) => {
             let doc = response.data as IDocente
@@ -193,7 +193,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         const { nome, cognome, CF, docente, email, materie, materieSel, corsi, corsiSel } = this.state
 
         if(!docente || !materie.length || !corsi.length){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />

@@ -1,9 +1,9 @@
 import React from "react"
-import { NavLink, Route, Router, Switch } from 'react-router-dom';
+import { NavLink, Route, Router, Switch } from "react-router-dom"
 import { routerHistory } from "../.."
-import { IStudent } from "../../models/IStudent";
-import QRCodeScreen from "./QRCodeScreen";
-import UserCalendar from "./UserCalendar";
+import { IStudent } from "../../models/IStudent"
+import QRCodeScreen from "./QRCodeScreen"
+import UserCalendar from "./UserCalendar"
 
 export default class UserApplication extends React.Component{
 
@@ -19,6 +19,7 @@ export default class UserApplication extends React.Component{
             code: "CIAO-GGG"
         }))
     }
+    
     render(): JSX.Element{
         let session = localStorage.getItem("student")
         

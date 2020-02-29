@@ -332,6 +332,7 @@ namespace ProjectWork.Controllers
             return GetDocenti();
         }
 
+
         private List<int> getCorsiDocente(int idDocente)
         {
             var getCorsi = _context.Tenere.Where(c => c.IdDocente == idDocente);
