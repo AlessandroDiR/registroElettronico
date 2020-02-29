@@ -1,10 +1,10 @@
 import React from "react"
-import { Modal, Icon, Spin, Upload, message } from "antd";
-import { routerHistory } from "../..";
-import { siteUrl, imageFileToBase64, superAdminRoute } from "../../utilities";
-import Axios from "axios";
-import { RouteComponentProps } from "react-router-dom";
-import { ICorso } from "../../models/ICorso";
+import { Modal, Icon, Spin, Upload, message } from "antd"
+import { routerHistory } from "../.."
+import { siteUrl, imageFileToBase64, superAdminRoute } from "../../utilities"
+import Axios from "axios"
+import { RouteComponentProps } from "react-router-dom"
+import { ICorso } from "../../models/ICorso"
 
 export interface IRouteParams{
     readonly id: string
@@ -117,7 +117,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         )
 
         if(!corso){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
@@ -131,7 +131,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
                 <div className="form-group mr-3">
                     <label className="text-secondary d-block">Logo</label>
                     <Upload listType="picture-card" showUploadList={false} beforeUpload={(file) => this.convertImage(file)} className="logo-upload" accept="image/*">
-                        {logo ? <img src={logo} alt="logo" style={{ width: '100%' }} /> : uploadButton}
+                        {logo ? <img src={logo} alt="logo" style={{ width: "100%" }} /> : uploadButton}
                     </Upload>
                 </div>
 

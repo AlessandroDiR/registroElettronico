@@ -1,7 +1,7 @@
 import React from "react"
-import { Icon, Modal, Tooltip, Tabs } from "antd";
-import ImageScale from "../ImageScale";
-import ConfigForm from "./ConfigForm";
+import { Icon, Modal, Tooltip, Tabs } from "antd"
+import ImageScale from "../ImageScale"
+import ConfigForm from "./ConfigForm"
 
 export interface IProps{
     readonly corso: number
@@ -35,11 +35,11 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
             </div>
         })
 
-        setTimeout(() => document.getElementsByClassName('ant-modal-wrap')[0].scrollTo(0, 0), 100);
+        setTimeout(() => document.getElementsByClassName("ant-modal-wrap")[0].scrollTo(0, 0), 100)
     }
 
     render(): JSX.Element{
-        const { TabPane } = Tabs;
+        const { TabPane } = Tabs
 
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">

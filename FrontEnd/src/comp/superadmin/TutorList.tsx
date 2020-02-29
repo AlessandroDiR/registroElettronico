@@ -1,9 +1,9 @@
 import React from "react"
-import Axios from "axios";
-import { siteUrl, superAdminRoute } from "../../utilities";
-import { Icon, Spin, Tooltip } from "antd";
-import { routerHistory } from "../..";
-import { ITutor } from "../../models/ITutor";
+import Axios from "axios"
+import { siteUrl, superAdminRoute } from "../../utilities"
+import { Icon, Spin, Tooltip } from "antd"
+import { routerHistory } from "../.."
+import { ITutor } from "../../models/ITutor"
 
 export interface IProps{}
 export interface IState{
@@ -33,7 +33,7 @@ export default class TutorList extends React.PureComponent<IProps, IState>{
         const { tutor } = this.state
         
         if(!tutor){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />

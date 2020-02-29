@@ -1,9 +1,9 @@
 import React from "react"
-import { ILezione } from "../../models/ILezione";
-import { Icon, Spin, Tooltip } from "antd";
-import { routerHistory } from "../..";
-import Axios from "axios";
-import { siteUrl, formatItalian } from "../../utilities";
+import { ILezione } from "../../models/ILezione"
+import { Icon, Spin, Tooltip } from "antd"
+import { routerHistory } from "../.."
+import Axios from "axios"
+import { siteUrl, formatItalian } from "../../utilities"
 
 export interface IProps{
     readonly idDocente: number
@@ -39,7 +39,7 @@ export default class LezioniDocente extends React.PureComponent<IProps, IState>{
         const { lezioni } = this.state
         
         if(!lezioni){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />

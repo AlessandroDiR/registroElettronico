@@ -1,23 +1,22 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { createHashHistory } from 'history'
-import './index.scss'
-import * as serviceWorker from './serviceWorker'
-import Main from './comp/Main'
-import { Router, Switch, Route } from 'react-router-dom'
-import Dashboard from './comp/admin/Dashboard'
-import UserApplication from './comp/mobile/UserApplication'
-import DocentiDashboard from './comp/docenti/DocentiDashboard'
-import Page404 from './comp/Page404'
-import moment from 'moment';
-import 'moment/locale/it';
-import SuperDashboard from './comp/superadmin/SuperDashboard'
-import { superAdminRoute, adminRoute, docentiRoute } from './utilities'
+import React from "react"
+import ReactDOM from "react-dom"
+import { createHashHistory } from "history"
+import "./index.scss"
+import * as serviceWorker from "./serviceWorker"
+import Main from "./comp/Main"
+import { Router, Switch, Route } from "react-router-dom"
+import Dashboard from "./comp/admin/Dashboard"
+import UserApplication from "./comp/mobile/UserApplication"
+import DocentiDashboard from "./comp/docenti/DocentiDashboard"
+import Page404 from "./comp/Page404"
+import moment from "moment"
+import "moment/locale/it"
+import SuperDashboard from "./comp/superadmin/SuperDashboard"
+import { superAdminRoute, adminRoute, docentiRoute } from "./utilities"
 
-moment.locale('it')
+moment.locale("it")
 
 export const routerHistory = createHashHistory()
-
 
 ReactDOM.render(<Router history={routerHistory}>
     <Switch>
@@ -49,7 +48,7 @@ ReactDOM.render(<Router history={routerHistory}>
 
         <Route render={() => <Page404 goTo="/" />} />
     </Switch>
-</Router>, document.getElementById('root'))
+</Router>, document.getElementById("root"))
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

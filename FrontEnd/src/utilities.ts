@@ -91,23 +91,23 @@ export const getDateYear = (d: string) => {
 }
 
 export const capitalizeFirst = (name: string) => {
-    let splitStr = capitalizeQuote(name.toLowerCase()).split(' ')
+    let splitStr = capitalizeQuote(name.toLowerCase()).split(" ")
 
-    for (var i = 0; i < splitStr.length; i++) {
-        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);    
+    for (let i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1) 
     }
    
-    return splitStr.join(' '); 
+    return splitStr.join(" ")
 }
 
 export const capitalizeQuote = (name: string) => {
     let splitStr = name.toLowerCase().split("'")
 
-    for (var i = 0; i < splitStr.length; i++) {
-        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);    
+    for (let i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1)
     }
    
-    return splitStr.join("'"); 
+    return splitStr.join("'")
 }
 
 export const mountLogin = () => {
@@ -124,18 +124,18 @@ export const unmountLogin = () => {
 export const imageFileToBase64 = async (file: any) => {
     function readImageFile(file: any){
         return new Promise((resolve, reject) => {
-            let reader = new FileReader();
+            let reader = new FileReader()
         
             reader.onload = e => {
                 let base64Img = new Buffer(e.target.result as any, "binary").toString("base64"),
                 src = "data:image/png;base64," + base64Img
 
                 resolve(src)
-            };
+            }
         
-            reader.onerror = reject;
+            reader.onerror = reject
         
-            reader.readAsArrayBuffer(file);
+            reader.readAsArrayBuffer(file)
         })     
     }
 

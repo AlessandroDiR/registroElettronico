@@ -98,7 +98,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
                 <div className="form-group mr-3">
                     <label className="text-secondary d-block">Logo</label>
                     <Upload listType="picture-card" showUploadList={false} beforeUpload={(file) => this.convertImage(file)} className="logo-upload" accept="image/*">
-                        {logo ? <img src={logo} alt="logo" style={{ width: '100%' }} /> : uploadButton}
+                        {logo ? <img src={logo} alt="logo" style={{ width: "100%" }} /> : uploadButton}
                     </Upload>
                 </div>
                 

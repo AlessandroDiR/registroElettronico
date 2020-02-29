@@ -1,7 +1,7 @@
 import React from "react"
-import { Spin, Icon } from "antd";
+import { Spin, Icon } from "antd"
 import QRCode from "qrcode.react"
-import Axios from "axios";
+import Axios from "axios"
 
 export interface IProps{
     studentId: number
@@ -43,7 +43,7 @@ export default class QRCodeScreen extends React.PureComponent<IProps, IState>{
         const { code } = this.state
 
         if(!code){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div>
                 <Spin indicator={icon} />

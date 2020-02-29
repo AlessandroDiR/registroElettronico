@@ -1,12 +1,12 @@
-import React from 'react'
-import { RouteComponentProps } from 'react-router'
-import { routerHistory } from '../..'
-import { Icon, Spin, Modal, Button, Statistic } from 'antd'
-import Axios from 'axios'
-import { IDocente } from '../../models/IDocente'
-import LezioniDocenteTable from './LezioniDocenteTable'
-import { siteUrl, adminRoute } from '../../utilities'
-import { Cipher } from '../../models/Cipher'
+import React from "react"
+import { RouteComponentProps } from "react-router"
+import { routerHistory } from "../.."
+import { Icon, Spin, Modal, Button, Statistic } from "antd"
+import Axios from "axios"
+import { IDocente } from "../../models/IDocente"
+import LezioniDocenteTable from "./LezioniDocenteTable"
+import { siteUrl, adminRoute } from "../../utilities"
+import { Cipher } from "../../models/Cipher"
 import QRCode from "qrcode.react"
 
 
@@ -75,7 +75,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
         const { docente, modal } = this.state
 
         if(!docente){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />

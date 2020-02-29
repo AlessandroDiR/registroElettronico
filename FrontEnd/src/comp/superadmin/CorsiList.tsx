@@ -1,9 +1,9 @@
 import React from "react"
-import { ICorso } from "../../models/ICorso";
-import Axios from "axios";
-import { siteUrl, superAdminRoute } from "../../utilities";
-import { Icon, Spin, Tooltip } from "antd";
-import { routerHistory } from "../..";
+import { ICorso } from "../../models/ICorso"
+import Axios from "axios"
+import { siteUrl, superAdminRoute } from "../../utilities"
+import { Icon, Spin, Tooltip } from "antd"
+import { routerHistory } from "../.."
 
 export interface IProps{}
 export interface IState{
@@ -33,7 +33,7 @@ export default class CorsiList extends React.PureComponent<IProps, IState>{
         const { corsi } = this.state
         
         if(!corsi){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
