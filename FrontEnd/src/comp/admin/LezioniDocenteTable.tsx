@@ -163,7 +163,9 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
                                 <span id={"uscitaSpan_"+p.idPresenza}>{p.uscita}</span>
                                 <input type="text" className="form-control edit-time" value={uscitaEdit} style={{display: "none"}} onChange={this.changeUscita} id={"uscitaInput_"+p.idPresenza} />
                             </td>
-                            <td style={{maxWidth: 0}} className="text-truncate">{p.lezione}</td>
+                            <Tooltip title={p.lezione}>
+                                <td style={{maxWidth: 0}} className="text-truncate">{p.lezione}</td>
+                            </Tooltip>
                             <td>
                                 <Tooltip title="Modifica orari">
                                     <button type="button" className="btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p.idPresenza)} id={"editBtn_"+p.idPresenza}>
