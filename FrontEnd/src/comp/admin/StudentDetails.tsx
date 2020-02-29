@@ -109,7 +109,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
             </div>
         }
 
-        let perc = student.frequenza ? this.roundToTwo(100 * totPresenze / oreTotali) : null,
+        let perc = student.frequenza !== null ? this.roundToTwo(100 * totPresenze / oreTotali) : null,
         color = perc >= 80 ? "var(--success)" : "var(--danger)"
 
         return <div className="col px-5 py-4 right-block">

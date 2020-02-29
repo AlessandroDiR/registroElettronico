@@ -29,6 +29,9 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
     }
 
     componentDidMount = () => {
+        // let id = parseInt(sessionStorage.getItem("corso")),
+        // classe = parseInt(sessionStorage.getItem("classe"))
+        
         /************************************/
         /* CARICAMENTO CALENDARIO IN BASE A */
         /* sessionStorage.getItem("corso")  */
@@ -48,6 +51,7 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
         }
 
         return <div className="col px-5 py-3" id="mainBlock">
+            
             <FullCalendar
                 plugins={[ googleCalendarPlugin, dayGridPlugin ]}
                 events={ { googleCalendarId: calendar.calendarId} }

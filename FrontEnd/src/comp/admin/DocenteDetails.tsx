@@ -102,7 +102,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
 
                 <div className="col-12 col-md-3 pr-md-0">
                     <div className="p-3 bg-white border rounded text-center" style={{ display: "flex", height: "100%", alignItems: "center", justifyContent: "center" }}>
-                        <Statistic title="Ore tenute" value={docente.monteOre} />
+                        <Statistic title="Ore svolte" value={docente.monteOre} />
                     </div>
                 </div>
             </div>
