@@ -38,7 +38,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
     }
 
     changeEntrata = (event: any) => {
-        let entrata = event.target.value
+        let entrata = event.target.value.trim()
 
         this.setState({
             entrataEdit: entrata
@@ -46,7 +46,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
     }
 
     changeUscita = (event: any) => {
-        let uscita = event.target.value
+        let uscita = event.target.value.trim()
 
         this.setState({
             uscitaEdit: uscita
@@ -83,7 +83,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
         if(!validateTime(entrataEdit) || !validateTime(uscitaEdit)){
             Modal.error({
                 title: "Errore!",
-                content: "Orari non validi!",
+                content: "Orari non validi! (ore:minuti:secondi)",
                 maskClosable: true
             })
 

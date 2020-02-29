@@ -157,14 +157,14 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     allRetired = (group: IStudent[]) => {
-        let allRetired = true
+        let allRetired = false
 
         group.forEach(s => {
-            if(!s.ritirato)
-                allRetired = false
+            if(s.ritirato)
+                allRetired = true
         })
 
-        return !allRetired
+        return allRetired
     }
 
     sortbyId = (a: IStudent, b: IStudent) => { 

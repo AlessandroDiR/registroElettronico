@@ -63,6 +63,8 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
             return
         }
 
+        // TRIM DATI
+
         /*************************************************/
         /* CREAZIONE NUOVO CORSO E POI MOSTRARE MODAL    */
         /*************************************************/

@@ -28,7 +28,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
     }
 
     changeID = (e: any) => {
-        let calendarId = e.target.value
+        let calendarId = e.target.value.trim()
 
         this.setState({
             calendarId: calendarId
@@ -36,7 +36,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
     }
 
     changeKey = (e: any) => {
-        let apiKey = e.target.value
+        let apiKey = e.target.value.trim()
 
         this.setState({
             apiKey: apiKey
@@ -64,7 +64,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
 
         // SE IL CALENDARIO NON È CARICATO SPIN
 
-        return <form>
+        return <form className="p-1">
             <div className="form-group row">
                 <div className="col">
                     <label className="text-secondary">ID Calendario</label>
@@ -76,7 +76,8 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
                 </div>
             </div>
 
-            <button type="button" className="btn btn-success float-right mr-1 mb-1" onClick={this.saveConfig}>Salva configurazione</button>
+            <button type="button" className="btn btn-success float-right" onClick={this.saveConfig}>Salva configurazione</button>
+            <div className="clearfix"></div>
         </form>
     }
 }
