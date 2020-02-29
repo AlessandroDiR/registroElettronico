@@ -7,8 +7,8 @@ namespace ProjectWork.Models
     {
         public Corsi()
         {
-            Amministrare = new HashSet<Amministrare>();
             Comprende = new HashSet<Comprende>();
+            Coordina = new HashSet<Coordina>();
             Studenti = new HashSet<Studenti>();
             Tenere = new HashSet<Tenere>();
         }
@@ -18,8 +18,8 @@ namespace ProjectWork.Models
         public string Descrizione { get; set; }
         public string Luogo { get; set; }
 
-        public ICollection<Amministrare> Amministrare { get; set; }
         public ICollection<Comprende> Comprende { get; set; }
+        public ICollection<Coordina> Coordina { get; set; }
         public ICollection<Studenti> Studenti { get; set; }
         public ICollection<Tenere> Tenere { get; set; }
     }
