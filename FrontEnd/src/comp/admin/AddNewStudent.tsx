@@ -71,7 +71,7 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
     }
 
     changeCF = (event: any) => {
-        let CF = event.target.value
+        let CF = event.target.value.trim()
 
         this.setState({
             cf: CF
@@ -100,11 +100,11 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
         }
 
         let students = [{
-            nome: nome,
-            cognome: cognome,
+            nome: nome.trim(),
+            cognome: cognome.trim(),
             cf: cf,
             password: cf,
-            email: email,
+            email: email.trim(),
             annoFrequentazione: annoScolastico,
             dataNascita: formattaData(dataNascita, true),
             idCorso: this.props.corso

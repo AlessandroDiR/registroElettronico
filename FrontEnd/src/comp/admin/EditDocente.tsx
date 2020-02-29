@@ -106,7 +106,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
     }
 
     changeCF = (event: any) => {
-        let CF = event.target.value
+        let CF = event.target.value.trim()
 
         this.setState({
             CF: CF
@@ -154,9 +154,9 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
 
         Axios.put(siteUrl+"/api/docenti/" + this.props.match.params.id, {
             idDocente: parseInt(this.props.match.params.id),
-            nome: nome,
-            cognome: cognome,
-            email: email,
+            nome: nome.trim(),
+            cognome: cognome.trim(),
+            email: email.trim(),
             cf: CF,
             tenere: corsiSel.map(c => { return { idCorso: c, idDocente: docente.idDocente } }),
             insegnare: materieSel.map(m => { return { idMateria: m, idDocente: docente.idDocente } }),
