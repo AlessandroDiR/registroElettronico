@@ -34,7 +34,7 @@ namespace ProjectWork
                         options.UseSqlServer(Configuration.GetConnectionString("Server=tcp:avocado-db.database.windows.net,1433;Database=AvocadoDB;User ID=alessandro;Password=Mpslc.98;Encrypt=true;Connection Timeout=30;")));
             else
                 services.AddDbContext<AvocadoDBContext>(options =>
-                        options.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;"));
+                        options.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;"));
 
             // Automatically perform database migration
             services.BuildServiceProvider().GetService<AvocadoDBContext>().Database.Migrate();
