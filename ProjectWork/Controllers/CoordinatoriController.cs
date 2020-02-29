@@ -92,7 +92,7 @@
 //            }
 
 //            var coord = await _context.Coordinatori.SingleOrDefaultAsync(d => d.Cf == cred.username && d.Password == cred.password);
-            
+
 //            if (coord == null)
 //            {
 //                return Ok("error");
