@@ -152,14 +152,14 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.monteOre}</td>
                                     <td>
                                         <Tooltip title="Dettagli">
-                                            <button type="button" className="btn btn-info circle-btn mr-2" onClick={() => routerHistory.push(adminRoute+"/docenti/" + d.idDocente)}>
+                                            <button type="button" className="btn btn-info circle-btn" onClick={() => routerHistory.push(adminRoute+"/docenti/" + d.idDocente)}>
                                                 <i className="fa fa-info"></i>
                                             </button>
                                         </Tooltip>
 
                                         {
                                             !d.ritirato && <Tooltip title="Modifica">
-                                                <button type="button" className="btn btn-warning text-white circle-btn mr-2" onClick={() => routerHistory.push(adminRoute+"/docenti/edit/" + d.idDocente)}>
+                                                <button type="button" className="btn btn-warning text-white circle-btn ml-2" onClick={() => routerHistory.push(adminRoute+"/docenti/edit/" + d.idDocente)}>
                                                     <i className="fa fa-pen"></i>
                                                 </button>
                                             </Tooltip>
@@ -167,7 +167,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                                         
                                         {
                                             !d.ritirato && <Tooltip title="Segna come ritirato">
-                                                <button type="button" className="btn btn-danger circle-btn" onClick={() => this.showDeleteConfirm(d)}>
+                                                <button type="button" className="btn btn-danger circle-btn ml-2" onClick={() => this.showDeleteConfirm(d)}>
                                                     <i className="fa fa-user-times"></i>
                                                 </button>
                                             </Tooltip>
