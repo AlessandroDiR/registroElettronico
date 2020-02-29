@@ -320,13 +320,18 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
-            docenti.Ritirato = "True";
+            if ((docenti.Ritirato).ToLower() == "false")
+                docenti.Ritirato = "true";
+
+            else if ((docenti.Ritirato).ToLower() == "true")
+                docenti.Ritirato = "false";
 
             _context.Entry(docenti).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return Ok(docenti);
+            return GetDocenti();
         }
+
 
         private List<int> getCorsiDocente(int idDocente)
         {
