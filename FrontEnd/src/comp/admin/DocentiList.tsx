@@ -110,7 +110,6 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
     render(): JSX.Element{
         const { docenti, showAll } = this.state
 
-        
         if(!docenti){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
@@ -174,7 +173,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                                         }
 
                                         {
-                                            d.ritirato && <Tooltip title="Reintegra nel corso">
+                                            d.ritirato && this.isInCorso(d) && <Tooltip title="Reintegra nel corso">
                                                 <button type="button" className="btn btn-danger circle-btn ml-2" onClick={() => this.backRetire(d)}>
                                                     <i className="fa fa-reply"></i>
                                                 </button>

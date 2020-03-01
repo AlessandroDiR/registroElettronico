@@ -6,6 +6,7 @@ import { IPresenzaDocente } from "../../models/IPresenzaDocente"
 
 export interface IProps{
     readonly idDocente: string
+    readonly canEdit: boolean
 }
 export interface IState{
     readonly presenze: IPresenzaDocente[]
@@ -131,7 +132,8 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
     }
 
     render(): JSX.Element{
-        const { presenze, entrataEdit, uscitaEdit } = this.state
+        const { presenze, entrataEdit, uscitaEdit } = this.state,
+        { canEdit } = this.props
 
         if(!presenze){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
@@ -148,7 +150,9 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
                     <th>Entrata</th>
                     <th>Uscita</th>
                     <th>Lezione</th>
-                    <th>Azioni</th>
+                    {
+                        canEdit && <th>Azioni</th>
+                    }
                 </tr>
 
                 {
@@ -166,18 +170,20 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
                             <Tooltip title={p.lezione}>
                                 <td style={{maxWidth: 0}} className="text-truncate">{p.lezione}</td>
                             </Tooltip>
-                            <td>
-                                <Tooltip title="Modifica orari">
-                                    <button type="button" className="btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p.idPresenza)} id={"editBtn_"+p.idPresenza}>
-                                        <i className="fa fa-user-edit"></i>
-                                    </button>
-                                </Tooltip>
-                                <Tooltip title="Conferma modifiche">
-                                    <button type="button" className="btn btn-success circle-btn" onClick={() => this.confirmEdit(p.idPresenza)} id={"confirmBtn_"+p.idPresenza} style={{display: "none"}}>
-                                        <i className="fa fa-check"></i>
-                                    </button>
-                                </Tooltip>
-                            </td>
+                            {
+                                canEdit && <td>
+                                    <Tooltip title="Modifica orari">
+                                        <button type="button" className="btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p.idPresenza)} id={"editBtn_"+p.idPresenza}>
+                                            <i className="fa fa-user-edit"></i>
+                                        </button>
+                                    </Tooltip>
+                                    <Tooltip title="Conferma modifiche">
+                                        <button type="button" className="btn btn-success circle-btn" onClick={() => this.confirmEdit(p.idPresenza)} id={"confirmBtn_"+p.idPresenza} style={{display: "none"}}>
+                                            <i className="fa fa-check"></i>
+                                        </button>
+                                    </Tooltip>
+                                </td>
+                            }
                         </tr>
                     })
                 }

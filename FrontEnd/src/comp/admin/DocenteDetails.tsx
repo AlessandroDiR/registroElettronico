@@ -71,6 +71,10 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
         return code
     }
 
+    isInCorso = (doc: IDocente) => {
+        return doc.corsi.indexOf(this.props.corso) !== -1
+    }
+
     render(): JSX.Element{
         const { docente, modal } = this.state
 
@@ -108,7 +112,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
             </div>
 
             <h3 className="mt-3">Lezioni tenute dal docente</h3>
-            <LezioniDocenteTable idDocente={docente.idDocente} />
+            <LezioniDocenteTable idDocente={docente.idDocente} canEdit={this.isInCorso(docente)} />
 
             <Modal visible={modal} maskClosable={true} centered title={
                 <span>
