@@ -1,4 +1,4 @@
-export const siteUrl = "https://fitsign.azurewebsites.net"
+export const siteUrl = "http://localhost:5000"
 export const logoUrl = "https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png"
 
 export const adminRoute = "/adminpanel"

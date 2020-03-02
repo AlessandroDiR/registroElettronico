@@ -101,7 +101,7 @@ export default class UserCalendar extends React.PureComponent<IProps, IState> {
                                     <div className="col-3 pr-0">
                                         <span className="label">Luogo</span>
                                     </div>
-                                    <div className="col" style={{ fontSize: 15 }}>
+                                    <div className="col-9" style={{ fontSize: 15 }}>
                                         {event.extendedProps.location}
                                     </div>
                                 </div>

@@ -145,7 +145,6 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                 </div>
             </div>
 
-            <h3 className="mt-3">Presenze dello studente</h3>
             <PresenzeTable studente={student.idStudente} reloadTotali={this.loadTotali} />
             
             <Modal visible={modal} maskClosable={true} centered title={

@@ -27,6 +27,11 @@ export default class LogoCorso extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
+        if(!this.props.idCorso){
+            this.catchNull()
+            return
+        }
+        
         Axios.get(siteUrl+"/api/corsi/"+this.props.idCorso).then(response => {
             let corso = response.data as ICorso
 

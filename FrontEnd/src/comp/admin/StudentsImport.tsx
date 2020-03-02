@@ -215,7 +215,7 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 </Dragger>
             </div>
 
-            <div id="popup" className="col preview px-0">
+            <div id="popup" className="preview px-0">
                 <div className="w-100 h-100 inner overflow-auto px-5 py-4">
                     <h3 className="mb-3 text-center">Anteprima dati da importare</h3>
                     {

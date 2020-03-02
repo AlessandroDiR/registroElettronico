@@ -111,7 +111,6 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
                 </div>
             </div>
 
-            <h3 className="mt-3">Lezioni tenute dal docente</h3>
             <LezioniDocenteTable idDocente={docente.idDocente} canEdit={this.isInCorso(docente)} />
 
             <Modal visible={modal} maskClosable={true} centered title={
