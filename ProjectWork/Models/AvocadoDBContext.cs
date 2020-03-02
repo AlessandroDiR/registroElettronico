@@ -32,8 +32,10 @@ namespace ProjectWork.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
+                if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+                    optionsBuilder.UseSqlServer("Server=tcp:avo-server.database.windows.net,1433;Database=AvocadoDB;User ID=alessandro;Password=Mpslc.98;Encrypt=true;Connection Timeout=30;");
+                else
+                    optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 

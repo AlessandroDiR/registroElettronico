@@ -117,41 +117,22 @@ namespace ProjectWork.Controllers
             return Ok(studenti);
         }
 
-        // GET: api/Studenti/firma/codice
-        [HttpGet("[action]/{code}")]
-        public IActionResult Firma([FromRoute] string code)
+        // POST: api/Studenti/firma
+        [HttpPost("[action]")]
+        public IActionResult Firma([FromBody] FirmaModel firma)
         {
-            if (_ut.CheckCode(Encoder.encode(code)) != "studente")
+            if (_ut.CheckCode(Encoder.encode(firma.code)) != "studente")
             {
-                return RedirectToAction("Firma","Docenti", new { code });
+                return RedirectToAction("Firma","Docenti", new { firma.code });
             }
 
             // recupero lo studente, controllo se è ingresso o uscita e 
             // salvo la firma nel db con l'ora attuale. (LA TOLLERANZA VIENE CONSIDERATA DA PARTE DEL TUTOR)
 
-            var studente = _context.Studenti.SingleOrDefault(s => s.Cf == code);
+            var studente = _context.Studenti.Where(s => s.IdCorso == firma.idCorso && s.AnnoFrequentazione == firma.anno).SingleOrDefault(s => s.Cf == firma.code);
 
             return Ok(SalvaFirma(studente));
         }
-
-        // GET: api/studenti/coderequest/2
-        //[HttpGet("[action]/{idStudente}")]
-        //public async Task<IActionResult> CodeRequest([FromRoute] int idStudente)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    var studente = await _context.Studenti.SingleOrDefaultAsync(s => s.IdStudente == idStudente);
-
-        //    if (studente == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return Ok(Encoder.encode(studente.Cf));
-        //}
 
         [HttpGet("[action]/{idStudente}")]
         public async Task<IActionResult> GetHoursAmount([FromRoute] int idStudente)
