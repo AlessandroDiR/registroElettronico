@@ -43,7 +43,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
 
         Modal.confirm({
             title: `ATTENZIONE: si sta per ritirare un docente (${docente.nome} ${docente.cognome})`,
-            content: "I dati identificativi del docente, le lezioni e le presenze verranno comunque mantenuti.",
+            content: "I dati identificativi del docente, le lezioni e le presenze verranno comunque mantenuti, ma il docente verrà ritirato da tutti i corsi in cui insegna. In seguito sarà possibile reintegrarlo nel corso.",
             okText: "Confermo",
             okType: "danger",
             cancelText: "Annulla",
@@ -173,7 +173,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                                         }
 
                                         {
-                                            d.ritirato && this.isInCorso(d) && <Tooltip title="Reintegra nel corso">
+                                            d.ritirato && <Tooltip title="Reintegra nel corso">
                                                 <button type="button" className="btn btn-danger circle-btn ml-2" onClick={() => this.backRetire(d)}>
                                                     <i className="fa fa-reply"></i>
                                                 </button>
