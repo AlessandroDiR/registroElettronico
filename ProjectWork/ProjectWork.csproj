@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="3.2.1" />
     <PackageReference Include="Google.Apis.Calendar.v3" Version="1.43.0.1858" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
