@@ -24,6 +24,24 @@ namespace ProjectWork.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPresenze([FromRoute] int id, [FromBody] Presenze presenze)
         {
+            LogPresenze log = new LogPresenze();
+            log.DataOra = DateTime.Now;
+            log.IdPresenza = id;
+            log.IdStudente = presenze.IdStudente;
+            var lezione = _context.Lezioni.First(l => l.IdLezione == presenze.IdLezione);
+            log.IdCorso = lezione.IdCorso;
+            var presenzaNonModificata = _context.Presenze.First(p => p.IdPresenza == id);
+            log.Modifiche = "MODIFICHE = ";
+
+            if (presenze.Ingresso != presenzaNonModificata.Ingresso)
+            {
+                log.Modifiche += string.Format("Valore precedente ingresso : {0} - Valore attuale ingresso : {1}; ", presenzaNonModificata.Ingresso, presenze.Ingresso);
+            }
+
+            if (presenze.Uscita != presenzaNonModificata.Uscita)
+            {
+                log.Modifiche += string.Format("Valore precedente uscita : {0} - Valore attuale uscita : {1}; ", presenzaNonModificata.Uscita, presenze.Uscita);
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -33,7 +51,8 @@ namespace ProjectWork.Controllers
             {
                 return BadRequest();
             }
-
+            _context.LogPresenze.Add(log);
+            _context.Remove(presenzaNonModificata);
             _context.Entry(presenze).State = EntityState.Modified;
 
             try

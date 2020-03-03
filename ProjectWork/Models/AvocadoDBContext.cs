@@ -33,10 +33,8 @@ namespace ProjectWork.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
-                    optionsBuilder.UseSqlServer("Server=tcp:avo-server.database.windows.net,1433;Database=AvocadoDB;User ID=alessandro;Password=Mpslc.98;Encrypt=true;Connection Timeout=30;");
-                else
-                    optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 
@@ -107,6 +105,8 @@ namespace ProjectWork.Models
                     .HasColumnName("cognome")
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.IdCorso).HasColumnName("id_corso");
 
                 entity.Property(e => e.Nome)
                     .IsRequired()
@@ -215,9 +215,13 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.IdLezione).HasColumnName("id_lezione");
 
+                entity.Property(e => e.Anno).HasColumnName("anno");
+
                 entity.Property(e => e.Data)
                     .HasColumnName("data")
                     .HasColumnType("date");
+
+                entity.Property(e => e.IdCorso).HasColumnName("id_corso");
 
                 entity.Property(e => e.IdMateria).HasColumnName("id_materia");
 
@@ -247,7 +251,7 @@ namespace ProjectWork.Models
                     .HasColumnName("data_ora")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.IdCoordinatore).HasColumnName("id_coordinatore");
+                entity.Property(e => e.IdCorso).HasColumnName("id_corso");
 
                 entity.Property(e => e.IdDocente).HasColumnName("id_docente");
 
@@ -255,9 +259,9 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.IdStudente).HasColumnName("id_studente");
 
-                entity.Property(e => e.ValorePrecedente)
+                entity.Property(e => e.Modifiche)
                     .IsRequired()
-                    .HasColumnName("valore_precedente")
+                    .HasColumnName("modifiche")
                     .HasMaxLength(255)
                     .IsUnicode(false);
             });
