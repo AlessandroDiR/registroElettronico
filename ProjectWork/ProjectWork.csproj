@@ -5,7 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <None Include="wwwroot\static\css\2.986fbe91.chunk.css.map" />
+    <None Include="wwwroot\static\css\main.7bb606e3.chunk.css.map" />
+    <None Include="wwwroot\static\js\2.07bbf165.chunk.js" />
+    <None Include="wwwroot\static\js\2.07bbf165.chunk.js.LICENSE" />
+    <None Include="wwwroot\static\js\2.07bbf165.chunk.js.map" />
+    <None Include="wwwroot\static\js\main.19653f6c.chunk.js" />
+    <None Include="wwwroot\static\js\main.19653f6c.chunk.js.map" />
+    <None Include="wwwroot\static\js\runtime-main.263c3f02.js" />
+    <None Include="wwwroot\static\js\runtime-main.263c3f02.js.map" />
   </ItemGroup>
 
   <ItemGroup>

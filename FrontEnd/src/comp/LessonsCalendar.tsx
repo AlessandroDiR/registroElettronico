@@ -1,13 +1,13 @@
-import React from 'react'
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import googleCalendarPlugin from '@fullcalendar/google-calendar'
-import { Digits2 } from '../utilities'
-import { Modal, Icon, Spin } from 'antd'
-import { ICalendar } from '../models/ICalendar'
+import React from "react"
+import FullCalendar from "@fullcalendar/react"
+import dayGridPlugin from "@fullcalendar/daygrid"
+import googleCalendarPlugin from "@fullcalendar/google-calendar"
+import { Digits2 } from "../utilities"
+import { Modal, Icon, Spin } from "antd"
+import { ICalendar } from "../models/ICalendar"
 
-import '@fullcalendar/core/main.css'
-import '@fullcalendar/timegrid/main.css'
+import "@fullcalendar/core/main.css"
+import "@fullcalendar/timegrid/main.css"
 
 export interface IProps{
     readonly corso?: number
@@ -59,19 +59,19 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
                 defaultView="dayGridMonth"
                 fixedWeekCount={false}
                 firstDay={1}
-                themeSystem={'bootstrap'}
+                themeSystem={"bootstrap"}
                 eventTimeFormat={{
-                    hour: '2-digit',
-                    minute: '2-digit',
+                    hour: "2-digit",
+                    minute: "2-digit",
                     meridiem: false
                 }}
                 buttonText={{
                     today: "Mese corrente"
                 }}
                 header={{
-                    right: 'prev, next'
+                    right: "prev, next"
                 }}
-                locale={'it'}
+                locale={"it"}
                 eventClick={
                     function(info){
                         info.jsEvent.preventDefault()
@@ -108,7 +108,7 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
                                         <div className="col-3 pr-0">
                                             <span className="label">Luogo</span>
                                         </div>
-                                        <div className="col" style={{ fontSize: 15 }}>
+                                        <div className="col-9" style={{ fontSize: 15 }}>
                                             {event.extendedProps.location}
                                         </div>
                                     </div>

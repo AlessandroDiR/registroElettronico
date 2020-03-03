@@ -27,6 +27,11 @@ export default class LogoCorso extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
+        if(!this.props.idCorso){
+            this.catchNull()
+            return
+        }
+        
         Axios.get(siteUrl+"/api/corsi/"+this.props.idCorso).then(response => {
             let corso = response.data as ICorso
 
@@ -47,7 +52,7 @@ export default class LogoCorso extends React.PureComponent<IProps, IState>{
         const { logo } = this.state
         
         if(!logo){
-            const icon = <Icon type="loading" style={{ fontSize: 50, color: "#fff" }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50, color: "#fff" }} spin />
 
             return <div className="text-center py-4">
                 <Spin indicator={icon} />

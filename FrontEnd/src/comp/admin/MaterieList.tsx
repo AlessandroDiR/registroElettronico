@@ -1,8 +1,8 @@
 import React from "react"
 import { Tooltip, Spin, Icon, Modal, message, Button } from "antd"
-import Axios from "axios";
-import { siteUrl } from "../../utilities";
-import { IMateria } from "../../models/IMateria";
+import Axios from "axios"
+import { siteUrl } from "../../utilities"
+import { IMateria } from "../../models/IMateria"
 
 export interface IProps{
     readonly corso: number
@@ -172,7 +172,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
         const { materie, nomeMateria, showModal, showEditModal, materiaEdit, nomeEdit, descMateria, descEdit } = this.state
         
         if(!materie){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />

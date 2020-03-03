@@ -56,7 +56,8 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
             return
         }
 
-        // SALVARE LA CONFIGURAZIONE
+        // SALVARE LA CONFIGURAZIONE this.props.corso e this.props.anno
+        
         message.success("Configurazione calendario salvata!")
     }
     render(): JSX.Element{

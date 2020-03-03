@@ -1,14 +1,14 @@
 import React from "react"
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from '@fullcalendar/daygrid';
-import { Digits2 } from "../../utilities";
-import googleCalendarPlugin from '@fullcalendar/google-calendar';
-import { Modal, Icon, Spin } from "antd";
-import { ICalendar } from "../../models/ICalendar";
-import { IStudent } from "../../models/IStudent";
+import FullCalendar from "@fullcalendar/react"
+import dayGridPlugin from "@fullcalendar/daygrid"
+import { Digits2 } from "../../utilities"
+import googleCalendarPlugin from "@fullcalendar/google-calendar"
+import { Modal, Icon, Spin } from "antd"
+import { ICalendar } from "../../models/ICalendar"
+import { IStudent } from "../../models/IStudent"
 
-import '@fullcalendar/core/main.css'
-import '@fullcalendar/timegrid/main.css';
+import "@fullcalendar/core/main.css"
+import "@fullcalendar/timegrid/main.css"
 
 export interface IProps{
     readonly student: IStudent
@@ -41,7 +41,7 @@ export default class UserCalendar extends React.PureComponent<IProps, IState> {
         const { calendar } = this.state
     
         if(!calendar){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
@@ -58,16 +58,16 @@ export default class UserCalendar extends React.PureComponent<IProps, IState> {
             fixedWeekCount={false}
             header={false}
             firstDay={1}
-            themeSystem={'bootstrap'}
+            themeSystem={"bootstrap"}
             eventTimeFormat={{
-                hour: '2-digit',
-                minute: '2-digit',
+                hour: "2-digit",
+                minute: "2-digit",
                 meridiem: false
             }}
-            locale={'it'}
+            locale={"it"}
             eventClick={
                 function(info){
-                    info.jsEvent.preventDefault();
+                    info.jsEvent.preventDefault()
                     let event = info.event
                     
                     Modal.info({
@@ -101,7 +101,7 @@ export default class UserCalendar extends React.PureComponent<IProps, IState> {
                                     <div className="col-3 pr-0">
                                         <span className="label">Luogo</span>
                                     </div>
-                                    <div className="col" style={{ fontSize: 15 }}>
+                                    <div className="col-9" style={{ fontSize: 15 }}>
                                         {event.extendedProps.location}
                                     </div>
                                 </div>

@@ -1,9 +1,9 @@
 import React from "react"
-import { IDocente } from "../../models/IDocente";
-import { routerHistory } from "../..";
+import { IDocente } from "../../models/IDocente"
+import { routerHistory } from "../.."
 import { Modal, Tooltip, Spin, Icon, Switch, message } from "antd"
-import Axios from "axios";
-import { siteUrl, adminRoute } from "../../utilities";
+import Axios from "axios"
+import { siteUrl, adminRoute } from "../../utilities"
 
 export interface IProps{
     readonly corso: number
@@ -42,11 +42,11 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
         let context = this
 
         Modal.confirm({
-            title: 'ATTENZIONE: si sta per ritirare un docente (' + docente.nome + ' ' + docente.cognome + ')',
-            content: 'I dati identificativi del docente, le lezioni e le presenze verranno comunque mantenuti.',
-            okText: 'Confermo',
-            okType: 'danger',
-            cancelText: 'Annulla',
+            title: `ATTENZIONE: si sta per ritirare un docente (${docente.nome} ${docente.cognome})`,
+            content: "I dati identificativi del docente, le lezioni e le presenze verranno comunque mantenuti, ma il docente verrà ritirato da tutti i corsi in cui insegna. In seguito sarà possibile reintegrarlo nel corso.",
+            okText: "Confermo",
+            okType: "danger",
+            cancelText: "Annulla",
             onOk: () => {
                 context.setState({
                     docenti: null
@@ -81,9 +81,9 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
         Modal.confirm({
             title: `${doc.nome} ${doc.cognome}`,
             content: "Questo docente verrà reintegrato all'interno del corso.",
-            okText: 'Confermo',
-            okType: 'danger',
-            cancelText: 'Annulla',
+            okText: "Confermo",
+            okType: "danger",
+            cancelText: "Annulla",
             onOk: () => {
                 context.setState({
                     docenti: null
@@ -110,9 +110,8 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
     render(): JSX.Element{
         const { docenti, showAll } = this.state
 
-        
         if(!docenti){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />

@@ -1,10 +1,10 @@
 import React from "react"
-import { IStudent } from "../../models/IStudent";
-import { routerHistory } from "../..";
+import { IStudent } from "../../models/IStudent"
+import { routerHistory } from "../.."
 import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse, DatePicker, message } from "antd"
-import Axios from "axios";
-import { siteUrl, formattaData, adminRoute } from "../../utilities";
-import locale from 'antd/es/date-picker/locale/it_IT';
+import Axios from "axios"
+import { siteUrl, formattaData, adminRoute } from "../../utilities"
+import locale from "antd/es/date-picker/locale/it_IT"
 
 export interface IProps{
     readonly corso: number
@@ -14,8 +14,6 @@ export interface IState{
     readonly selection: IStudent[]
     readonly confirmModal: boolean
 }
-
-const { Panel } = Collapse;
 
 export default class StudentsList extends React.PureComponent<IProps, IState>{
 
@@ -43,16 +41,16 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         context = this
 
         Modal.confirm({
-            title: 'ATTENZIONE: si sta per ritirare uno studente (' + student.nome + ' ' + student.cognome + ')',
+            title: `ATTENZIONE: si sta per ritirare uno studente (${student.nome} ${student.cognome})`,
             content: <div style={{ marginLeft: -38 }}>
                 <p>I dati identificativi dello studente e le sue frequenze verranno comunque mantenuti.</p>
                 <label className="text-secondary">Data di ritiro</label>
                 
                 <DatePicker locale={locale} className="w-100" onChange={(_, d2) => date = d2} format="DD-MM-YYYY" />
             </div>,
-            okText: 'Conferma ritiro',
-            okType: 'danger',
-            cancelText: 'Annulla',
+            okText: "Conferma ritiro",
+            okType: "danger",
+            cancelText: "Annulla",
             onOk() {
                 if(date === ""){
                     Modal.error({
@@ -157,14 +155,14 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     allRetired = (group: IStudent[]) => {
-        let allRetired = false
+        let allRetired = true
 
         group.forEach(s => {
-            if(s.ritirato)
-                allRetired = true
+            if(!s.ritirato)
+                allRetired = false
         })
 
-        return allRetired
+        return !allRetired
     }
 
     sortbyId = (a: IStudent, b: IStudent) => { 
@@ -177,10 +175,11 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { students, selection } = this.state
+        const { students, selection } = this.state,
+        { Panel } = Collapse
         
         if(!students){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />

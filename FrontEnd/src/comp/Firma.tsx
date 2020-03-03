@@ -15,6 +15,8 @@ export interface IState{
 }
 
 export default class Firma extends React.PureComponent<IProps, IState>{
+    maxLength = 16
+
     constructor(props: IProps){
         super(props)
 
@@ -50,15 +52,24 @@ export default class Firma extends React.PureComponent<IProps, IState>{
     }
 
     tryToLog = (code: string) => {
-        if(code.length < 16) return false
+        if(code.length < this.maxLength) return false
+
+        this.switchInput(true)
+
+        let idCorso = parseInt(sessionStorage.getItem("corso")),
+        anno = parseInt(sessionStorage.getItem("classe"))
         
-        axios.get(siteUrl + "/api/studenti/firma/" + code).then((response) => {
+        axios.post(siteUrl + "/api/studenti/firma", {
+            code: code,
+            idCorso: idCorso,
+            anno: anno
+        }).then((response) => {
             this.setState({
                 popup: response.data as IMessage
             })
 
             this.showMessagePopup()
-        }).catch((err) => {
+        }).catch((_) => {
             this.setState({
                 popup: genericError
             })
@@ -67,20 +78,30 @@ export default class Firma extends React.PureComponent<IProps, IState>{
         })
     }
 
-    showMessagePopup = () => {
-        let popup = document.getElementById("popup"),
-        input = document.getElementById("mainInput") as HTMLInputElement
+    switchInput = (disable: boolean) => {
+        let input = document.getElementById("mainInput") as HTMLInputElement
 
-        if(!input && !popup) return false
+        if(!input) return
 
-        popup.classList.add("show")
-        input.setAttribute("disabled", "disabled")
-
-        setTimeout(() => {
-            popup.classList.remove("show")
+        if(disable)
+            input.setAttribute("disabled", "disabled")
+        else{
             input.value = ""
             input.removeAttribute("disabled")
             input.focus()
+        }
+    }
+
+    showMessagePopup = () => {
+        let popup = document.getElementById("popup")
+
+        if(!popup) return
+
+        popup.classList.add("show")
+
+        setTimeout(() => {
+            popup.classList.remove("show")
+            this.switchInput(false)
         }, this.state.popup.time)
     }
 
@@ -98,7 +119,7 @@ export default class Firma extends React.PureComponent<IProps, IState>{
         return <div className="col" id="mainBlock">
             <div className="text-center w-100">
                 <h2 className="text-center my-3 font-weight-normal">Scannerizza il codice</h2>
-                <input autoFocus type="password" className="form-control text-center mx-auto shadow-sm font-weight-normal" value={this.state.code} onChange={this.changeCode} maxLength={24} id="mainInput" />
+                <input autoFocus type="password" className="form-control text-center mx-auto shadow-sm font-weight-normal" value={this.state.code} onChange={this.changeCode} maxLength={this.maxLength} id="mainInput" />
 
                 <div className="top-info">
                         {
@@ -118,7 +139,7 @@ export default class Firma extends React.PureComponent<IProps, IState>{
                 </div>
             </div>
 
-            <div id="popup" className="col">
+            <div id="popup">
                 <div className="w-100">
                     <i className={"fal fa-fw fa-lg fa-6x " + popup.icon} style={{ color: popup.iconColor}}></i>
                     <h2 className="mt-5">{popup.title}</h2>

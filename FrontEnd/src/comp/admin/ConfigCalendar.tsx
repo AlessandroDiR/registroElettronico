@@ -1,7 +1,7 @@
 import React from "react"
-import { Icon, Modal, Tooltip, Tabs } from "antd";
-import ImageScale from "../ImageScale";
-import ConfigForm from "./ConfigForm";
+import { Icon, Modal, Tooltip, Tabs } from "antd"
+import ImageScale from "../ImageScale"
+import ConfigForm from "./ConfigForm"
 
 export interface IProps{
     readonly corso: number
@@ -27,7 +27,7 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
                 <u className="d-block">Ricordare che l'API Key può essere la stessa per entrambi i calendari (primo e secondo anno).</u>
                 </p>
                 <strong>ID del calendario</strong>
-                <p>Per trovare l'ID (identificativo) del calendario, basterà effettuare l'accesso su <a href="https://calendar.google.com/" target="_blank" rel="noopener noreferrer">Google Calendar <i className="far fa-external-link"></i></a> con un account che abbia integrato il calendario del corso. Bisognerà poi premere sul simbolo <i className="far fa-cog"></i> in alto a destra e successivamente su <strong>Impostazioni</strong> nel menu che comparirà. Scorrere quindi la lista a sinistra della pagina, e cliccare sul calendario che si desidera integrare. Recarsi quindi sotto la voce <strong>Integra calendario</strong> e copiare (subito in basso) il codice identificativo del calendario (<strong>ID calendario</strong>), per poi incollarlo in questa pagina di configurazione.</p>
+                <p>Per trovare l'ID (identificativo) del calendario, basterà effettuare l'accesso su <a href="https://calendar.google.com/" target="_blank" rel="noopener noreferrer">Google Calendar <i className="far fa-external-link"></i></a> con un account che abbia integrato il calendario del corso. Bisognerà poi premere sul simbolo <i className="far fa-cog"></i> in alto a destra e successivamente su <strong>Impostazioni</strong> nel menu che comparirà. Scorrere quindi la lista a sinistra della pagina, e cliccare sul calendario che si desidera integrare. Recarsi sotto la voce <strong>Integra calendario</strong> e copiare (subito in basso) il codice identificativo del calendario (<strong>ID calendario</strong>), per poi incollarlo in questa pagina di configurazione.</p>
                 <strong className="d-block mb-2">Galleria immagini</strong>
                 <ImageScale src="https://i.imgur.com/u1qM1oD.png" width={143} />
                 <ImageScale src="https://i.imgur.com/g0IjAtJ.png" scalable={true} height={100} />
@@ -35,11 +35,11 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
             </div>
         })
 
-        setTimeout(() => document.getElementsByClassName('ant-modal-wrap')[0].scrollTo(0, 0), 100);
+        setTimeout(() => document.getElementsByClassName("ant-modal-wrap")[0].scrollTo(0, 0), 100)
     }
 
     render(): JSX.Element{
-        const { TabPane } = Tabs;
+        const { TabPane } = Tabs
 
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">

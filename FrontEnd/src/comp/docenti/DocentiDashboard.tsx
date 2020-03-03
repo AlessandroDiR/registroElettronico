@@ -1,13 +1,13 @@
 import React from "react"
-import { NavLink, Route, Router, Switch } from 'react-router-dom';
+import { NavLink, Route, Router, Switch } from "react-router-dom"
 import { routerHistory } from "../.."
-import LoginDocenti from "./LoginDocenti";
-import LezioniDocente from "./LezioniDocente";
-import LezioneDetails from "./LezioneDetails";
-import { IAdminDocente } from "../../models/IAdminDocente";
-import LogoCorso from "../LogoCorso";
-import Page404 from "../Page404";
-import { docentiRoute } from "../../utilities";
+import LoginDocenti from "./LoginDocenti"
+import LezioniDocente from "./LezioniDocente"
+import LezioneDetails from "./LezioneDetails"
+import { IAdminDocente } from "../../models/IAdminDocente"
+import LogoCorso from "../LogoCorso"
+import Page404 from "../Page404"
+import { docentiRoute } from "../../utilities"
 
 export default class DocentiDashboard extends React.Component{
 

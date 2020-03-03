@@ -1,12 +1,12 @@
-import React from 'react'
-import { RouteComponentProps } from 'react-router'
-import { routerHistory } from '../..'
-import { Icon, Spin, Modal, Button, Statistic } from 'antd'
-import Axios from 'axios'
-import { IDocente } from '../../models/IDocente'
-import LezioniDocenteTable from './LezioniDocenteTable'
-import { siteUrl } from '../../utilities'
-import { Cipher } from '../../models/Cipher'
+import React from "react"
+import { RouteComponentProps } from "react-router"
+import { routerHistory } from "../.."
+import { Icon, Spin, Modal, Button, Statistic } from "antd"
+import Axios from "axios"
+import { IDocente } from "../../models/IDocente"
+import LezioniDocenteTable from "./LezioniDocenteTable"
+import { siteUrl, adminRoute } from "../../utilities"
+import { Cipher } from "../../models/Cipher"
 import QRCode from "qrcode.react"
 
 
@@ -36,7 +36,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
         let id = Number(this.props.match.params.id)
 
         if(isNaN(id))
-            routerHistory.push("/adminpanel")
+            routerHistory.push(adminRoute)
 
         Axios.get(siteUrl+"/api/docenti/getdocentibyid/" + id).then((response) => {
             this.setState({
@@ -71,11 +71,15 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
         return code
     }
 
+    isInCorso = (doc: IDocente) => {
+        return doc.corsi.indexOf(this.props.corso) !== -1
+    }
+
     render(): JSX.Element{
         const { docente, modal } = this.state
 
         if(!docente){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
@@ -107,8 +111,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
                 </div>
             </div>
 
-            <h3 className="mt-3">Lezioni tenute dal docente</h3>
-            <LezioniDocenteTable idDocente={docente.idDocente} />
+            <LezioniDocenteTable idDocente={docente.idDocente} canEdit={this.isInCorso(docente)} />
 
             <Modal visible={modal} maskClosable={true} centered title={
                 <span>

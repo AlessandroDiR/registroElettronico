@@ -1,12 +1,12 @@
 import React from "react"
-import { Modal, Icon, Spin, message, DatePicker } from "antd";
-import { routerHistory } from "../..";
-import { siteUrl, formattaData, formatItalian, adminRoute } from "../../utilities";
-import Axios from "axios";
-import { RouteComponentProps } from "react-router-dom";
-import { IStudent } from "../../models/IStudent";
-import locale from 'antd/es/date-picker/locale/it_IT';
-import moment from 'moment';
+import { Modal, Icon, Spin, message, DatePicker } from "antd"
+import { routerHistory } from "../.."
+import { siteUrl, formattaData, formatItalian, adminRoute } from "../../utilities"
+import Axios from "axios"
+import { RouteComponentProps } from "react-router-dom"
+import { IStudent } from "../../models/IStudent"
+import locale from "antd/es/date-picker/locale/it_IT"
+import moment from "moment"
 
 export interface IRouteParams{
     readonly id: string
@@ -42,7 +42,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
         let id = Number(this.props.match.params.id)
 
         if(isNaN(id))
-            routerHistory.push("/adminpanel")
+            routerHistory.push(adminRoute)
 
         Axios.get(siteUrl+"/api/studenti/getstudentibyid/" + id).then((response) => {
             let stu = response.data as IStudent
@@ -139,7 +139,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
         const { nome, cognome, dataNascita, CF, studente, email } = this.state
 
         if(!studente){
-            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
@@ -164,7 +164,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">Data di nascita</label>
-                        <DatePicker locale={locale} className="w-100 select-date" onChange={(_, d2) => this.changeData(d2)} format="DD-MM-YYYY" defaultValue={moment(dataNascita, 'DD-MM-YYYY')} />
+                        <DatePicker locale={locale} className="w-100 select-date" onChange={(_, d2) => this.changeData(d2)} format="DD-MM-YYYY" defaultValue={moment(dataNascita, "DD-MM-YYYY")} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">E-mail</label>

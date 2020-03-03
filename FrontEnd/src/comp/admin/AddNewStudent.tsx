@@ -3,7 +3,7 @@ import { Modal, message, DatePicker } from "antd"
 import { routerHistory } from "../.."
 import { siteUrl, formattaData, adminRoute } from "../../utilities"
 import Axios from "axios"
-import locale from 'antd/es/date-picker/locale/it_IT';
+import locale from "antd/es/date-picker/locale/it_IT"
 
 export interface IProps{
     readonly corso: number

@@ -11,5 +11,6 @@
     <WebStackScaffolding_DbContextTypeFullName>ProjectWork.Models.AvocadoDBContext</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
     <ShowAllFiles>true</ShowAllFiles>
+    <NameOfLastUsedPublishProfile>avocadoapi - Web Deploy</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
