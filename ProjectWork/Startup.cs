@@ -31,7 +31,7 @@ namespace ProjectWork
             // Use SQL Database if in Azure, otherwise, use SQLite
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
                 services.AddDbContext<AvocadoDBContext>(options =>
-                        options.UseSqlServer(Configuration.GetConnectionString("Server=tcp:avocado-db.database.windows.net,1433;Database=AvocadoDB;User ID=alessandro;Password=Mpslc.98;Encrypt=true;Connection Timeout=30;")));
+                        options.UseSqlServer("Server=tcp:avo-server.database.windows.net,1433;Database=AvocadoDB;User ID=alessandro;Password=Mpslc.98;Encrypt=true;Connection Timeout=30;"));
             else
                 services.AddDbContext<AvocadoDBContext>(options =>
                         options.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;"));
@@ -64,6 +64,8 @@ namespace ProjectWork
                 app.UseHsts();
             }
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseCors("AllowAllHeaders");
