@@ -1,5 +1,7 @@
 import React from "react"
 import { Modal, message } from "antd"
+import Axios from "axios"
+import { siteUrl } from "../../utilities"
 
 export interface IProps{
     readonly anno: number
@@ -7,7 +9,6 @@ export interface IProps{
 }
 export interface IState{
     readonly calendarId: string
-    readonly apiKey: string
 }
 
 export default class ConfigForm extends React.PureComponent<IProps, IState>{
@@ -15,8 +16,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
         super(props)
 
         this.state = {
-            calendarId: "",
-            apiKey: ""
+            calendarId: ""
         }
     }
 
@@ -35,19 +35,11 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
         })
     }
 
-    changeKey = (e: any) => {
-        let apiKey = e.target.value
-
-        this.setState({
-            apiKey: apiKey
-        })
-    }
-
     saveConfig = () => {
         const { corso, anno } = this.props
-        const { calendarId, apiKey } = this.state
+        const { calendarId } = this.state
 
-        if(calendarId === "" || apiKey === ""){
+        if(calendarId === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -56,12 +48,16 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
             return
         }
 
-        // SALVARE LA CONFIGURAZIONE this.props.corso e this.props.anno
-        
-        message.success("Configurazione calendario salvata!")
+        Axios.post(siteUrl+"/api/configcalendario", {
+            idCorso: corso,
+            anno: anno,
+            calendarId: calendarId
+        }).then(_ => {
+            message.success("Configurazione calendario salvata!")
+        })
     }
     render(): JSX.Element{
-        const { calendarId, apiKey } = this.state
+        const { calendarId } = this.state
 
         // SE IL CALENDARIO NON È CARICATO SPIN
 
@@ -70,10 +66,6 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
                 <div className="col">
                     <label className="text-secondary">ID Calendario</label>
                     <input name="calendarID" type="text" className="form-control" value={calendarId} onChange={this.changeID} />
-                </div>
-                <div className="col">
-                    <label className="text-secondary">Chiave API</label>
-                    <input name="apiKey" type="text" className="form-control" value={apiKey} onChange={this.changeKey} />
                 </div>
             </div>
 

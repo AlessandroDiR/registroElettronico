@@ -1,4 +1,4 @@
-export const siteUrl = "https://avocadoapi.azurewebapps.net"
+export const siteUrl = "https://avocadoapi.azurewebsites.net"
 export const logoUrl = "https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png"
 
 export const adminRoute = "/adminpanel"
