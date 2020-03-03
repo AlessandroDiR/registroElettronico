@@ -22,6 +22,7 @@ namespace ProjectWork.Models
         public virtual DbSet<Docenti> Docenti { get; set; }
         public virtual DbSet<Insegnare> Insegnare { get; set; }
         public virtual DbSet<Lezioni> Lezioni { get; set; }
+        public virtual DbSet<LogPresenze> LogPresenze { get; set; }
         public virtual DbSet<Materie> Materie { get; set; }
         public virtual DbSet<Presenze> Presenze { get; set; }
         public virtual DbSet<PresenzeDocente> PresenzeDocente { get; set; }
@@ -230,6 +231,33 @@ namespace ProjectWork.Models
                     .WithMany(p => p.Lezioni)
                     .HasForeignKey(d => d.IdMateria)
                     .HasConstraintName("FK_Lezioni_Materie");
+            });
+
+            modelBuilder.Entity<LogPresenze>(entity =>
+            {
+                entity.HasKey(e => e.IdLog);
+
+                entity.ToTable("Log_presenze");
+
+                entity.Property(e => e.IdLog).HasColumnName("id_log");
+
+                entity.Property(e => e.DataOra)
+                    .HasColumnName("data_ora")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.IdCoordinatore).HasColumnName("id_coordinatore");
+
+                entity.Property(e => e.IdDocente).HasColumnName("id_docente");
+
+                entity.Property(e => e.IdPresenza).HasColumnName("id_presenza");
+
+                entity.Property(e => e.IdStudente).HasColumnName("id_studente");
+
+                entity.Property(e => e.ValorePrecedente)
+                    .IsRequired()
+                    .HasColumnName("valore_precedente")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Materie>(entity =>
