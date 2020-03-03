@@ -4,5 +4,5 @@ export interface ITutor{
     readonly nome: string
     readonly cognome: string
     readonly corso: string
-    readonly cf: string
+    readonly email: string
 }

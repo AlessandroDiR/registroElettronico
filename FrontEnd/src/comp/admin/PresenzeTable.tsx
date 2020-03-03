@@ -162,7 +162,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
 
             return <div>
-                <Spin indicator={icon} />
+                <Spin indicator={icon} className="mt-3" />
             </div>
         }
 
@@ -174,7 +174,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
 
             <div className="float-right">
                 <label className="d-inline-block text-secondary mr-2">Filtra per materia: </label>
-                <Select defaultValue="" style={{ width: 150 }} onChange={this.changeFilter}>
+                <Select defaultValue="" style={{ width: 150 }} onChange={this.changeFilter} showSearch>
                     <Option value="">Nessuna</Option>
                     {
                         this.getCategorie().map(l =>{
