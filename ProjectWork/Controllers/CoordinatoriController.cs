@@ -101,6 +101,7 @@ namespace ProjectWork.Controllers
             var corsoAmministrato = await _context.Coordina.SingleOrDefaultAsync(c => c.IdCoordinatore == coord.IdCoordinatore);
             var json = new
             {
+                idCoordinatore = coord.IdCoordinatore,
                 idCorso = corsoAmministrato.IdCorso,
                 nome = coord.Nome,
                 cognome = coord.Cognome
