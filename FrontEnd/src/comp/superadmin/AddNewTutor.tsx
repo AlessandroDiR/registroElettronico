@@ -9,7 +9,7 @@ export interface IProps{}
 export interface IState{
     readonly nome: string
     readonly cognome: string
-    readonly cf: string
+    readonly email: string
     readonly listaCorsi: ICorso[]
     readonly corso: number
 }
@@ -22,7 +22,7 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
         this.state = {
             nome: "",
             cognome: "",
-            cf: "",
+            email: "",
             listaCorsi: null,
             corso: null
         }
@@ -55,11 +55,11 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
         })
     }
 
-    changeCF = (event: any) => {
-        let cf = event.target.value
+    changeEmail = (event: any) => {
+        let email = event.target.value
 
         this.setState({
-            cf: cf
+            email: email
         })
     }
 
@@ -76,21 +76,12 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
     }
 
     aggiungiTutor = () => {
-        const { nome, cognome, cf, corso } = this.state
+        const { nome, cognome, email, corso } = this.state
 
-        if(nome === "" || cognome === "" || cf === ""){
+        if(nome === "" || cognome === "" || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
-            })
-
-            return
-        }
-
-        if(cf.length !== 16){
-            Modal.error({
-                title: "Errore!",
-                content: "Codice Fiscale non valido."
             })
 
             return
@@ -117,7 +108,7 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { nome, cognome, cf, listaCorsi } = this.state
+        const { nome, cognome, email, listaCorsi } = this.state
 
         if(!listaCorsi){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
@@ -144,8 +135,8 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
                 
                 <div className="form-group row">
                     <div className="col">
-                        <label className="text-secondary">Codice Fiscale</label>
-                        <input name="cf" type="text" className="form-control" maxLength={16} value={cf} onChange={this.changeCF} />
+                        <label className="text-secondary">E-mail</label>
+                        <input name="email" type="text" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Corso gestito</label>

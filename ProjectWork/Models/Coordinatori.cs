@@ -16,6 +16,7 @@ namespace ProjectWork.Models
         public string Cf { get; set; }
         public string Password { get; set; }
         public string UltimoLog { get; set; }
+        public int IdCorso { get; set; }
 
         public ICollection<Coordina> Coordina { get; set; }
     }
