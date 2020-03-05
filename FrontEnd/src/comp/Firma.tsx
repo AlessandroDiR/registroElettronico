@@ -122,20 +122,20 @@ export default class Firma extends React.PureComponent<IProps, IState>{
                 <input autoFocus type="password" className="form-control text-center mx-auto shadow-sm font-weight-normal" value={this.state.code} onChange={this.changeCode} maxLength={this.maxLength} id="mainInput" />
 
                 <div className="top-info">
-                        {
-                            corso ? corso.nome : <Spin indicator={icon} />
-                        }
-                    <Divider type="vertical" style={{ height: 20 }} />
-                        {
-                            parseInt(sessionStorage.getItem("classe")) === 1 ? "Primo anno" : "Secondo anno"
-                        }
-                    <Divider type="vertical" style={{ height: 20 }} />
-                        <Tooltip placement="bottomRight" title="Cambia il corso o la classe per firmare">
-                            <button type="button" className="btn btn-sm btn-blue" onClick={this.cambiaCorso}>
-                                <i className="far fa-repeat-alt fa-fw mr-1"></i>
-                                Cambia
-                            </button>
-                        </Tooltip>
+                    {
+                        corso ? corso.nome : <Spin indicator={icon} />
+                    }
+                        <Divider type="vertical" style={{ height: 20 }} />
+                    {
+                        parseInt(sessionStorage.getItem("classe")) === 1 ? "Primo anno" : "Secondo anno"
+                    }
+                        <Divider type="vertical" style={{ height: 20 }} />
+                    <Tooltip placement="bottomRight" title="Cambia il corso o la classe per firmare">
+                        <button type="button" className="btn btn-sm btn-blue" onClick={this.cambiaCorso}>
+                            <i className="far fa-repeat-alt fa-fw mr-1"></i>
+                            Cambia
+                        </button>
+                    </Tooltip>
                 </div>
             </div>
 

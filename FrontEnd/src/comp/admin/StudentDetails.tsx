@@ -47,7 +47,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
             })
         })
 
-        Axios.get(siteUrl+"/api/studenti/gettotaleorelezioni").then((response) => {
+        Axios.get(siteUrl+"/api/studenti/gettotaleorelezioni/" + id).then((response) => {
             this.setState({
                 oreTotali: this.roundToTwo(response.data as number)
             })
