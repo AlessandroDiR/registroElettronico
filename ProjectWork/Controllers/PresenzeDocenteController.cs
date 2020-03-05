@@ -40,14 +40,14 @@ namespace ProjectWork.Controllers
             var presenzaNonModificata = _context.PresenzeDocente.First(p => p.IdPresenza == id);
             log.Modifiche = "MODIFICHE = ";
 
-            if(presenzeDocente.Ingresso != presenzaNonModificata.Ingresso)
+            if (presenzeDocente.Ingresso != presenzaNonModificata.Ingresso)
             {
-                log.Modifiche += string.Format("Valore precedente ingresso : {0} - Valore attuale ingresso : {1}; ",presenzaNonModificata.Ingresso,presenzeDocente.Ingresso);
+                log.Modifiche += string.Format("Valore precedente ingresso : {0} - Valore attuale ingresso : {1}; ", presenzaNonModificata.Ingresso, presenzeDocente.Ingresso);
             }
 
-            if(presenzeDocente.Uscita != presenzaNonModificata.Uscita)
+            if (presenzeDocente.Uscita != presenzaNonModificata.Uscita)
             {
-                log.Modifiche += string.Format("Valore precedente uscita : {0} - Valore attuale uscita : {1}; ",presenzaNonModificata.Uscita,presenzeDocente.Uscita);
+                log.Modifiche += string.Format("Valore precedente uscita : {0} - Valore attuale uscita : {1}; ", presenzaNonModificata.Uscita, presenzeDocente.Uscita);
             }
 
             if (!ModelState.IsValid)

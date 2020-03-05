@@ -14,11 +14,12 @@ namespace ProjectWork.Controllers
     public class DocentiController : ControllerBase
     {
         private readonly AvocadoDBContext _context;
-        private readonly utilities _ut = new utilities();
+        private readonly utilities _ut;
 
         public DocentiController(AvocadoDBContext context)
         {
             _context = context;
+            _ut = new utilities(context);
         }
 
         // GET: api/Docenti

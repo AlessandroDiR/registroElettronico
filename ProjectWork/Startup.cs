@@ -28,13 +28,13 @@ namespace ProjectWork
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Use SQL Database if in Azure, otherwise, use SQLite
+            // Use SQL Database if in Azure, otherwise, use local Database
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
                 services.AddDbContext<AvocadoDBContext>(options =>
-                        options.UseSqlServer("Server=tcp:avo-server.database.windows.net,1433;Database=AvocadoDB;User ID=alessandro;Password=Mpslc.98;Encrypt=true;Connection Timeout=30;"));
+                        options.UseSqlServer(Configuration.GetConnectionString("Remote")));
             else
                 services.AddDbContext<AvocadoDBContext>(options =>
-                        options.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;"));
+                        options.UseSqlServer(Configuration.GetConnectionString("Local")));
 
             // Automatically perform database migration
             services.BuildServiceProvider().GetService<AvocadoDBContext>().Database.Migrate();
