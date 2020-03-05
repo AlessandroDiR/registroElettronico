@@ -31,10 +31,13 @@ namespace ProjectWork.Controllers
 
 
         // GET: api/Lezioni/GetLezioniDocente/IdDoc
-        [HttpGet("[action]/{idDocente}")]
-        public async Task<IActionResult> GetLezioniDocente([FromRoute] int idDocente)
+        [HttpGet("[action]/{idDocente}/{id_corso}")]
+        public async Task<IActionResult> GetLezioniDocente([FromRoute] int idDocente, int id_corso)
         {
-            var lezioniTenute = _context.PresenzeDocente.Where(p => p.IdDocente == idDocente);
+            //var materie = _context.Materie.Where(m => mat.Any(c => c.IdMateria == m.IdMateria));
+            var idCalendario = _context.Calendari.Where(i => i.IdCorso == id_corso);
+            var lezioniPerCorso = _context.Lezioni.Where(l => idCalendario.Any(c => c.IdCalendario == l.IdCalendario));
+            var lezioniTenute = _context.PresenzeDocente.Where(p => lezioniPerCorso.Any(lpc => lpc.IdLezione == p.IdLezione && p.IdDocente == idDocente));
             var result = new List<object>();
 
             foreach (var lezione in lezioniTenute)
