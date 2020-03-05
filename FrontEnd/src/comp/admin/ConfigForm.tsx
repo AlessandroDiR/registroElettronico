@@ -54,10 +54,11 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.post(siteUrl+"/api/configcalendario", {
-            idCorso: corso,
-            anno: anno,
-            idGoogleCalendar: calendarId
+        Axios.post(siteUrl+"/api/calendari", {
+            IdCalendario: "0",
+            IdCorso: corso,
+            Anno: anno,
+            IdGoogleCalendar: calendarId
         }).then(_ => {
             message.success("Configurazione calendario salvata!")
         })

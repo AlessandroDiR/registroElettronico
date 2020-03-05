@@ -97,7 +97,7 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return CreatedAtAction("GetCalendari", new { id = calendario.IdCalendario }, calendario);
+            return Ok("ok");
         }
 
         // DELETE: api/Calendari/5
