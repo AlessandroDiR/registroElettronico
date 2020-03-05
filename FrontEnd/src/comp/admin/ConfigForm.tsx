@@ -10,6 +10,7 @@ export interface IProps{
 }
 export interface IState{
     readonly calendarId: string
+    readonly calendar: ICalendar
 }
 
 export default class ConfigForm extends React.PureComponent<IProps, IState>{
@@ -17,7 +18,8 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
         super(props)
 
         this.state = {
-            calendarId: null
+            calendarId: null,
+            calendar: null
         }
     }
 
@@ -28,7 +30,8 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
             let calendar = response.data as ICalendar
 
             this.setState({
-                calendarId: calendar.idGoogleCalendar
+                calendarId: calendar.idGoogleCalendar,
+                calendar: calendar
             })
         })
     }
@@ -43,7 +46,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
 
     saveConfig = () => {
         const { corso, anno } = this.props
-        const { calendarId } = this.state
+        const { calendarId, calendar } = this.state
 
         if(calendarId === ""){
             Modal.error({
@@ -55,7 +58,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
         }
 
         Axios.post(siteUrl+"/api/calendari", {
-            IdCalendario: "0",
+            IdCalendario: calendar ? calendar.idCalendar : "0",
             IdCorso: corso,
             Anno: anno,
             IdGoogleCalendar: calendarId
@@ -63,6 +66,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
             message.success("Configurazione calendario salvata!")
         })
     }
+
     render(): JSX.Element{
         const { calendarId } = this.state
 
