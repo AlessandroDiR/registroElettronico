@@ -36,7 +36,7 @@ namespace ProjectWork.Controllers
             log.IdPresenza = id;
             log.IdDocente = presenzeDocente.IdDocente;
             var lezione = _context.Lezioni.First(l => l.IdLezione == presenzeDocente.IdLezione);
-            log.IdCorso = lezione.IdCorso;
+            log.IdCorso = _context.Calendari.First(c => c.IdCalendario == lezione.IdCalendario).IdCorso;      
             var presenzaNonModificata = _context.PresenzeDocente.First(p => p.IdPresenza == id);
             log.Modifiche = "MODIFICHE = ";
 

@@ -41,10 +41,6 @@
       "frameworks": {
         "netcoreapp2.1": {
           "dependencies": {
-            "BCrypt.Net-Next": {
-              "target": "Package",
-              "version": "[3.2.1, )"
-            },
             "Google.Apis.Calendar.v3": {
               "target": "Package",
               "version": "[1.43.0.1858, )"

@@ -187,10 +187,19 @@ namespace ProjectWork.Controllers
             return Ok(result);
         }
 
-        [HttpGet("[action]")]
-        public double GetTotaleOreLezioni()
+        [HttpGet("[action]/{id_corso}/{anno}")]
+        public double GetTotaleOreLezioni([FromRoute] int id_corso, int anno)
         {
-            return TotaleOreLezioni();
+            var id_calendario = _context.Calendari.Where(c => c.IdCorso == id_corso && c.Anno == anno);
+            var lezioni = _context.Lezioni.Where(l => id_calendario.Any(c=> c.IdCalendario == l.IdCalendario && l.Data <= DateTime.Now ));
+            TimeSpan totOreLezioni = new TimeSpan();
+
+            foreach (var l in lezioni)
+            {
+                totOreLezioni += l.OraFine - l.OraInizio;
+            }
+
+            return totOreLezioni.TotalHours;
         }
 
         //Crea studente
