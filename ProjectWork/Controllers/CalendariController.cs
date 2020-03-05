@@ -49,41 +49,6 @@ namespace ProjectWork.Controllers
             return Ok(calendario);
         }
 
-        // PUT: api/Calendari/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCalendari([FromRoute] string id, [FromBody] Calendari calendario)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != calendario.IdCalendario)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(calendario).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CalendariExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Calendari
         [HttpPost]
         public async Task<IActionResult> PostCalendari([FromBody] Calendari calendario)
@@ -93,8 +58,17 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            calendario.IdCalendario = Guid.NewGuid().ToString();
-            _context.Calendari.Add(calendario);
+            if (!CalendariExists(calendario.IdCalendario))
+            {
+                calendario.IdCalendario = Guid.NewGuid().ToString();
+                _context.Calendari.Add(calendario);
+                _calendarApi.SaveEventsInContext(calendario.IdGoogleCalendar, calendario.IdCalendario);
+            }
+            else
+            {
+                _context.Calendari.Update(calendario);
+            }
+
             try
             {
                 await _context.SaveChangesAsync();
@@ -103,17 +77,13 @@ namespace ProjectWork.Controllers
             {
                 if (CalendariExists(calendario.IdCalendario))
                 {
-                    _context.Calendari.Update(calendario);
-
-                    return Ok(calendario);
+                    return new StatusCodeResult(StatusCodes.Status409Conflict);
                 }
                 else
                 {
                     throw;
                 }
             }
-
-            _calendarApi.SaveEventsInContext(calendario.IdGoogleCalendar, calendario.IdCalendario);
 
             return CreatedAtAction("GetCalendari", new { id = calendario.IdCalendario }, calendario);
         }
