@@ -106,6 +106,8 @@ namespace ProjectWork.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.IdCorso).HasColumnName("id_corso");
+
                 entity.Property(e => e.Nome)
                     .IsRequired()
                     .HasColumnName("nome")
@@ -213,9 +215,13 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.IdLezione).HasColumnName("id_lezione");
 
+                entity.Property(e => e.Anno).HasColumnName("anno");
+
                 entity.Property(e => e.Data)
                     .HasColumnName("data")
                     .HasColumnType("date");
+
+                entity.Property(e => e.IdCorso).HasColumnName("id_corso");
 
                 entity.Property(e => e.IdMateria).HasColumnName("id_materia");
 
@@ -245,7 +251,7 @@ namespace ProjectWork.Models
                     .HasColumnName("data_ora")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.IdCoordinatore).HasColumnName("id_coordinatore");
+                entity.Property(e => e.IdCorso).HasColumnName("id_corso");
 
                 entity.Property(e => e.IdDocente).HasColumnName("id_docente");
 
@@ -253,9 +259,9 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.IdStudente).HasColumnName("id_studente");
 
-                entity.Property(e => e.ValorePrecedente)
+                entity.Property(e => e.Modifiche)
                     .IsRequired()
-                    .HasColumnName("valore_precedente")
+                    .HasColumnName("modifiche")
                     .HasMaxLength(255)
                     .IsUnicode(false);
             });
