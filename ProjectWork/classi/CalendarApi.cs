@@ -10,14 +10,20 @@ namespace ProjectWork.classi
 {
     public class CalendarApi
     {
-        static public List<EventiModel> GetCalendarEvents()
+        private readonly AvocadoDBContext _context;
+        public CalendarApi(AvocadoDBContext context)
+        {
+            _context = context;
+        }
+
+        public List<EventiModel> GetCalendarEvents(string gCalendarID)
         {
             var service = new CalendarService(new BaseClientService.Initializer
             {
                 ApiKey = "AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs"
             });
 
-            var request = service.Events.List("ckhj7iqj3msae4i4ietm5ip1cg@group.calendar.google.com");
+            var request = service.Events.List(gCalendarID);
             request.MaxResults = 400;
 
             var response = request.Execute();
@@ -44,6 +50,27 @@ namespace ProjectWork.classi
             }
 
             return result;
+        }
+
+        public void SaveEventsInContext(string gCalendarID, string idCalendario)
+        {
+            var events = GetCalendarEvents(gCalendarID);
+            foreach (var e in events)
+            {
+                var lezione = new Lezioni
+                {
+                    Titolo = e.summary,
+                    Data = e.date,
+                    OraInizio = e.start,
+                    OraFine = e.end,
+                    IdCalendario = idCalendario
+                };
+
+                _context.Lezioni.Add(lezione);
+            }
+
+            _context.SaveChanges();
+
         }
     }
 }
