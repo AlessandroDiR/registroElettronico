@@ -33,15 +33,18 @@ namespace ProjectWork.Controllers
             log.IdCorso = lezione.IdCalendarioNavigation.IdCorso;
             var presenzaNonModificata = _context.Presenze.First(p => p.IdPresenza == id);
             log.Modifiche = "MODIFICHE = ";
+            bool modificato = false;
 
             if (presenze.Ingresso != presenzaNonModificata.Ingresso)
             {
                 log.Modifiche += string.Format("Valore precedente ingresso : {0} - Valore attuale ingresso : {1}; ", presenzaNonModificata.Ingresso, presenze.Ingresso);
+                modificato = true;
             }
 
             if (presenze.Uscita != presenzaNonModificata.Uscita)
             {
                 log.Modifiche += string.Format("Valore precedente uscita : {0} - Valore attuale uscita : {1}; ", presenzaNonModificata.Uscita, presenze.Uscita);
+                modificato = true;
             }
             if (!ModelState.IsValid)
             {
@@ -52,9 +55,13 @@ namespace ProjectWork.Controllers
             {
                 return BadRequest();
             }
-            _context.LogPresenze.Add(log);
-            _context.Remove(presenzaNonModificata);
-            _context.Entry(presenze).State = EntityState.Modified;
+
+            if (modificato == true)
+            {
+                _context.LogPresenze.Add(log);
+                _context.Remove(presenzaNonModificata);
+                _context.Entry(presenze).State = EntityState.Modified;
+            }
 
             try
             {
