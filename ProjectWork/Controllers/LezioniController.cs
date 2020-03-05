@@ -24,9 +24,7 @@ namespace ProjectWork.Controllers
         [HttpGet]
         public IEnumerable<Lezioni> GetLezioni()
         {
-            //SaveEventsInContext();
             return _context.Lezioni.OrderBy(l => l.Data);
-            //return CalendarApi.GetCalendarEvents();
         }
 
 
