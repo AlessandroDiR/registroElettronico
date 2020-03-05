@@ -187,19 +187,10 @@ namespace ProjectWork.Controllers
             return Ok(result);
         }
 
-        [HttpGet("[action]/{id_corso}/{anno}")]
-        public double GetTotaleOreLezioni([FromRoute] int id_corso, int anno)
+        [HttpGet("[action]/{idStudente}")]
+        public double GetTotaleOreLezioni([FromRoute] int idStudente)
         {
-            var id_calendario = _context.Calendari.Where(c => c.IdCorso == id_corso && c.Anno == anno);
-            var lezioni = _context.Lezioni.Where(l => id_calendario.Any(c=> c.IdCalendario == l.IdCalendario && l.Data <= DateTime.Now ));
-            TimeSpan totOreLezioni = new TimeSpan();
-
-            foreach (var l in lezioni)
-            {
-                totOreLezioni += l.OraFine - l.OraInizio;
-            }
-
-            return totOreLezioni.TotalHours;
+            return TotaleOreLezioni(idStudente);
         }
 
         //Crea studente
@@ -420,7 +411,7 @@ namespace ProjectWork.Controllers
         public double GetPercentualeFrequenza(int idStudente)
         {
             // la percentuale viene calcolata in relazione alle ore di lezione svolte ed alle ore di presenza effettive dello studente
-            var totOreLezioni = TotaleOreLezioni();
+            var totOreLezioni = TotaleOreLezioni(idStudente);
 
             var oreEffettiveStudente = HoursAmount(idStudente);
 
@@ -446,9 +437,11 @@ namespace ProjectWork.Controllers
             return Math.Round(hoursAmount.TotalHours, 2);
         }
 
-        public double TotaleOreLezioni()
+        public double TotaleOreLezioni(int idStudente)
         {
-            var lezioni = _context.Lezioni.Where(l => l.Data <= DateTime.Now);
+            var studente = _context.Studenti.Find(idStudente);
+            var id_calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == studente.IdCorso && c.Anno == studente.AnnoFrequentazione).IdCalendario;
+            var lezioni = _context.Lezioni.Where(l => l.IdCalendario == id_calendario && l.Data <= DateTime.Now);
             TimeSpan totOreLezioni = new TimeSpan();
 
             foreach (var l in lezioni)
