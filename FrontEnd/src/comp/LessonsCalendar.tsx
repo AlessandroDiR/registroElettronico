@@ -2,16 +2,15 @@ import React from "react"
 import FullCalendar from "@fullcalendar/react"
 import dayGridPlugin from "@fullcalendar/daygrid"
 import googleCalendarPlugin from "@fullcalendar/google-calendar"
-import { Digits2 } from "../utilities"
+import { Digits2, siteUrl } from "../utilities"
 import { Modal, Icon, Spin } from "antd"
 import { ICalendar } from "../models/ICalendar"
+import Axios from "axios"
 
 import "@fullcalendar/core/main.css"
 import "@fullcalendar/timegrid/main.css"
 
-export interface IProps{
-    readonly corso?: number
-}
+export interface IProps{}
 export interface IState{
     readonly calendar: ICalendar
 }
@@ -21,22 +20,21 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
         super(props)
         
         this.state = {
-            calendar: {
-                calendarId: "ckhj7iqj3msae4i4ietm5ip1cg@group.calendar.google.com",
-                apiKey: "AIzaSyCEEaAbHOYhofQs-iLdHd_J8-KyD_IlRbE"
-            }
+            calendar: null
         }
     }
 
     componentDidMount = () => {
-        // let id = parseInt(sessionStorage.getItem("corso")),
-        // classe = parseInt(sessionStorage.getItem("classe"))
+        let idCorso = parseInt(sessionStorage.getItem("corso")),
+        classe = parseInt(sessionStorage.getItem("classe"))
         
-        /************************************/
-        /* CARICAMENTO CALENDARIO IN BASE A */
-        /* sessionStorage.getItem("corso")  */
-        /* sessionStorage.getItem("classe") */
-        /************************************/
+        Axios.get(siteUrl+"/api/calendari/"+idCorso+"/"+classe).then(response => {
+            let calendar = response.data as ICalendar
+
+            this.setState({
+                calendar: calendar
+            })
+        })
     }
 
     render() {
@@ -54,8 +52,8 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
             
             <FullCalendar
                 plugins={[ googleCalendarPlugin, dayGridPlugin ]}
-                events={ { googleCalendarId: calendar.calendarId} }
-                googleCalendarApiKey={calendar.apiKey}
+                events={ { googleCalendarId: calendar.idGoogleCalendar} }
+                googleCalendarApiKey={"AIzaSyCEEaAbHOYhofQs-iLdHd_J8-KyD_IlRbE"}
                 defaultView="dayGridMonth"
                 fixedWeekCount={false}
                 firstDay={1}

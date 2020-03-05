@@ -22,10 +22,7 @@ export default class UserCalendar extends React.PureComponent<IProps, IState> {
         super(props)
         
         this.state = {
-            calendar: {
-                calendarId: "ckhj7iqj3msae4i4ietm5ip1cg@group.calendar.google.com",
-                apiKey: "AIzaSyCEEaAbHOYhofQs-iLdHd_J8-KyD_IlRbE"
-            }
+            calendar: null
         }
     }
 
@@ -52,8 +49,8 @@ export default class UserCalendar extends React.PureComponent<IProps, IState> {
             <h5 className="text-center text-black w-100">Calendario del mese</h5>
             <FullCalendar
             plugins={[ googleCalendarPlugin, dayGridPlugin ]}
-            events={ { googleCalendarId: calendar.calendarId} }
-            googleCalendarApiKey={calendar.apiKey}
+            events={ { googleCalendarId: calendar.idGoogleCalendar} }
+            googleCalendarApiKey={"AIzaSyCEEaAbHOYhofQs-iLdHd_J8-KyD_IlRbE"}
             defaultView="dayGridMonth"
             fixedWeekCount={false}
             header={false}

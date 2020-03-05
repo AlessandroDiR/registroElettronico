@@ -1,7 +1,8 @@
 import React from "react"
-import { Modal, message } from "antd"
+import { Modal, message, Icon, Spin } from "antd"
 import Axios from "axios"
 import { siteUrl } from "../../utilities"
+import { ICalendar } from "../../models/ICalendar"
 
 export interface IProps{
     readonly anno: number
@@ -16,15 +17,20 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
         super(props)
 
         this.state = {
-            calendarId: ""
+            calendarId: null
         }
     }
 
     componentDidMount = () => {
-        /******************************************************/
-        /* CARICARE LA CONFIGURAZIONE CORRENTE DEL CALENDARIO */
-        /* di this.props.corso e this.props.anno              */
-        /******************************************************/
+        const { corso, anno } = this.props
+
+        Axios.get(siteUrl+"/api/calendari/"+corso+"/"+anno).then(response => {
+            let calendar = response.data as ICalendar
+
+            this.setState({
+                calendarId: calendar.idGoogleCalendar
+            })
+        })
     }
 
     changeID = (e: any) => {
@@ -51,7 +57,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
         Axios.post(siteUrl+"/api/configcalendario", {
             idCorso: corso,
             anno: anno,
-            calendarId: calendarId
+            idGoogleCalendar: calendarId
         }).then(_ => {
             message.success("Configurazione calendario salvata!")
         })
@@ -59,7 +65,13 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
     render(): JSX.Element{
         const { calendarId } = this.state
 
-        // SE IL CALENDARIO NON È CARICATO SPIN
+        if(calendarId === null){
+            const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
+
+            return <div className="text-center">
+                <Spin indicator={icon} />
+            </div>
+        }
 
         return <form>
             <div className="form-group row">
