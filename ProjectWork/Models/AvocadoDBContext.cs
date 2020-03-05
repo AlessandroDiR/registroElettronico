@@ -15,6 +15,7 @@ namespace ProjectWork.Models
         {
         }
 
+        public virtual DbSet<Calendari> Calendari { get; set; }
         public virtual DbSet<Comprende> Comprende { get; set; }
         public virtual DbSet<Coordina> Coordina { get; set; }
         public virtual DbSet<Coordinatori> Coordinatori { get; set; }
@@ -40,6 +41,33 @@ namespace ProjectWork.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Calendari>(entity =>
+            {
+                entity.HasKey(e => e.IdCalendario);
+
+                entity.Property(e => e.IdCalendario)
+                    .HasColumnName("id_calendario")
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Anno).HasColumnName("anno");
+
+                entity.Property(e => e.IdCorso).HasColumnName("id_corso");
+
+                entity.Property(e => e.IdGoogleCalendar)
+                    .IsRequired()
+                    .HasColumnName("id_google_calendar")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdCorsoNavigation)
+                    .WithMany(p => p.Calendari)
+                    .HasForeignKey(d => d.IdCorso)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Calendari_Corsi");
+            });
+
             modelBuilder.Entity<Comprende>(entity =>
             {
                 entity.HasKey(e => new { e.IdMateria, e.IdCorso });
@@ -215,13 +243,14 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.IdLezione).HasColumnName("id_lezione");
 
-                entity.Property(e => e.Anno).HasColumnName("anno");
-
                 entity.Property(e => e.Data)
                     .HasColumnName("data")
                     .HasColumnType("date");
 
-                entity.Property(e => e.IdCorso).HasColumnName("id_corso");
+                entity.Property(e => e.IdCalendario)
+                    .HasColumnName("id_calendario")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.IdMateria).HasColumnName("id_materia");
 
@@ -232,6 +261,11 @@ namespace ProjectWork.Models
                 entity.Property(e => e.Titolo)
                     .HasColumnName("titolo")
                     .HasColumnType("text");
+
+                entity.HasOne(d => d.IdCalendarioNavigation)
+                    .WithMany(p => p.Lezioni)
+                    .HasForeignKey(d => d.IdCalendario)
+                    .HasConstraintName("FK_Lezioni_Calendari");
 
                 entity.HasOne(d => d.IdMateriaNavigation)
                     .WithMany(p => p.Lezioni)

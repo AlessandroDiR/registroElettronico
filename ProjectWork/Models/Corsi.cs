@@ -7,6 +7,7 @@ namespace ProjectWork.Models
     {
         public Corsi()
         {
+            Calendari = new HashSet<Calendari>();
             Comprende = new HashSet<Comprende>();
             Coordina = new HashSet<Coordina>();
             Studenti = new HashSet<Studenti>();
@@ -18,6 +19,7 @@ namespace ProjectWork.Models
         public string Descrizione { get; set; }
         public string Luogo { get; set; }
 
+        public ICollection<Calendari> Calendari { get; set; }
         public ICollection<Comprende> Comprende { get; set; }
         public ICollection<Coordina> Coordina { get; set; }
         public ICollection<Studenti> Studenti { get; set; }
