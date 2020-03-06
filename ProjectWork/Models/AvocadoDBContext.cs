@@ -15,6 +15,7 @@ namespace ProjectWork.Models
         {
         }
 
+        public virtual DbSet<Amministratori> Amministratori { get; set; }
         public virtual DbSet<Calendari> Calendari { get; set; }
         public virtual DbSet<Comprende> Comprende { get; set; }
         public virtual DbSet<Coordina> Coordina { get; set; }
@@ -35,12 +36,43 @@ namespace ProjectWork.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Amministratori>(entity =>
+            {
+                entity.HasKey(e => e.IdAmministratore);
+
+                entity.Property(e => e.IdAmministratore)
+                    .HasColumnName("id_amministratore")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Cognome)
+                    .HasColumnName("cognome")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nome)
+                    .HasColumnName("nome")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasColumnName("password")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Username)
+                    .IsRequired()
+                    .HasColumnName("username")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Calendari>(entity =>
             {
                 entity.HasKey(e => e.IdCalendario);
@@ -123,15 +155,15 @@ namespace ProjectWork.Models
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Cf)
-                    .HasColumnName("cf")
-                    .HasMaxLength(16)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Cognome)
                     .IsRequired()
                     .HasColumnName("cognome")
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email)
+                    .HasColumnName("email")
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.IdCorso).HasColumnName("id_corso");
@@ -151,6 +183,11 @@ namespace ProjectWork.Models
                 entity.Property(e => e.UltimoLog)
                     .HasColumnName("ultimo_log")
                     .HasColumnType("text");
+
+                entity.Property(e => e.Username)
+                    .HasColumnName("username")
+                    .HasMaxLength(16)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Corsi>(entity =>

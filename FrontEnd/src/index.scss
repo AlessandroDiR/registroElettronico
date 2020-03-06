@@ -365,7 +365,8 @@ table td, table th{
   position: absolute;
   top: 10px;
   right: 20px;
-  font-size: 16px
+  font-size: 16px;
+  z-index: 2
 }
 .select-date input{
   border-color: #ced4da !important;

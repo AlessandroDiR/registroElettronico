@@ -1,6 +1,6 @@
-//export const siteUrl = "https://localhost:44336" 
-export const siteUrl = "https://avocadoapi.azurewebsites.net"
-export const logoUrl = "https://iscrizione.fitstic.it/wp-content/uploads/2015/07/Senza-titolo-1.png"
+export const siteUrl = "https://localhost:44336" 
+// export const siteUrl = "https://avocadoapi.azurewebsites.net"
+export const logoUrl = "fitstic_logo.png"
 
 export const adminRoute = "/adminpanel"
 export const superAdminRoute = "/superpanel"

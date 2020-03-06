@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
@@ -52,7 +53,7 @@ namespace ProjectWork.classi
             return result;
         }
 
-        public void SaveEventsInContext(string gCalendarID, string idCalendario)
+        public bool SaveEventsInContext(string gCalendarID, string idCalendario)
         {
             var events = GetCalendarEvents(gCalendarID);
             foreach (var e in events)
@@ -69,7 +70,16 @@ namespace ProjectWork.classi
                 _context.Lezioni.Add(lezione);
             }
 
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch
+            {
+                throw;
+            }
+
+            return true;
 
         }
     }

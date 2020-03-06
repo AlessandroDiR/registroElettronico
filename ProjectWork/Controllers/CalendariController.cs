@@ -30,6 +30,18 @@ namespace ProjectWork.Controllers
             return _context.Calendari;
         }
 
+        // GET: api/Calendari/idCorso/anno
+        [HttpGet("{idCorso}/{anno}")]
+        public async Task<IActionResult> GetCalendari([FromRoute] int idCorso, int anno)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok(await _context.Calendari.SingleOrDefaultAsync(c => c.IdCorso == idCorso && c.Anno == anno));
+        }
+
         // GET: api/Calendari/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCalendari([FromRoute] int id)
@@ -85,7 +97,7 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return CreatedAtAction("GetCalendari", new { id = calendario.IdCalendario }, calendario);
+            return Ok("ok");
         }
 
         // DELETE: api/Calendari/5

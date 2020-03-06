@@ -7,6 +7,7 @@ import { IPresenzaDocente } from "../../models/IPresenzaDocente"
 export interface IProps{
     readonly idDocente: string
     readonly canEdit: boolean
+    readonly corso: number
 }
 export interface IState{
     readonly presenze: IPresenzaDocente[]
@@ -29,7 +30,9 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/api/lezioni/getlezionidocente/"+this.props.idDocente).then(response => {
+        const { corso, idDocente } = this.props
+
+        Axios.get(siteUrl+"/api/lezioni/getlezionidocente/"+idDocente+"/"+corso).then(response => {
             let presenze = response.data as IPresenzaDocente[]
 
             this.setState({

@@ -25,7 +25,6 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
                 <strong>ID del calendario</strong>
                 <p>Per trovare l'ID (identificativo) del calendario, basterà effettuare l'accesso su <a href="https://calendar.google.com/" target="_blank" rel="noopener noreferrer">Google Calendar <i className="far fa-external-link"></i></a> con un account che abbia integrato il calendario del corso. Bisognerà poi premere sul simbolo <i className="far fa-cog"></i> in alto a destra e successivamente su <strong>Impostazioni</strong> nel menu che comparirà. Scorrere quindi la lista a sinistra della pagina, e cliccare sul calendario che si desidera integrare. Recarsi sotto la voce <strong>Integra calendario</strong> e copiare (subito in basso) il codice identificativo del calendario (<strong>ID calendario</strong>), per poi incollarlo in questa pagina di configurazione.</p>
                 <strong className="d-block mb-2">Galleria immagini</strong>
-                <ImageScale src="https://i.imgur.com/u1qM1oD.png" width={143} />
                 <ImageScale src="https://i.imgur.com/e3H0hXX.png" height={100} scalable={true} />
             </div>
         })

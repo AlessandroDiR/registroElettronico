@@ -1,4 +1,4 @@
 export interface ICalendar{
-    readonly calendarId: string
-    readonly apiKey: string
+    readonly idCalendar: string
+    readonly idGoogleCalendar: string
 }

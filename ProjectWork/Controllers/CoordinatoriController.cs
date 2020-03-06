@@ -91,7 +91,7 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            var coord = await _context.Coordinatori.SingleOrDefaultAsync(d => d.Cf == cred.username && d.Password == cred.password);
+            var coord = await _context.Coordinatori.SingleOrDefaultAsync(d => d.Username == cred.username && d.Password == cred.password);
 
             if (coord == null)
             {

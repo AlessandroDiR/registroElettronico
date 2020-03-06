@@ -17,8 +17,16 @@ export default class Main extends React.Component{
     }
 
     render(): JSX.Element{
-        return <div className="container-fluid" onClick={this.focusInput}>
+        let idCorso = sessionStorage.getItem("corso"),
+        classe = sessionStorage.getItem("classe")
 
+        if(!idCorso)
+            return <SceltaCorso />
+
+        if(!classe)
+            return <SceltaClasse />
+
+        return <div className="container-fluid" onClick={this.focusInput}>
 
             <Router history={routerHistory}>
                 <div className="row">
@@ -34,26 +42,17 @@ export default class Main extends React.Component{
                         </NavLink>
                     </div>
 
-                        <Switch>
-                            <Route exact path="/firme/" render={() => {
-                                let corso = sessionStorage.getItem("corso"),
-                                classe = sessionStorage.getItem("classe")
+                    <Switch>
+                        <Route exact path="/firme/" render={() => (
+                            <Firma />
+                        )} />
 
-                                if(!corso)
-                                    return <SceltaCorso />
-
-                                if(!classe)
-                                    return <SceltaClasse />
-
-                                return <Firma />
-                            }} />
-
-                            <Route exact path="/firme/calendar" render={() => (
-                                <LessonsCalendar />
-                            )} />
-                        </Switch>
+                        <Route exact path="/firme/calendar" render={() => (
+                            <LessonsCalendar />
+                        )} />
+                    </Switch>
                         
-                    </div>
+                </div>
             </Router>
         </div>
     }

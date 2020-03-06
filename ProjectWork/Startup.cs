@@ -21,6 +21,7 @@ namespace ProjectWork
         {
             Configuration = configuration;
             //Scaffold-DbContext "Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
+            //Scaffold-DbContext "Server=dell-alessandro\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
         }
 
         public IConfiguration Configuration { get; }
