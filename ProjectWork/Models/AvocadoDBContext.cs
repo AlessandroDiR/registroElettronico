@@ -36,7 +36,7 @@ namespace ProjectWork.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 
@@ -46,9 +46,7 @@ namespace ProjectWork.Models
             {
                 entity.HasKey(e => e.IdAmministratore);
 
-                entity.Property(e => e.IdAmministratore)
-                    .HasColumnName("id_amministratore")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.IdAmministratore).HasColumnName("id_amministratore");
 
                 entity.Property(e => e.Cognome)
                     .HasColumnName("cognome")
@@ -125,10 +123,7 @@ namespace ProjectWork.Models
             {
                 entity.HasKey(e => new { e.IdCoordinatore, e.IdCorso });
 
-                entity.Property(e => e.IdCoordinatore)
-                    .HasColumnName("id_coordinatore")
-                    .HasMaxLength(25)
-                    .IsUnicode(false);
+                entity.Property(e => e.IdCoordinatore).HasColumnName("id_coordinatore");
 
                 entity.Property(e => e.IdCorso).HasColumnName("id_corso");
 
@@ -149,11 +144,7 @@ namespace ProjectWork.Models
             {
                 entity.HasKey(e => e.IdCoordinatore);
 
-                entity.Property(e => e.IdCoordinatore)
-                    .HasColumnName("id_coordinatore")
-                    .HasMaxLength(25)
-                    .IsUnicode(false)
-                    .ValueGeneratedNever();
+                entity.Property(e => e.IdCoordinatore).HasColumnName("id_coordinatore");
 
                 entity.Property(e => e.Cognome)
                     .IsRequired()
@@ -162,6 +153,7 @@ namespace ProjectWork.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Email)
+                    .IsRequired()
                     .HasColumnName("email")
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -185,6 +177,7 @@ namespace ProjectWork.Models
                     .HasColumnType("text");
 
                 entity.Property(e => e.Username)
+                    .IsRequired()
                     .HasColumnName("username")
                     .HasMaxLength(16)
                     .IsUnicode(false);
@@ -197,6 +190,10 @@ namespace ProjectWork.Models
                 entity.Property(e => e.IdCorso).HasColumnName("id_corso");
 
                 entity.Property(e => e.Descrizione).HasColumnName("descrizione");
+
+                entity.Property(e => e.Logo)
+                    .HasColumnName("logo")
+                    .HasColumnType("text");
 
                 entity.Property(e => e.Luogo)
                     .IsRequired()
@@ -215,11 +212,10 @@ namespace ProjectWork.Models
             {
                 entity.HasKey(e => e.IdDocente);
 
-                entity.Property(e => e.IdDocente)
-                    .HasColumnName("id_docente")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.IdDocente).HasColumnName("id_docente");
 
                 entity.Property(e => e.Cf)
+                    .IsRequired()
                     .HasColumnName("CF")
                     .HasMaxLength(16)
                     .IsUnicode(false);

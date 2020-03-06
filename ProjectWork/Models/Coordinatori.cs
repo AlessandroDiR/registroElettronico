@@ -10,7 +10,7 @@ namespace ProjectWork.Models
             Coordina = new HashSet<Coordina>();
         }
 
-        public string IdCoordinatore { get; set; }
+        public int IdCoordinatore { get; set; }
         public string Nome { get; set; }
         public string Cognome { get; set; }
         public string Email { get; set; }

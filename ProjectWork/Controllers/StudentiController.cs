@@ -214,7 +214,7 @@ namespace ProjectWork.Controllers
                 studente.DataNascita = s.DataNascita;
                 studente.AnnoFrequentazione = s.AnnoFrequentazione;
                 studente.IdCorso = s.IdCorso;
-                studente.Password = s.Cf;
+                studente.Password = Cipher.encode(s.Cf);
 
                 _context.Studenti.Add(studente);
             }

@@ -252,11 +252,10 @@ namespace ProjectWork.Controllers
             }
 
             Docenti docente = new Docenti();
-            docente.IdDocente = _context.Docenti.Count() + 1;
             docente.Nome = d.Nome;
             docente.Cognome = d.Cognome;
             docente.Cf = d.Cf;
-            docente.Password = d.Cf;
+            docente.Password = Cipher.encode(d.Cf);
             docente.Email = d.Email;
 
             foreach (var item in d.Tenere)

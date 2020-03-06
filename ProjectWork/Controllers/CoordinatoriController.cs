@@ -49,7 +49,7 @@ namespace ProjectWork.Controllers
 
         // PUT: api/Coordinatori/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCoordinatore([FromRoute] string id, [FromBody] Coordinatori c)
+        public async Task<IActionResult> PutCoordinatore([FromRoute] int id, [FromBody] Coordinatori c)
         {
             if (!ModelState.IsValid)
             {
@@ -112,17 +112,29 @@ namespace ProjectWork.Controllers
 
         // POST: api/Coordinatori
         [HttpPost]
-        public async Task<IActionResult> PostCoordinatore([FromBody] Coordinatori c)
+        public async Task<IActionResult> PostCoordinatori([FromBody] Coordinatori coordinatore)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Coordinatori.Add(c);
+            Coordinatori coor = new Coordinatori();
+            coor.Nome = coordinatore.Nome;
+            coor.Email = coordinatore.Email;
+            coor.IdCorso = coordinatore.IdCorso;
+            coor.Cognome = coordinatore.Cognome;
+            coor.Username = coordinatore.Nome + "." + coordinatore.Cognome;
+            coor.Password = Cipher.encode(string.Format("{0}{1}{2}{3}{4}{5}", DateTime.Now.Day, coor.Nome.Substring(0, 2), coor.IdCorso, DateTime.Now.DayOfYear, coor.Cognome.Substring(0, 2), DateTime.Now.Second));
+
+            _context.Coordinatori.Add(coor);
+
+            await _context.SaveChangesAsync();
+            int id = _context.Coordinatori.Last().IdCoordinatore;
+            _context.Coordinatori.Last().Username = coordinatore.Nome + "." + coordinatore.Cognome + id;
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCoordinatori", new { id = c.IdCoordinatore }, c);
+            return CreatedAtAction("GetCoordinatori", _context.Coordinatori.Last());
         }
 
         // DELETE: api/Coordinatori/5
@@ -146,7 +158,7 @@ namespace ProjectWork.Controllers
             return Ok(c);
         }
 
-        private bool CoordinatoriExists(string id)
+        private bool CoordinatoriExists(int id)
         {
             return _context.Coordinatori.Any(e => e.IdCoordinatore == id);
         }
