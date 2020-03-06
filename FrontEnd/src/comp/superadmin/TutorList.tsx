@@ -20,7 +20,7 @@ export default class TutorList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/api/tutor").then(response => {
+        Axios.get(siteUrl+"/api/coordinatori").then(response => {
             let tutor = response.data as ITutor[]
 
             this.setState({
@@ -65,7 +65,7 @@ export default class TutorList extends React.PureComponent<IProps, IState>{
                                     <td style={{maxWidth: 0}} className="text-truncate">{t.corso}</td>
                                     <td>
                                         <Tooltip title="Modifica">
-                                            <button type="button" className="btn btn-warning text-white circle-btn" onClick={() => routerHistory.push(superAdminRoute+"/tutor/edit/" + t.idTutor)}>
+                                            <button type="button" className="btn btn-warning text-white circle-btn" onClick={() => routerHistory.push(superAdminRoute+"/tutor/edit/" + t.idCoordinatore)}>
                                                 <i className="fa fa-pen"></i>
                                             </button>
                                         </Tooltip>
