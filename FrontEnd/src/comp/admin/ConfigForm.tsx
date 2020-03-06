@@ -58,7 +58,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
         }
 
         Axios.post(siteUrl+"/api/calendari", {
-            IdCalendario: calendar ? calendar.idCalendar : "0",
+            IdCalendario: calendar ? calendar.idCalendario : "0",
             IdCorso: corso,
             Anno: anno,
             IdGoogleCalendar: calendarId
