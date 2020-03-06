@@ -23,9 +23,24 @@ namespace ProjectWork.Controllers
 
         // GET: api/Coordinatori
         [HttpGet]
-        public IEnumerable<Coordinatori> GetCoordinatori()
+        public IActionResult GetCoordinatori()
         {
-            return _context.Coordinatori;
+            var coordinatori = _context.Coordinatori;
+            var result = new List<object>();
+            foreach (var c in coordinatori)
+            {
+                var json = new
+                {
+                    idCoordinatore = c.IdCoordinatore,
+                    nome = c.Nome,
+                    cognome = c.Cognome,
+                    email = c.Email,
+                    idCorso = c.IdCorso
+                };
+
+                result.Add(json);
+            }
+            return Ok(result);
         }
 
         // GET: api/Coordinatori/5
@@ -44,6 +59,15 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
+            var json = new
+            {
+                idCoordinatore = id,
+                nome = coordinatori.Nome,
+                cognome = coordinatori.Cognome,
+                email = coordinatori.Email,
+                idCorso = coordinatori.IdCorso
+            };
+
             return Ok(coordinatori);
         }
 
@@ -61,6 +85,13 @@ namespace ProjectWork.Controllers
                 return BadRequest();
             }
 
+            var coord = await _context.Coordinatori.SingleOrDefaultAsync(i => i.IdCoordinatore == id);
+            if(c.Username==null)
+                c.Username = coord.Username;
+            if(c.Password==null)
+                c.Password = coord.Password;
+
+            _context.Remove(coord);
             _context.Entry(c).State = EntityState.Modified;
 
             try
