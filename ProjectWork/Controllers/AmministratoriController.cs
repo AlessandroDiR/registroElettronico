@@ -22,14 +22,16 @@ namespace ProjectWork.Controllers
 
         // POST: api/Amministratori/LoginAmministratori
         [HttpPost("[action]")]
-        public async Task<IActionResult> LoginAmministratori([FromBody] Amministratori amministratore)
+        public async Task<IActionResult> LoginAmministratori([FromBody] CredenzialiModel amministratore)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var admin = _context.Amministratori.Where(a => a.Username == amministratore.Username);
+            var c = Cipher.decode(":k5::k5=");
+
+            var admin = _context.Amministratori.Where(a => a.Username == amministratore.username);
 
             if (admin == null)
             {
@@ -39,9 +41,9 @@ namespace ProjectWork.Controllers
             {
                 foreach (var item in admin)
                 {
-                    if (item.Password == amministratore.Password)
+                    if (item.Password == amministratore.password)
                     {
-                        return CreatedAtAction("GetAmministratori", true);
+                        return Ok(item);
                     }
                 }
             }

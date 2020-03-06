@@ -155,12 +155,11 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         Axios.put(siteUrl+"/api/docenti/" + this.props.match.params.id, {
             idDocente: parseInt(this.props.match.params.id),
             nome: nome.trim(),
-            cognome: cognome.trim(),
+            cognome: cognome ? cognome.trim() : null,
             email: email.trim(),
             cf: CF,
             tenere: corsiSel.map(c => { return { idCorso: c, idDocente: docente.idDocente } }),
             insegnare: materieSel.map(m => { return { idMateria: m, idDocente: docente.idDocente } }),
-            password: docente.password,
             ritirato: docente.ritirato
         }).then(_ => {
             message.success("Docente modificato con successo!")
