@@ -5,6 +5,7 @@ import { siteUrl, adminRoute } from "../../utilities"
 import Axios from "axios"
 import { IMateria } from "../../models/IMateria"
 import { ICorso } from "../../models/ICorso"
+import { Cipher } from "../../models/Cipher"
 
 export interface IProps{
     readonly corso: number
@@ -126,11 +127,14 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             return
         }
 
+        let cipher = new Cipher(),
+        password = cipher.encode(CF)
+
         Axios.post(siteUrl+"/api/docenti", {
             nome: nome.trim(),
             cognome: cognome.trim(),
             cf: CF,
-            password: CF,
+            password: password,
             email: email.trim(),
             tenere: corsiSel.map(c => { return { idCorso: c, idDocente: 0 } }),
             insegnare: materieSel.map(m => { return { idMateria: m, idDocente: 0 } }),
