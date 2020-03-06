@@ -37,7 +37,6 @@ namespace ProjectWork.Controllers
                     cognome = d.Cognome,
                     email = d.Email,
                     cf = d.Cf,
-                    password = d.Password,
                     ritirato = bool.Parse(d.Ritirato),
                     corsi = getCorsiDocente(d.IdDocente),
                     monteOre = getMonteOre(d.IdDocente)
@@ -71,7 +70,6 @@ namespace ProjectWork.Controllers
                 cognome = docente.Cognome,
                 email = docente.Email,
                 cf = docente.Cf,
-                password = docente.Password,
                 ritirato = bool.Parse(docente.Ritirato),
                 corsi = getCorsiDocente(id),
                 materie = getMaterieocente(id),
@@ -92,14 +90,32 @@ namespace ProjectWork.Controllers
 
             var tenere = _context.Tenere.Where(t => t.IdCorso == idc);
 
-            var docenti = _context.Docenti.Where(d => tenere.Any(t => t.IdDocente == d.IdDocente));
+            var docente = _context.Docenti.Where(d => tenere.Any(t => t.IdDocente == d.IdDocente));
 
-            if (docenti == null)
+            if (docente == null)
             {
                 return NotFound();
             }
 
-            return Ok(docenti);
+            var result = new List<object>();
+            foreach (var d in docente)
+            {
+                var json = new
+                {
+                    idDocente = d.IdDocente,
+                    nome = d.Nome,
+                    cognome = d.Cognome,
+                    email = d.Email,
+                    cf = d.Cf,
+                    ritirato = bool.Parse(d.Ritirato),
+                    corsi = getCorsiDocente(d.IdDocente),
+                    monteOre = getMonteOre(d.IdDocente)
+                };
+
+                result.Add(json);
+            }
+
+            return Ok(result);
         }
 
         // GET: api/Docenti/GetDocentiByCf/cf
@@ -111,14 +127,26 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            var docenti = await _context.Docenti.FirstOrDefaultAsync(d => d.Cf == cf);
+            var docente = await _context.Docenti.FirstOrDefaultAsync(d => d.Cf == cf);
 
-            if (docenti == null)
+            if (docente == null)
             {
                 return NotFound();
             }
 
-            return Ok(docenti);
+            var result = new
+                {
+                    idDocente = docente.IdDocente,
+                    nome = docente.Nome,
+                    cognome = docente.Cognome,
+                    email = docente.Email,
+                    cf = docente.Cf,
+                    ritirato = bool.Parse(docente.Ritirato),
+                    corsi = getCorsiDocente(docente.IdDocente),
+                    monteOre = getMonteOre(docente.IdDocente)
+                };
+
+            return Ok(result);
         }
 
 
@@ -221,6 +249,12 @@ namespace ProjectWork.Controllers
 
             _context.Insegnare.AddRange(docenti.Insegnare);
 
+            var doc = await _context.Docenti.SingleOrDefaultAsync(a => a.IdDocente == id);
+
+            if (docenti.Password == null)
+                docenti.Password = doc.Password;
+
+            _context.Remove(doc);
             _context.Entry(docenti).State = EntityState.Modified;
 
             try
@@ -252,11 +286,10 @@ namespace ProjectWork.Controllers
             }
 
             Docenti docente = new Docenti();
-            docente.IdDocente = _context.Docenti.Count() + 1;
             docente.Nome = d.Nome;
             docente.Cognome = d.Cognome;
             docente.Cf = d.Cf;
-            docente.Password = d.Cf;
+            docente.Password = Cipher.encode(d.Cf);
             docente.Email = d.Email;
 
             foreach (var item in d.Tenere)

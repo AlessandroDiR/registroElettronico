@@ -27,9 +27,33 @@ namespace ProjectWork.Controllers
 
         // GET: api/Studenti
         [HttpGet]
-        public IEnumerable<Studenti> GetStudenti()
+        public IActionResult GetStudenti()
         {
-            return _context.Studenti;
+
+            var studenti = _context.Studenti;
+            var result = new List<object>();
+
+            foreach (var s in studenti)
+            {
+                var json = new
+                {
+                    idStudente = s.IdStudente,
+                    idCorso = s.IdCorso,
+                    nome = s.Nome,
+                    cognome = s.Cognome,
+                    email = s.Email,
+                    dataNascita = s.DataNascita,
+                    cf = s.Cf,
+                    ritirato = bool.Parse(s.Ritirato),
+                    dataRitiro = s.DataRitiro,
+                    annoFrequentazione = s.AnnoFrequentazione,
+                    giornate = GetDaysAmount(s.IdStudente),
+                    frequenza = GetPercentualeFrequenza(s.IdStudente)
+                };
+
+                result.Add(json);
+            }
+            return Ok(result);
         }
 
         // GET: api/Studenti/1
@@ -50,7 +74,6 @@ namespace ProjectWork.Controllers
                     email = s.Email,
                     dataNascita = s.DataNascita,
                     cf = s.Cf,
-                    password = s.Password,
                     ritirato = bool.Parse(s.Ritirato),
                     dataRitiro = s.DataRitiro,
                     annoFrequentazione = s.AnnoFrequentazione,
@@ -88,7 +111,6 @@ namespace ProjectWork.Controllers
                 email = s.Email,
                 dataNascita = s.DataNascita,
                 cf = s.Cf,
-                password = s.Password,
                 ritirato = bool.Parse(s.Ritirato),
                 dataRitiro = s.DataRitiro,
                 annoFrequentazione = s.AnnoFrequentazione,
@@ -108,14 +130,30 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            var studenti = await _context.Studenti.FirstOrDefaultAsync(s => s.Cf == cf);
+            var studente = await _context.Studenti.FirstOrDefaultAsync(s => s.Cf == cf);
 
-            if (studenti == null)
+            if (studente == null)
             {
                 return NotFound();
             }
 
-            return Ok(studenti);
+            var json = new
+            {
+                idStudente = studente.IdStudente,
+                idCorso = studente.IdCorso,
+                nome = studente.Nome,
+                cognome = studente.Cognome,
+                email = studente.Email,
+                dataNascita = studente.DataNascita,
+                cf = studente.Cf,
+                ritirato = bool.Parse(studente.Ritirato),
+                dataRitiro = studente.DataRitiro,
+                annoFrequentazione = studente.AnnoFrequentazione,
+                giornate = GetDaysAmount(studente.IdStudente),
+                frequenza = GetPercentualeFrequenza(studente.IdStudente)
+            };
+
+            return Ok(json);
         }
 
         // POST: api/Studenti/firma
@@ -214,7 +252,7 @@ namespace ProjectWork.Controllers
                 studente.DataNascita = s.DataNascita;
                 studente.AnnoFrequentazione = s.AnnoFrequentazione;
                 studente.IdCorso = s.IdCorso;
-                studente.Password = s.Cf;
+                studente.Password = Cipher.encode(s.Cf);
 
                 _context.Studenti.Add(studente);
             }
@@ -240,6 +278,11 @@ namespace ProjectWork.Controllers
                 return BadRequest();
             }
 
+            var s = await _context.Studenti.SingleOrDefaultAsync(i => i.IdStudente == id);
+            if (studenti.Password == null)
+                studenti.Password = s.Password;
+
+            _context.Remove(s);
             _context.Entry(studenti).State = EntityState.Modified;
 
             try
@@ -267,7 +310,6 @@ namespace ProjectWork.Controllers
                 email = studenti.Email,
                 dataNascita = studenti.DataNascita,
                 cf = studenti.Cf,
-                password = studenti.Password,
                 ritirato = bool.Parse(studenti.Ritirato),
                 dataRitiro = studenti.DataRitiro,
                 annoFrequentazione = studenti.AnnoFrequentazione,
@@ -293,7 +335,12 @@ namespace ProjectWork.Controllers
             {
                 try
                 {
-                   _context.Entry(item).State = EntityState.Modified;
+                    var s = _context.Studenti.Find(item.IdStudente);
+                    if (item.Password == null)
+                        item.Password = s.Password;
+
+                    _context.Remove(s);
+                    _context.Entry(item).State = EntityState.Modified;
                 }
                 catch
                 {

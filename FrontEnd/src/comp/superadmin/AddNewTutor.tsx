@@ -56,7 +56,7 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
     }
 
     changeEmail = (event: any) => {
-        let email = event.target.value
+        let email = event.target.value.trim()
 
         this.setState({
             email: email
@@ -96,14 +96,15 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
             return
         }
 
-        // TRIM DATI
-
-        /*************************************************/
-        /* CREAZIONE NUOVO CORSO E POI MOSTRARE MODAL    */
-        /*************************************************/
-
-        message.success("Tutor creato con successo!")
-        routerHistory.push(superAdminRoute+"/tutor")
+        Axios.post(siteUrl+"/api/coordinatori", {
+            nome: nome.trim(),
+            cognome: cognome.trim(),
+            email: email,
+            idCorso: corso
+        }).then(_ => {
+            message.success("Tutor creato con successo!")
+            routerHistory.push(superAdminRoute+"/tutor")
+        })
 
     }
 

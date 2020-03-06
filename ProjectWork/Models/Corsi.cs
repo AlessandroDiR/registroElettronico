@@ -18,6 +18,7 @@ namespace ProjectWork.Models
         public string Nome { get; set; }
         public string Descrizione { get; set; }
         public string Luogo { get; set; }
+        public string Logo { get; set; }
 
         public ICollection<Calendari> Calendari { get; set; }
         public ICollection<Comprende> Comprende { get; set; }

@@ -5,7 +5,7 @@ namespace ProjectWork.Models
 {
     public partial class Coordina
     {
-        public string IdCoordinatore { get; set; }
+        public int IdCoordinatore { get; set; }
         public int IdCorso { get; set; }
 
         public Coordinatori IdCoordinatoreNavigation { get; set; }

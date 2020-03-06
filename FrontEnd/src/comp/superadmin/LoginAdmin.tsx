@@ -53,7 +53,7 @@ export default class LoginAdmin extends React.PureComponent<IProps, IState>{
         let cipher = new Cipher(),
         password = cipher.encode(adminPsw)
 
-        Axios.post(siteUrl+"/api/amministratori/loginamministratore", {
+        Axios.post(siteUrl+"/api/coordinatori/logincoordinatore", {
             username: adminName.trim(),
             password: password
         }).then(response => {
