@@ -90,7 +90,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
     }
 
     changeEmail = (event: any) => {
-        let email = event.target.value
+        let email = event.target.value.trim()
 
         this.setState({
             email: email
@@ -116,7 +116,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
     modificaDocente = () => {
         const { docente, nome, cognome, CF, email, corsiSel, materieSel } = this.state
 
-        if(nome === "" || cognome === "" || CF === "" || email === ""){
+        if(nome.trim() === "" || cognome.trim() === "" || CF === "" || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -155,8 +155,8 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         Axios.put(siteUrl+"/api/docenti/" + this.props.match.params.id, {
             idDocente: parseInt(this.props.match.params.id),
             nome: nome.trim(),
-            cognome: cognome ? cognome.trim() : null,
-            email: email.trim(),
+            cognome: cognome.trim(),
+            email: email,
             cf: CF,
             tenere: corsiSel.map(c => { return { idCorso: c, idDocente: docente.idDocente } }),
             insegnare: materieSel.map(m => { return { idMateria: m, idDocente: docente.idDocente } }),

@@ -78,7 +78,7 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
     aggiungiTutor = () => {
         const { nome, cognome, email, corso } = this.state
 
-        if(nome === "" || cognome === "" || email === ""){
+        if(nome.trim() === "" || cognome.trim() === "" || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."

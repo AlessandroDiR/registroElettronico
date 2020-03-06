@@ -7,6 +7,7 @@ import { RouteComponentProps } from "react-router-dom"
 import { IStudent } from "../../models/IStudent"
 import locale from "antd/es/date-picker/locale/it_IT"
 import moment from "moment"
+import { Cipher } from "../../models/Cipher"
 
 export interface IRouteParams{
     readonly id: string
@@ -67,7 +68,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
     }
 
     changeEmail = (event: any) => {
-        let email = event.target.value
+        let email = event.target.value.trim()
 
         this.setState({
             email: email
@@ -99,7 +100,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
     modificaStudente = () => {
         const { nome, cognome, dataNascita, CF, email, studente } = this.state
 
-        if(nome === "" || cognome === "" || dataNascita === "" || CF === "" || email === ""){
+        if(nome.trim() === "" || cognome.trim() === "" || dataNascita === "" || CF === "" || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -117,12 +118,14 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             return
         }
 
+        let cipher = new Cipher(),
+        password = cipher.encode(CF)
+
         Axios.put(siteUrl+"/api/studenti/" + studente.idStudente, {
             idStudente: studente.idStudente,
             nome: nome.trim(),
             cognome: cognome.trim(),
-            email: email.trim(),
-            password: studente.password,
+            email: email,
             cf: CF,
             idCorso: this.props.corso,
             annoFrequentazione: studente.annoFrequentazione,

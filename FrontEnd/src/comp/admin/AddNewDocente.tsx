@@ -65,7 +65,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
     }
 
     changeEmail = (event: any) => {
-        let email = event.target.value
+        let email = event.target.value.trim()
 
         this.setState({
             email: email
@@ -91,7 +91,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
     aggiungiDocente = () => {
         const { nome, cognome,CF, email, corsiSel, materieSel } = this.state
 
-        if(nome === "" || cognome === "" || CF === "" || email === ""){
+        if(nome.trim() === "" || cognome.trim() === "" || CF === "" || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -135,7 +135,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             cognome: cognome.trim(),
             cf: CF,
             password: password,
-            email: email.trim(),
+            email: email,
             tenere: corsiSel.map(c => { return { idCorso: c, idDocente: 0 } }),
             insegnare: materieSel.map(m => { return { idMateria: m, idDocente: 0 } }),
         }).then(_ => {

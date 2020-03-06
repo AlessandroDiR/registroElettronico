@@ -71,7 +71,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
     aggiungiMateria = () => {
         const { nomeMateria, descMateria } = this.state
 
-        if(nomeMateria === "" || descMateria === ""){
+        if(nomeMateria.trim() === "" || descMateria.trim() === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
