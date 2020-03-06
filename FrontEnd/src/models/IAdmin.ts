@@ -12,7 +12,7 @@ export const isAdmin = (obj: any) => {
 }
 export const isSuperAdmin = (obj: any) => {
     try{
-        return "nome" in obj && "cognome" in obj
+        return "nome" in obj && "cognome" in obj && "idCorso" in obj
     }catch{
         return false
     }

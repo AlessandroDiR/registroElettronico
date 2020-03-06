@@ -76,7 +76,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
     }
 
     modificaCorso = () => {
-        const { nome, descrizione, luogo } = this.state
+        const { nome, descrizione, luogo, corso, logo } = this.state
 
         if(nome === "" || descrizione === "" || luogo === ""){
             Modal.error({
@@ -87,13 +87,16 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
             return
         }
 
-        // TRIM DATI
-        /***************************************/
-        /* MODIFICA CORSO E POI MOSTRARE MODAL */
-        /***************************************/
-
-        message.success("Corso modificato con successo!")
-        routerHistory.push(superAdminRoute+"/corsi")
+        Axios.put(siteUrl+"/api/corsi/"+corso.idCorso, {
+            idCorso: corso.idCorso,
+            nome: nome.trim(),
+            descrizione: descrizione.trim(),
+            luogo: luogo.trim(),
+            logo: logo
+        }).then(_ => {
+            message.success("Corso modificato con successo!")
+            routerHistory.push(superAdminRoute+"/corsi")
+        })
 
     }
 

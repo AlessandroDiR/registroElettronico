@@ -1,7 +1,8 @@
 import React from "react"
 import { Modal, Upload, Icon, message } from "antd"
 import { routerHistory } from "../.."
-import { imageFileToBase64, superAdminRoute } from "../../utilities"
+import { imageFileToBase64, superAdminRoute, siteUrl } from "../../utilities"
+import Axios from "axios"
 
 export interface IProps{}
 export interface IState{
@@ -60,14 +61,15 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
             return
         }
 
-        // TRIM DATI
-
-        /*************************************************/
-        /* CREAZIONE NUOVO CORSO E POI MOSTRARE MODAL    */
-        /*************************************************/
-
-        message.success("Corso creato con successo!")
-        routerHistory.push(superAdminRoute+"/corsi")
+        Axios.post(siteUrl+"/api/corsi", {
+            nome: nome.trim(),
+            descrizione: descrizione.trim(),
+            luogo: luogo.trim(),
+            logo: logo
+        }).then(_ => {
+            message.success("Corso creato con successo!")
+            routerHistory.push(superAdminRoute+"/corsi")
+        })
 
     }
 

@@ -39,7 +39,7 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push(superAdminRoute)
 
-        Axios.get(siteUrl+"/api/tutor/"+id).then(response => {
+        Axios.get(siteUrl+"/api/coordinatori/"+id).then(response => {
             let tutor = response.data as ITutor
 
             this.setState({
@@ -76,7 +76,7 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
     }
 
     changeEmail = (event: any) => {
-        let email = event.target.value
+        let email = event.target.value.trim()
 
         this.setState({
             email: email
@@ -97,6 +97,7 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
 
     aggiungiTutor = () => {
         const { nome, cognome, email, corso } = this.state
+        const idCoordinatore = this.props.match.params.id
 
         if(nome === "" || cognome === "" || email === ""){
             Modal.error({
@@ -116,14 +117,16 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
             return
         }
 
-        // TRIM DATI
-
-        /*************************************************/
-        /* CREAZIONE NUOVO CORSO E POI MOSTRARE MODAL    */
-        /*************************************************/
-
-        message.success("Tutor modificato con successo!")
-        routerHistory.push(superAdminRoute+"/tutor")
+        Axios.put(siteUrl+"/api/coordinatori/"+idCoordinatore, {
+            idCoordinatore: idCoordinatore,
+            nome: nome.trim(),
+            cognome: cognome.trim(),
+            email: email,
+            idCorso: corso
+        }).then(_ => {
+            message.success("Tutor modificato con successo!")
+            routerHistory.push(superAdminRoute+"/tutor")
+        })
 
     }
 
