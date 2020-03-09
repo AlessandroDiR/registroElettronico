@@ -43,7 +43,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
 
         Modal.confirm({
             title: `ATTENZIONE: si sta per ritirare un docente (${docente.nome} ${docente.cognome})`,
-            content: "I dati identificativi del docente, le lezioni e le presenze verranno comunque mantenuti, ma il docente verrà ritirato da tutti i corsi in cui insegna. In seguito sarà possibile reintegrarlo nel corso.",
+            content: "I dati identificativi del docente, le lezioni e le presenze verranno comunque mantenuti, ma il docente verrà ritirato da tutti i corsi in cui insegna. In seguito sarà possibile reintegrarlo nel corso se necessario.",
             okText: "Confermo",
             okType: "danger",
             cancelText: "Annulla",
@@ -144,7 +144,8 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
 
                         {
                             docs.map(d => {   
-                                let bg = d.ritirato ? "light font-italic" : "white"     
+                                let bg = d.ritirato ? "light font-italic" : !this.isInCorso(d) ? "transblue" :"white"
+
                                 return <tr className={"bg-"+bg}>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.nome}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.cognome}</td>
