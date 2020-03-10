@@ -220,6 +220,12 @@ namespace ProjectWork.Models
                     .HasMaxLength(16)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Codice)
+                    .IsRequired()
+                    .HasColumnName("codice")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Cognome)
                     .HasColumnName("cognome")
                     .HasMaxLength(100)
@@ -418,6 +424,7 @@ namespace ProjectWork.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Codice)
+                    .IsRequired()
                     .HasColumnName("codice")
                     .HasMaxLength(50)
                     .IsUnicode(false);
