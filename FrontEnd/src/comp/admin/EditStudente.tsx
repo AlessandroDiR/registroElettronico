@@ -7,7 +7,6 @@ import { RouteComponentProps } from "react-router-dom"
 import { IStudent } from "../../models/IStudent"
 import locale from "antd/es/date-picker/locale/it_IT"
 import moment from "moment"
-import { Cipher } from "../../models/Cipher"
 
 export interface IRouteParams{
     readonly id: string
@@ -117,9 +116,6 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
 
             return
         }
-
-        let cipher = new Cipher(),
-        password = cipher.encode(CF)
 
         Axios.put(siteUrl+"/api/studenti/" + studente.idStudente, {
             idStudente: studente.idStudente,
