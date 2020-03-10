@@ -99,7 +99,7 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
         const { nome, cognome, email, corso } = this.state
         const idCoordinatore = this.props.match.params.id
 
-        if(nome === "" || cognome === "" || email === ""){
+        if(nome.trim() === "" || cognome.trim() === "" || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."

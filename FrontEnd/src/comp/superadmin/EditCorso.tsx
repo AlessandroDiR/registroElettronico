@@ -78,7 +78,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
     modificaCorso = () => {
         const { nome, descrizione, luogo, corso, logo } = this.state
 
-        if(nome === "" || descrizione === "" || luogo === ""){
+        if(nome.trim() === "" || descrizione.trim() === "" || luogo.trim() === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."

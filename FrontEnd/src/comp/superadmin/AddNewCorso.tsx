@@ -52,7 +52,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
     aggiungiCorso = () => {
         const { nome, descrizione, luogo, logo } = this.state
 
-        if(nome === "" || descrizione === "" || luogo === ""){
+        if(nome.trim() === "" || descrizione.trim() === "" || luogo.trim() === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."

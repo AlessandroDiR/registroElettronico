@@ -35,7 +35,8 @@ namespace ProjectWork.Controllers
                     nome = c.Nome,
                     cognome = c.Cognome,
                     email = c.Email,
-                    idCorso = c.IdCorso
+                    idCorso = c.IdCorso,
+                    corso = _context.Corsi.SingleOrDefault(corso => corso.IdCorso == c.IdCorso).Nome
                 };
 
                 result.Add(json);
@@ -58,15 +59,6 @@ namespace ProjectWork.Controllers
             {
                 return NotFound();
             }
-
-            var json = new
-            {
-                idCoordinatore = id,
-                nome = coordinatori.Nome,
-                cognome = coordinatori.Cognome,
-                email = coordinatori.Email,
-                idCorso = coordinatori.IdCorso
-            };
 
             return Ok(coordinatori);
         }
@@ -129,11 +121,10 @@ namespace ProjectWork.Controllers
                 return Ok("error");
             }
 
-            var corsoAmministrato = await _context.Coordina.SingleOrDefaultAsync(c => c.IdCoordinatore == coord.IdCoordinatore);
             var json = new
             {
                 idCoordinatore = coord.IdCoordinatore,
-                idCorso = corsoAmministrato.IdCorso,
+                idCorso = coord.IdCorso,
                 nome = coord.Nome,
                 cognome = coord.Cognome
             };

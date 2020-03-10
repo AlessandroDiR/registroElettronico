@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
@@ -17,7 +18,7 @@ namespace ProjectWork.classi
             _context = context;
         }
 
-        public List<EventiModel> GetCalendarEvents(string gCalendarID)
+        private List<EventiModel> GetCalendarEvents(string gCalendarID)
         {
             var service = new CalendarService(new BaseClientService.Initializer
             {
@@ -64,7 +65,8 @@ namespace ProjectWork.classi
                     Data = e.date,
                     OraInizio = e.start,
                     OraFine = e.end,
-                    IdCalendario = idCalendario
+                    IdCalendario = idCalendario,
+                    IdMateria = FindIdMateria(e.summary)
                 };
 
                 _context.Lezioni.Add(lezione);
@@ -81,6 +83,14 @@ namespace ProjectWork.classi
 
             return true;
 
+        }
+
+        private int FindIdMateria(string evento)
+        {
+            var nomeMateria = evento.Split('-')[1].TrimStart();
+            var id = _context.Materie.SingleOrDefault(m => m.Nome == nomeMateria).IdMateria;
+
+            return id;
         }
     }
 }

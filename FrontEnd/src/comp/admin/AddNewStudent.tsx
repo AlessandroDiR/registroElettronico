@@ -49,7 +49,7 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
     }
 
     changeEmail = (event: any) => {
-        let email = event.target.value
+        let email = event.target.value.trim()
 
         this.setState({
             email: email
@@ -81,7 +81,7 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
     aggiungiStudente = () => {
         const { nome, cognome, dataNascita, cf, annoScolastico, email } = this.state
 
-        if(nome === "" || cognome === "" || dataNascita === "" || cf === "" || !annoScolastico || email === ""){
+        if(nome.trim() === "" || cognome.trim() === "" || dataNascita === "" || cf === "" || !annoScolastico || email === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -104,7 +104,7 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
             cognome: cognome.trim(),
             cf: cf,
             password: cf,
-            email: email.trim(),
+            email: email,
             annoFrequentazione: annoScolastico,
             dataNascita: formattaData(dataNascita, true),
             idCorso: this.props.corso
