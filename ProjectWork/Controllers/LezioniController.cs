@@ -30,9 +30,8 @@ namespace ProjectWork.Controllers
 
         // GET: api/Lezioni/GetLezioniDocente/IdDoc
         [HttpGet("[action]/{idDocente}/{id_corso}")]
-        public async Task<IActionResult> GetLezioniDocente([FromRoute] int idDocente, int id_corso)
+        public IActionResult GetLezioniDocente([FromRoute] int idDocente, int id_corso)
         {
-            //var materie = _context.Materie.Where(m => mat.Any(c => c.IdMateria == m.IdMateria));
             var idCalendario = _context.Calendari.Where(i => i.IdCorso == id_corso);
             var lezioniPerCorso = _context.Lezioni.Where(l => idCalendario.Any(c => c.IdCalendario == l.IdCalendario));
             var lezioniTenute = _context.PresenzeDocente.Where(p => lezioniPerCorso.Any(lpc => lpc.IdLezione == p.IdLezione && p.IdDocente == idDocente));
@@ -46,8 +45,8 @@ namespace ProjectWork.Controllers
                     idPresenza = lezione.IdPresenza,
                     idDocente = lezione.IdDocente,
                     data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == lezione.IdLezioneNavigation.IdLezione).Data,
-                    idLezione = lezione.IdLezioneNavigation.IdLezione,
-                    lezione = lezione.IdLezioneNavigation.Titolo,
+                    idLezione = lezione.IdLezione,
+                    lezione = lezione.IdLezioneNavigation.Titolo.Split('-')[1].TrimStart(),
                     ingresso = lezione.Ingresso,
                     uscita = lezione.Uscita
                 };

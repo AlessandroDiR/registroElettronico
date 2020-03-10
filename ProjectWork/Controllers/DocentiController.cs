@@ -72,7 +72,7 @@ namespace ProjectWork.Controllers
                 cf = docente.Cf,
                 ritirato = bool.Parse(docente.Ritirato),
                 corsi = getCorsiDocente(id),
-                materie = getMaterieocente(id),
+                materie = getMaterieDocente(id),
                 monteOre = getMonteOre(id)
             };
 
@@ -147,76 +147,6 @@ namespace ProjectWork.Controllers
                 };
 
             return Ok(result);
-        }
-
-
-        // GET: api/Docenti/firma/codice
-        [HttpGet("[action]/{code}")]
-        public string Firma([FromRoute] string code)
-        {
-            if (_ut.CheckCode(Encoder.encode(code)) != "docente")
-            {
-                return OutputMsg.generateMessage("Errore", "Il codice non è valido!", true);
-            }
-
-            var docente = _context.Docenti.SingleOrDefault(d => d.Cf == code);
-
-            return SalvaFirma(docente);
-        }
-
-        private string SalvaFirma(Docenti docente)
-        {
-            var date = DateTime.Now;
-            var time = TimeSpan.Parse(date.TimeOfDay.ToString().Split('.')[0]);
-
-            var lesson = _context.Lezioni.Where(l => l.Data == date);
-
-            if(lesson != null)
-            {
-                foreach(var l in lesson)
-                {
-                    var presenza = _context.PresenzeDocente.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdDocente == docente.IdDocente);
-                    if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0))
-                    {
-                        return OutputMsg.generateMessage("Attenzione!", "Hai già la firmato la lezione!", true);
-                    }
-                    else
-                    {
-                        if(l.OraFine < time)
-                        {
-                            if(presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
-                            {
-                                presenza.Uscita = l.OraFine;
-                                _context.SaveChanges();
-                                return OutputMsg.generateMessage("Ok", $"Arrivederci {docente.Nome}!");
-                            }
-                        }
-                        else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
-                        {
-                            presenza.Uscita = time;
-                            _context.SaveChanges();
-                            return OutputMsg.generateMessage("Ok", $"Arrivederci {docente.Nome}!");
-                        }
-                        else if (presenza == null && l.OraFine >= time)
-                        {
-                            var newPresenza = new PresenzeDocente
-                            {
-                                IdLezione = l.IdLezione,
-                                IdDocente = docente.IdDocente,
-                                Ingresso = time <= (l.OraInizio + new TimeSpan(0, 10, 0)) ? l.OraInizio : time
-                            };
-
-                            _context.PresenzeDocente.Add(newPresenza);
-                            _context.SaveChanges();
-                            return OutputMsg.generateMessage("Ok", $"Ben arrivato {docente.Nome}!");
-                        }
-                        
-                    }
-                }
-            }
-
-            return OutputMsg.generateMessage("Spiacente", "Non ci sono lezioni oggi!", true);
-
         }
 
         // PUT: api/Docenti/5
@@ -379,7 +309,7 @@ namespace ProjectWork.Controllers
             return idCorsi;
         }
 
-        private List<int> getMaterieocente(int idDocente)
+        private List<int> getMaterieDocente(int idDocente)
         {
             var materie = _context.Insegnare.Where(i => i.IdDocente == idDocente);
             var idMaterie = new List<int>();
@@ -392,7 +322,7 @@ namespace ProjectWork.Controllers
         }
 
         private double getMonteOre(int idDocente)
-        {
+       {
             var presenze = _context.PresenzeDocente.Where(p => p.IdDocente == idDocente && p.Uscita != new TimeSpan(0, 0, 0));
             var totOre = new TimeSpan();
 
@@ -403,6 +333,47 @@ namespace ProjectWork.Controllers
 
             return Math.Round(totOre.TotalHours, 2);
         }
+
+        private object getMonteOrePerAnno(int idDocente)
+        {
+            var presenze = _context.PresenzeDocente.Where(p => p.IdDocente == idDocente && p.Uscita != new TimeSpan(0, 0, 0));
+            var totOre1 = new TimeSpan();
+            var totOre2 = new TimeSpan();
+
+            var lezione = _context.Lezioni.Where(l => presenze.Any(p => p.IdLezione == l.IdLezione));
+
+            var calendariPrimo = _context.Calendari.Where(c => lezione.Any(l => l.IdCalendario == c.IdCalendario && c.Anno == 1));
+
+            var calendariSecondo = _context.Calendari.Where(c => lezione.Any(l => l.IdCalendario == c.IdCalendario && c.Anno == 2));
+
+            var lezionePrimo = _context.Lezioni.Where(l => calendariPrimo.Any(p => p.IdCalendario == l.IdCalendario));
+
+            var lezioneSecondo = _context.Lezioni.Where(l => calendariSecondo.Any(p => p.IdCalendario == l.IdCalendario));
+
+            var presenzePrimo = _context.PresenzeDocente.Where(l => lezionePrimo.Any(p => p.IdLezione == l.IdLezione && l.Uscita != new TimeSpan(0, 0, 0) && l.IdDocente == idDocente));
+
+            var presenzeSecondo = _context.PresenzeDocente.Where(l => lezioneSecondo.Any(p => p.IdLezione == l.IdLezione && l.Uscita != new TimeSpan(0, 0, 0) && l.IdDocente == idDocente));
+
+            foreach (var p in presenzePrimo)
+            {
+                totOre1 += p.Uscita - p.Ingresso;
+            }
+
+            foreach (var p in presenzeSecondo)
+            {
+                totOre2 += p.Uscita - p.Ingresso;
+            }
+
+
+            var json = new
+            {
+                OrePrimo = Math.Round(totOre1.TotalHours, 2),
+                OreSecondo = Math.Round(totOre2.TotalHours, 2)
+            };
+
+            return json;
+        }
+
 
         private bool DocentiExists(int id)
         {

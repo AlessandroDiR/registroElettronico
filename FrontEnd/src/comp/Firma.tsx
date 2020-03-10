@@ -6,7 +6,6 @@ import { routerHistory } from ".."
 import { Divider, Tooltip, Spin, Icon } from "antd"
 import { ICorso } from "../models/ICorso"
 import Axios from "axios"
-import { Cipher } from "../models/Cipher"
 
 export interface IProps{}
 export interface IState{
@@ -60,7 +59,7 @@ export default class Firma extends React.PureComponent<IProps, IState>{
         let idCorso = parseInt(sessionStorage.getItem("corso")),
         anno = parseInt(sessionStorage.getItem("classe"))
         
-        axios.post(siteUrl + "/api/studenti/firma", {
+        axios.post(siteUrl + "/api/firma", {
             code: code,
             idCorso: idCorso,
             anno: anno

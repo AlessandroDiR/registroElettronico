@@ -156,23 +156,6 @@ namespace ProjectWork.Controllers
             return Ok(json);
         }
 
-        // POST: api/Studenti/firma
-        [HttpPost("[action]")]
-        public IActionResult Firma([FromBody] FirmaModel firma)
-        {
-            if (_ut.CheckCode(Encoder.encode(firma.code)) != "studente")
-            {
-                return RedirectToAction("Firma","Docenti", new { firma.code });
-            }
-
-            // recupero lo studente, controllo se è ingresso o uscita e 
-            // salvo la firma nel db con l'ora attuale. (LA TOLLERANZA VIENE CONSIDERATA DA PARTE DEL TUTOR)
-
-            var studente = _context.Studenti.Where(s => s.IdCorso == firma.idCorso && s.AnnoFrequentazione == firma.anno).SingleOrDefault(s => s.Cf == firma.code);
-
-            return Ok(SalvaFirma(studente));
-        }
-
         [HttpGet("[action]/{idStudente}")]
         public async Task<IActionResult> GetHoursAmount([FromRoute] int idStudente)
         {
@@ -384,59 +367,6 @@ namespace ProjectWork.Controllers
         private bool StudentiExists(int id)
         {
             return _context.Studenti.Any(e => e.IdStudente == id);
-        }
-
-        private string SalvaFirma(Studenti s)
-        {
-            var date = DateTime.Now;
-            var time = TimeSpan.Parse(date.TimeOfDay.ToString().Split('.')[0]);
-
-            var lesson = _context.Lezioni.Where(l => l.Data == date);
-
-            if (lesson != null)
-            {
-                foreach (var l in lesson)
-                {
-                    var presenza = _context.Presenze.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdStudente == s.IdStudente);
-                    if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0))
-                    {
-                        return OutputMsg.generateMessage("Attenzione!", "Hai già la firmato la lezione!", true);
-                    }
-                    else
-                    {
-                        if (l.OraFine < time)
-                        {
-                            if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
-                            {
-                                presenza.Uscita = l.OraFine;
-                                _context.SaveChanges();
-                                return OutputMsg.generateMessage("Ok", $"Arrivederci {s.Nome}!");
-                            }
-                        }
-                        else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
-                        {
-                            presenza.Uscita = time;
-                            _context.SaveChanges();
-                            return OutputMsg.generateMessage("Ok", $"Arrivederci {s.Nome}!");
-                        }
-                        else if (presenza == null && l.OraFine >= time)
-                        {
-                            var newPresenza = new Presenze
-                            {
-                                IdLezione = l.IdLezione,
-                                IdStudente = s.IdStudente,
-                                Ingresso = time <= (l.OraInizio + new TimeSpan(0, 10, 0)) ? l.OraInizio : time
-                            };
-
-                            _context.Presenze.Add(newPresenza);
-                            _context.SaveChanges();
-                            return OutputMsg.generateMessage("Ok", $"Ben arrivato {s.Nome}!");
-                        }
-                    }                                  
-                }
-            }
-
-            return OutputMsg.generateMessage("Spiacente", "Non ci sono lezioni oggi!", true);
         }
 
         public int GetDaysAmount(int idStudente)
