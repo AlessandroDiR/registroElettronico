@@ -17,12 +17,10 @@ namespace ProjectWork.Controllers
     public class StudentiController : ControllerBase
     {
         private readonly AvocadoDBContext _context;
-        private readonly utilities _ut;
 
         public StudentiController(AvocadoDBContext context)
         {
             _context = context;
-            _ut = new utilities(context);
         }
 
         // GET: api/Studenti

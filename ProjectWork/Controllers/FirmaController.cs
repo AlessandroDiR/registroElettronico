@@ -23,12 +23,6 @@ namespace ProjectWork.Controllers
             _ut = new utilities(context);
         }
 
-        [HttpGet]
-        public IActionResult Get()
-        {
-            return Ok("ciao");
-        }
-
         // POST: api/Firma
         [HttpPost]
         public IActionResult Post([FromBody] FirmaModel firma)
