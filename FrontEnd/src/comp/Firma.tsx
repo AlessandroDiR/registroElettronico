@@ -62,7 +62,7 @@ export default class Firma extends React.PureComponent<IProps, IState>{
         cipher = new Cipher(),
         codice = cipher.encode(code)
         
-        axios.post(siteUrl + "/api/studenti/firma", {
+        axios.post(siteUrl + "/api/firma", {
             code: codice,
             idCorso: idCorso,
             anno: anno
