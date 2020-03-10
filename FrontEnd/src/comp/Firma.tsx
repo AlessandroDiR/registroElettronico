@@ -59,7 +59,7 @@ export default class Firma extends React.PureComponent<IProps, IState>{
         let idCorso = parseInt(sessionStorage.getItem("corso")),
         anno = parseInt(sessionStorage.getItem("classe"))
         
-        axios.post(siteUrl + "/api/studenti/firma", {
+        axios.post(siteUrl + "/api/firma", {
             code: code,
             idCorso: idCorso,
             anno: anno
