@@ -6,7 +6,6 @@ import { routerHistory } from ".."
 import { Divider, Tooltip, Spin, Icon } from "antd"
 import { ICorso } from "../models/ICorso"
 import Axios from "axios"
-import { Cipher } from "../models/Cipher"
 
 export interface IProps{}
 export interface IState{
@@ -58,12 +57,10 @@ export default class Firma extends React.PureComponent<IProps, IState>{
         this.switchInput(true)
 
         let idCorso = parseInt(sessionStorage.getItem("corso")),
-        anno = parseInt(sessionStorage.getItem("classe")),
-        cipher = new Cipher(),
-        codice = cipher.encode(code)
+        anno = parseInt(sessionStorage.getItem("classe"))
         
         axios.post(siteUrl + "/api/firma", {
-            code: codice,
+            code: code,
             idCorso: idCorso,
             anno: anno
         }).then((response) => {
