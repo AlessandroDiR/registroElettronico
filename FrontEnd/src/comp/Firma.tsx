@@ -58,12 +58,10 @@ export default class Firma extends React.PureComponent<IProps, IState>{
         this.switchInput(true)
 
         let idCorso = parseInt(sessionStorage.getItem("corso")),
-        anno = parseInt(sessionStorage.getItem("classe")),
-        cipher = new Cipher(),
-        codice = cipher.encode(code)
+        anno = parseInt(sessionStorage.getItem("classe"))
         
         axios.post(siteUrl + "/api/studenti/firma", {
-            code: codice,
+            code: code,
             idCorso: idCorso,
             anno: anno
         }).then((response) => {
