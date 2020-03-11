@@ -8,7 +8,7 @@ export interface IStudent{
     readonly cf: string
     readonly password?: string
     readonly dataNascita: string
-    readonly code?: string
+    readonly codice?: string
     readonly ritirato?: boolean
     readonly dataRitiro?: string
     readonly giornate?: number
