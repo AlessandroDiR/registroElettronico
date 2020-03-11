@@ -138,7 +138,8 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                         <tr>
                             <th>Nome</th>
                             <th>Cognome</th>
-                            <th style={{width: "15%"}}>Ore svolte</th>
+                            <th style={{width: "15%"}}>Ore 1° anno</th>
+                            <th style={{width: "15%"}}>Ore 2° anno</th>
                             <th style={{width: "20%"}}>Azioni</th>
                         </tr>
 
@@ -149,7 +150,8 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                                 return <tr className={"bg-"+bg}>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.nome}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.cognome}</td>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{d.monteOre}</td>
+                                    <td style={{maxWidth: 0}} className="text-truncate">{d.monteOre.orePrimo}</td>
+                                    <td style={{maxWidth: 0}} className="text-truncate">{d.monteOre.oreSecondo}</td>
                                     <td>
                                         <Tooltip title="Dettagli">
                                             <button type="button" className="btn btn-info circle-btn" onClick={() => routerHistory.push(adminRoute+"/docenti/" + d.idDocente)}>

@@ -8,5 +8,5 @@ export interface IDocente{
     readonly corsi: number[]
     readonly password?: string
     readonly ritirato?: boolean
-    readonly monteOre?: number
+    readonly monteOre?: number | any
 }

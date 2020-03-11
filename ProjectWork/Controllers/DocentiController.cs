@@ -37,7 +37,7 @@ namespace ProjectWork.Controllers
                     cf = d.Cf,
                     ritirato = bool.Parse(d.Ritirato),
                     corsi = getCorsiDocente(d.IdDocente),
-                    monteOre = getMonteOre(d.IdDocente)
+                    monteOre = getMonteOrePerAnno(d.IdDocente)
                 };
 
                 result.Add(json);
