@@ -15,34 +15,23 @@ namespace ProjectWork.Controllers
     public class FirmaController : ControllerBase
     {
         private readonly AvocadoDBContext _context;
-        private readonly utilities _ut;
 
         public FirmaController(AvocadoDBContext context)
         {
             _context = context;
-            _ut = new utilities(context);
-        }
-
-        [HttpGet]
-        public IActionResult Get()
-        {
-            return Ok("ciao");
         }
 
         // POST: api/Firma
         [HttpPost]
         public IActionResult Post([FromBody] FirmaModel firma)
         {
-            if (_ut.CheckCode(Encoder.encode(firma.code)) == "studente")
+            var studente = _context.Studenti.Where(s => s.IdCorso == firma.idCorso && s.AnnoFrequentazione == firma.anno).SingleOrDefault(s => s.Codice == firma.code);
+            if(studente != null)
+                return Ok(FirmaStudente(studente, firma.idCorso, firma.anno));
+            else
             {
-                var studente = _context.Studenti.Where(s => s.IdCorso == firma.idCorso && s.AnnoFrequentazione == firma.anno).SingleOrDefault(s => s.Cf == firma.code);
-                if(studente != null)
-                    return Ok(FirmaStudente(studente, firma.idCorso, firma.anno));
-            }
-            else if (_ut.CheckCode(Encoder.encode(firma.code)) == "docente")
-            {
-                var docente = _context.Docenti.SingleOrDefault(d => d.Cf == firma.code);
-                if(docente != null)
+                var docente = _context.Docenti.SingleOrDefault(d => d.Codice == firma.code);
+                if (docente != null)
                     return Ok(FirmaDocente(docente, firma.idCorso, firma.anno));
             }
 

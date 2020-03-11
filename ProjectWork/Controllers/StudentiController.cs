@@ -17,12 +17,10 @@ namespace ProjectWork.Controllers
     public class StudentiController : ControllerBase
     {
         private readonly AvocadoDBContext _context;
-        private readonly utilities _ut;
 
         public StudentiController(AvocadoDBContext context)
         {
             _context = context;
-            _ut = new utilities(context);
         }
 
         // GET: api/Studenti
@@ -219,11 +217,12 @@ namespace ProjectWork.Controllers
         [HttpPost]
         public async Task<IActionResult> PostStudenti([FromBody] Studenti[] studenti)
         {
-            //string nome, string luogo_nas, string cognome, string cf, DateTime data_nas, int anno_iscrizione, int id_corso
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            var idCorso = studenti[0].IdCorso;
 
             foreach(var s in studenti)
             {
@@ -236,15 +235,14 @@ namespace ProjectWork.Controllers
                 studente.AnnoFrequentazione = s.AnnoFrequentazione;
                 studente.IdCorso = s.IdCorso;
                 studente.Password = Cipher.encode(s.Cf);
+                studente.Codice = Cipher.encode(s.Cf);
 
                 _context.Studenti.Add(studente);
             }
 
-            
-
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("GetStudenti", new { idCorso = 1 });
+            return GetStudenti(idCorso);
         }
 
         // PUT: api/Studenti/5
@@ -262,8 +260,12 @@ namespace ProjectWork.Controllers
             }
 
             var s = await _context.Studenti.SingleOrDefaultAsync(i => i.IdStudente == id);
+
             if (studenti.Password == null)
                 studenti.Password = s.Password;
+
+            if (studenti.Codice == null)
+                studenti.Codice = s.Codice;
 
             _context.Remove(s);
             _context.Entry(studenti).State = EntityState.Modified;
@@ -319,8 +321,12 @@ namespace ProjectWork.Controllers
                 try
                 {
                     var s = _context.Studenti.Find(item.IdStudente);
+
                     if (item.Password == null)
                         item.Password = s.Password;
+
+                    if (item.Codice == null)
+                        item.Codice = s.Codice;
 
                     _context.Remove(s);
                     _context.Entry(item).State = EntityState.Modified;
