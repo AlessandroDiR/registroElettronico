@@ -6,7 +6,9 @@ import Axios from "axios"
 import { Cipher } from "../../models/Cipher"
 import { isAdmin } from "../../models/IAdmin"
 
-export interface IProps{}
+export interface IProps{
+    readonly forSignature: boolean
+}
 export interface IState{
     readonly adminName: string
     readonly adminPsw: string
@@ -60,9 +62,14 @@ export default class LoginTutor extends React.PureComponent<IProps, IState>{
             let data = response.data
 
             if(isAdmin(data)){
-                sessionStorage.setItem("adminSession", JSON.stringify(data))
-                routerHistory.push(adminRoute)
-                message.success("Login effettuato con successo!")
+                if(!this.props.forSignature){
+                    sessionStorage.setItem("adminSession", JSON.stringify(data))
+                    routerHistory.push(adminRoute)
+                    message.success("Login effettuato con successo!")
+                }else{
+                    sessionStorage.setItem("confermaTutor", "true")
+                    routerHistory.push("/")
+                }
             }
             else{
                 Modal.error({

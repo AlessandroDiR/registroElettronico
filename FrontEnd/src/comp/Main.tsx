@@ -6,6 +6,7 @@ import LessonsCalendar from "./LessonsCalendar"
 import SceltaCorso from "./SceltaCorso"
 import SceltaClasse from "./SceltaClasse"
 import LogoCorso from "./LogoCorso"
+import LoginTutor from "./admin/LoginTutor"
 
 export default class Main extends React.Component{
 
@@ -18,8 +19,11 @@ export default class Main extends React.Component{
 
     render(): JSX.Element{
         let idCorso = sessionStorage.getItem("corso"),
-        classe = sessionStorage.getItem("classe")
+        classe = sessionStorage.getItem("classe"),
+        confermaTutor = sessionStorage.getItem("confermaTutor")
 
+        if(!confermaTutor)
+            return <LoginTutor forSignature={true} />
         if(!idCorso)
             return <SceltaCorso />
 
