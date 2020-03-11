@@ -109,6 +109,7 @@ namespace ProjectWork.Controllers
                 email = s.Email,
                 dataNascita = s.DataNascita,
                 cf = s.Cf,
+                codice = s.Codice,
                 ritirato = bool.Parse(s.Ritirato),
                 dataRitiro = s.DataRitiro,
                 annoFrequentazione = s.AnnoFrequentazione,
