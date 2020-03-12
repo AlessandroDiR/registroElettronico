@@ -169,7 +169,7 @@ namespace ProjectWork.Models
                 entity.Property(e => e.Password)
                     .IsRequired()
                     .HasColumnName("password")
-                    .HasMaxLength(100)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UltimoLog)
@@ -179,7 +179,7 @@ namespace ProjectWork.Models
                 entity.Property(e => e.Username)
                     .IsRequired()
                     .HasColumnName("username")
-                    .HasMaxLength(16)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
             });
 

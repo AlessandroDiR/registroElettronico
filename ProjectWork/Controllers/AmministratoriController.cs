@@ -29,8 +29,6 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            var c = Cipher.decode(":k5::k5=");
-
             var admin = _context.Amministratori.Where(a => a.Username == amministratore.username);
 
             if (admin == null)

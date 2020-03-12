@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectWork.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Cors;
+using ProjectWork.classi;
 
 namespace ProjectWork.Controllers
 {

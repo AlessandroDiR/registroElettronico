@@ -2,11 +2,10 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.1": {
-      "Google.Apis/1.43.0": {
+      "Google.Apis/1.44.1": {
         "type": "package",
         "dependencies": {
-          "Google.Apis.Core": "1.43.0",
-          "Newtonsoft.Json": "10.0.2"
+          "Google.Apis.Core": "1.44.1"
         },
         "compile": {
           "lib/netstandard2.0/Google.Apis.dll": {}
@@ -15,11 +14,11 @@
           "lib/netstandard2.0/Google.Apis.dll": {}
         }
       },
-      "Google.Apis.Auth/1.43.0": {
+      "Google.Apis.Auth/1.44.1": {
         "type": "package",
         "dependencies": {
-          "Google.Apis": "1.43.0",
-          "Google.Apis.Core": "1.43.0"
+          "Google.Apis": "1.44.1",
+          "Google.Apis.Core": "1.44.1"
         },
         "compile": {
           "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll": {},
@@ -43,16 +42,29 @@
           "lib/netstandard2.0/Google.Apis.Calendar.v3.dll": {}
         }
       },
-      "Google.Apis.Core/1.43.0": {
+      "Google.Apis.Core/1.44.1": {
         "type": "package",
         "dependencies": {
-          "Newtonsoft.Json": "10.0.2"
+          "Newtonsoft.Json": "12.0.3"
         },
         "compile": {
           "lib/netstandard2.0/Google.Apis.Core.dll": {}
         },
         "runtime": {
           "lib/netstandard2.0/Google.Apis.Core.dll": {}
+        }
+      },
+      "Google.Apis.Gmail.v1/1.44.1.1859": {
+        "type": "package",
+        "dependencies": {
+          "Google.Apis": "1.44.1",
+          "Google.Apis.Auth": "1.44.1"
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.Gmail.v1.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Gmail.v1.dll": {}
         }
       },
       "MailKit/2.5.1": {
@@ -4846,16 +4858,16 @@
     }
   },
   "libraries": {
-    "Google.Apis/1.43.0": {
-      "sha512": "obrhmOs3G1NdKb6vJukj5nls3FJ8qcheSugvUDA5fHA+4sb9hOvSgtR4rzSiBFTSn30d8C9aJAUFlBtcFi4ltA==",
+    "Google.Apis/1.44.1": {
+      "sha512": "5l8vy1bwhuKDuE4Uku8qz2YnLaDhK1YJBGqzohx3MiaXyTucZWutovpEGYkvo6014rKUHa4hWDDuPxBJs/yxpA==",
       "type": "package",
-      "path": "google.apis/1.43.0",
+      "path": "google.apis/1.44.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE",
         "NuGetIcon.png",
-        "google.apis.1.43.0.nupkg.sha512",
+        "google.apis.1.44.1.nupkg.sha512",
         "google.apis.nuspec",
         "lib/net45/Google.Apis.PlatformServices.dll",
         "lib/net45/Google.Apis.dll",
@@ -4869,16 +4881,16 @@
         "lib/netstandard2.0/Google.Apis.xml"
       ]
     },
-    "Google.Apis.Auth/1.43.0": {
-      "sha512": "612MnDeSfltoLztQnlG78ndEJn4kCKP/tnqKMI4l0biZoVJb9l+H1KtU1tTLW1ftiq+mgSoGfAR4jS2JGGOJRA==",
+    "Google.Apis.Auth/1.44.1": {
+      "sha512": "5gIhSOw362+daGBT2YgElpQUWgLERsKOS7k8d2FzIxi6wXTpeu7ov5kT4fWrnoX4fUJ+ibxqTfhmEY8UThCxyA==",
       "type": "package",
-      "path": "google.apis.auth/1.43.0",
+      "path": "google.apis.auth/1.44.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE",
         "NuGetIcon.png",
-        "google.apis.auth.1.43.0.nupkg.sha512",
+        "google.apis.auth.1.44.1.nupkg.sha512",
         "google.apis.auth.nuspec",
         "lib/net45/Google.Apis.Auth.PlatformServices.dll",
         "lib/net45/Google.Apis.Auth.dll",
@@ -4921,16 +4933,16 @@
         "lib/netstandard2.0/Google.Apis.Calendar.v3.xml"
       ]
     },
-    "Google.Apis.Core/1.43.0": {
-      "sha512": "Y5uzXQP58JFV1VKENO+/IALD1ID8PSff8jFVL9jYUdiXKCI82/1hR8PAx4sQcAenFrFgCNAPSwYJRFJ46OvtBQ==",
+    "Google.Apis.Core/1.44.1": {
+      "sha512": "VjN2tpE5++8xRjBcHgXuW7HoxgvPYoAsONj6ekq1Uv20TaC3aDsw+1tVCt1M60pO4mK0vnoZAxupb49B308+0Q==",
       "type": "package",
-      "path": "google.apis.core/1.43.0",
+      "path": "google.apis.core/1.44.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE",
         "NuGetIcon.png",
-        "google.apis.core.1.43.0.nupkg.sha512",
+        "google.apis.core.1.44.1.nupkg.sha512",
         "google.apis.core.nuspec",
         "lib/net45/Google.Apis.Core.dll",
         "lib/net45/Google.Apis.Core.pdb",
@@ -4941,6 +4953,33 @@
         "lib/netstandard2.0/Google.Apis.Core.dll",
         "lib/netstandard2.0/Google.Apis.Core.pdb",
         "lib/netstandard2.0/Google.Apis.Core.xml"
+      ]
+    },
+    "Google.Apis.Gmail.v1/1.44.1.1859": {
+      "sha512": "BDaTW68jeis3VBIwqIWK2FnrT1Yw6ydoSu+5BsHqqN/5zOv9Zeanmi0N9vKB7ge/7954BqcaTIEaxKTlHP3mvA==",
+      "type": "package",
+      "path": "google.apis.gmail.v1/1.44.1.1859",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "google.apis.gmail.v1.1.44.1.1859.nupkg.sha512",
+        "google.apis.gmail.v1.nuspec",
+        "lib/net40/Google.Apis.Gmail.v1.dll",
+        "lib/net40/Google.Apis.Gmail.v1.pdb",
+        "lib/net40/Google.Apis.Gmail.v1.xml",
+        "lib/net45/Google.Apis.Gmail.v1.dll",
+        "lib/net45/Google.Apis.Gmail.v1.pdb",
+        "lib/net45/Google.Apis.Gmail.v1.xml",
+        "lib/netstandard1.0/Google.Apis.Gmail.v1.dll",
+        "lib/netstandard1.0/Google.Apis.Gmail.v1.pdb",
+        "lib/netstandard1.0/Google.Apis.Gmail.v1.xml",
+        "lib/netstandard1.3/Google.Apis.Gmail.v1.dll",
+        "lib/netstandard1.3/Google.Apis.Gmail.v1.pdb",
+        "lib/netstandard1.3/Google.Apis.Gmail.v1.xml",
+        "lib/netstandard2.0/Google.Apis.Gmail.v1.dll",
+        "lib/netstandard2.0/Google.Apis.Gmail.v1.pdb",
+        "lib/netstandard2.0/Google.Apis.Gmail.v1.xml"
       ]
     },
     "MailKit/2.5.1": {
@@ -13153,6 +13192,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.1": [
       "Google.Apis.Calendar.v3 >= 1.43.0.1858",
+      "Google.Apis.Gmail.v1 >= 1.44.1.1859",
       "MailKit >= 2.5.1",
       "Microsoft.AspNetCore.App >= 2.1.1",
       "Microsoft.AspNetCore.Razor.Design >= 2.1.2",
@@ -13205,6 +13245,10 @@
           "Google.Apis.Calendar.v3": {
             "target": "Package",
             "version": "[1.43.0.1858, )"
+          },
+          "Google.Apis.Gmail.v1": {
+            "target": "Package",
+            "version": "[1.44.1.1859, )"
           },
           "MailKit": {
             "target": "Package",

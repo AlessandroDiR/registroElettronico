@@ -25,6 +25,7 @@
       "ProjectWork/1.0.0": {
         "dependencies": {
           "Google.Apis.Calendar.v3": "1.43.0.1858",
+          "Google.Apis.Gmail.v1": "1.44.1.1859",
           "MailKit": "2.5.1",
           "Microsoft.AspNetCore.App": "2.1.1",
           "Microsoft.AspNetCore.Razor.Design": "2.1.2",
@@ -39,34 +40,33 @@
           "ProjectWork.dll": {}
         }
       },
-      "Google.Apis/1.43.0": {
+      "Google.Apis/1.44.1": {
         "dependencies": {
-          "Google.Apis.Core": "1.43.0",
-          "Newtonsoft.Json": "12.0.3"
+          "Google.Apis.Core": "1.44.1"
         },
         "runtime": {
           "lib/netstandard2.0/Google.Apis.dll": {
-            "assemblyVersion": "1.43.0.0",
-            "fileVersion": "1.43.0.0"
+            "assemblyVersion": "1.44.1.0",
+            "fileVersion": "1.44.1.0"
           }
         },
         "compile": {
           "lib/netstandard2.0/Google.Apis.dll": {}
         }
       },
-      "Google.Apis.Auth/1.43.0": {
+      "Google.Apis.Auth/1.44.1": {
         "dependencies": {
-          "Google.Apis": "1.43.0",
-          "Google.Apis.Core": "1.43.0"
+          "Google.Apis": "1.44.1",
+          "Google.Apis.Core": "1.44.1"
         },
         "runtime": {
           "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll": {
-            "assemblyVersion": "1.43.0.0",
-            "fileVersion": "1.43.0.0"
+            "assemblyVersion": "1.44.1.0",
+            "fileVersion": "1.44.1.0"
           },
           "lib/netstandard2.0/Google.Apis.Auth.dll": {
-            "assemblyVersion": "1.43.0.0",
-            "fileVersion": "1.43.0.0"
+            "assemblyVersion": "1.44.1.0",
+            "fileVersion": "1.44.1.0"
           }
         },
         "compile": {
@@ -76,8 +76,8 @@
       },
       "Google.Apis.Calendar.v3/1.43.0.1858": {
         "dependencies": {
-          "Google.Apis": "1.43.0",
-          "Google.Apis.Auth": "1.43.0"
+          "Google.Apis": "1.44.1",
+          "Google.Apis.Auth": "1.44.1"
         },
         "runtime": {
           "lib/netstandard2.0/Google.Apis.Calendar.v3.dll": {
@@ -89,18 +89,33 @@
           "lib/netstandard2.0/Google.Apis.Calendar.v3.dll": {}
         }
       },
-      "Google.Apis.Core/1.43.0": {
+      "Google.Apis.Core/1.44.1": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3"
         },
         "runtime": {
           "lib/netstandard2.0/Google.Apis.Core.dll": {
-            "assemblyVersion": "1.43.0.0",
-            "fileVersion": "1.43.0.0"
+            "assemblyVersion": "1.44.1.0",
+            "fileVersion": "1.44.1.0"
           }
         },
         "compile": {
           "lib/netstandard2.0/Google.Apis.Core.dll": {}
+        }
+      },
+      "Google.Apis.Gmail.v1/1.44.1.1859": {
+        "dependencies": {
+          "Google.Apis": "1.44.1",
+          "Google.Apis.Auth": "1.44.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Gmail.v1.dll": {
+            "assemblyVersion": "1.44.1.1859",
+            "fileVersion": "1.44.1.1859"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.Gmail.v1.dll": {}
         }
       },
       "MailKit/2.5.1": {
@@ -3653,19 +3668,19 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Google.Apis/1.43.0": {
+    "Google.Apis/1.44.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-obrhmOs3G1NdKb6vJukj5nls3FJ8qcheSugvUDA5fHA+4sb9hOvSgtR4rzSiBFTSn30d8C9aJAUFlBtcFi4ltA==",
-      "path": "google.apis/1.43.0",
-      "hashPath": "google.apis.1.43.0.nupkg.sha512"
+      "sha512": "sha512-5l8vy1bwhuKDuE4Uku8qz2YnLaDhK1YJBGqzohx3MiaXyTucZWutovpEGYkvo6014rKUHa4hWDDuPxBJs/yxpA==",
+      "path": "google.apis/1.44.1",
+      "hashPath": "google.apis.1.44.1.nupkg.sha512"
     },
-    "Google.Apis.Auth/1.43.0": {
+    "Google.Apis.Auth/1.44.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-612MnDeSfltoLztQnlG78ndEJn4kCKP/tnqKMI4l0biZoVJb9l+H1KtU1tTLW1ftiq+mgSoGfAR4jS2JGGOJRA==",
-      "path": "google.apis.auth/1.43.0",
-      "hashPath": "google.apis.auth.1.43.0.nupkg.sha512"
+      "sha512": "sha512-5gIhSOw362+daGBT2YgElpQUWgLERsKOS7k8d2FzIxi6wXTpeu7ov5kT4fWrnoX4fUJ+ibxqTfhmEY8UThCxyA==",
+      "path": "google.apis.auth/1.44.1",
+      "hashPath": "google.apis.auth.1.44.1.nupkg.sha512"
     },
     "Google.Apis.Calendar.v3/1.43.0.1858": {
       "type": "package",
@@ -3674,12 +3689,19 @@
       "path": "google.apis.calendar.v3/1.43.0.1858",
       "hashPath": "google.apis.calendar.v3.1.43.0.1858.nupkg.sha512"
     },
-    "Google.Apis.Core/1.43.0": {
+    "Google.Apis.Core/1.44.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Y5uzXQP58JFV1VKENO+/IALD1ID8PSff8jFVL9jYUdiXKCI82/1hR8PAx4sQcAenFrFgCNAPSwYJRFJ46OvtBQ==",
-      "path": "google.apis.core/1.43.0",
-      "hashPath": "google.apis.core.1.43.0.nupkg.sha512"
+      "sha512": "sha512-VjN2tpE5++8xRjBcHgXuW7HoxgvPYoAsONj6ekq1Uv20TaC3aDsw+1tVCt1M60pO4mK0vnoZAxupb49B308+0Q==",
+      "path": "google.apis.core/1.44.1",
+      "hashPath": "google.apis.core.1.44.1.nupkg.sha512"
+    },
+    "Google.Apis.Gmail.v1/1.44.1.1859": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-BDaTW68jeis3VBIwqIWK2FnrT1Yw6ydoSu+5BsHqqN/5zOv9Zeanmi0N9vKB7ge/7954BqcaTIEaxKTlHP3mvA==",
+      "path": "google.apis.gmail.v1/1.44.1.1859",
+      "hashPath": "google.apis.gmail.v1.1.44.1.1859.nupkg.sha512"
     },
     "MailKit/2.5.1": {
       "type": "package",
