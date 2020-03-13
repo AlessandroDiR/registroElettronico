@@ -166,7 +166,6 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
-
             var t = _context.Tenere.Where(d => d.IdDocente == id);
             _context.Tenere.RemoveRange(t);
             
@@ -181,6 +180,9 @@ namespace ProjectWork.Controllers
 
             if (docenti.Password == null)
                 docenti.Password = doc.Password;
+
+            if (docenti.Codice == null)
+                docenti.Codice = doc.Codice;
 
             _context.Remove(doc);
             _context.Entry(docenti).State = EntityState.Modified;
@@ -214,10 +216,12 @@ namespace ProjectWork.Controllers
             }
 
             Docenti docente = new Docenti();
+            docente.IdDocente = _context.Docenti.Count() + 1;
             docente.Nome = d.Nome;
             docente.Cognome = d.Cognome;
             docente.Cf = d.Cf;
             docente.Password = Cipher.encode(d.Cf);
+            docente.Codice = Cipher.encode(d.Cf);
             docente.Email = d.Email;
 
             foreach (var item in d.Tenere)

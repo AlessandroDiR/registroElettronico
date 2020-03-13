@@ -65,8 +65,8 @@ namespace ProjectWork.classi
                     Data = e.date,
                     OraInizio = e.start,
                     OraFine = e.end,
-                    IdCalendario = idCalendario,
-                    IdMateria = FindIdMateria(e.summary)
+                    IdCalendario = idCalendario
+                    //IdMateria = FindIdMateria(e.summary)
                 };
 
                 _context.Lezioni.Add(lezione);
