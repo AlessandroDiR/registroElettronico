@@ -6,7 +6,7 @@ import LessonsCalendar from "./LessonsCalendar"
 import SceltaCorso from "./SceltaCorso"
 import SceltaClasse from "./SceltaClasse"
 import LogoCorso from "./LogoCorso"
-import LoginTutor from "./admin/LoginTutor"
+import CodiceAccesso from "./CodiceAccesso"
 
 export default class Main extends React.Component{
 
@@ -22,13 +22,14 @@ export default class Main extends React.Component{
         classe = sessionStorage.getItem("classe"),
         confermaTutor = sessionStorage.getItem("confermaTutor")
 
-        if(!confermaTutor)
-            return <LoginTutor forSignature={true} />
         if(!idCorso)
             return <SceltaCorso />
 
         if(!classe)
             return <SceltaClasse />
+
+        if(!confermaTutor)
+            return <CodiceAccesso idCorso={parseInt(idCorso)} />
 
         return <div className="container-fluid" onClick={this.focusInput}>
 

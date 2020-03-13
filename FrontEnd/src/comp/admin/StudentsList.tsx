@@ -1,7 +1,7 @@
 import React from "react"
 import { IStudent } from "../../models/IStudent"
 import { routerHistory } from "../.."
-import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse, DatePicker, message } from "antd"
+import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse, DatePicker, message, Tabs } from "antd"
 import Axios from "axios"
 import { siteUrl, formattaData, adminRoute } from "../../utilities"
 import locale from "antd/es/date-picker/locale/it_IT"
@@ -37,8 +37,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
 
     showConfirm = (student: IStudent) => {
         const { students } = this.state
-        let date: string = "",
-        context = this
+        let date: string = ""
 
         Modal.confirm({
             title: `ATTENZIONE: si sta per ritirare uno studente (${student.nome} ${student.cognome})`,
@@ -51,7 +50,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             okText: "Conferma ritiro",
             okType: "danger",
             cancelText: "Annulla",
-            onOk() {
+            onOk: () => {
                 if(date === ""){
                     Modal.error({
                         title: "Errore!",
@@ -66,7 +65,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 studente.ritirato = "true"
                 studente.dataRitiro = dataRitiro
                 
-                context.setState({
+                this.setState({
                     students: null
                 })
                 
@@ -78,7 +77,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                     
                     currentList[editingStudent] = stu
 
-                    context.setState({
+                    this.setState({
                         students: currentList as IStudent[]
                     })
 
@@ -139,7 +138,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         }
 
         this.setState({
-            students: null
+            students: null,
+            selection: []
         })
 
         Axios.put(siteUrl+"/api/studenti", studenti).then(response => {
@@ -167,16 +167,42 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
 
     sortbyId = (a: IStudent, b: IStudent) => { 
         if(a.idStudente > b.idStudente)
-            return -1
+            return-1
         if(a.idStudente < b.idStudente)
             return 1
 
         return 0
     }
 
+    promuoviStudent = (s: IStudent) => {
+        Modal.confirm({
+            title: `${s.nome} ${s.cognome}`,
+            content: "Confermi di voler segnare questo studente come promosso?",
+            okText: "Conferma",
+            okType: "primary",
+            cancelText: "Annulla",
+            onOk: () => {
+                this.setState({
+                    students: null
+                })
+        
+                Axios.delete(siteUrl+"/api/studenti/" + s.idStudente).then(response => {
+                    let studenti = response.data as IStudent[]
+        
+                    this.setState({
+                        students: studenti
+                    })
+        
+                    message.success("Studente promosso con successo!")
+                })
+            }
+        })
+    }
+
     render(): JSX.Element{
         const { students, selection } = this.state,
-        { Panel } = Collapse
+        { Panel } = Collapse,
+        { TabPane } = Tabs
         
         if(!students){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
@@ -186,72 +212,144 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             </div>
         }
         
-        let firstYear = students.filter(s => s.annoFrequentazione === 1).sort(this.sortbyId).sort((a, _) => a.ritirato ? 0 : -1),
-        secondYear = students.filter(s => s.annoFrequentazione === 2).sort(this.sortbyId).sort((a, _) => a.ritirato ? 0 : -1),
-        groups = [firstYear, secondYear]
+        let firstYear = students.filter(s => s.annoFrequentazione === 1 && !s.promosso).sort(this.sortbyId).sort((a, _) => a.ritirato ? 0 : -1),
+        secondYear = students.filter(s => s.annoFrequentazione === 2 && !s.promosso).sort(this.sortbyId).sort((a, _) => a.ritirato ? 0 : -1),
+        groups = [firstYear, secondYear],
+        ritirati = students.filter(s => s.promosso).sort(this.sortbyId)
 
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-3 text-center">Studenti del corso</h3>
 
-            <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push(adminRoute+"/studenti/new")}>
-                <i className="fal fa-plus"></i> Aggiungi studente
-            </button>
+            <Tabs defaultActiveKey="1">
+                <TabPane tab="Studenti attivi" key="1">
+                    <button className="btn btn-success float-right" type="button" onClick={() => routerHistory.push(adminRoute+"/studenti/new")}>
+                        <i className="fal fa-plus"></i> Aggiungi studente
+                    </button>
 
-            <button className="btn btn-orange float-right mb-3 mr-2" type="button" onClick={this.showHideModal}>
-                <i className="fa fa-arrows-alt"></i> Sposta studenti
-            </button>
+                    <button className="btn btn-orange float-right mr-2" type="button" onClick={this.showHideModal}>
+                        <i className="fa fa-arrows-alt"></i> Sposta studenti
+                    </button>
 
-            <button className="btn btn-blue float-right mb-3 mr-2" type="button" onClick={() => routerHistory.push(adminRoute+"/studenti/import")}>
-                <i className="fa fa-file-csv"></i> Importa da CSV
-            </button>
+                    <button className="btn btn-blue float-right mr-2" type="button" onClick={() => routerHistory.push(adminRoute+"/studenti/import")}>
+                        <i className="fa fa-file-csv"></i> Importa da CSV
+                    </button>
 
-            <table className="table table-bordered text-center">
-                
-                
-                {
-                    groups.map(g => {
-                        if(!g[0])
-                            return false
+                    <div className="clearfix"></div>
+
+                    <Tabs defaultActiveKey="0">
+                        
+                        {
+                            groups.map((g, i) => {
+                                if(!g[0])
+                                    return false
+                                    
+                                let checkedAll = this.allRetired(g),
+                                tabTitle = g[0].annoFrequentazione === 1 ? "Primo" : "Secondo"
+
+                                g.forEach(element => {
+                                    if(selection.indexOf(element) === -1 && !element.ritirato)
+                                        checkedAll = false
+                                })
+
+                                return <TabPane tab={tabTitle + " anno"} key={i.toString()}>
+                                    <table className="table table-bordered text-center">
+
+                                        <tbody className="border-top-0">
+                                            <tr>
+                                                <th style={{width: "5%"}}>
+                                                    <Tooltip title="Seleziona tutti">
+                                                        <Checkbox onChange={(e) => this.selectAll(g[0].annoFrequentazione, e)} checked={checkedAll} />
+                                                    </Tooltip>
+                                                </th>
+                                                <th>Nome</th>
+                                                <th>Cognome</th>
+                                                <th>Codice Fiscale</th>
+                                                <th style={{width: "15%"}}>Frequenza</th>
+                                                <th style={{width: "26%"}}>Azioni</th>
+                                            </tr>
+                                
+                                            {
+                                                g.map(s => {
+                                                    let checked = this.state.selection.find(n => n === s) ? true : false,
+                                                    bg = s.ritirato ? "light font-italic" : "white"
                             
-                        let checkedAll = this.allRetired(g)
+                                                    return <tr className={"bg-"+bg}>
+                                                        <td>
+                                                            {
+                                                                s.ritirato ? <Checkbox disabled={true} /> : <Checkbox onChange={() => this.changeSelection(s)} checked={checked} />
+                                                            }
+                                                        </td>
+                                                        <td style={{maxWidth: 0}} className="text-truncate">{s.nome}</td>
+                                                        <td style={{maxWidth: 0}} className="text-truncate">{s.cognome}</td>
+                                                        <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
+                                                        <td style={{maxWidth: 0}} className="text-truncate">{s.frequenza}%</td>
+                                                        
+                                                        <td>
+                                                            <Tooltip title="Dettagli">
+                                                                <button type="button" className="btn btn-info circle-btn" onClick={() => routerHistory.push(adminRoute+"/studenti/" + s.idStudente)}>
+                                                                    <i className="fa fa-info"></i>
+                                                                </button>
+                                                            </Tooltip>
+                                                            
+                                                            {
+                                                                !s.ritirato && <Tooltip title="Modifica">
+                                                                    <button type="button" className="btn btn-warning text-white circle-btn ml-2" onClick={() => routerHistory.push(adminRoute+"/studenti/edit/" + s.idStudente)}>
+                                                                        <i className="fa fa-pen"></i>
+                                                                    </button>
+                                                                </Tooltip>
+                                                            }
+                                                            {
+                                                                !s.ritirato && <Tooltip title="Segna come ritirato">
+                                                                    <button type="button" className="btn btn-danger circle-btn ml-2" onClick={() => this.showConfirm(s)}>
+                                                                        <i className="fa fa-user-times"></i>
+                                                                    </button>
+                                                                </Tooltip>
+                                                            }
 
-                        g.forEach(element => {
-                            if(selection.indexOf(element) === -1 && !element.ritirato)
-                                checkedAll = false
-                        })
+                                                            {
+                                                                s.ritirato && <Tooltip title="Studente ritirato">
+                                                                    <button type="button" className="circle-btn ml-2 border-0">
+                                                                        <i className="fa fa-user-slash"></i>
+                                                                    </button>
+                                                                </Tooltip>
+                                                            }
+                                                            
+                                                            <Tooltip title="Segna come promosso">
+                                                                <button type="button" className="btn btn-success circle-btn ml-2" onClick={() => this.promuoviStudent(s)}>
+                                                                    <i className="fa fa-user-check"></i>
+                                                                </button>
+                                                            </Tooltip>
+                                                            
+                                                        </td>
+                                                    </tr>
+                                                })
+                                            }
+                                        </tbody>
+                                    </table>
+                                </TabPane>
+                            })
+                        }
+                    </Tabs>
+                </TabPane>
 
-                        return <tbody className="border-top-0">
-                            
-                            <tr className="thead-light">
-                                <th colSpan={7}>
-                                    { g[0].annoFrequentazione === 1 ? "Primo" : "Secondo" } anno
-                                </th>
-                            </tr>
+                <TabPane tab="Studenti archiviati" key="2">
+                    <table className="table table-bordered text-center">
+                        <tbody className="border-top-0">
 
                             <tr>
-                                <th style={{width: "5%"}}>
-                                    <Tooltip title="Seleziona tutti">
-                                        <Checkbox onChange={(e) => this.selectAll(g[0].annoFrequentazione, e)} checked={checkedAll} />
-                                    </Tooltip>
-                                </th>
+                                <th><i className="fa fa-check-circle fa-lg text-success"></i></th>
                                 <th>Nome</th>
                                 <th>Cognome</th>
                                 <th>Codice Fiscale</th>
                                 <th style={{width: "15%"}}>Frequenza</th>
                                 <th style={{width: "20%"}}>Azioni</th>
                             </tr>
-                
+                            
                             {
-                                g.map(s => {
-                                    let checked = this.state.selection.find(n => n === s) ? true : false,
-                                    bg = s.ritirato ? "light font-italic" : "white"
-            
-                                    return <tr className={"bg-"+bg}>
-                                        <td>
-                                            {
-                                                s.ritirato ? <Checkbox disabled={true} /> : <Checkbox onChange={() => this.changeSelection(s)} checked={checked} />
-                                            }
-                                        </td>
+                                ritirati.map(s => {
+
+                                    return <tr>
+                                        <td><i className="fa fa-check-circle fa-lg text-success"></i></td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.nome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cognome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
@@ -262,39 +360,15 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                                 <button type="button" className="btn btn-info circle-btn" onClick={() => routerHistory.push(adminRoute+"/studenti/" + s.idStudente)}>
                                                     <i className="fa fa-info"></i>
                                                 </button>
-                                            </Tooltip>
-                                            
-                                            {
-                                                !s.ritirato && <Tooltip title="Modifica">
-                                                    <button type="button" className="btn btn-warning text-white circle-btn ml-2" onClick={() => routerHistory.push(adminRoute+"/studenti/edit/" + s.idStudente)}>
-                                                        <i className="fa fa-pen"></i>
-                                                    </button>
-                                                </Tooltip>
-                                            }
-                                            {
-                                                !s.ritirato && <Tooltip title="Segna come ritirato">
-                                                    <button type="button" className="btn btn-danger circle-btn ml-2" onClick={() => this.showConfirm(s)}>
-                                                        <i className="fa fa-user-times"></i>
-                                                    </button>
-                                                </Tooltip>
-                                            }
-
-                                            {
-                                                s.ritirato && <Tooltip title="Studente ritirato">
-                                                    <button type="button" className="circle-btn ml-2 border-0">
-                                                        <i className="fa fa-user-slash"></i>
-                                                    </button>
-                                                </Tooltip>
-                                            }
-                                            
+                                            </Tooltip>                                            
                                         </td>
                                     </tr>
                                 })
                             }
                         </tbody>
-                    })
-                }
-            </table>
+                    </table>
+                </TabPane>
+            </Tabs>
 
             <Modal title="Sposta studenti" visible={this.state.confirmModal} onCancel={this.showHideModal} cancelText="Annulla" okText="Conferma" onOk={this.moveStudents}>
                 <label className="text-secondary">Scegliere l'anno in cui spostare gli studenti</label>
