@@ -29,7 +29,7 @@ export default class Dashboard extends React.Component{
         let session = sessionStorage.getItem("adminSession")
         
         if(!session)
-            return <LoginTutor forSignature={false} />
+            return <LoginTutor />
 
         let admin = JSON.parse(session) as IAdmin
 

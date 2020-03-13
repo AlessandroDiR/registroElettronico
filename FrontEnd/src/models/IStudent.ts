@@ -13,4 +13,5 @@ export interface IStudent{
     readonly dataRitiro?: string
     readonly giornate?: number
     readonly frequenza?: number
+    readonly promosso?: boolean
 }
