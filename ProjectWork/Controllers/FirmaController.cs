@@ -35,7 +35,7 @@ namespace ProjectWork.Controllers
                     return Ok(FirmaDocente(docente, firma.idCorso, firma.anno));
             }
 
-            return Ok(OutputMsg.generateMessage("Errore", "Il codice non è valido!", true));
+            return Ok(OutputMsg.generateMessage("Errore!", "Il codice non è valido!", true));
         }
 
         public string FirmaStudente(Studenti s, int idCorso, int anno)
@@ -62,14 +62,14 @@ namespace ProjectWork.Controllers
                             {
                                 presenza.Uscita = l.OraFine;
                                 _context.SaveChanges();
-                                return OutputMsg.generateMessage("Ok", $"Arrivederci {s.Nome}!");
+                                return OutputMsg.generateMessage("Ok!", $"Arrivederci {s.Nome}!");
                             }
                         }
                         else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
                         {
                             presenza.Uscita = time;
                             _context.SaveChanges();
-                            return OutputMsg.generateMessage("Ok", $"Arrivederci {s.Nome}!");
+                            return OutputMsg.generateMessage("Ok!", $"Arrivederci {s.Nome}!");
                         }
                         else if (presenza == null && l.OraFine >= time)
                         {
@@ -82,13 +82,13 @@ namespace ProjectWork.Controllers
 
                             _context.Presenze.Add(newPresenza);
                             _context.SaveChanges();
-                            return OutputMsg.generateMessage("Ok", $"Ben arrivato {s.Nome}!");
+                            return OutputMsg.generateMessage("Ok!", $"Ben arrivato {s.Nome}!");
                         }
                     }
                 }
             }
 
-            return OutputMsg.generateMessage("Spiacente", "Non ci sono lezioni oggi!", true);
+            return OutputMsg.generateMessage("Spiacente!", "Non ci sono lezioni oggi!", true);
         }
 
         public string FirmaDocente(Docenti d, int idCorso, int anno)
