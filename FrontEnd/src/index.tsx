@@ -7,12 +7,11 @@ import Main from "./comp/Main"
 import { Router, Switch, Route } from "react-router-dom"
 import Dashboard from "./comp/admin/Dashboard"
 import UserApplication from "./comp/mobile/UserApplication"
-import DocentiDashboard from "./comp/docenti/DocentiDashboard"
 import Page404 from "./comp/Page404"
 import moment from "moment"
 import "moment/locale/it"
 import SuperDashboard from "./comp/superadmin/SuperDashboard"
-import { superAdminRoute, adminRoute, docentiRoute } from "./utilities"
+import { superAdminRoute, adminRoute } from "./utilities"
 
 moment.locale("it")
 
@@ -36,10 +35,6 @@ ReactDOM.render(<Router history={routerHistory}>
 
         <Route path="/userprofile" render={() => (
             <UserApplication />
-        )} />
-
-        <Route path={docentiRoute} render={() => (
-            <DocentiDashboard />
         )} />
 
         <Route path={superAdminRoute} render={() => (

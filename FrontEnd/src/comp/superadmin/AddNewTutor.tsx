@@ -34,7 +34,7 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
 
             this.setState({
                 listaCorsi: corsi,
-                corso: corsi[0].idCorso
+                corso: corsi.length ? corsi[0].idCorso : 0
             })
         })
     }
@@ -116,6 +116,12 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
 
             return <div className="col px-5 py-4 right-block" id="mainBlock">
                 <Spin indicator={icon} />
+            </div>
+        }
+
+        if(!listaCorsi.length){
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
+                È necessario creare almeno un corso per poter inserire un nuovo coordinatore.
             </div>
         }
 
