@@ -212,7 +212,9 @@ namespace ProjectWork.Models
             {
                 entity.HasKey(e => e.IdDocente);
 
-                entity.Property(e => e.IdDocente).HasColumnName("id_docente");
+                entity.Property(e => e.IdDocente)
+                    .HasColumnName("id_docente")
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Cf)
                     .IsRequired()
