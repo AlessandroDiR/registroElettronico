@@ -43,7 +43,7 @@ export default class CodiceAccesso extends React.PureComponent<IProps, IState>{
     render(): JSX.Element{
         return <div className="col-11 col-lg-5 mx-auto" id="loginBlock">
             <form className="w-100 bg-white p-3 rounded shadow" onSubmit={this.inviaCodice}>
-                <h3 className="text-center">Conferma coordinatore</h3>
+                <h3 className="text-center">Conferma del coordinatore</h3>
 
                 <div className="form-group">
                     <label className="text-secondary">Codice di conferma</label>

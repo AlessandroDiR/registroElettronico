@@ -108,6 +108,7 @@ export default class Firma extends React.PureComponent<IProps, IState>{
     cambiaCorso = () => {
         sessionStorage.removeItem("corso")
         sessionStorage.removeItem("classe")
+        sessionStorage.removeItem("confermaTutor")
 
         routerHistory.push("/")
     }
