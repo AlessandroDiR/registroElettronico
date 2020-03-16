@@ -36,7 +36,7 @@ namespace ProjectWork.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 
@@ -473,12 +473,19 @@ namespace ProjectWork.Models
                     .HasColumnName("password")
                     .IsUnicode(false);
 
+                entity.Property(e => e.Promosso)
+                    .IsRequired()
+                    .HasColumnName("promosso")
+                    .HasMaxLength(5)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('false')");
+
                 entity.Property(e => e.Ritirato)
                     .IsRequired()
                     .HasColumnName("ritirato")
                     .HasMaxLength(5)
                     .IsUnicode(false)
-                    .HasDefaultValueSql("('False')");
+                    .HasDefaultValueSql("('false')");
 
                 entity.HasOne(d => d.IdCorsoNavigation)
                     .WithMany(p => p.Studenti)
