@@ -6,7 +6,6 @@ import { Icon, Spin, Progress, Statistic, Modal, Button } from "antd"
 import PresenzeTable from "./PresenzeTable"
 import Axios from "axios"
 import { formatItalian, siteUrl, adminRoute } from "../../utilities"
-import { Cipher } from "../../models/Cipher"
 import QRCode from "qrcode.react"
 
 export interface IRouteParams{
@@ -88,10 +87,8 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
 
     getQRCode = () => {
         const { student } = this.state
-        let cipher = new Cipher(),
-        code = cipher.encode(student.cf)
 
-        return code
+        return student.codice
     }
 
     roundToTwo = (total: number) => {    

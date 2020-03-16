@@ -174,6 +174,12 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             </div>
         }
 
+        if(!materie.length){
+            return <div className="col px-5 py-4 right-block" id="mainBlock">
+                È necessario creare almeno una materia per poter inserire un nuovo docente.
+            </div>
+        }
+
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo docente</h3>
 

@@ -14,12 +14,10 @@ namespace ProjectWork.Controllers
     public class DocentiController : ControllerBase
     {
         private readonly AvocadoDBContext _context;
-        private readonly utilities _ut;
 
         public DocentiController(AvocadoDBContext context)
         {
             _context = context;
-            _ut = new utilities(context);
         }
 
         // GET: api/Docenti
@@ -39,7 +37,7 @@ namespace ProjectWork.Controllers
                     cf = d.Cf,
                     ritirato = bool.Parse(d.Ritirato),
                     corsi = getCorsiDocente(d.IdDocente),
-                    monteOre = getMonteOre(d.IdDocente)
+                    monteOre = getMonteOrePerAnno(d.IdDocente)
                 };
 
                 result.Add(json);
@@ -149,76 +147,6 @@ namespace ProjectWork.Controllers
             return Ok(result);
         }
 
-
-        // GET: api/Docenti/firma/codice
-        [HttpGet("[action]/{code}")]
-        public string Firma([FromRoute] string code)
-        {
-            if (_ut.CheckCode(Encoder.encode(code)) != "docente")
-            {
-                return OutputMsg.generateMessage("Errore", "Il codice non è valido!", true);
-            }
-
-            var docente = _context.Docenti.SingleOrDefault(d => d.Cf == code);
-
-            return SalvaFirma(docente);
-        }
-
-        private string SalvaFirma(Docenti docente)
-        {
-            var date = DateTime.Now;
-            var time = TimeSpan.Parse(date.TimeOfDay.ToString().Split('.')[0]);
-
-            var lesson = _context.Lezioni.Where(l => l.Data == date);
-
-            if(lesson != null)
-            {
-                foreach(var l in lesson)
-                {
-                    var presenza = _context.PresenzeDocente.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdDocente == docente.IdDocente);
-                    if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0))
-                    {
-                        return OutputMsg.generateMessage("Attenzione!", "Hai già la firmato la lezione!", true);
-                    }
-                    else
-                    {
-                        if(l.OraFine < time)
-                        {
-                            if(presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
-                            {
-                                presenza.Uscita = l.OraFine;
-                                _context.SaveChanges();
-                                return OutputMsg.generateMessage("Ok", $"Arrivederci {docente.Nome}!");
-                            }
-                        }
-                        else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
-                        {
-                            presenza.Uscita = time;
-                            _context.SaveChanges();
-                            return OutputMsg.generateMessage("Ok", $"Arrivederci {docente.Nome}!");
-                        }
-                        else if (presenza == null && l.OraFine >= time)
-                        {
-                            var newPresenza = new PresenzeDocente
-                            {
-                                IdLezione = l.IdLezione,
-                                IdDocente = docente.IdDocente,
-                                Ingresso = time <= (l.OraInizio + new TimeSpan(0, 10, 0)) ? l.OraInizio : time
-                            };
-
-                            _context.PresenzeDocente.Add(newPresenza);
-                            _context.SaveChanges();
-                            return OutputMsg.generateMessage("Ok", $"Ben arrivato {docente.Nome}!");
-                        }
-                        
-                    }
-                }
-            }
-
-            return OutputMsg.generateMessage("Spiacente", "Non ci sono lezioni oggi!", true);
-
-        }
-
         // PUT: api/Docenti/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDocenti([FromRoute] int id, [FromBody] Docenti docenti)
@@ -238,7 +166,6 @@ namespace ProjectWork.Controllers
                 return NotFound();
             }
 
-
             var t = _context.Tenere.Where(d => d.IdDocente == id);
             _context.Tenere.RemoveRange(t);
             
@@ -253,6 +180,9 @@ namespace ProjectWork.Controllers
 
             if (docenti.Password == null)
                 docenti.Password = doc.Password;
+
+            if (docenti.Codice == null)
+                docenti.Codice = doc.Codice;
 
             _context.Remove(doc);
             _context.Entry(docenti).State = EntityState.Modified;
@@ -286,10 +216,12 @@ namespace ProjectWork.Controllers
             }
 
             Docenti docente = new Docenti();
+            docente.IdDocente = _context.Docenti.Count() + 1;
             docente.Nome = d.Nome;
             docente.Cognome = d.Cognome;
             docente.Cf = d.Cf;
             docente.Password = Cipher.encode(d.Cf);
+            docente.Codice = Cipher.encode(d.Cf);
             docente.Email = d.Email;
 
             foreach (var item in d.Tenere)

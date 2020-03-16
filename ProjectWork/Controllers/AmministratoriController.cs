@@ -29,27 +29,14 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            var c = Cipher.decode(":k5::k5=");
-
-            var admin = _context.Amministratori.Where(a => a.Username == amministratore.username);
+            var admin = await _context.Amministratori.SingleOrDefaultAsync(a => a.Username == amministratore.username && a.Password == amministratore.password);
 
             if (admin == null)
             {
-                return CreatedAtAction("GetDocenti", false);
+                return Ok("errore");
             }
-            else
-            {
-                foreach (var item in admin)
-                {
-                    if (item.Password == amministratore.password)
-                    {
-                        return Ok(item);
-                    }
-                }
-            }
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAmministratori", false);
+            return Ok(admin);
         }
 
     }

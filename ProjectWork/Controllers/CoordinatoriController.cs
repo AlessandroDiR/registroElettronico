@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
+using ProjectWork.classi;
 using ProjectWork.Models;
 
 namespace ProjectWork.Controllers
@@ -15,10 +16,12 @@ namespace ProjectWork.Controllers
     public class CoordinatoriController : ControllerBase
     {
         private readonly AvocadoDBContext _context;
+        private readonly EmailSender _es;
 
         public CoordinatoriController(AvocadoDBContext context)
         {
             _context = context;
+            _es = new EmailSender();
         }
 
         // GET: api/Coordinatori
@@ -78,6 +81,7 @@ namespace ProjectWork.Controllers
             }
 
             var coord = await _context.Coordinatori.SingleOrDefaultAsync(i => i.IdCoordinatore == id);
+
             if(c.Username==null)
                 c.Username = coord.Username;
             if(c.Password==null)
@@ -155,6 +159,8 @@ namespace ProjectWork.Controllers
             int id = _context.Coordinatori.Last().IdCoordinatore;
             _context.Coordinatori.Last().Username = coordinatore.Nome + "." + coordinatore.Cognome + id;
             await _context.SaveChangesAsync();
+
+            _es.SendEmail(_context.Coordinatori.Last());
 
             return CreatedAtAction("GetCoordinatori", _context.Coordinatori.Last());
         }

@@ -6,6 +6,7 @@ import LessonsCalendar from "./LessonsCalendar"
 import SceltaCorso from "./SceltaCorso"
 import SceltaClasse from "./SceltaClasse"
 import LogoCorso from "./LogoCorso"
+import CodiceAccesso from "./CodiceAccesso"
 
 export default class Main extends React.Component{
 
@@ -18,13 +19,17 @@ export default class Main extends React.Component{
 
     render(): JSX.Element{
         let idCorso = sessionStorage.getItem("corso"),
-        classe = sessionStorage.getItem("classe")
+        classe = sessionStorage.getItem("classe"),
+        confermaTutor = sessionStorage.getItem("confermaTutor")
 
         if(!idCorso)
             return <SceltaCorso />
 
         if(!classe)
             return <SceltaClasse />
+
+        if(!confermaTutor)
+            return <CodiceAccesso idCorso={parseInt(idCorso)} />
 
         return <div className="container-fluid" onClick={this.focusInput}>
 

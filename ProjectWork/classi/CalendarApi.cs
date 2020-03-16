@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
+using Google.Apis.Util.Store;
 using Microsoft.AspNetCore.Mvc;
 using ProjectWork.Models;
 
@@ -13,60 +17,129 @@ namespace ProjectWork.classi
     public class CalendarApi
     {
         private readonly AvocadoDBContext _context;
+        public CalendarService _service;
         public CalendarApi(AvocadoDBContext context)
         {
             _context = context;
+            ConfigService();
         }
 
-        private List<EventiModel> GetCalendarEvents(string gCalendarID)
+        public void ConfigService()
         {
-            var service = new CalendarService(new BaseClientService.Initializer
+            //UserCredential credential;
+            //using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+            //{
+            //    credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+            //        GoogleClientSecrets.Load(stream).Secrets,
+            //        new[] { CalendarService.Scope.Calendar },
+            //        "user", CancellationToken.None, new FileDataStore("Books.ListMyLibrary"));
+            //};
+
+            _service = new CalendarService(new BaseClientService.Initializer
             {
+                //HttpClientInitializer = credential,
                 ApiKey = "AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs"
             });
+        }
 
-            var request = service.Events.List(gCalendarID);
+        //public Channel ActivateWatch(CalendarService service, string gCalendarID)
+        //{
+        //    var body = new Channel
+        //    {
+        //        Id = Guid.NewGuid().ToString(),
+        //        Type = "web_hook",
+        //        Address = "https://avocadoapi.azurewebsites.net/notifications"
+        //    };
+
+        //    var request = service.Events.Watch(body, gCalendarID);
+        //    var response = request.Execute();
+
+        //    return response;
+        //}
+
+        public IList<Event> GetCalendarEvents(Calendari c)
+        {
+            var request = _service.Events.List(c.IdGoogleCalendar);
             request.MaxResults = 400;
 
             var response = request.Execute();
             var events = response.Items;
-            var result = new List<EventiModel>();
+            c.NextSyncToken = response.NextSyncToken;
 
-            foreach (var e in events)
-            {
-                if (e.Status != "cancelled")
-                {
-                    var date = e.Start.DateTime != null ? e.Start.DateTime.ToString().Split(' ')[0] : null;
-                    var start = e.Start.DateTime != null ? e.Start.DateTime.ToString().Split(' ')[1] : null;
-                    var end = e.End.DateTime != null ? e.End.DateTime.ToString().Split(' ')[1] : null;
-                    var json = new EventiModel
-                    {
-                        summary = e.Summary != null ? e.Summary : "NONE",
-                        date = DateTime.Parse(date).Date,
-                        start = TimeSpan.Parse(start),
-                        end = TimeSpan.Parse(end)
-                        
-                    };
-                    result.Add(json);
-                }
-            }
+            _context.Calendari.Update(c);
+            _context.SaveChanges();
 
-            return result;
+            return events;
         }
 
-        public bool SaveEventsInContext(string gCalendarID, string idCalendario)
+        public IList<Event> GetUpdatedEvents(Calendari c)
         {
-            var events = GetCalendarEvents(gCalendarID);
+            var request = _service.Events.List(c.IdGoogleCalendar);
+            request.MaxResults = 400;
+            request.SyncToken = c.NextSyncToken;
+
+            var response = request.Execute();
+            var updatedEvents = response.Items;
+            c.NextSyncToken = response.NextSyncToken;
+
+            _context.Calendari.Update(c);
+            _context.SaveChanges();
+
+            return updatedEvents;
+        }
+
+        public void UpdateEventsInContext(Calendari c, IList<Event> updatedEvents)
+        {
+            foreach(var e in updatedEvents)
+            {
+                var lezione = _context.Lezioni.SingleOrDefault(l => l.IdGEvent == e.Id);
+                if(lezione != null)
+                {
+                    if (e.Status == "cancelled")
+                        _context.Lezioni.Remove(lezione);
+                    else
+                    {
+                        lezione.Titolo = e.Summary;
+                        lezione.Data = DateTime.Parse(e.Start.DateTime.ToString().Split(' ')[0]).Date;
+                        lezione.OraInizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]);
+                        lezione.OraFine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1]);
+
+                        _context.Lezioni.Update(lezione);
+                    }
+                }
+                else
+                {
+                    lezione = new Lezioni
+                    {
+                        Titolo = e.Summary,
+                        Data = DateTime.Parse(e.Start.DateTime.ToString().Split(' ')[0]).Date,
+                        OraInizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]),
+                        OraFine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1]),
+                        IdCalendario = c.IdCalendario,
+                        IdGEvent = e.Id,
+                        IdMateria = FindIdMateria(e.Summary)
+                    };
+
+                    _context.Lezioni.Add(lezione);
+                }
+
+                _context.SaveChanges();
+            }
+        }
+
+        public bool SaveEventsInContext(Calendari c, IList<Event> events)
+        {
             foreach (var e in events)
             {
                 var lezione = new Lezioni
                 {
-                    Titolo = e.summary,
-                    Data = e.date,
-                    OraInizio = e.start,
-                    OraFine = e.end,
-                    IdCalendario = idCalendario,
-                    IdMateria = FindIdMateria(e.summary)
+                    Titolo = e.Summary,
+                    Data = DateTime.Parse(e.Start.DateTime.ToString().Split(' ')[0]).Date,
+                    OraInizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]),
+                    OraFine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1]),
+                    IdCalendario = c.IdCalendario,
+                    IdGEvent = e.Id,
+                    IdMateria = FindIdMateria(e.Summary)
                 };
 
                 _context.Lezioni.Add(lezione);

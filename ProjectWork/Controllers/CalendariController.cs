@@ -74,11 +74,21 @@ namespace ProjectWork.Controllers
             {
                 calendario.IdCalendario = Guid.NewGuid().ToString();
                 _context.Calendari.Add(calendario);
-                _calendarApi.SaveEventsInContext(calendario.IdGoogleCalendar, calendario.IdCalendario);
             }
             else
             {
-                _context.Calendari.Update(calendario);
+                if (!GoogleCalendarExists(calendario))
+                {
+                    _context.Lezioni.RemoveRange(_context.Lezioni.Where(l => l.IdCalendario == calendario.IdCalendario));
+                    var events = _calendarApi.GetCalendarEvents(calendario);
+                    _calendarApi.SaveEventsInContext(calendario, events);
+                }
+                else
+                {
+                    var updatedCalendar = _context.Calendari.Find(calendario.IdCalendario);
+                    var updatedEvents = _calendarApi.GetUpdatedEvents(updatedCalendar);
+                    _calendarApi.UpdateEventsInContext(calendario, updatedEvents);
+                }
             }
 
             try
@@ -124,6 +134,11 @@ namespace ProjectWork.Controllers
         private bool CalendariExists(string id)
         {
             return _context.Calendari.Any(e => e.IdCalendario == id);
+        }
+
+        private bool GoogleCalendarExists(Calendari c)
+        {
+            return _context.Calendari.Any(gc => gc.IdGoogleCalendar == c.IdGoogleCalendar);
         }
     }
 }

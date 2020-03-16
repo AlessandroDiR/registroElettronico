@@ -92,7 +92,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
             nome: nome.trim(),
             descrizione: descrizione.trim(),
             luogo: luogo.trim(),
-            logo: logo
+            logo: logo ? logo.trim() : ""
         }).then(_ => {
             message.success("Corso modificato con successo!")
             routerHistory.push(superAdminRoute+"/corsi")

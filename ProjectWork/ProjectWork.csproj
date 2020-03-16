@@ -5,27 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\static\css\2.986fbe91.chunk.css.map" />
-    <None Include="wwwroot\static\css\main.3348da53.chunk.css.map" />
-    <None Include="wwwroot\static\css\main.7bb606e3.chunk.css.map" />
-    <None Include="wwwroot\static\js\2.07bbf165.chunk.js" />
-    <None Include="wwwroot\static\js\2.07bbf165.chunk.js.LICENSE" />
-    <None Include="wwwroot\static\js\2.07bbf165.chunk.js.map" />
-    <None Include="wwwroot\static\js\2.f99629f5.chunk.js" />
-    <None Include="wwwroot\static\js\2.f99629f5.chunk.js.LICENSE" />
-    <None Include="wwwroot\static\js\2.f99629f5.chunk.js.map" />
-    <None Include="wwwroot\static\js\main.19653f6c.chunk.js" />
-    <None Include="wwwroot\static\js\main.19653f6c.chunk.js.map" />
-    <None Include="wwwroot\static\js\main.c90525ca.chunk.js" />
-    <None Include="wwwroot\static\js\main.c90525ca.chunk.js.map" />
-    <None Include="wwwroot\static\js\main.f74a1bd8.chunk.js" />
-    <None Include="wwwroot\static\js\main.f74a1bd8.chunk.js.map" />
-    <None Include="wwwroot\static\js\runtime-main.263c3f02.js" />
-    <None Include="wwwroot\static\js\runtime-main.263c3f02.js.map" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Google.Apis.Calendar.v3" Version="1.43.0.1858" />
+    <PackageReference Include="Google.Apis.Gmail.v1" Version="1.44.1.1859" />
+    <PackageReference Include="MailKit" Version="2.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.10" />
