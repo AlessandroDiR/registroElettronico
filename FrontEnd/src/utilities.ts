@@ -1,4 +1,4 @@
-export const siteUrl = "https://localhost:44336" 
+export const siteUrl = "http://localhost:5000" 
 //export const siteUrl = "https://avocadoapi.azurewebsites.net"
 export const logoUrl = "fitstic_logo.png"
 
@@ -12,52 +12,6 @@ export const Digits2 = (n: number) => {
 
 export const validateTime = (time: string) => {
     return /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])$/.test(time)
-}
-
-export const startEdit = (id: number) => {
-    let entrataInput = document.getElementById("entrataInput_" + id),
-    uscitaInput = document.getElementById("uscitaInput_" + id),
-    entrataSpan = document.getElementById("entrataSpan_" + id),
-    uscitaSpan = document.getElementById("uscitaSpan_" + id),
-    editBtn = document.getElementById("editBtn_" + id),
-    confirmBtn = document.getElementById("confirmBtn_" + id)
-
-    hideAll()
-
-    entrataInput.style.display = "block"
-    uscitaInput.style.display = "block"
-    confirmBtn.style.display = "inline-block"
-    entrataSpan.style.display = "none"
-    uscitaSpan.style.display = "none"
-    editBtn.style.display = "none"
-}
-
-export const hideAll = () => {
-    let entrataInputs = document.querySelectorAll("input[id^='entrataInput_']"),
-    uscitaInputs = document.querySelectorAll("input[id^='uscitaInput_']"),
-    entrataSpans = document.querySelectorAll("span[id^='entrataSpan_']"),
-    uscitaSpans = document.querySelectorAll("span[id^='uscitaSpan_']"),
-    confirmBtns = document.querySelectorAll("button[id^='confirmBtn_']"),
-    editBtns = document.querySelectorAll("button[id^='editBtn_']")
-    
-    entrataInputs.forEach(e => {
-        (e as HTMLElement).style.display = "none"
-    })
-    uscitaInputs.forEach(e => {
-        (e as HTMLElement).style.display = "none"
-    })
-    confirmBtns.forEach(e => {
-        (e as HTMLElement).style.display = "none"
-    })
-    entrataSpans.forEach(e => {
-        (e as HTMLElement).style.display = "block"
-    })
-    uscitaSpans.forEach(e => {
-        (e as HTMLElement).style.display = "block"
-    })
-    editBtns.forEach(e => {
-        (e as HTMLElement).style.display = "inline-block"
-    })
 }
 
 export const formattaData = (d: string, convert?: boolean) => {

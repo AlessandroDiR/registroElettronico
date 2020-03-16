@@ -4,6 +4,6 @@ export interface IPresenze{
     readonly idLezione: number
     readonly data: string
     readonly lezione: string
-    readonly ingresso: string
-    readonly uscita: string
+    ingresso: string
+    uscita: string
 }
