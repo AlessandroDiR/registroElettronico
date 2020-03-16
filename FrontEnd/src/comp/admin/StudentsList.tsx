@@ -186,7 +186,9 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                     students: null
                 })
         
-                Axios.delete(siteUrl+"/api/studenti/" + s.idStudente).then(response => {
+                Axios.post(siteUrl+"/api/studenti/promuovistudente", {
+                    idStudente: s.idStudente
+                }).then(response => {
                     let studenti = response.data as IStudent[]
         
                     this.setState({
