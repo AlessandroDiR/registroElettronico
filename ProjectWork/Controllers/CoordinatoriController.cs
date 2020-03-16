@@ -81,6 +81,7 @@ namespace ProjectWork.Controllers
             }
 
             var coord = await _context.Coordinatori.SingleOrDefaultAsync(i => i.IdCoordinatore == id);
+
             if(c.Username==null)
                 c.Username = coord.Username;
             if(c.Password==null)

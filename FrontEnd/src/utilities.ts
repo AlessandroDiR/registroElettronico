@@ -1,9 +1,10 @@
-export const siteUrl = "http://localhost:5000" 
-// export const siteUrl = "https://avocadoapi.azurewebsites.net"
+export const siteUrl = "https://localhost:44336" 
+//export const siteUrl = "https://avocadoapi.azurewebsites.net"
 export const logoUrl = "fitstic_logo.png"
 
 export const adminRoute = "/adminpanel"
 export const superAdminRoute = "/superpanel"
+export const docentiRoute = "/docentipanel"
 
 export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n

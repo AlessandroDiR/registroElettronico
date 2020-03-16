@@ -91,6 +91,11 @@ namespace ProjectWork.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.NextSyncToken)
+                    .HasColumnName("nextSyncToken")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.IdCorsoNavigation)
                     .WithMany(p => p.Calendari)
                     .HasForeignKey(d => d.IdCorso)
@@ -290,6 +295,11 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.IdCalendario)
                     .HasColumnName("id_calendario")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IdGEvent)
+                    .HasColumnName("id_gEvent")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 

@@ -14,6 +14,7 @@ namespace ProjectWork.Models
         public string IdGoogleCalendar { get; set; }
         public int IdCorso { get; set; }
         public int Anno { get; set; }
+        public string NextSyncToken { get; set; }
 
         public Corsi IdCorsoNavigation { get; set; }
         public ICollection<Lezioni> Lezioni { get; set; }

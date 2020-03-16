@@ -18,6 +18,7 @@ namespace ProjectWork.Models
         public string Titolo { get; set; }
         public int? IdMateria { get; set; }
         public string IdCalendario { get; set; }
+        public string IdGEvent { get; set; }
 
         public Calendari IdCalendarioNavigation { get; set; }
         public Materie IdMateriaNavigation { get; set; }
