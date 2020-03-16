@@ -40,8 +40,8 @@ namespace ProjectWork.classi
             MailMessage message = new MailMessage()
             {
                 From = from,
-                Subject = "Demo",
-                Body = $"Ciao {c.Nome} e benvenuto in FITSTIC.\nTi comunichiamo che il tuo account è stato creato e le tue credenziali sono le seguenti:\nUsername:{c.Username}\nPassword:{c.Password}"
+                Subject = "FITSTIC | Registro",
+                Body = $"Ciao {c.Nome} e benvenuto in FITSTIC.\nTi comunichiamo che il tuo account è stato creato e le tue credenziali sono le seguenti:\nUsername: {c.Username}\nPassword: {c.Password}"
             };
 
             message.To.Add(to);
