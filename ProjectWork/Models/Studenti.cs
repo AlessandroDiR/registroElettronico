@@ -22,6 +22,7 @@ namespace ProjectWork.Models
         public int IdCorso { get; set; }
         public string Ritirato { get; set; }
         public DateTime? DataRitiro { get; set; }
+        public string Promosso { get; set; }
 
         public Corsi IdCorsoNavigation { get; set; }
         public ICollection<Presenze> Presenze { get; set; }

@@ -45,6 +45,7 @@ namespace ProjectWork.Controllers
                     cf = s.Cf,
                     ritirato = bool.Parse(s.Ritirato),
                     dataRitiro = s.DataRitiro,
+                    promosso = bool.Parse(s.Promosso),
                     annoFrequentazione = s.AnnoFrequentazione,
                     giornate = GetDaysAmount(s.IdStudente),
                     frequenza = GetPercentualeFrequenza(s.IdStudente)
@@ -75,6 +76,7 @@ namespace ProjectWork.Controllers
                     cf = s.Cf,
                     ritirato = bool.Parse(s.Ritirato),
                     dataRitiro = s.DataRitiro,
+                    promosso = bool.Parse(s.Promosso),
                     annoFrequentazione = s.AnnoFrequentazione,
                     giornate = GetDaysAmount(s.IdStudente),
                     frequenza = GetPercentualeFrequenza(s.IdStudente)
@@ -113,6 +115,7 @@ namespace ProjectWork.Controllers
                 codice = s.Codice,
                 ritirato = bool.Parse(s.Ritirato),
                 dataRitiro = s.DataRitiro,
+                promosso = bool.Parse(s.Promosso),
                 annoFrequentazione = s.AnnoFrequentazione,
                 giornate = GetDaysAmount(s.IdStudente),
                 frequenza = GetPercentualeFrequenza(s.IdStudente)
@@ -148,6 +151,7 @@ namespace ProjectWork.Controllers
                 cf = studente.Cf,
                 ritirato = bool.Parse(studente.Ritirato),
                 dataRitiro = studente.DataRitiro,
+                promosso = bool.Parse(studente.Promosso),
                 annoFrequentazione = studente.AnnoFrequentazione,
                 giornate = GetDaysAmount(studente.IdStudente),
                 frequenza = GetPercentualeFrequenza(studente.IdStudente)
@@ -299,6 +303,7 @@ namespace ProjectWork.Controllers
                 cf = studenti.Cf,
                 ritirato = bool.Parse(studenti.Ritirato),
                 dataRitiro = studenti.DataRitiro,
+                promosso = bool.Parse(s.Promosso),
                 annoFrequentazione = studenti.AnnoFrequentazione,
                 giornate = GetDaysAmount(studenti.IdStudente),
                 frequenza = GetPercentualeFrequenza(studenti.IdStudente)
@@ -345,10 +350,35 @@ namespace ProjectWork.Controllers
                     }
                 }
             }
-
             _context.SaveChanges();
             return GetStudenti(idCorso);
         }
+
+        public class Promozione
+        {
+            public int idStudente { get; set; }
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> PromuoviStudente([FromBody] Promozione Studente)
+        {
+            var studente = _context.Studenti.FirstOrDefault(s => s.IdStudente == Studente.idStudente);
+
+            if (studente == null)
+            {
+                return NotFound("Studente non esistente");      
+            }
+            else
+            {
+                studente.Promosso = "true";
+            }
+
+            _context.Entry(studente).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return GetStudenti(studente.IdCorso);
+        }
+
 
         // DELETE: api/Studenti/5
         [HttpDelete("{id}")]
@@ -364,7 +394,7 @@ namespace ProjectWork.Controllers
             {
                 return NotFound();
             }
-            studenti.Ritirato = "True";
+            studenti.Ritirato = "true";
             //_context.Studenti.Remove(studenti);
             _context.Entry(studenti).State = EntityState.Modified;
             await _context.SaveChangesAsync();

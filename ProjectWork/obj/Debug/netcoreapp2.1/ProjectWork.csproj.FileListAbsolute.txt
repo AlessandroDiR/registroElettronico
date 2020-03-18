@@ -31,3 +31,4 @@ C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\apps
 C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\appsettings.json
 C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\Properties\launchSettings.json
 C:\Users\dirom\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\credentials.json
+C:\Users\ITSstudente\source\repos\ProjectWork\ProjectWork\bin\Debug\netcoreapp2.1\credentials.json

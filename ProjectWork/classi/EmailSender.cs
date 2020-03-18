@@ -4,6 +4,7 @@ using Google.Apis.Gmail.v1.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using ProjectWork.Models;
+using ProjectWork.classi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -40,8 +41,8 @@ namespace ProjectWork.classi
             MailMessage message = new MailMessage()
             {
                 From = from,
-                Subject = "Demo",
-                Body = $"Ciao {c.Nome} e benvenuto in FITSTIC.\n\nTi comunichiamo che il tuo account è stato creato e le tue credenziali per accedere a https://avocadoapi.azurewebsites.net/#/adminpanel sono le seguenti:\n\nUsername:{c.Username}\nPassword:{c.Password}"
+                Subject = "FITSTIC | Credenziali registro",
+                Body = $"Ciao {c.Nome} e benvenuto in FITSTIC.\n\nTi comunichiamo che il tuo account è stato creato e le tue credenziali per accedere a https://avocadoapi.azurewebsites.net/#/adminpanel sono le seguenti:\n\nUsername: {c.Username}\nPassword: {Cipher.decode(c.Password)}"
             };
 
             message.To.Add(to);

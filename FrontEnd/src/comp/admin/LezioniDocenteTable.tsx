@@ -1,6 +1,6 @@
 import React from "react"
 import { Tooltip, Icon, Spin, Modal, Select } from "antd"
-import { hideAll, siteUrl, formatItalian, startEdit, validateTime } from "../../utilities"
+import { siteUrl, formatItalian, validateTime } from "../../utilities"
 import Axios from "axios"
 import { IPresenzaDocente } from "../../models/IPresenzaDocente"
 
@@ -11,8 +11,7 @@ export interface IProps{
 }
 export interface IState{
     readonly presenze: IPresenzaDocente[]
-    readonly entrataEdit: string
-    readonly uscitaEdit: string
+    readonly editingList: IPresenzaDocente[]
     readonly filter: string
 }
 
@@ -23,8 +22,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
 
         this.state = {
             presenze: null,
-            entrataEdit: "",
-            uscitaEdit: "",
+            editingList: [],
             filter: null
         }
     }
@@ -41,50 +39,55 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
         })
     }
 
-    changeEntrata = (event: any) => {
-        let entrata = event.target.value.trim()
+    changeEntrata = (e: any, idPresenza: number) => {
+        let entrata = e.target.value.trim(),
+        presenze = this.state.editingList.map(p => {
+            if(p.idPresenza === idPresenza)
+                p.ingresso = entrata
+            
+            return p
+        })
 
         this.setState({
-            entrataEdit: entrata
+            editingList: presenze
         })
     }
 
-    changeUscita = (event: any) => {
-        let uscita = event.target.value.trim()
+    changeUscita = (e: any, idPresenza: number) => {
+        let uscita = e.target.value.trim(),
+        presenze = this.state.editingList.map(p => {
+            if(p.idPresenza === idPresenza)
+                p.uscita = uscita
+            
+            return p
+        })
 
         this.setState({
-            uscitaEdit: uscita
+            editingList: presenze
         })
     }
 
-    startTimeEdit = (id: number) => {
-        let presenza = this.state.presenze.find(p => p.idPresenza === id)
-
-        startEdit(id)
-
+    startTimeEdit = (p: IPresenzaDocente) => {
         this.setState({
-            entrataEdit: presenza.ingresso,
-            uscitaEdit: presenza.uscita
+            editingList: this.state.editingList.concat(p)
         })
     }
 
-    animateSpans = (span1: HTMLElement, span2: HTMLElement) => {
-        let node1 = span1.parentNode as HTMLElement,
-        node2 = span2.parentNode as HTMLElement
-
-        node1.classList.add("edited")
-        node2.classList.add("edited")
+    animateTds = (td1: HTMLElement, td2: HTMLElement) => {
+        td1.classList.add("edited")
+        td2.classList.add("edited")
 
         setTimeout(() => {
-            node1.classList.remove("edited")
-            node2.classList.remove("edited")
+            td1.classList.remove("edited")
+            td2.classList.remove("edited")
         }, 1000)
     }
 
-    confirmEdit = (id: number) => {
-        const { entrataEdit, uscitaEdit, presenze } = this.state
+    confirmEdit = (id: number, td1: HTMLElement, td2: HTMLElement) => {
+        const { editingList, presenze } = this.state,
+        presenza = editingList.find(p => p.idPresenza === id)
         
-        if(!validateTime(entrataEdit) || !validateTime(uscitaEdit)){
+        if(!validateTime(presenza.ingresso) || !validateTime(presenza.uscita)){
             Modal.error({
                 title: "Errore!",
                 content: "Orari non validi! (ore:minuti:secondi)",
@@ -94,14 +97,10 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
             return
         }
 
-        let entrataSpan = document.getElementById("entrataSpan_" + id),
-        uscitaSpan = document.getElementById("uscitaSpan_" + id),
-        presenza = presenze.find(p => p.idPresenza === id)
-
         Axios.put(siteUrl+"/api/presenzedocente/"+id, {
             idPresenza: id,
-            ingresso: entrataEdit,
-            uscita: uscitaEdit,
+            ingresso: presenza.ingresso,
+            uscita: presenza.uscita,
             idDocente: presenza.idDocente,
             idLezione: presenza.idLezione
         }).then(response => {
@@ -110,23 +109,18 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
             if(output === "success"){
                 let newPresenze = presenze.map(p => {
                     if(p.idPresenza === id){
-                        let newP = p as any
-                        newP.ingresso = entrataEdit
-                        newP.uscita = uscitaEdit
-
-                        return newP as IPresenzaDocente
+                        return presenza
                     }
 
                     return p
                 })
 
                 this.setState({
-                    presenze: newPresenze
+                    presenze: newPresenze,
+                    editingList: editingList.filter(p => p.idPresenza !== presenza.idPresenza)
                 })
-
-                hideAll()
                 
-                this.animateSpans(entrataSpan, uscitaSpan)
+                this.animateTds(td1, td2)
             }else{
                 Modal.error({
                     title: "Errore!",
@@ -155,7 +149,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
     }
 
     render(): JSX.Element{
-        const { presenze, entrataEdit, uscitaEdit, filter } = this.state,
+        const { presenze, editingList, filter } = this.state,
         { canEdit } = this.props,
         { Option } = Select
 
@@ -200,31 +194,39 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
 
                     {
                         presences.map(p => {
+                            let editPresenza = editingList.find(pre => pre.idPresenza === p.idPresenza),
+                            td1: HTMLElement,
+                            td2: HTMLElement
+
                             return <tr>
                                 <td style={{maxWidth: 0}} className="text-truncate">{formatItalian(p.data)}</td>
-                                <td style={{maxWidth: 0}} className="text-truncate">
-                                    <span id={"entrataSpan_"+p.idPresenza}>{p.ingresso}</span>
-                                    <input type="text" className="form-control edit-time" value={entrataEdit} style={{display: "none"}} onChange={this.changeEntrata} id={"entrataInput_"+p.idPresenza} />
+                                <td style={{maxWidth: 0}} className="text-truncate" ref={r => td1 = r}>
+                                    {
+                                        editPresenza ? <input type="text" className="form-control edit-time" value={editPresenza.ingresso} onChange={(e) => this.changeEntrata(e, p.idPresenza)} /> : <span>{p.ingresso}</span>
+                                    }
                                 </td>
-                                <td style={{maxWidth: 0}} className="text-truncate">
-                                    <span id={"uscitaSpan_"+p.idPresenza}>{p.uscita}</span>
-                                    <input type="text" className="form-control edit-time" value={uscitaEdit} style={{display: "none"}} onChange={this.changeUscita} id={"uscitaInput_"+p.idPresenza} />
+                                <td style={{maxWidth: 0}} className="text-truncate" ref={r => td2 = r}>
+                                    {
+                                        editPresenza ? <input type="text" className="form-control edit-time" value={editPresenza.uscita} onChange={(e) => this.changeUscita(e, p.idPresenza)} /> : <span>{p.uscita}</span>
+                                    }
                                 </td>
                                 <Tooltip title={p.lezione}>
                                     <td style={{maxWidth: 0}} className="text-truncate">{p.lezione}</td>
                                 </Tooltip>
                                 {
                                     canEdit && <td>
-                                        <Tooltip title="Modifica orari">
-                                            <button type="button" className="btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p.idPresenza)} id={"editBtn_"+p.idPresenza}>
-                                                <i className="fa fa-user-edit"></i>
-                                            </button>
-                                        </Tooltip>
-                                        <Tooltip title="Conferma modifiche">
-                                            <button type="button" className="btn btn-success circle-btn" onClick={() => this.confirmEdit(p.idPresenza)} id={"confirmBtn_"+p.idPresenza} style={{display: "none"}}>
-                                                <i className="fa fa-check"></i>
-                                            </button>
-                                        </Tooltip>
+                                        {
+                                            editPresenza ? <Tooltip title="Conferma modifiche">
+                                                <button type="button" className="btn btn-success circle-btn" onClick={() => this.confirmEdit(p.idPresenza, td1, td2)}>
+                                                    <i className="fa fa-check"></i>
+                                                </button>
+                                            </Tooltip> : <Tooltip title="Modifica orari">
+                                                <button type="button" className="btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p)}>
+                                                    <i className="fa fa-user-edit"></i>
+                                                </button>
+                                            </Tooltip>
+                                        }
+                                        
                                     </td>
                                 }
                             </tr>
