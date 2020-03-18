@@ -1,4 +1,4 @@
-export const siteUrl = "http://localhost:5000" 
+export const siteUrl = "http://localhost:5000"
 //export const siteUrl = "https://avocadoapi.azurewebsites.net"
 export const logoUrl = "fitstic_logo.png"
 

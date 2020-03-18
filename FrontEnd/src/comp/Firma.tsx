@@ -12,6 +12,7 @@ export interface IState{
     readonly code: string
     readonly popup: IMessage
     readonly corso: ICorso
+    readonly focus: boolean
 }
 
 export default class Firma extends React.PureComponent<IProps, IState>{
@@ -23,7 +24,8 @@ export default class Firma extends React.PureComponent<IProps, IState>{
         this.state = {
             code: "",
             popup: genericError,
-            corso: null
+            corso: null,
+            focus: false
         }
     }
     
@@ -113,14 +115,28 @@ export default class Firma extends React.PureComponent<IProps, IState>{
         routerHistory.push("/")
     }
 
+    switchFocus = () => {
+        this.setState({
+            focus: !this.state.focus
+        })
+    }
+
     render(): JSX.Element{
-        const { popup, corso } = this.state
+        const { popup, corso, focus } = this.state
         let icon = <Icon type="loading" spin />
 
         return <div className="col" id="mainBlock">
             <div className="text-center w-100">
-                <h2 className="text-center my-3 font-weight-normal">Scannerizza il codice</h2>
-                <input autoFocus type="password" className="form-control text-center mx-auto shadow-sm font-weight-normal" value={this.state.code} onChange={this.changeCode} maxLength={this.maxLength} id="mainInput" />
+                <h2 className="mb-1 font-weight-normal">Scannerizza il codice</h2>
+                <input autoFocus type="password" value={this.state.code} onChange={this.changeCode} maxLength={this.maxLength} id="mainInput" onFocus={this.switchFocus} onBlur={this.switchFocus}/>
+
+                <i className="far fa-barcode-scan fa-9x text-blue d-block"></i>
+
+                {/* <input autoFocus type="password" className="form-control text-center mx-auto shadow-sm font-weight-normal" value={this.state.code} onChange={this.changeCode} maxLength={this.maxLength} id="mainInput" /> */}
+
+                {
+                    !focus ? <div className="text-danger text-center mt-2">Clicca sulla pagina per ristabilire il focus e firmare.</div>  : ""
+                }
 
                 <div className="top-info">
                     {

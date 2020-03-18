@@ -94,7 +94,11 @@ body{
 }
 #mainInput{
   font-size: 25px !important;
-  width: 60%
+  width: 60%;
+  opacity: 0;
+  padding: 0;
+  height: 0;
+  border: 0
 }
 #popup{
   height: 100vh;
