@@ -20,7 +20,7 @@ namespace ProjectWork.classi
 {
     public class EmailSender
     {
-        public string SendEmail(Coordinatori c)
+        public string SendEmail(Coordinatori c, Corsi corso)
         {
             SmtpClient client = new SmtpClient()
             {
@@ -42,7 +42,9 @@ namespace ProjectWork.classi
             {
                 From = from,
                 Subject = "FITSTIC | Credenziali registro",
-                Body = $"Ciao {c.Nome} e benvenuto in FITSTIC.\n\nTi comunichiamo che il tuo account è stato creato e le tue credenziali per accedere a https://avocadoapi.azurewebsites.net/#/adminpanel sono le seguenti:\n\nUsername: {c.Username}\nPassword: {Cipher.decode(c.Password)}"
+                Body =  $"Ciao {c.Nome} e benvenuto in FITSTIC.\n\nTi comunichiamo che il tuo account è stato creato " +
+                        $"e le tue credenziali per accedere a https://avocadoapi.azurewebsites.net/#/adminpanel sono le seguenti:\n\nUsername: {c.Username}\nPassword: {Cipher.decode(c.Password)}\n" +
+                        $"Il codice per abilitare la registrazione delle firme su https://avocadoapi.azurewebsites.net/#/firme è {Cipher.decode(corso.Codice)}"
             };
 
             message.To.Add(to);

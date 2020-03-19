@@ -138,7 +138,7 @@ namespace ProjectWork.Controllers
 
         private bool GoogleCalendarExists(Calendari c)
         {
-            return _context.Calendari.Any(gc => gc.IdGoogleCalendar == c.IdGoogleCalendar);
+            return _context.Calendari.Any(gc => gc.IdCalendario == c.IdCalendario && gc.IdGoogleCalendar == c.IdGoogleCalendar);
         }
     }
 }
