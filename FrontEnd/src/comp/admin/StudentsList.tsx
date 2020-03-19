@@ -5,6 +5,7 @@ import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse, DatePicker, message, Ta
 import Axios from "axios"
 import { siteUrl, formattaData, adminRoute } from "../../utilities"
 import locale from "antd/es/date-picker/locale/it_IT"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{
     readonly corso: number
@@ -185,10 +186,10 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 this.setState({
                     students: null
                 })
-        
-                Axios.post(siteUrl+"/api/studenti/promuovistudente", {
+
+                askPassword(siteUrl+"/api/studenti/promuovistudente", "post", {
                     idStudente: s.idStudente
-                }).then(response => {
+                }, (response: any) => {
                     let studenti = response.data as IStudent[]
         
                     this.setState({
