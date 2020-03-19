@@ -195,7 +195,18 @@ namespace ProjectWork.Models
                 entity.Property(e => e.IdCorso).HasColumnName("id_corso");
 
                 entity.Property(e => e.Codice)
+                    .IsRequired()
                     .HasColumnName("codice")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CodicePrimoAnno)
+                    .HasColumnName("codice_primo_anno")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CodiceSecondoAnno)
+                    .HasColumnName("codice_secondo_anno")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjectWork.CustomizedModels;
 using ProjectWork.Models;
 
 namespace ProjectWork.Controllers
@@ -62,28 +63,43 @@ namespace ProjectWork.Controllers
         }
 
 
-        // GET: api/Corsi/CambiaCodiceCorso/1
-        [HttpGet("[action]/{idCorso}")]
-        public async Task<IActionResult> CambiaCodiceCorso([FromRoute] int idCorso)
+        // POST: api/Corsi/GeneraCodiceAnno
+        [HttpPost("[action]")]
+        public async Task<IActionResult> GeneraCodiceAnno([FromBody] GeneraCodiceAnnoModel obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var corso = await _context.Corsi.SingleOrDefaultAsync(c => c.IdCorso == idCorso);
+            var coordinatore = await _context.Coordinatori.SingleOrDefaultAsync(c => c.IdCoordinatore == obj.IdCoordinatore && c.Password == obj.Password);
+            if (coordinatore == null)
+                return NotFound("error");
 
-            if(corso == null)
+            var corso = await _context.Corsi.SingleOrDefaultAsync(c => c.IdCorso == coordinatore.IdCorso);
+
+            if (corso == null)
             {
                 return NotFound();
             }
 
-            corso.Codice = Cipher.encode(DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
-
-            _context.Corsi.Update(corso);
-            _context.SaveChanges();
-
-            return Ok(corso);
+            if (obj.Anno == 1)
+            {
+                corso.CodicePrimoAnno = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+                _context.Corsi.Update(corso);
+                _context.SaveChanges();
+                return Ok(corso.CodicePrimoAnno);
+            }
+                
+            else if (obj.Anno == 2)
+            {
+                corso.CodiceSecondoAnno = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+                _context.Corsi.Update(corso);
+                _context.SaveChanges();
+                return Ok(corso.CodiceSecondoAnno);
+            }
+                
+            return NotFound();
 
         }
 
@@ -141,7 +157,7 @@ namespace ProjectWork.Controllers
             }
 
             if (corsi.Codice == null)
-                corsi.Codice = Cipher.encode(DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
+                corsi.Codice = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
 
             var cor = _context.Corsi.Last();
             if (cor == null)
