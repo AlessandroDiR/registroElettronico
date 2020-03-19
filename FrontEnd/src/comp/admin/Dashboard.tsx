@@ -41,22 +41,22 @@ export default class Dashboard extends React.Component{
                         <LogoCorso idCorso={admin.idCorso} />
 
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(adminRoute+"/studenti")} to={adminRoute+"/studenti"}>
-                            <span>Studenti</span>
+                            <span><i className="fal fa-users-class fa-fw mr-1"></i> Studenti</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(adminRoute+"/docenti")} to={adminRoute+"/docenti"}>
-                            <span>Docenti</span>
+                            <span><i className="fal fa-chalkboard-teacher fa-fw mr-1"></i> Docenti</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(adminRoute+"/materie")} to={adminRoute+"/materie"}>
-                            <span>Materie</span>
+                            <span><i className="fal fa-list-alt fa-fw mr-1"></i> Materie</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(adminRoute+"/config")} to={adminRoute+"/config"}>
-                            <span>Configura calendario</span>
+                            <span><i className="fal fa-calendar-edit fa-fw mr-1"></i> Configura calendario</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => {
                             sessionStorage.removeItem("adminSession")
                             routerHistory.push(adminRoute)
                         }} exact to={adminRoute+"/login"}>
-                            <span>Esci</span>
+                            <span><i className="fal fa-power-off fa-fw mr-1"></i> Esci</span>
                         </NavLink>
                     </div>
   

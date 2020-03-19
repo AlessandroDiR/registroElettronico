@@ -40,10 +40,10 @@ export default class Main extends React.Component{
                         <LogoCorso idCorso={sessionStorage.getItem("corso")} />
 
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/")} exact to="/firme/">
-                            <span>Home</span>
+                            <span><i className="fal fa-home-alt fa-fw mr-1"></i> Home</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/calendar")} exact to="/firme/calendar">
-                            <span>Calendario</span>
+                            <span><i className="fal fa-calendar-alt fa-fw mr-1"></i> Calendario</span>
                         </NavLink>
                     </div>
 

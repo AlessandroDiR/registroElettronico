@@ -223,7 +223,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             <h3 className="mb-3 text-center">Studenti del corso</h3>
 
             <Tabs defaultActiveKey="1">
-                <TabPane tab="Studenti attivi" key="1">
+                <TabPane tab={<span><i className="fal fa-user fa-fw mr-1"></i> Studenti attivi</span>} key="1">
                     <button className="btn btn-success float-right" type="button" onClick={() => routerHistory.push(adminRoute+"/studenti/new")}>
                         <i className="fal fa-plus"></i> Aggiungi studente
                     </button>
@@ -334,7 +334,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                     </Tabs>
                 </TabPane>
 
-                <TabPane tab="Studenti archiviati" key="2">
+                <TabPane  tab={<span><i className="fal fa-user-graduate fa-fw mr-1"></i> Studenti archiviati</span>} key="2">
                     <table className="table table-bordered text-center">
                         <tbody className="border-top-0">
 
