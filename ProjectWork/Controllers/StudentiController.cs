@@ -9,6 +9,7 @@ using ProjectWork.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Cors;
 using ProjectWork.classi;
+using ProjectWork.CustomizedModels;
 
 namespace ProjectWork.Controllers
 {
@@ -354,15 +355,15 @@ namespace ProjectWork.Controllers
             return GetStudenti(idCorso);
         }
 
-        public class Promozione
-        {
-            public int idStudente { get; set; }
-        }
-
         [HttpPost("[action]")]
-        public async Task<IActionResult> PromuoviStudente([FromBody] Promozione Studente)
+        public async Task<IActionResult> PromuoviStudente([FromBody]  PromozioneModel promozione)
         {
-            var studente = _context.Studenti.FirstOrDefault(s => s.IdStudente == Studente.idStudente);
+            var coordinatore = await _context.Coordinatori.SingleOrDefaultAsync(c => c.IdCoordinatore == promozione.IdCoordinatore && c.Password == promozione.Password);
+
+            if (coordinatore == null)
+                return Ok("error");
+
+            var studente = _context.Studenti.FirstOrDefault(s => s.IdStudente == promozione.IdStudente);
 
             if (studente == null)
             {

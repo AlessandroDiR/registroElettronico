@@ -34,23 +34,23 @@ namespace ProjectWork.Controllers
             var corso = await _context.Corsi.SingleOrDefaultAsync(c => obj.IdCorso == c.IdCorso && obj.Codice == c.Codice);
 
             if (corso == null)
-                return NotFound();
+                return Ok("error");
 
             return Ok("success");
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> AccessoRemoto([FromBody] AccessoFirmaModel obj)
+        public async Task<IActionResult> AccessoRemoto([FromBody] string codice)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var corso = await _context.Corsi.SingleOrDefaultAsync(c => obj.IdCorso == c.IdCorso && (obj.Codice == c.CodicePrimoAnno || obj.Codice == c.CodiceSecondoAnno));
-            var b = _context.Corsi.Any(c => obj.IdCorso == c.IdCorso && (obj.Codice == c.CodicePrimoAnno || obj.Codice == c.CodiceSecondoAnno));
+            var corso = await _context.Corsi.SingleOrDefaultAsync(c => codice == c.CodicePrimoAnno || codice == c.CodiceSecondoAnno);
+            //var corso = await _context.Corsi.AnyAsync(c => codice == c.CodicePrimoAnno || codice == c.CodiceSecondoAnno);
             if (corso == null)
-                return NotFound();
+                return Ok("error");
       
             return Ok("success");
         }
