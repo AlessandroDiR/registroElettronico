@@ -41,9 +41,7 @@ export default class CodiceSegreto extends React.PureComponent<IProps, IState>{
 
         const { codice } = this.state
 
-        Axios.post(siteUrl+"/api/firma/accessoremoto", {
-            codice: codice
-        }).then(response => {
+        Axios.post(siteUrl+"/api/firma/accessoremoto", codice).then(response => {
             let data = response.data
 
             if(areStudent(data)){
