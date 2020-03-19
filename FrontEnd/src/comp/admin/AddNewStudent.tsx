@@ -2,8 +2,8 @@ import React from "react"
 import { Modal, message, DatePicker } from "antd"
 import { routerHistory } from "../.."
 import { siteUrl, formattaData, adminRoute } from "../../utilities"
-import Axios from "axios"
 import locale from "antd/es/date-picker/locale/it_IT"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{
     readonly corso: number
@@ -110,10 +110,17 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
             idCorso: this.props.corso
         }]
 
-        Axios.post(siteUrl+"/api/studenti", students).then(response => {
+        askPassword(siteUrl+"/api/studenti", "post", (response: any) => {
             message.success("Studente creato con successo!")
             routerHistory.push(adminRoute+"/studenti")
+        }, {
+            studenti: students
         })
+
+        // Axios.post(siteUrl+"/api/studenti", students).then(response => {
+        //     message.success("Studente creato con successo!")
+        //     routerHistory.push(adminRoute+"/studenti")
+        // })
 
     }
 

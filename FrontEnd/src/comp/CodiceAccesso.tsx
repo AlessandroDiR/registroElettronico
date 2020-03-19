@@ -1,6 +1,8 @@
 import React from "react"
-import { mountLogin, unmountLogin } from "../utilities"
+import { mountLogin, unmountLogin, siteUrl } from "../utilities"
 import { routerHistory } from ".."
+import Axios from "axios"
+import { Modal } from "antd"
 
 export interface IProps{
     readonly idCorso: number
@@ -36,8 +38,21 @@ export default class CodiceAccesso extends React.PureComponent<IProps, IState>{
     inviaCodice = (e: any) => {
         e.preventDefault()
 
-        sessionStorage.setItem("confermaTutor", "true")
-        routerHistory.push("/")
+        Axios.post(siteUrl+"/api/firma/accedi", {
+            idCorso: this.props.idCorso,
+            codice: this.state.codice
+        }).then(response => {
+
+            if(response.data.trim() === "success"){
+                sessionStorage.setItem("confermaTutor", "true")
+                routerHistory.push("/")
+            }else{
+                Modal.error({
+                    title: "Errore!",
+                    content: "Codice non valido."
+                })
+            }
+        })
     }
 
     render(): JSX.Element{

@@ -1,4 +1,5 @@
 export interface IAdmin{
+    readonly idCoordinatore: number
     readonly idCorso: number
     readonly nome: string
     readonly cognome: string
