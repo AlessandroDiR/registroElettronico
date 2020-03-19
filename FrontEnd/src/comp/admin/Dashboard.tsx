@@ -17,6 +17,7 @@ import { IAdmin } from "../../models/IAdmin"
 import LogoCorso from "../LogoCorso"
 import Page404 from "../Page404"
 import { adminRoute } from "../../utilities"
+import EditCodiceFirma from "./EditCodiceFirma"
 
 export default class Dashboard extends React.Component{
 
@@ -51,6 +52,9 @@ export default class Dashboard extends React.Component{
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(adminRoute+"/config")} to={adminRoute+"/config"}>
                             <span><i className="fal fa-calendar-edit fa-fw mr-1"></i> Configura calendario</span>
+                        </NavLink>
+                        <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(adminRoute+"/codicefirma")} to={adminRoute+"/codicefirma"}>
+                            <span><i className="fal fa-house-signal fa-fw mr-1"></i> Firma da casa</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => {
                             sessionStorage.removeItem("adminSession")
@@ -109,6 +113,10 @@ export default class Dashboard extends React.Component{
 
                         <Route exact path={adminRoute+"/config"} render={() => (
                             <ConfigCalendar corso={admin.idCorso} />
+                        )} />
+
+                        <Route exact path={adminRoute+"/codicefirma"} render={() => (
+                            <EditCodiceFirma idCoordinatore={admin.idCoordinatore} />
                         )} />
 
                         <Route render={() => <Page404 goTo={adminRoute} />} />

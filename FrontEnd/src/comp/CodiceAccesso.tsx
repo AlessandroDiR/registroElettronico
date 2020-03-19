@@ -35,6 +35,13 @@ export default class CodiceAccesso extends React.PureComponent<IProps, IState>{
         })
     }
 
+    cambiaScelta = () => {
+        sessionStorage.removeItem("corso")
+        sessionStorage.removeItem("classe")
+
+        routerHistory.push("/")
+    }
+
     inviaCodice = (e: any) => {
         e.preventDefault()
 
@@ -65,7 +72,14 @@ export default class CodiceAccesso extends React.PureComponent<IProps, IState>{
                     <input name="codice" type="password" className="form-control" value={this.state.codice} onChange={this.cambiaCodice} />
                 </div>
 
-                <input type="submit" value="Prosegui" className="btn btn-lg btn-success w-100 text-uppercase"/>
+                <div className="row">
+                    <div className="pr-1 col-6">
+                        <input type="button" value="Annulla scelta" className="btn btn-lg btn-link text-danger w-100 text-uppercase" onClick={this.cambiaScelta} />
+                    </div>
+                    <div className="pl-1 col">
+                        <input type="submit" value="Prosegui" className="btn btn-lg btn-success w-100 text-uppercase"/>
+                    </div>
+                </div>
             </form>
         </div>
 
