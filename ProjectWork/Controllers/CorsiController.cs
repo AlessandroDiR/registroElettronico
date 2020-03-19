@@ -61,6 +61,32 @@ namespace ProjectWork.Controllers
             return Ok(corso);
         }
 
+
+        // GET: api/Corsi/CambiaCodiceCorso/1
+        [HttpGet("[action]/{idCorso}")]
+        public async Task<IActionResult> CambiaCodiceCorso([FromRoute] int idCorso)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var corso = await _context.Corsi.SingleOrDefaultAsync(c => c.IdCorso == idCorso);
+
+            if(corso == null)
+            {
+                return NotFound();
+            }
+
+            corso.Codice = Cipher.encode(DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
+
+            _context.Corsi.Update(corso);
+            _context.SaveChanges();
+
+            return Ok(corso);
+
+        }
+
         // PUT: api/Corsi/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCorsi([FromRoute] int id, [FromBody] Corsi corsi)
@@ -113,6 +139,9 @@ namespace ProjectWork.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            if (corsi.Codice == null)
+                corsi.Codice = Cipher.encode(DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
 
             var cor = _context.Corsi.Last();
             if (cor == null)

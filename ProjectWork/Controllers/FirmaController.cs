@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProjectWork.Models;
 
 namespace ProjectWork.Controllers
@@ -19,6 +20,29 @@ namespace ProjectWork.Controllers
         public FirmaController(AvocadoDBContext context)
         {
             _context = context;
+        }
+
+        public class AccessoFirmaModel
+        {
+            public int IdCorso { get; set; }
+            public string Codice { get; set; }
+        }
+
+        //POST: api/Firma/Accedi
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Accedi([FromBody] AccessoFirmaModel obj)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var corso = await _context.Corsi.SingleOrDefaultAsync(c => obj.IdCorso == c.IdCorso && obj.Codice == c.Codice);
+
+            if (corso == null)
+                return NotFound();
+
+            return Ok("success");
         }
 
         // POST: api/Firma

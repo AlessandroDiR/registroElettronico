@@ -160,7 +160,9 @@ namespace ProjectWork.Controllers
             _context.Coordinatori.Last().Username = coordinatore.Nome + "." + coordinatore.Cognome + id;
             await _context.SaveChangesAsync();
 
-            _es.SendEmail(_context.Coordinatori.Last());
+            var corsoCoordinato = _context.Corsi.Find(coor.IdCorso);
+
+            _es.SendEmail(_context.Coordinatori.Last(), corsoCoordinato);
 
             return CreatedAtAction("GetCoordinatori", _context.Coordinatori.Last());
         }
