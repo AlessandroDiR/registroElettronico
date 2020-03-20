@@ -106,7 +106,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
         }).then(response => {
             let output = response.data
 
-            if(output === "success"){
+            if(output.trim() === "success"){
                 let newPresenze = presenze.map(p => {
                     if(p.idPresenza === id){
                         return presenza

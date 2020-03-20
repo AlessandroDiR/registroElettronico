@@ -1,7 +1,7 @@
 import React from "react"
 import { Cipher } from "../models/Cipher"
 import Axios from "axios"
-import { Modal } from "antd"
+import { Modal, Icon } from "antd"
 import { IAdmin } from "../models/IAdmin"
 
 export const askPassword = (url: string, callType: string, body?: any, callback?: any, preAction?: any) => {
@@ -13,16 +13,18 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
         if(preAction)
             preAction()
             
-        if(callType === "get"){
-            Axios.get(url).then(callback)
-        }else if(callType === "post"){
+        if(callType === "post"){
             body.password = cipher.encode(input.value)
-            body.idCoordinatore = tutor.idCoordinatore
+
+            if(tutor)
+                body.idCoordinatore = tutor.idCoordinatore
 
             Axios.post(url, body).then(callback)
         }else if(callType === "put"){
             body.password = cipher.encode(input.value)
-            body.idCoordinatore = tutor.idCoordinatore
+            
+            if(tutor)
+                body.idCoordinatore = tutor.idCoordinatore
 
             Axios.put(url, body).then(callback)
         }
@@ -43,6 +45,7 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
         </div>,
         okText: "Conferma identità",
         cancelText: "Annulla",
-        onOk: sendForm
+        onOk: sendForm,
+        icon: <Icon type="lock" style={{ color: "var(--danger)" }} />,
     })
 }

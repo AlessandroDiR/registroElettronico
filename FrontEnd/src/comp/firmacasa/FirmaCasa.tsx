@@ -1,10 +1,10 @@
 import React from "react"
 import { Modal, Radio } from "antd"
 import { mountLogin, unmountLogin, siteUrl } from "../../utilities"
-import Axios from "axios"
 import { IStudent } from "../../models/IStudent"
 import LogoCorso from "../LogoCorso"
 import { IMessage } from "../../models/IMessage"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{}
 export interface IState{
@@ -44,9 +44,9 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.post(siteUrl+"/api/firmadacasa/firma", {
+        askPassword(siteUrl+"/api/firmadacasa/firma", "post", {
             idStudente: selectedStudente.idStudente
-        }).then(response => {
+        }, (response: any) => {
             let popup = response.data as IMessage
 
             Modal.info({
@@ -86,8 +86,6 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
                         }
                     </div>
                 </div>
-
-                <p className="text-muted">Ricorda che non puoi firmare per altre persone!</p>
 
                 <input type="submit" value="Firma" className="btn btn-lg btn-success w-100 text-uppercase"/>
             </form>
