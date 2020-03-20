@@ -183,13 +183,11 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             okType: "primary",
             cancelText: "Annulla",
             onOk: () => {
-                this.setState({
-                    students: null
-                })
 
                 askPassword(siteUrl+"/api/studenti/promuovistudente", "post", {
                     idStudente: s.idStudente
                 }, (response: any) => {
+                    
                     let studenti = response.data as IStudent[]
         
                     this.setState({
@@ -197,6 +195,10 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                     })
         
                     message.success("Studente promosso con successo!")
+                }, () => {
+                    this.setState({
+                        students: null
+                    })
                 })
             }
         })
