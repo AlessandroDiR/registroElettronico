@@ -44,7 +44,7 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
             return
         }
 
-        askPassword(siteUrl+"/api/firmadacasa/firma", "post", {
+        askPassword(siteUrl+"/api/firmaremota", "post", {
             idStudente: selectedStudente.idStudente
         }, (response: any) => {
             let popup = response.data as IMessage

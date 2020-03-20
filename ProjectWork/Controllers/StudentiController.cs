@@ -88,6 +88,38 @@ namespace ProjectWork.Controllers
             return Ok(result);
         }
 
+        // GET: api/Studenti/1
+        [HttpGet("{idCorso}/{anno}")]
+        public IActionResult GetStudenti([FromRoute] int idCorso, int anno)
+        {
+            var studenti = _context.Studenti.Where(s => s.IdCorso == idCorso && s.AnnoFrequentazione == anno);
+            var result = new List<object>();
+
+            foreach (var s in studenti)
+            {
+                var json = new
+                {
+                    idStudente = s.IdStudente,
+                    idCorso = s.IdCorso,
+                    nome = s.Nome,
+                    cognome = s.Cognome,
+                    email = s.Email,
+                    dataNascita = s.DataNascita,
+                    cf = s.Cf,
+                    ritirato = bool.Parse(s.Ritirato),
+                    dataRitiro = s.DataRitiro,
+                    promosso = bool.Parse(s.Promosso),
+                    annoFrequentazione = s.AnnoFrequentazione,
+                    giornate = GetDaysAmount(s.IdStudente),
+                    frequenza = GetPercentualeFrequenza(s.IdStudente)
+                };
+
+                result.Add(json);
+            }
+            return Ok(result);
+        }
+
+
         // GET: api/Studenti/GetStudentiById/5
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> GetStudentiById([FromRoute] int id)

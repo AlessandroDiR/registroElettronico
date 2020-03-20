@@ -39,30 +39,13 @@ namespace ProjectWork.Controllers
             return Ok("success");
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> AccessoRemoto([FromBody] string codice)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var corso = await _context.Corsi.SingleOrDefaultAsync(c => codice == c.CodicePrimoAnno || codice == c.CodiceSecondoAnno);
-            //var corso = await _context.Corsi.AnyAsync(c => codice == c.CodicePrimoAnno || codice == c.CodiceSecondoAnno);
-            if (corso == null)
-                return Ok("error");
-      
-            return Ok("success");
-            // RITORNARE LA LISTA DEGLI STUDENDI DI QUEL CORSO
-        }
-
         // POST: api/Firma
         [HttpPost]
         public IActionResult Post([FromBody] FirmaModel firma)
         {
             var studente = _context.Studenti.Where(s => s.IdCorso == firma.idCorso && s.AnnoFrequentazione == firma.anno).SingleOrDefault(s => s.Codice == firma.code);
             if(studente != null)
-                return Ok(FirmaStudente(studente, firma.idCorso, firma.anno));
+                return Ok(FirmaStudente(studente));
             else
             {
                 var docente = _context.Docenti.SingleOrDefault(d => d.Codice == firma.code);
@@ -73,11 +56,11 @@ namespace ProjectWork.Controllers
             return Ok(OutputMsg.generateMessage("Errore!", "Il codice non è valido!", true));
         }
 
-        public string FirmaStudente(Studenti s, int idCorso, int anno)
+        public string FirmaStudente(Studenti s)
         {
             var date = DateTime.Now;
             var time = TimeSpan.Parse(date.TimeOfDay.ToString().Split('.')[0]);
-            var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == idCorso && c.Anno == anno);
+            var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == s.IdCorso && c.Anno == s.AnnoFrequentazione);
             var lesson = _context.Lezioni.Where(l => l.Data == date && calendario.IdCalendario == l.IdCalendario);
 
             if (lesson != null)
