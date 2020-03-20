@@ -104,7 +104,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
         }).then(response => {
             let output = response.data
 
-            if(output === "success"){
+            if(output.trim() === "success"){
                 let newPresenze = presenze.map(p => {
                     if(p.idPresenza === id){
                         return presenza

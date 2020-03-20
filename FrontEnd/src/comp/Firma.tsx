@@ -128,11 +128,10 @@ export default class Firma extends React.PureComponent<IProps, IState>{
         return <div className="col" id="mainBlock">
             <div className="text-center w-100">
                 <h2 className="mb-1 font-weight-normal">Scannerizza il codice</h2>
+                <h6 className="mb-1 text-muted font-weight-normal">(alza la luminosità del dispositivo)</h6>
                 <input autoFocus type="password" value={this.state.code} onChange={this.changeCode} maxLength={this.maxLength} id="mainInput" onFocus={this.switchFocus} onBlur={this.switchFocus}/>
 
                 <Icon type="scan" className="fa-9x d-block text-blue" />
-
-                {/* <input autoFocus type="password" className="form-control text-center mx-auto shadow-sm font-weight-normal" value={this.state.code} onChange={this.changeCode} maxLength={this.maxLength} id="mainInput" /> */}
 
                 {
                     !focus ? <div className="text-danger text-center mt-2">Clicca sulla pagina per ristabilire il focus e firmare.</div>  : ""
