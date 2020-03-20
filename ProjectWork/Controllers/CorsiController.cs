@@ -117,15 +117,20 @@ namespace ProjectWork.Controllers
                 return BadRequest();
             }
 
+            var corso = _context.Corsi.Find(id);
+
+            if (corsi.Codice == null)
+                corsi.Codice = corso.Codice;
+
             var t = _context.Tenere.Where(c => c.IdCorso == id);
             _context.Tenere.RemoveRange(t);
+             _context.Tenere.AddRange(corsi.Tenere);
 
-            _context.Tenere.AddRange(corsi.Tenere);
             var com = _context.Comprende.Where(c => c.IdCorso == id);
             _context.Comprende.RemoveRange(com);
-
             _context.Comprende.AddRange(corsi.Comprende);
 
+            _context.Remove(corso);
             _context.Entry(corsi).State = EntityState.Modified;
 
             try
