@@ -244,9 +244,13 @@ table td, table th{
   height: 42px;
   width: 42px
 }
-.anticon-check-circle{
+.anticon-check-circle, .ant-steps-icon .anticon, .ant-btn .anticon{
   vertical-align: middle !important;
-  margin-top: -5px
+  margin-top: -5px;
+
+  &.ant-steps-finish-icon{
+    margin-top: -2px
+  }
 }
 .uploader{
   flex-grow: 1;

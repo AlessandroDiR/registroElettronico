@@ -10,6 +10,18 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
     tutor = JSON.parse(sessionStorage.getItem("adminSession")) as IAdmin
 
     const sendForm = () => {
+
+        if(input.value === ""){
+            Modal.error({
+                title: "Errore!",
+                content: "Riempire il campo.",
+                centered: true,
+                maskClosable: true
+            })
+            
+            return true
+        }
+
         if(preAction)
             preAction()
             
@@ -37,8 +49,8 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
                 <label className="text-secondary">Inserisci la tua password per confermare l'identità</label>
                 <input type="password" ref={r => input = r} className="form-control" onKeyUp={(e) => {
                     if(e.keyCode === 13){
-                        sendForm()
-                        modal.destroy()
+                        if(!sendForm())
+                            modal.destroy()
                     }
                 }} />
             </div>
@@ -47,5 +59,6 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
         cancelText: "Annulla",
         onOk: sendForm,
         icon: <Icon type="lock" style={{ color: "var(--danger)" }} />,
+        centered: true
     })
 }
