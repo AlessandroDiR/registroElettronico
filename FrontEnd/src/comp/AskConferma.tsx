@@ -11,7 +11,7 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
 
     const sendForm = () => {
         if(preAction)
-                preAction()
+            preAction()
             
         if(callType === "get"){
             Axios.get(url).then(callback)
