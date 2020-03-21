@@ -41,10 +41,11 @@ namespace ProjectWork.classi
             MailMessage message = new MailMessage()
             {
                 From = from,
+				IsBodyHtml = true,
                 Subject = "FITSTIC | Credenziali registro",
-                Body =  $"Ciao {c.Nome} e benvenuto in FITSTIC.\n\nTi comunichiamo che il tuo account è stato creato " +
-                        $"e le tue credenziali per accedere a https://avocadoapi.azurewebsites.net/#/adminpanel sono le seguenti:\n\nUsername: {c.Username}\nPassword: {Cipher.decode(c.Password)}\n" +
-                        $"Il codice per abilitare la registrazione delle firme su https://avocadoapi.azurewebsites.net/#/firme è {corso.Codice}"
+                Body =  $"Ciao {c.Nome} e benvenuto in FITSTIC.<br><br>Ti comunichiamo che il tuo account è stato creato " +
+                        $"e le tue credenziali per accedere a https://avocadoapi.azurewebsites.net/#/adminpanel sono le seguenti:<br><br><strong>Username</strong>: {c.Username}<br><strong>Password</strong>: {Cipher.decode(c.Password)}<br><br>" +
+                        $"Il codice per abilitare la registrazione delle firme su https://avocadoapi.azurewebsites.net/#/firme è:<br> <strong style='font-size:25px'>{corso.Codice}</strong>"
             };
 
             message.To.Add(to);

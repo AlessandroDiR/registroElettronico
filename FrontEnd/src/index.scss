@@ -48,6 +48,7 @@ body{
   height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
+  padding-bottom: 30px !important;
 
   & .logo{
     filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-0.7px 0 0 #fff) drop-shadow(0 -1px 0 #fff) drop-shadow(0 1.5px 0 #fff)
@@ -78,6 +79,14 @@ body{
       border: 15px solid transparent;
       border-right-color: $bodycolor
     }
+  }
+
+  & .copyright{
+    color: #fff;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    bottom: 10px
   }
 }
 #mainBlock, #loginBlock{
@@ -244,9 +253,13 @@ table td, table th{
   height: 42px;
   width: 42px
 }
-.anticon-check-circle{
+.anticon-check-circle, .ant-steps-icon .anticon, .ant-btn .anticon{
   vertical-align: middle !important;
-  margin-top: -5px
+  margin-top: -5px;
+
+  &.ant-steps-finish-icon{
+    margin-top: -2px
+  }
 }
 .uploader{
   flex-grow: 1;

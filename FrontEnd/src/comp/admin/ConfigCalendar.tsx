@@ -40,7 +40,7 @@ export default class ConfigCalendar extends React.PureComponent<IProps, IState>{
             <h3 className="mb-2 text-center">
                 Configurazione calendario
                 <Tooltip title="Informazioni">
-                    <button type="button" className="btn btn-info circle-btn float-right" onClick={this.showHelp}>
+                    <button type="button" className="btn btn-outline-info circle-btn float-right" onClick={this.showHelp}>
                         <i className="fa fa-question"></i>
                     </button>
                 </Tooltip>

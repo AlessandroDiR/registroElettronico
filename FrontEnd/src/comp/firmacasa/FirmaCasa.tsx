@@ -66,6 +66,15 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
     render(): JSX.Element{
         const { studenti, selectedStudente } = this.state
 
+        if(!studenti.length){
+            return <div className="col-11 col-lg-4 mx-auto" id="loginBlock">
+                <div className="w-100 bg-white p-3 rounded shadow">
+                    <p className="text-muted m-0 text-center">
+                        <i className="fa fa-ban fa-fw fa-lg text-danger"></i> Non è stato trovato nessuno studente.</p>
+                </div>
+            </div>
+        }
+
         return <div className="col-11 col-lg-5 mx-auto" id="loginBlock">
             <form className="w-100 bg-white p-3 rounded shadow" onSubmit={this.inviaFirma}>
                 <h3 className="d-inline-block">Firma da casa</h3>

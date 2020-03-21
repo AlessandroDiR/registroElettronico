@@ -10,23 +10,53 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
     tutor = JSON.parse(sessionStorage.getItem("adminSession")) as IAdmin
 
     const sendForm = () => {
+
+        if(input.value === ""){
+            Modal.error({
+                title: "Errore!",
+                content: "Riempire il campo.",
+                centered: true,
+                maskClosable: true
+            })
+            
+            return true
+        }
+
         if(preAction)
             preAction()
             
         if(callType === "post"){
-            body.password = cipher.encode(input.value)
+            let password = cipher.encode(input.value)
 
-            if(tutor)
-                body.idCoordinatore = tutor.idCoordinatore
+            if(tutor){
+                body.authCoordinatore = {
+                    idCoordinatore: tutor.idCoordinatore,
+                    password: password
+                }
+            }
 
-            Axios.post(url, body).then(callback)
+            Axios.post(url, body).then(callback).catch(_ => {
+                Modal.error({
+                    title: "Errore!",
+                    content: "Password errata."
+                })
+            })
         }else if(callType === "put"){
-            body.password = cipher.encode(input.value)
+            let password = cipher.encode(input.value)
             
-            if(tutor)
-                body.idCoordinatore = tutor.idCoordinatore
+            if(tutor){
+                body.authCoordinatore = {
+                    idCoordinatore: tutor.idCoordinatore,
+                    password: password
+                }
+            }
 
-            Axios.put(url, body).then(callback)
+            Axios.put(url, body).then(callback).catch(_ => {
+                Modal.error({
+                    title: "Errore!",
+                    content: "Password errata."
+                })
+            })
         }
     }
 
@@ -37,8 +67,8 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
                 <label className="text-secondary">Inserisci la tua password per confermare l'identità</label>
                 <input type="password" ref={r => input = r} className="form-control" onKeyUp={(e) => {
                     if(e.keyCode === 13){
-                        sendForm()
-                        modal.destroy()
+                        if(!sendForm())
+                            modal.destroy()
                     }
                 }} />
             </div>
@@ -47,5 +77,6 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
         cancelText: "Annulla",
         onOk: sendForm,
         icon: <Icon type="lock" style={{ color: "var(--danger)" }} />,
+        centered: true
     })
 }

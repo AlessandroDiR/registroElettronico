@@ -45,6 +45,15 @@ export default class CodiceAccesso extends React.PureComponent<IProps, IState>{
     inviaCodice = (e: any) => {
         e.preventDefault()
 
+        if(this.state.codice === ""){
+            Modal.error({
+                title: "Errore!",
+                content: "Riempi il campo."
+            })
+
+            return
+        }
+
         Axios.post(siteUrl+"/api/firma/accedi", {
             idCorso: this.props.idCorso,
             codice: this.state.codice

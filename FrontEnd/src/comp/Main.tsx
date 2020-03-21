@@ -45,6 +45,10 @@ export default class Main extends React.Component{
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push("/calendar")} exact to="/firme/calendar">
                             <span><i className="fal fa-calendar-alt fa-fw mr-1"></i> Calendario</span>
                         </NavLink>
+
+                        <div className="copyright">
+                            {(new Date()).getFullYear()} Copyright FITSTIC
+                        </div>
                     </div>
 
                     <Switch>

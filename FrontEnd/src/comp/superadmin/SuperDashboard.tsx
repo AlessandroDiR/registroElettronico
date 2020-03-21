@@ -44,6 +44,10 @@ export default class SuperDashboard extends React.Component{
                         }} exact to={superAdminRoute+"/login"}>
                             <span><i className="fal fa-power-off fa-fw mr-1"></i> Esci</span>
                         </NavLink>
+
+                        <div className="copyright">
+                            {(new Date()).getFullYear()} Copyright FITSTIC
+                        </div>
                     </div>
   
                     <Switch>
