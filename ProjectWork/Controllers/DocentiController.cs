@@ -79,7 +79,7 @@ namespace ProjectWork.Controllers
 
         // GET: api/Docenti/GetDocentiByCorso/5
         [HttpGet("[action]/{idc}")]
-        public async Task<IActionResult> GetDocentiByCorso([FromRoute] int idc)
+        public IActionResult GetDocentiByCorso([FromRoute] int idc)
         {
             if (!ModelState.IsValid)
             {
@@ -215,14 +215,16 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            Docenti docente = new Docenti();
-            docente.IdDocente = _context.Docenti.Count() + 1;
-            docente.Nome = d.Nome;
-            docente.Cognome = d.Cognome;
-            docente.Cf = d.Cf;
-            docente.Password = Cipher.encode(d.Cf);
-            docente.Codice = Cipher.encode(d.Cf);
-            docente.Email = d.Email;
+            Docenti docente = new Docenti
+            {
+                IdDocente = _context.Docenti.Count() + 1,
+                Nome = d.Nome,
+                Cognome = d.Cognome,
+                Cf = d.Cf,
+                Password = Cipher.encode(d.Cf),
+                Codice = Cipher.encode(d.Cf),
+                Email = d.Email
+            };
 
             foreach (var item in d.Tenere)
             {

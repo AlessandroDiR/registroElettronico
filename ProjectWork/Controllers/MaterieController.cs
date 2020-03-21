@@ -47,7 +47,7 @@ namespace ProjectWork.Controllers
 
         // GET: api/Materie/GetMaterieByName/5
         [HttpGet("[action]/{nome}")]
-        public async Task<IActionResult> GetMaterieByName([FromRoute] string nome)
+        public IActionResult GetMaterieByName([FromRoute] string nome)
         {
             if (!ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace ProjectWork.Controllers
 
         // GET: api/Materie/GetMaterieByCorso/IdCor
         [HttpGet("[action]/{IdCor}")]
-        public async Task<IActionResult> GetMaterieByCorso([FromRoute] int IdCor)
+        public IActionResult GetMaterieByCorso([FromRoute] int IdCor)
         {
             if (!ModelState.IsValid)
             {

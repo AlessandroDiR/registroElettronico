@@ -254,27 +254,33 @@ namespace ProjectWork.Controllers
         //Crea studente
         // POST: api/Studenti
         [HttpPost]
-        public async Task<IActionResult> PostStudenti([FromBody] Studenti[] studenti)
+        public async Task<IActionResult> PostStudenti([FromBody] PostStudentiModel obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var idCorso = studenti[0].IdCorso;
+            var coordinatore = await _context.Coordinatori.SingleOrDefaultAsync(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
+            if (coordinatore == null)
+                return Ok("error");
 
-            foreach(var s in studenti)
+            var idCorso = obj.Studenti[0].IdCorso;
+
+            foreach(var s in obj.Studenti)
             {
-                Studenti studente = new Studenti();
-                studente.Nome = s.Nome;
-                studente.Cognome = s.Cognome;
-                studente.Cf = s.Cf;
-                studente.Email = s.Email;
-                studente.DataNascita = s.DataNascita;
-                studente.AnnoFrequentazione = s.AnnoFrequentazione;
-                studente.IdCorso = s.IdCorso;
-                studente.Password = Cipher.encode(s.Cf);
-                studente.Codice = Cipher.encode(s.Cf);
+                Studenti studente = new Studenti
+                {
+                    Nome = s.Nome,
+                    Cognome = s.Cognome,
+                    Cf = s.Cf,
+                    Email = s.Email,
+                    DataNascita = s.DataNascita,
+                    AnnoFrequentazione = s.AnnoFrequentazione,
+                    IdCorso = s.IdCorso,
+                    Password = Cipher.encode(s.Cf),
+                    Codice = Cipher.encode(s.Cf)
+                };
 
                 _context.Studenti.Add(studente);
             }
@@ -286,28 +292,32 @@ namespace ProjectWork.Controllers
 
         // PUT: api/Studenti/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStudenti([FromRoute] int id, [FromBody] Studenti studenti)
+        public async Task<IActionResult> PutStudenti([FromRoute] int id, [FromBody] PutStudenteModel obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != studenti.IdStudente)
+            var coordinatore = _context.Coordinatori.SingleOrDefault(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
+            if (coordinatore == null)
+                return Ok("error");
+
+            if (id != obj.Studente.IdStudente)
             {
                 return BadRequest();
             }
 
             var s = await _context.Studenti.SingleOrDefaultAsync(i => i.IdStudente == id);
 
-            if (studenti.Password == null)
-                studenti.Password = s.Password;
+            if (obj.Studente.Password == null)
+                obj.Studente.Password = s.Password;
 
-            if (studenti.Codice == null)
-                studenti.Codice = s.Codice;
+            if (obj.Studente.Codice == null)
+                obj.Studente.Codice = s.Codice;
 
             _context.Remove(s);
-            _context.Entry(studenti).State = EntityState.Modified;
+            _context.Entry(obj.Studente).State = EntityState.Modified;
 
             try
             {
@@ -327,19 +337,19 @@ namespace ProjectWork.Controllers
 
             var json = new
             {
-                idStudente = studenti.IdStudente,
-                idCorso = studenti.IdCorso,
-                nome = studenti.Nome,
-                cognome = studenti.Cognome,
-                email = studenti.Email,
-                dataNascita = studenti.DataNascita,
-                cf = studenti.Cf,
-                ritirato = bool.Parse(studenti.Ritirato),
-                dataRitiro = studenti.DataRitiro,
+                idStudente = obj.Studente.IdStudente,
+                idCorso = obj.Studente.IdCorso,
+                nome = obj.Studente.Nome,
+                cognome = obj.Studente.Cognome,
+                email = obj.Studente.Email,
+                dataNascita = obj.Studente.DataNascita,
+                cf = obj.Studente.Cf,
+                ritirato = bool.Parse(obj.Studente.Ritirato),
+                dataRitiro = obj.Studente.DataRitiro,
                 promosso = bool.Parse(s.Promosso),
-                annoFrequentazione = studenti.AnnoFrequentazione,
-                giornate = GetDaysAmount(studenti.IdStudente),
-                frequenza = GetPercentualeFrequenza(studenti.IdStudente)
+                annoFrequentazione = obj.Studente.AnnoFrequentazione,
+                giornate = GetDaysAmount(obj.Studente.IdStudente),
+                frequenza = GetPercentualeFrequenza(obj.Studente.IdStudente)
             };
 
             return Ok(json);
@@ -347,16 +357,20 @@ namespace ProjectWork.Controllers
 
         // PUT: api/Studenti
         [HttpPut]
-        public IActionResult PutStudentiArray([FromBody] Studenti[] studenti)
+        public IActionResult PutStudentiArray([FromBody] PostStudentiModel obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var idCorso = studenti[0].IdCorso;
+            var coordinatore = _context.Coordinatori.SingleOrDefault(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
+            if (coordinatore == null)
+                return Ok("error");
 
-            foreach (var item in studenti)
+            var idCorso = obj.Studenti[0].IdCorso;
+
+            foreach (var item in obj.Studenti)
             {
                 try
                 {
@@ -390,10 +404,10 @@ namespace ProjectWork.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> PromuoviStudente([FromBody]  PromozioneModel promozione)
         {
-            var coordinatore = await _context.Coordinatori.SingleOrDefaultAsync(c => c.IdCoordinatore == promozione.IdCoordinatore && c.Password == promozione.Password);
+            var coordinatore = await _context.Coordinatori.SingleOrDefaultAsync(c => c.IdCoordinatore == promozione.AuthCoordinatore.IdCoordinatore && c.Password == promozione.AuthCoordinatore.Password);
 
             if (coordinatore == null)
-                return Ok("error");
+                return NotFound();
 
             var studente = _context.Studenti.FirstOrDefault(s => s.IdStudente == promozione.IdStudente);
 
