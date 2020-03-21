@@ -29,12 +29,16 @@ namespace ProjectWork.Controllers
             if (coordinatore == null)
                 return NotFound();
 
-            LogPresenze log = new LogPresenze();
-            log.DataOra = DateTime.Now;
-            log.IdPresenza = id;
-            log.IdStudente = obj.Presenza.IdStudente;
+            LogPresenze log = new LogPresenze
+            {
+                DataOra = DateTime.Now,
+                IdPresenza = id,
+                IdStudente = obj.Presenza.IdStudente
+            };
+
             var lezione = _context.Lezioni.First(l => l.IdLezione == obj.Presenza.IdLezione);
             lezione.IdCalendarioNavigation = _context.Calendari.SingleOrDefault(c => c.IdCalendario == lezione.IdCalendario);
+
             log.IdCorso = lezione.IdCalendarioNavigation.IdCorso;
             var presenzaNonModificata = _context.Presenze.First(p => p.IdPresenza == id);
             log.Modifiche = "MODIFICHE = ";

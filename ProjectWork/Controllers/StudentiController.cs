@@ -263,7 +263,7 @@ namespace ProjectWork.Controllers
 
             var coordinatore = await _context.Coordinatori.SingleOrDefaultAsync(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
             if (coordinatore == null)
-                return Ok("error");
+                return NotFound();
 
             var idCorso = obj.Studenti[0].IdCorso;
 
@@ -366,7 +366,7 @@ namespace ProjectWork.Controllers
 
             var coordinatore = _context.Coordinatori.SingleOrDefault(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
             if (coordinatore == null)
-                return Ok("error");
+                return NotFound();
 
             var idCorso = obj.Studenti[0].IdCorso;
 
