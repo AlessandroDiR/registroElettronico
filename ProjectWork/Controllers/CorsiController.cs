@@ -49,7 +49,7 @@ namespace ProjectWork.Controllers
 
         // GET: api/Corsi/GetCorsiByDocenti/IdDoc
         [HttpGet("[action]/{IdDoc}")]
-        public async Task<IActionResult> GetCorsiByDocenti([FromRoute] int IdDoc)
+        public IActionResult GetCorsiByDocenti([FromRoute] int IdDoc)
         {
             if (!ModelState.IsValid)
             {
@@ -72,9 +72,9 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            var coordinatore = await _context.Coordinatori.SingleOrDefaultAsync(c => c.IdCoordinatore == obj.IdCoordinatore && c.Password == obj.Password);
+            var coordinatore = await _context.Coordinatori.SingleOrDefaultAsync(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
             if (coordinatore == null)
-                return NotFound("error");
+                return NotFound();
 
             var corso = await _context.Corsi.SingleOrDefaultAsync(c => c.IdCorso == coordinatore.IdCorso);
 

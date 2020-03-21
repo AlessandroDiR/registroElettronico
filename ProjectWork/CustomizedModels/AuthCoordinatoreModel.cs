@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace ProjectWork.CustomizedModels
 {
-    public class GeneraCodiceAnnoModel
+    public class AuthCoordinatoreModel
     {
-        public AuthCoordinatoreModel AuthCoordinatore { get; set; }
-        public int Anno { get; set; }
+        public int IdCoordinatore { get; set; }
+        public string Password { get; set; }
     }
 }
