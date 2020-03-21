@@ -7,6 +7,7 @@ import { RouteComponentProps } from "react-router-dom"
 import { IStudent } from "../../models/IStudent"
 import locale from "antd/es/date-picker/locale/it_IT"
 import moment from "moment"
+import { askPassword } from "../AskConferma"
 
 export interface IRouteParams{
     readonly id: string
@@ -117,7 +118,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.put(siteUrl+"/api/studenti/" + studente.idStudente, {
+        askPassword(siteUrl+"/api/studenti/" + studente.idStudente, "put", {
             idStudente: studente.idStudente,
             nome: nome.trim(),
             cognome: cognome.trim(),
@@ -127,7 +128,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             annoFrequentazione: studente.annoFrequentazione,
             dataNascita: formattaData(dataNascita, true),
             ritirato: studente.ritirato
-        }).then(_ => {
+        }, (_: any) => {
             message.success("Studente modificato con successo!")
             routerHistory.push(adminRoute+"/studenti")
         })

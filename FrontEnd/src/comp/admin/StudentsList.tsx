@@ -66,11 +66,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 studente.ritirato = "true"
                 studente.dataRitiro = dataRitiro
                 
-                this.setState({
-                    students: null
-                })
-                
-                Axios.put(siteUrl+"/api/studenti/"+student.idStudente, {...studente}).then(response => {
+                askPassword(siteUrl+"/api/studenti/"+student.idStudente, "put", {...studente}, (response: any) => {
 
                     let stu = response.data as IStudent,
                     currentList = students as any,
@@ -83,6 +79,10 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                     })
 
                     message.success("Studente ritirato con successo!")
+                }, () => {
+                    this.setState({
+                        students: null
+                    })
                 })
             }
         })
@@ -138,21 +138,21 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             })
         }
 
-        this.setState({
-            students: null,
-            selection: []
-        })
-
-        Axios.put(siteUrl+"/api/studenti", studenti).then(response => {
+        askPassword(siteUrl+"/api/studenti", "put", {
+            studenti: studenti
+        }, (response: any) => {
             this.setState({
                 students: response.data as IStudent[]
             })
 
             message.success("Studenti spostati con successo!")
+            this.showHideModal()
+        }, () => {
+            this.setState({
+                students: null,
+                selection: []
+            })
         })
-
-
-        this.showHideModal()
     }
 
     allRetired = (group: IStudent[]) => {

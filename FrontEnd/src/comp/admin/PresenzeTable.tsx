@@ -3,6 +3,7 @@ import { IPresenze } from "../../models/IPresenze"
 import { Tooltip, Icon, Spin, Modal, Select } from "antd"
 import { siteUrl, formatItalian, validateTime } from "../../utilities"
 import Axios from "axios"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{
     readonly studente: number
@@ -95,13 +96,13 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.put(siteUrl+"/api/presenze/" + id, {
+        askPassword(siteUrl+"/api/presenze/" + id, "put", {
             idPresenza: presenza.idPresenza,
             idStudente: presenza.idStudente,
             ingresso: presenza.ingresso,
             uscita: presenza.uscita,
             idLezione: presenza.idLezione
-        }).then(response => {
+        }, (response: any) => {
             let output = response.data
 
             if(output.trim() === "success"){

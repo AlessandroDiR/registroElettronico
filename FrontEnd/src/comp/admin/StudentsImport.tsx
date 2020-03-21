@@ -4,7 +4,7 @@ import { IStudent } from "../../models/IStudent"
 import { Modal, Tooltip, Icon, message } from "antd"
 import { routerHistory } from "../.."
 import { formattaData, capitalizeFirst, siteUrl, resizePopup, formatItalian, adminRoute } from "../../utilities"
-import Axios from "axios"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{
     readonly corso: number
@@ -187,7 +187,9 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
     }
 
     confirmImport = () => {
-        Axios.post(siteUrl+"/api/studenti", this.state.addList).then(_ => {
+        askPassword(siteUrl+"/api/studenti", "post", {
+            studenti: this.state.addList
+        }, (_: any) => {
             message.success("Importazione eseguita con successo!")
             routerHistory.push(adminRoute+"/studenti")
         })

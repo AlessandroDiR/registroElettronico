@@ -112,15 +112,10 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
 
         askPassword(siteUrl+"/api/studenti", "post", {
             studenti: students
-        }, (response: any) => {
+        }, (_: any) => {
             message.success("Studente creato con successo!")
             routerHistory.push(adminRoute+"/studenti")
         })
-
-        // Axios.post(siteUrl+"/api/studenti", students).then(response => {
-        //     message.success("Studente creato con successo!")
-        //     routerHistory.push(adminRoute+"/studenti")
-        // })
 
     }
 
