@@ -62,6 +62,10 @@ export default class Dashboard extends React.Component{
                         }} exact to={adminRoute+"/login"}>
                             <span><i className="fal fa-power-off fa-fw mr-1"></i> Esci</span>
                         </NavLink>
+
+                        <div className="copyright">
+                            {(new Date()).getFullYear()} Copyright FITSTIC
+                        </div>
                     </div>
   
                     <Switch>

@@ -26,19 +26,37 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
             preAction()
             
         if(callType === "post"){
-            body.password = cipher.encode(input.value)
+            let password = cipher.encode(input.value)
 
-            if(tutor)
-                body.idCoordinatore = tutor.idCoordinatore
+            if(tutor){
+                body.authCoordinatore = {
+                    idCoordinatore: tutor.idCoordinatore,
+                    password: password
+                }
+            }
 
-            Axios.post(url, body).then(callback)
+            Axios.post(url, body).then(callback).catch(_ => {
+                Modal.error({
+                    title: "Errore!",
+                    content: "Password errata."
+                })
+            })
         }else if(callType === "put"){
-            body.password = cipher.encode(input.value)
+            let password = cipher.encode(input.value)
             
-            if(tutor)
-                body.idCoordinatore = tutor.idCoordinatore
+            if(tutor){
+                body.authCoordinatore = {
+                    idCoordinatore: tutor.idCoordinatore,
+                    password: password
+                }
+            }
 
-            Axios.put(url, body).then(callback)
+            Axios.put(url, body).then(callback).catch(_ => {
+                Modal.error({
+                    title: "Errore!",
+                    content: "Password errata."
+                })
+            })
         }
     }
 
