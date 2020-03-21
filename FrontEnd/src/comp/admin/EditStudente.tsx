@@ -119,15 +119,17 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
         }
 
         askPassword(siteUrl+"/api/studenti/" + studente.idStudente, "put", {
-            idStudente: studente.idStudente,
-            nome: nome.trim(),
-            cognome: cognome.trim(),
-            email: email,
-            cf: CF,
-            idCorso: this.props.corso,
-            annoFrequentazione: studente.annoFrequentazione,
-            dataNascita: formattaData(dataNascita, true),
-            ritirato: studente.ritirato
+            studente: {
+                idStudente: studente.idStudente,
+                nome: nome.trim(),
+                cognome: cognome.trim(),
+                email: email,
+                cf: CF,
+                idCorso: this.props.corso,
+                annoFrequentazione: studente.annoFrequentazione,
+                dataNascita: formattaData(dataNascita, true),
+                ritirato: studente.ritirato
+            }
         }, (_: any) => {
             message.success("Studente modificato con successo!")
             routerHistory.push(adminRoute+"/studenti")

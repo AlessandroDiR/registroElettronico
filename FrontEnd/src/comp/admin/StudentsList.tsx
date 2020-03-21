@@ -66,7 +66,9 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 studente.ritirato = "true"
                 studente.dataRitiro = dataRitiro
                 
-                askPassword(siteUrl+"/api/studenti/"+student.idStudente, "put", {...studente}, (response: any) => {
+                askPassword(siteUrl+"/api/studenti/"+student.idStudente, "put", {
+                    studente: {...studente}
+                }, (response: any) => {
 
                     let stu = response.data as IStudent,
                     currentList = students as any,
@@ -142,11 +144,11 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             studenti: studenti
         }, (response: any) => {
             this.setState({
-                students: response.data as IStudent[]
+                students: response.data as IStudent[],
+                confirmModal: false
             })
 
             message.success("Studenti spostati con successo!")
-            this.showHideModal()
         }, () => {
             this.setState({
                 students: null,
