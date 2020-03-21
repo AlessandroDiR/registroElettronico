@@ -301,7 +301,7 @@ namespace ProjectWork.Controllers
 
             var coordinatore = _context.Coordinatori.SingleOrDefault(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
             if (coordinatore == null)
-                return Ok("error");
+                return NotFound();
 
             if (id != obj.Studente.IdStudente)
             {
@@ -424,29 +424,6 @@ namespace ProjectWork.Controllers
             await _context.SaveChangesAsync();
 
             return GetStudenti(studente.IdCorso);
-        }
-
-
-        // DELETE: api/Studenti/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudenti([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var studenti = await _context.Studenti.FindAsync(id);
-            if (studenti == null)
-            {
-                return NotFound();
-            }
-            studenti.Ritirato = "true";
-            //_context.Studenti.Remove(studenti);
-            _context.Entry(studenti).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return Ok(studenti);
         }
 
         private bool StudentiExists(int id)
