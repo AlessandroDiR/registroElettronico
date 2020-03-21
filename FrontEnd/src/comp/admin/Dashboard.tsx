@@ -120,7 +120,7 @@ export default class Dashboard extends React.Component{
                         )} />
 
                         <Route exact path={adminRoute+"/codicefirma"} render={() => (
-                            <EditCodiceFirma idCoordinatore={admin.idCoordinatore} />
+                            <EditCodiceFirma />
                         )} />
 
                         <Route render={() => <Page404 goTo={adminRoute} />} />

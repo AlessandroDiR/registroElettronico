@@ -3,17 +3,12 @@ import { Modal } from "antd"
 import { siteUrl } from "../../utilities"
 import { askPassword } from "../AskConferma"
 
-export interface IProps{
-    readonly idCoordinatore: number
-}
+export interface IProps{}
 export interface IState{}
 
 export default class EditCodiceFirma extends React.PureComponent<IProps, IState>{
     requestCodeChange = (anno: number) => {
-        const { idCoordinatore } = this.props
-
         askPassword(siteUrl+"/api/corsi/generacodiceanno", "post", {
-            idCoordinatore: idCoordinatore,
             anno: anno
         }, (response: any) => {
             let codice = response.data
