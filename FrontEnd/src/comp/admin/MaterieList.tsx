@@ -187,7 +187,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             <h3 className="mb-3 text-center">Lista delle materie</h3>
 
             <button className="btn btn-success float-right mb-3" type="button" onClick={this.showHideModal}>
-                <i className="fal fa-plus"></i> Aggiungi materia
+                <i className="fal fa-plus fa-fw"></i> Aggiungi materia
             </button>
 
             <table className="table table-bordered text-center">

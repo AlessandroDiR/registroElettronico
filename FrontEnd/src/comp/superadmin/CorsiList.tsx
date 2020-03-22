@@ -44,7 +44,7 @@ export default class CorsiList extends React.PureComponent<IProps, IState>{
             <h3 className="mb-3 text-center">Lista dei corsi</h3>
 
             <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push(superAdminRoute+"/corsi/new")}>
-                <i className="fal fa-plus"></i> Aggiungi corso
+                <i className="fal fa-plus fa-fw"></i> Aggiungi corso
             </button>
 
             <table className="table table-bordered text-center">

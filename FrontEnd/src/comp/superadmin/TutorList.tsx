@@ -44,7 +44,7 @@ export default class TutorList extends React.PureComponent<IProps, IState>{
             <h3 className="mb-3 text-center">Lista dei coordinatori</h3>
 
             <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push(superAdminRoute+"/tutor/new")}>
-                <i className="fal fa-plus"></i> Aggiungi coordinatore
+                <i className="fal fa-plus fa-fw"></i> Aggiungi coordinatore
             </button>
 
             <table className="table table-bordered text-center">

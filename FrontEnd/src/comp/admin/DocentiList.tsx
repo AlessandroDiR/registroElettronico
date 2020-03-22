@@ -129,7 +129,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
             </label>
 
             <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push(adminRoute+"/docenti/new")}>
-                <i className="fal fa-plus"></i> Aggiungi docente
+                <i className="fal fa-plus fa-fw"></i> Aggiungi docente
             </button>
 
             <table className="table table-bordered text-center">
