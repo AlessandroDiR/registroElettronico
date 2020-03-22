@@ -1,4 +1,4 @@
-export const siteUrl = "https://localhost:44336"
+export const siteUrl = "http://localhost:5000"
 //export const siteUrl = "https://avocadoapi.azurewebsites.net"
 export const logoUrl = "fitstic_logo.png"
 
@@ -104,6 +104,11 @@ export const resizePopup = () => {
 
     if(mainBlock && popup)
         popup.style.width = width + "px"
+}
+
+export const checkEnter = (e: any, callback: any) => {
+    if(e.keyCode === 13)
+        callback()
 }
 
 window.addEventListener("load", resizePopup)

@@ -44,7 +44,9 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
         })
     }
 
-    saveConfig = () => {
+    saveConfig = (e: any) => {
+        e.preventDefault()
+
         const { corso, anno } = this.props
         const { calendarId, calendar } = this.state
 
@@ -78,15 +80,15 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
             </div>
         }
 
-        return <form>
-            <div className="form-group row">
-                <div className="col">
+        return <form onSubmit={this.saveConfig}>
+            <div className="form-group row mx-1">
+                <div className="col px-0">
                     <label className="text-secondary">ID Calendario</label>
                     <input name="calendarID" type="text" className="form-control" value={calendarId} onChange={this.changeID} />
                 </div>
             </div>
 
-            <button type="button" className="btn btn-success float-right mr-1 mb-1" onClick={this.saveConfig}>Salva configurazione</button>
+            <button type="submit" className="btn btn-success float-right mr-1 mb-1">Salva configurazione</button>
         </form>
     }
 }

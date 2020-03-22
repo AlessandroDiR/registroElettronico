@@ -48,7 +48,7 @@ export default class CodiceAccesso extends React.PureComponent<IProps, IState>{
         if(this.state.codice === ""){
             Modal.error({
                 title: "Errore!",
-                content: "Riempi il campo."
+                content: "Riempire il campo."
             })
 
             return

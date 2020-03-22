@@ -1,6 +1,6 @@
 import React from "react"
 import { Tooltip, Icon, Spin, Modal, Select } from "antd"
-import { siteUrl, formatItalian, validateTime } from "../../utilities"
+import { siteUrl, formatItalian, validateTime, checkEnter } from "../../utilities"
 import Axios from "axios"
 import { IPresenzaDocente } from "../../models/IPresenzaDocente"
 
@@ -202,12 +202,12 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
                                 <td style={{maxWidth: 0}} className="text-truncate">{formatItalian(p.data)}</td>
                                 <td style={{maxWidth: 0}} className="text-truncate" ref={r => td1 = r}>
                                     {
-                                        editPresenza ? <input type="text" className="form-control edit-time" value={editPresenza.ingresso} onChange={(e) => this.changeEntrata(e, p.idPresenza)} /> : <span>{p.ingresso}</span>
+                                        editPresenza ? <input type="text" className="form-control edit-time" value={editPresenza.ingresso} onChange={(e) => this.changeEntrata(e, p.idPresenza)} onKeyUp={(e) => checkEnter(e, () => this.confirmEdit(p.idPresenza, td1, td2))} /> : <span>{p.ingresso}</span>
                                     }
                                 </td>
                                 <td style={{maxWidth: 0}} className="text-truncate" ref={r => td2 = r}>
                                     {
-                                        editPresenza ? <input type="text" className="form-control edit-time" value={editPresenza.uscita} onChange={(e) => this.changeUscita(e, p.idPresenza)} /> : <span>{p.uscita}</span>
+                                        editPresenza ? <input type="text" className="form-control edit-time" value={editPresenza.uscita} onChange={(e) => this.changeUscita(e, p.idPresenza)} onKeyUp={(e) => checkEnter(e, () => this.confirmEdit(p.idPresenza, td1, td2))} /> : <span>{p.uscita}</span>
                                     }
                                 </td>
                                 <Tooltip title={p.lezione}>

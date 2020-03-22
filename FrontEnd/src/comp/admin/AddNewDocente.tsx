@@ -88,7 +88,9 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         })
     }
 
-    aggiungiDocente = () => {
+    aggiungiDocente = (e: any) => {
+        e.preventDefault()
+        
         const { nome, cognome,CF, email, corsiSel, materieSel } = this.state
 
         if(nome.trim() === "" || cognome.trim() === "" || CF === "" || email === ""){
@@ -183,7 +185,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo docente</h3>
 
-            <form>
+            <form onSubmit={this.aggiungiDocente}>
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">Nome</label>
@@ -242,7 +244,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
                     </div>
                 </div>
 
-                <button type="button" className="btn btn-success text-uppercase w-100" onClick={this.aggiungiDocente}>Aggiungi docente</button>
+                <button type="submit" className="btn btn-success text-uppercase w-100">Aggiungi docente</button>
             </form>
         </div>
     }

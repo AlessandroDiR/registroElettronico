@@ -66,8 +66,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 studente.ritirato = "true"
                 studente.dataRitiro = dataRitiro
                 
-                askPassword(siteUrl+"/api/studenti/"+student.idStudente, "put", {
-                    studente: {...studente}
+                askPassword(siteUrl+"/api/studenti/" + student.idStudente, "put", {
+                    studente: studente
                 }, (response: any) => {
 
                     let stu = response.data as IStudent,
@@ -312,6 +312,13 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                                                     </button>
                                                                 </Tooltip>
                                                             }
+                                                            {
+                                                                !s.ritirato && <Tooltip title="Segna come promosso">
+                                                                    <button type="button" className="btn btn-success circle-btn ml-2" onClick={() => this.promuoviStudent(s)}>
+                                                                        <i className="fa fa-user-check"></i>
+                                                                    </button>
+                                                                </Tooltip>
+                                                            }
 
                                                             {
                                                                 s.ritirato && <Tooltip title="Studente ritirato">
@@ -320,12 +327,6 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                                                     </button>
                                                                 </Tooltip>
                                                             }
-                                                            
-                                                            <Tooltip title="Segna come promosso">
-                                                                <button type="button" className="btn btn-success circle-btn ml-2" onClick={() => this.promuoviStudent(s)}>
-                                                                    <i className="fa fa-user-check"></i>
-                                                                </button>
-                                                            </Tooltip>
                                                             
                                                         </td>
                                                     </tr>

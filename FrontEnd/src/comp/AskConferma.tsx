@@ -3,6 +3,7 @@ import { Cipher } from "../models/Cipher"
 import Axios from "axios"
 import { Modal, Icon } from "antd"
 import { IAdmin } from "../models/IAdmin"
+import { checkEnter } from "../utilities"
 
 export const askPassword = (url: string, callType: string, body?: any, callback?: any, preAction?: any) => {
     let input: HTMLInputElement,
@@ -65,12 +66,10 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
         content: <div style={{ marginLeft: -38 }}>
             <div className="form-group mb-0">
                 <label className="text-secondary">Inserisci la tua password per confermare l'identità</label>
-                <input type="password" ref={r => input = r} className="form-control" onKeyUp={(e) => {
-                    if(e.keyCode === 13){
-                        if(!sendForm())
-                            modal.destroy()
-                    }
-                }} />
+                <input type="password" ref={r => input = r} className="form-control" onKeyUp={(e) => checkEnter(e, () => {
+                    if(!sendForm())
+                        modal.destroy()
+                })} />
             </div>
         </div>,
         okText: "Conferma identità",
@@ -79,4 +78,8 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
         icon: <Icon type="lock" style={{ color: "var(--danger)" }} />,
         centered: true
     })
+
+    setTimeout(() => {
+        input.focus()
+    }, 300)
 }
