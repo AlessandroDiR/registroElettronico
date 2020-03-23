@@ -75,7 +75,9 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         })
     }
 
-    modificaCorso = () => {
+    modificaCorso = (e: any) => {
+        e.preventDefault()
+
         const { nome, descrizione, luogo, corso, logo } = this.state
 
         if(nome.trim() === "" || descrizione.trim() === "" || luogo.trim() === ""){
@@ -130,7 +132,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Modifica di un corso</h3>
 
-            <form className="row">
+            <form className="row" onSubmit={this.modificaCorso}>
                 <div className="form-group mr-3">
                     <label className="text-secondary d-block">Logo</label>
                     <Upload listType="picture-card" showUploadList={false} beforeUpload={(file) => this.convertImage(file)} className="logo-upload" accept="image/*">
@@ -158,7 +160,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
                     </div>
                 </div>
 
-                <button type="button" className="btn btn-success text-uppercase w-100" onClick={this.modificaCorso}>Modifica corso</button>
+                <button type="submit" className="btn btn-success text-uppercase w-100">Modifica corso</button>
             </form>
         </div>
     }

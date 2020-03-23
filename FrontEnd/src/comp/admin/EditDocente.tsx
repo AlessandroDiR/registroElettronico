@@ -113,7 +113,9 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         })
     }
 
-    modificaDocente = () => {
+    modificaDocente = (e: any) => {
+        e.preventDefault()
+        
         const { docente, nome, cognome, CF, email, corsiSel, materieSel } = this.state
 
         if(nome.trim() === "" || cognome.trim() === "" || CF === "" || email === ""){
@@ -202,7 +204,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Modifica di un docente</h3>
 
-            <form>
+            <form onSubmit={this.modificaDocente}>
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">Nome</label>
@@ -261,7 +263,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                     </div>
                 </div>
 
-                <button type="button" className="btn btn-success text-uppercase w-100" onClick={this.modificaDocente}>Modifica docente</button>
+                <button type="submit" className="btn btn-success text-uppercase w-100">Modifica docente</button>
             </form>
         </div>
     }

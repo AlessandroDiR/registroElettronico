@@ -68,7 +68,9 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
         })
     }
 
-    aggiungiMateria = () => {
+    aggiungiMateria = (e: any) => {
+        e.preventDefault()
+
         const { nomeMateria, descMateria } = this.state
 
         if(nomeMateria.trim() === "" || descMateria.trim() === ""){
@@ -100,7 +102,9 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
 
     }
 
-    modificaMateria = () => {
+    modificaMateria = (e: any) => {
+        e.preventDefault()
+
         const { nomeEdit, materiaEdit, descEdit } = this.state
 
         if(nomeEdit === "" || descEdit === ""){
@@ -183,7 +187,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             <h3 className="mb-3 text-center">Lista delle materie</h3>
 
             <button className="btn btn-success float-right mb-3" type="button" onClick={this.showHideModal}>
-                <i className="fal fa-plus"></i> Aggiungi materia
+                <i className="fal fa-plus fa-fw"></i> Aggiungi materia
             </button>
 
             <table className="table table-bordered text-center">
@@ -217,7 +221,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                 <Button type="primary" onClick={this.aggiungiMateria}>Aggiungi</Button>,
                 <Button type="default" onClick={this.showHideModal}>Annulla</Button>
             ]} onCancel={this.showHideModal}>
-                <form>
+                <form onSubmit={this.aggiungiMateria}>
                     <div className="form-group">
                         <label className="text-secondary">Nome della materia</label>
                         <input type="text" value={nomeMateria} onChange={this.changeNome} className="form-control" />
@@ -226,6 +230,8 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                         <label className="text-secondary">Descrizione della materia</label>
                         <input type="text" value={descMateria} onChange={this.changeDesc} className="form-control" />
                     </div>
+
+                    <input type="submit" className="d-none" />
                 </form>
             </Modal>
 
@@ -234,7 +240,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                     <Button type="primary" onClick={this.modificaMateria}>Modifica</Button>,
                     <Button type="default" onClick={this.hideEditModal}>Annulla</Button>
                 ]} onCancel={this.hideEditModal}>
-                    <form>
+                    <form onSubmit={this.modificaMateria}>
                         <div className="form-group">
                             <label className="text-secondary">Nome della materia</label>
                             <input type="text" value={nomeEdit} onChange={this.changeNomeEdit} className="form-control" />
@@ -243,6 +249,8 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                             <label className="text-secondary">Descrizione della materia</label>
                             <input type="text" value={descEdit} onChange={this.changeDescEdit} className="form-control" />
                         </div>
+
+                        <input type="submit" className="d-none" />
                     </form>
                 </Modal>
             }
