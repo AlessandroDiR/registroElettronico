@@ -16,7 +16,6 @@ namespace ProjectWork.Models
 
         public int IdCorso { get; set; }
         public string Nome { get; set; }
-        public string Descrizione { get; set; }
         public string Luogo { get; set; }
         public string Logo { get; set; }
         public string Codice { get; set; }

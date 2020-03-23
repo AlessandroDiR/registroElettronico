@@ -19,10 +19,12 @@ namespace ProjectWork.Controllers
     public class StudentiController : ControllerBase
     {
         private readonly AvocadoDBContext _context;
+        private readonly EmailSender _es;
 
         public StudentiController(AvocadoDBContext context)
         {
             _context = context;
+            _es = new EmailSender();
         }
 
         // GET: api/Studenti
@@ -288,6 +290,22 @@ namespace ProjectWork.Controllers
             await _context.SaveChangesAsync();
 
             return GetStudenti(idCorso);
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult RichiestaCodice([FromBody] int idStudente)
+        {
+            var s = _context.Studenti.Find(idStudente);
+            if (s == null)
+                return NotFound();
+
+            s.Password = Guid.NewGuid().ToString().Split('-')[0];
+            _context.Studenti.Update(s);
+            _context.SaveChanges();
+
+            _es.SendCredenzialiAccessoRemoto(s.Email, s.Password);
+
+            return Ok("success");
         }
 
         // PUT: api/Studenti/5

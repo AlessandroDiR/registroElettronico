@@ -53,7 +53,7 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
         Axios.post(siteUrl+"/api/studenti/richiestacodice", selectedStudente.idStudente, {
             headers: {"Content-Type": "application/json"}
         }).then(_ => {
-            askPassword(siteUrl+"/api/firmaremotastudente", "post", {
+            askPassword(siteUrl+"/api/firmaremota/firmaremotastudente", "post", {
                 idStudente: selectedStudente.idStudente
             }, (response: any) => {
                 let popup = response.data as IMessage
@@ -73,7 +73,7 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
         Axios.post(siteUrl+"/api/docenti/richiestacodice", lezione.idDocente, {
             headers: {"Content-Type": "application/json"}
         }).then(_ => {
-            askPassword(siteUrl+"/api/firmaremotadocente", "post", {
+            askPassword(siteUrl+"/api/firmaremota/firmaremotadocente", "post", {
                 idDocente: lezione.idDocente,
                 idCorso: studenti[0].idCorso,
                 anno: studenti[0].annoFrequentazione
@@ -128,7 +128,7 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
                             <Tooltip title={lezione.titolo}>
                                 <h5 className="mb-0 text-truncate">{lezione.titolo}</h5>
                             </Tooltip>
-                            <small className="text-muted">{lezione.oraInizio} - {lezione.oraFine}</small>
+                            <small className="text-muted">{lezione.oraInizio.slice(0,-3)} - {lezione.oraFine.slice(0,-3)}</small>
                             
                             <button type="button" className="btn btn-danger w-100 text-uppercase mt-2" disabled={lezione === null} onClick={this.firmaDocente}>
                                 {

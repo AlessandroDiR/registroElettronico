@@ -138,8 +138,8 @@ namespace ProjectWork.classi
                     OraInizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]),
                     OraFine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1]),
                     IdCalendario = c.IdCalendario,
-                    IdGEvent = e.Id
-                    //IdMateria = FindIdMateria(e.Summary)
+                    IdGEvent = e.Id,
+                    IdMateria = FindIdMateria(e.Summary)
                 };
 
                 _context.Lezioni.Add(lezione);

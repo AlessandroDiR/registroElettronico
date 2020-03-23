@@ -17,13 +17,11 @@ namespace ProjectWork.Controllers
     {
         private readonly AvocadoDBContext _context;
         private readonly FirmaController _firma;
-        private readonly EmailSender _es;
 
         public FirmaRemotaController(AvocadoDBContext context)
         {
             _context = context;
             _firma = new FirmaController(context);
-            _es = new EmailSender();
         }
 
         [HttpPost("[action]")]
@@ -48,9 +46,9 @@ namespace ProjectWork.Controllers
             return RedirectToAction("GetStudenti", "Studenti", new { idCorso = corso.IdCorso, anno });
         }
 
-        // POST: api/FirmaRemota
-        [HttpPost]
-        public IActionResult Post([FromBody] FirmaRemotaModel firma)
+        // POST: api/FirmaRemota/FirmaRemotaStudente
+        [HttpPost("[action]")]
+        public IActionResult FirmaRemotaStudente([FromBody] FirmaRemotaStudenteModel firma)
         {
             var studente = _context.Studenti.SingleOrDefault(s => s.IdStudente == firma.IdStudente && s.Password == firma.Password);
             if (studente != null)
@@ -59,20 +57,15 @@ namespace ProjectWork.Controllers
             return Ok(OutputMsg.generateMessage("Errore!", "Il codice non è valido!", true));
         }
 
+        // POST: api/FirmaRemota/FirmaRemotaDocente
         [HttpPost("[action]")]
-        public IActionResult RichiestaCodice([FromBody] int idStudente)
+        public IActionResult FirmaRemotaDocente([FromBody] FirmaRemotaDocenteModel firma)
         {
-            var s = _context.Studenti.Find(idStudente);
-            if (s == null)
-                return NotFound();
+            var docente = _context.Docenti.SingleOrDefault(d => d.IdDocente == firma.IdDocente && d.Password == firma.Password);
+            if (docente != null)
+                return Ok(_firma.FirmaDocente(docente, firma.IdCorso, firma.Anno));
 
-            s.Password = Guid.NewGuid().ToString().Split('-')[0];
-            _context.Studenti.Update(s);
-            _context.SaveChanges();
-
-            _es.SendCredenzialiAccessoRemoto(s.Email, s.Password);
-
-            return Ok("success");
+            return Ok(OutputMsg.generateMessage("Errore!", "Il codice non è valido!", true));
         }
     }
 }

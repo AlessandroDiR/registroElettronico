@@ -38,8 +38,6 @@ namespace ProjectWork.Models
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
             }
-
-            optionsBuilder.EnableSensitiveDataLogging();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -212,8 +210,6 @@ namespace ProjectWork.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Descrizione).HasColumnName("descrizione");
-
                 entity.Property(e => e.Logo)
                     .HasColumnName("logo")
                     .IsUnicode(false);
@@ -374,10 +370,6 @@ namespace ProjectWork.Models
                 entity.HasKey(e => e.IdMateria);
 
                 entity.Property(e => e.IdMateria).HasColumnName("id_materia");
-
-                entity.Property(e => e.Descrizione)
-                    .HasColumnName("descrizione")
-                    .HasMaxLength(100);
 
                 entity.Property(e => e.Nome)
                     .IsRequired()

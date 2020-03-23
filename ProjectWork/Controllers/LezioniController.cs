@@ -68,12 +68,16 @@ namespace ProjectWork.Controllers
 
             foreach(var l in lezioni)
             {
-                if(l.OraFine <= DateTime.Now.TimeOfDay)
+                if(l.OraInizio <= DateTime.Now.TimeOfDay && l.OraFine >= DateTime.Now.TimeOfDay)
                 {
                     var idDocente = _context.Insegnare.SingleOrDefault(i => i.IdMateria == l.IdMateria).IdDocente;
                     var json = new
                     {
-                        l,
+                        idLezione = l.IdLezione,
+                        titolo = l.Titolo,
+                        data = l.Data,
+                        oraInizio = l.OraInizio,
+                        oraFine = l.OraFine,
                         idDocente
                     };
 
@@ -81,7 +85,7 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok("Tutte le lezioni sono state svolte");
         }
 
     }

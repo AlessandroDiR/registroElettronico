@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ProjectWork.CustomizedModels
 {
-    public class FirmaRemotaModel
+    public class FirmaRemotaStudenteModel
     {
         public int IdStudente { get; set; }
         public string Password { get; set; }

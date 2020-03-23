@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjectWork.classi;
 using ProjectWork.Models;
 
 namespace ProjectWork.Controllers
@@ -14,10 +15,12 @@ namespace ProjectWork.Controllers
     public class DocentiController : ControllerBase
     {
         private readonly AvocadoDBContext _context;
+        private readonly EmailSender _es;
 
         public DocentiController(AvocadoDBContext context)
         {
             _context = context;
+            _es = new EmailSender();
         }
 
         // GET: api/Docenti
@@ -243,34 +246,20 @@ namespace ProjectWork.Controllers
             return GetDocenti();
         }
 
-        // POST: api/Docenti/LoginDocente
         [HttpPost("[action]")]
-        public async Task<IActionResult> LoginDocente([FromBody] Docenti docenti)
+        public IActionResult RichiestaCodice([FromBody] int idDocente)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var d = _context.Docenti.Find(idDocente);
+            if (d == null)
+                return NotFound();
 
-            var docente = _context.Docenti.Where(d => d.Cf == docenti.Cf);
+            d.Password = Guid.NewGuid().ToString().Split('-')[0];
+            _context.Docenti.Update(d);
+            _context.SaveChanges();
 
-            if (docente == null)
-            {
-                return CreatedAtAction("GetDocenti", false);
-            }
-            else
-            {
-                foreach (var item in docente)
-                {
-                    if (item.Password == docenti.Password)
-                    {
-                        return CreatedAtAction("GetDocenti", true);
-                    }
-                }
-            }
-            await _context.SaveChangesAsync();
+            _es.SendCredenzialiAccessoRemoto(d.Email, d.Password);
 
-            return CreatedAtAction("GetDocenti", false);
+            return Ok("success");
         }
 
         // DELETE: api/Docenti/5

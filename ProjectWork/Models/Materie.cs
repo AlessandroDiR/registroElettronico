@@ -14,7 +14,6 @@ namespace ProjectWork.Models
 
         public int IdMateria { get; set; }
         public string Nome { get; set; }
-        public string Descrizione { get; set; }
 
         public ICollection<Comprende> Comprende { get; set; }
         public ICollection<Insegnare> Insegnare { get; set; }
