@@ -4,4 +4,5 @@ export interface ILezione{
     readonly oraInizio: string
     readonly oraFine: string
     readonly idDocente: number
+    readonly titolo: string
 }

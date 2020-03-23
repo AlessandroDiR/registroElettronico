@@ -253,11 +253,11 @@ table td, table th{
   height: 42px;
   width: 42px
 }
-.anticon-check-circle, .ant-steps-icon .anticon, .ant-btn .anticon{
+.anticon-check-circle, .ant-steps-icon .anticon, .ant-btn .anticon, .loadable-btn.anticon{
   vertical-align: middle !important;
   margin-top: -5px;
 
-  &.ant-steps-finish-icon{
+  &.ant-steps-finish-icon, &.loadable-btn{
     margin-top: -2px
   }
 }
@@ -438,4 +438,8 @@ table td, table th{
 
 @media screen and (max-height: 370px){
   #mainBlock{ flex-direction: row !important}
+}
+
+@media screen and (min-width: 992px){
+  .pos-lg-fixed{ position: fixed !important; right: 20px; top: 20px; width: 250px !important }
 }

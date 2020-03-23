@@ -1,5 +1,5 @@
 import React from "react"
-import { Modal, Radio } from "antd"
+import { Modal, Radio, Icon, Tooltip } from "antd"
 import { mountLogin, unmountLogin, siteUrl } from "../../utilities"
 import { IStudent } from "../../models/IStudent"
 import LogoCorso from "../LogoCorso"
@@ -28,6 +28,7 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
 
     componentDidMount = () => {
         mountLogin()
+        this.caricaLezione()
     }
 
     componentWillUnmount = () => {
@@ -49,11 +50,33 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.post(siteUrl+"/api/firmaremota/richiestacodice", selectedStudente.idStudente, {
+        Axios.post(siteUrl+"/api/studenti/richiestacodice", selectedStudente.idStudente, {
             headers: {"Content-Type": "application/json"}
         }).then(_ => {
-            askPassword(siteUrl+"/api/firmaremota", "post", {
+            askPassword(siteUrl+"/api/firmaremotastudente", "post", {
                 idStudente: selectedStudente.idStudente
+            }, (response: any) => {
+                let popup = response.data as IMessage
+    
+                Modal.info({
+                    title: popup.title,
+                    content: <div style={{ marginLeft: 38 }}>{popup.message}</div>,
+                    icon: <i className={"float-left mr-3 far "+popup.icon} style={{ color: popup.iconColor, fontSize: 22 }}/>
+                })
+            }, null, "Inserisci il codice che ti abbiamo inviato per e-mail")
+        })
+    }
+
+    firmaDocente = () => {
+        const { lezione, studenti } = this.state
+
+        Axios.post(siteUrl+"/api/docenti/richiestacodice", lezione.idDocente, {
+            headers: {"Content-Type": "application/json"}
+        }).then(_ => {
+            askPassword(siteUrl+"/api/firmaremotadocente", "post", {
+                idDocente: lezione.idDocente,
+                idCorso: studenti[0].idCorso,
+                anno: studenti[0].annoFrequentazione
             }, (response: any) => {
                 let popup = response.data as IMessage
     
@@ -97,39 +120,50 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
             </div>
         }
 
-        this.caricaLezione()
-
         return <div className="col-11 col-lg-5 mx-auto" id="loginBlock">
-            <form className="w-100 bg-white p-3 rounded shadow" onSubmit={this.inviaFirma}>
-                <h3 className="d-inline-block">Firma da casa</h3>
-                <LogoCorso idCorso={studenti[0].idCorso} forLogin={true} />
+            <div className="w-100">
+                <div className="bg-white p-3 rounded shadow mx-auto mb-3 col-12 col-md-6 pos-lg-fixed">
+                    {
+                        lezione ? <div>
+                            <Tooltip title={lezione.titolo}>
+                                <h5 className="mb-0 text-truncate">{lezione.titolo}</h5>
+                            </Tooltip>
+                            <small className="text-muted">{lezione.oraInizio} - {lezione.oraFine}</small>
+                            
+                            <button type="button" className="btn btn-danger w-100 text-uppercase mt-2" disabled={lezione === null} onClick={this.firmaDocente}>
+                                {
+                                    lezione === null && <Icon type="loading" className="mr-2 loadable-btn" spin />
+                                }
 
-                <div className="form-group">
-                    <label className="text-secondary">Scegli lo studente</label>
-                    <div className="multiselect form-control p-0">
-                        {
-                            studenti.map(s => {
-                                let checked = selectedStudente === s,
-                                classname = checked ? "checked" : ""
-                                
-                                return <label className={"option "+classname}>
-                                    <Radio className="mr-2" onChange={() => this.scegliStudente(s)} checked={checked} /> {s.nome} {s.cognome}
-                                </label>
-                            })
-                        }
-                    </div>
+                                Firma docente
+                            </button>
+                        </div> : <Icon type="loading" spin style={{ fontSize: 23 }} />
+                    }
                 </div>
 
-                <input type="submit" value="Firma" className="btn btn-lg btn-success w-100 text-uppercase"/>
+                <form className="w-100 bg-white p-3 rounded shadow" onSubmit={this.inviaFirma}>
+                    <h3 className="d-inline-block">Firma studente</h3>
+                    <LogoCorso idCorso={studenti[0].idCorso} forLogin={true} />
 
-                <button className="btn btn-lg btn-danger w-100 text-uppercase mt-3" disabled={lezione === null}>
-                    {
-                        lezione === null && <span className="spinner-border spinner-border-sm mr-2 align-middle"></span> 
-                    }
-                    
-                    Firma docente
-                </button>
-            </form>
+                    <div className="form-group">
+                        <label className="text-secondary">Scegli lo studente</label>
+                        <div className="multiselect form-control p-0">
+                            {
+                                studenti.map(s => {
+                                    let checked = selectedStudente === s,
+                                    classname = checked ? "checked" : ""
+                                    
+                                    return <label className={"option "+classname}>
+                                        <Radio className="mr-2" onChange={() => this.scegliStudente(s)} checked={checked} /> {s.nome} {s.cognome}
+                                    </label>
+                                })
+                            }
+                        </div>
+                    </div>
+
+                    <input type="submit" value="Firma" className="btn btn-lg btn-success w-100 text-uppercase"/>
+                </form>
+            </div>
         </div>
     }
 
