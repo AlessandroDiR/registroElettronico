@@ -5,7 +5,7 @@ import { Modal, Icon } from "antd"
 import { IAdmin } from "../models/IAdmin"
 import { checkEnter } from "../utilities"
 
-export const askPassword = (url: string, callType: string, body?: any, callback?: any, preAction?: any) => {
+export const askPassword = (url: string, callType: string, body?: any, callback?: any, preAction?: any, customText?: string) => {
     let input: HTMLInputElement,
     cipher = new Cipher(),
     tutor = JSON.parse(sessionStorage.getItem("adminSession")) as IAdmin
@@ -34,6 +34,8 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
                     idCoordinatore: tutor.idCoordinatore,
                     password: password
                 }
+            }else{
+                body.password = password
             }
 
             Axios.post(url, body).then(callback).catch(_ => {
@@ -50,6 +52,8 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
                     idCoordinatore: tutor.idCoordinatore,
                     password: password
                 }
+            }else{
+                body.password = password
             }
 
             Axios.put(url, body).then(callback).catch(_ => {
@@ -65,7 +69,9 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
         title: "Prima di procedere...",
         content: <div style={{ marginLeft: -38 }}>
             <div className="form-group mb-0">
-                <label className="text-secondary">Inserisci la tua password per confermare l'identità</label>
+                <label className="text-secondary">
+                    {customText ? customText : "Inserisci la tua password per confermare l'identità"}
+                </label>
                 <input type="password" ref={r => input = r} className="form-control" onKeyUp={(e) => checkEnter(e, () => {
                     if(!sendForm())
                         modal.destroy()

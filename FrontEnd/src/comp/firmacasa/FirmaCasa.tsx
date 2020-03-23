@@ -5,6 +5,7 @@ import { IStudent } from "../../models/IStudent"
 import LogoCorso from "../LogoCorso"
 import { IMessage } from "../../models/IMessage"
 import { askPassword } from "../AskConferma"
+import Axios from "axios"
 
 export interface IProps{}
 export interface IState{
@@ -32,6 +33,7 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
 
     inviaFirma = (e: any) => {
         e.preventDefault()
+
         const { selectedStudente } = this.state
 
         if(!selectedStudente){
@@ -44,16 +46,18 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
             return
         }
 
-        askPassword(siteUrl+"/api/firmaremota", "post", {
-            idStudente: selectedStudente.idStudente
-        }, (response: any) => {
-            let popup = response.data as IMessage
-
-            Modal.info({
-                title: popup.title,
-                content: <div style={{ marginLeft: 38 }}>{popup.message}</div>,
-                icon: <i className={"float-left mr-3 far "+popup.icon} style={{ color: popup.iconColor, fontSize: 22 }}/>
-            })
+        Axios.post(siteUrl+"/api/firmaremota/richiestacodice", selectedStudente.idStudente).then(_ => {
+            askPassword(siteUrl+"/api/firmaremota", "post", {
+                idStudente: selectedStudente.idStudente
+            }, (response: any) => {
+                let popup = response.data as IMessage
+    
+                Modal.info({
+                    title: popup.title,
+                    content: <div style={{ marginLeft: 38 }}>{popup.message}</div>,
+                    icon: <i className={"float-left mr-3 far "+popup.icon} style={{ color: popup.iconColor, fontSize: 22 }}/>
+                })
+            }, null, "Inserisci il codice che ti abbiamo inviato per e-mail")
         })
     }
 
