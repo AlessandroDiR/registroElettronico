@@ -59,7 +59,7 @@ namespace ProjectWork.Controllers
             return Ok(OutputMsg.generateMessage("Errore!", "Il codice non è valido!", true));
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
         public IActionResult RichiestaCodice([FromBody] int idStudente)
         {
             var s = _context.Studenti.Find(idStudente);

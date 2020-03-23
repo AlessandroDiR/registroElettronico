@@ -189,7 +189,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             cancelText: "Annulla",
             onOk: () => {
 
-                askPassword(siteUrl+"/api/studenti/promuovistudente", "post", {
+                askPassword(siteUrl+"/api/studenti/promuovistudente", "put", {
                     idStudente: s.idStudente
                 }, (response: any) => {
                     
