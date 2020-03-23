@@ -195,7 +195,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                 <Button type="default" onClick={this.showHideModal}>Annulla</Button>
             ]} onCancel={this.showHideModal}>
                 <form onSubmit={this.aggiungiMateria}>
-                    <div className="form-group">
+                    <div className="form-group mb-0">
                         <label className="text-secondary">Nome della materia</label>
                         <input type="text" value={nomeMateria} onChange={this.changeNome} className="form-control" />
                     </div>
@@ -210,7 +210,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                     <Button type="default" onClick={this.hideEditModal}>Annulla</Button>
                 ]} onCancel={this.hideEditModal}>
                     <form onSubmit={this.modificaMateria}>
-                        <div className="form-group">
+                        <div className="form-group mb-0">
                             <label className="text-secondary">Nome della materia</label>
                             <input type="text" value={nomeEdit} onChange={this.changeNomeEdit} className="form-control" />
                         </div>
