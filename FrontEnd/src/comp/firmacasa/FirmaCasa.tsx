@@ -128,7 +128,7 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
                             <Tooltip title={lezione.titolo}>
                                 <h5 className="mb-0 text-truncate">{lezione.titolo}</h5>
                             </Tooltip>
-                            <small className="text-muted">{lezione.oraInizio.slice(0,-3)} - {lezione.oraFine.slice(0,-3)}</small>
+                            <small className="text-muted">{lezione.oraInizio.slice(0, -3)} - {lezione.oraFine.slice(0, -3)}</small>
                             
                             <button type="button" className="btn btn-danger w-100 text-uppercase mt-2" disabled={lezione === null} onClick={this.firmaDocente}>
                                 {
