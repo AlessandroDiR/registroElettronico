@@ -60,5 +60,44 @@ namespace ProjectWork.classi
                 return ex.InnerException.Message;
             }
         }
+
+        public string SendCredenzialiAccessoRemoto(string email, string codice)
+        {
+            SmtpClient client = new SmtpClient()
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential
+                {
+                    UserName = "registro.fitstic@gmail.com",
+                    Password = "dkviqxwjmlvrwppt"
+                }
+            };
+
+            MailAddress from = new MailAddress("registro.fitstic@gmail.com", "Registro Fitstic");
+            MailAddress to = new MailAddress(email);
+            MailMessage message = new MailMessage()
+            {
+                From = from,
+                IsBodyHtml = true,
+                Subject = "FITSTIC | Credenziali accesso remoto",
+                Body = $"Ciao! Ecco il codice di accesso per registrare la firma da remoto: {codice}"
+            };
+
+            message.To.Add(to);
+
+            try
+            {
+                client.SendMailAsync(message);
+                return "success";
+            }
+            catch (Exception ex)
+            {
+                return ex.InnerException.Message;
+            }
+        }
     }
 }
