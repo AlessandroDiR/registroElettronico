@@ -6,11 +6,13 @@ import LogoCorso from "../LogoCorso"
 import { IMessage } from "../../models/IMessage"
 import { askPassword } from "../AskConferma"
 import Axios from "axios"
+import { ILezione } from "../../models/ILezione"
 
 export interface IProps{}
 export interface IState{
     readonly studenti: IStudent[]
     readonly selectedStudente: IStudent
+    readonly lezione: ILezione
 }
 
 export default class FirmaCasa extends React.PureComponent<IProps, IState>{
@@ -19,7 +21,8 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
 
         this.state = {
             studenti: JSON.parse(sessionStorage.getItem("confermaCasa")) as IStudent[],
-            selectedStudente: null
+            selectedStudente: null,
+            lezione: null
         }
     }
 
@@ -67,8 +70,21 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
         })
     }
 
+    caricaLezione = () => {
+        const { studenti } = this.state,
+        temp = studenti[0]
+
+        Axios.get(siteUrl+"/api/lezioni/"+temp.idCorso+"/"+temp.annoFrequentazione).then(response => {
+            let lezione = response.data as ILezione
+
+            this.setState({
+                lezione: lezione
+            })
+        })
+    }
+
     render(): JSX.Element{
-        const { studenti, selectedStudente } = this.state
+        const { studenti, selectedStudente, lezione } = this.state
 
         if(!studenti.length){
             return <div className="col-11 col-lg-4 mx-auto" id="loginBlock">
@@ -78,6 +94,8 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
                 </div>
             </div>
         }
+
+        this.caricaLezione()
 
         return <div className="col-11 col-lg-5 mx-auto" id="loginBlock">
             <form className="w-100 bg-white p-3 rounded shadow" onSubmit={this.inviaFirma}>
@@ -101,6 +119,14 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
                 </div>
 
                 <input type="submit" value="Firma" className="btn btn-lg btn-success w-100 text-uppercase"/>
+
+                <button className="btn btn-lg btn-danger w-100 text-uppercase mt-3" disabled={lezione === null}>
+                    {
+                        lezione === null && <span className="spinner-border spinner-border-sm mr-2 align-middle"></span> 
+                    }
+                    
+                    Firma docente
+                </button>
             </form>
         </div>
     }
