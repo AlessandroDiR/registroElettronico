@@ -14,8 +14,6 @@ export interface IState{
     readonly showEditModal: boolean
     readonly materiaEdit: IMateria
     readonly nomeEdit: string
-    readonly descEdit: string
-    readonly descMateria: string
 }
 
 export default class MaterieList extends React.PureComponent<IProps, IState>{
@@ -27,11 +25,9 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             materie: null,
             showModal: false,
             nomeMateria: "",
-            descMateria: "",
             showEditModal: false,
             materiaEdit: null,
-            nomeEdit: "",
-            descEdit: ""
+            nomeEdit: ""
         }
     }
 
@@ -46,8 +42,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
     showHideModal = () => {
         this.setState({
             showModal: !this.state.showModal,
-            nomeMateria: "",
-            descMateria: ""
+            nomeMateria: ""
         })
     }
 
@@ -63,7 +58,6 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
         this.setState({
             showEditModal: true,
             nomeEdit: materia.nome,
-            descEdit: materia.descrizione,
             materiaEdit: materia
         })
     }
@@ -71,9 +65,9 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
     aggiungiMateria = (e: any) => {
         e.preventDefault()
 
-        const { nomeMateria, descMateria } = this.state
+        const { nomeMateria } = this.state
 
-        if(nomeMateria.trim() === "" || descMateria.trim() === ""){
+        if(nomeMateria.trim() === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -88,8 +82,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
         })
 
         Axios.post(siteUrl+"/api/materie/"+this.props.corso, {
-            nome: nomeMateria.trim(),
-            descrizione: descMateria.trim()
+            nome: nomeMateria.trim()
         }).then(response => {
             let materie = response.data as IMateria[]
 
@@ -105,9 +98,9 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
     modificaMateria = (e: any) => {
         e.preventDefault()
 
-        const { nomeEdit, materiaEdit, descEdit } = this.state
+        const { nomeEdit, materiaEdit } = this.state
 
-        if(nomeEdit === "" || descEdit === ""){
+        if(nomeEdit === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -123,8 +116,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
 
         Axios.put(siteUrl+"/api/materie/"+materiaEdit.idMateria, {
             idMateria: materiaEdit.idMateria,
-            nome: nomeEdit.trim(),
-            descrizione: descEdit.trim()
+            nome: nomeEdit.trim()
         }).then(response => {
             let materie = response.data as IMateria[]
 
@@ -132,7 +124,6 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                 materie: materie,
                 materiaEdit: null,
                 nomeEdit: "",
-                descEdit: ""
             })
 
             message.success("Materia modificata con successo!")
@@ -156,24 +147,8 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
         })
     }
 
-    changeDesc = (event: any) => {
-        let desc = event.target.value
-
-        this.setState({
-            descMateria: desc
-        })
-    }
-
-    changeDescEdit = (event: any) => {
-        let desc = event.target.value
-
-        this.setState({
-            descEdit: desc
-        })
-    }
-
     render(): JSX.Element{
-        const { materie, nomeMateria, showModal, showEditModal, materiaEdit, nomeEdit, descMateria, descEdit } = this.state
+        const { materie, nomeMateria, showModal, showEditModal, materiaEdit, nomeEdit } = this.state
         
         if(!materie){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
@@ -203,7 +178,6 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                             materie.map(m => {        
                                 return <tr>
                                     <td style={{maxWidth: 0}} className="text-truncate">{m.nome}</td>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{m.descrizione}</td>
                                     <td>
                                         <Tooltip title="Modifica">
                                             <button type="button" className="btn btn-warning text-white circle-btn" onClick={() => this.showEditModal(m)}>
@@ -226,10 +200,6 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                         <label className="text-secondary">Nome della materia</label>
                         <input type="text" value={nomeMateria} onChange={this.changeNome} className="form-control" />
                     </div>
-                    <div className="form-group">
-                        <label className="text-secondary">Descrizione della materia</label>
-                        <input type="text" value={descMateria} onChange={this.changeDesc} className="form-control" />
-                    </div>
 
                     <input type="submit" className="d-none" />
                 </form>
@@ -244,10 +214,6 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                         <div className="form-group">
                             <label className="text-secondary">Nome della materia</label>
                             <input type="text" value={nomeEdit} onChange={this.changeNomeEdit} className="form-control" />
-                        </div>
-                        <div className="form-group">
-                            <label className="text-secondary">Descrizione della materia</label>
-                            <input type="text" value={descEdit} onChange={this.changeDescEdit} className="form-control" />
                         </div>
 
                         <input type="submit" className="d-none" />
