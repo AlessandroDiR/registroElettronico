@@ -401,7 +401,7 @@ namespace ProjectWork.Controllers
             return GetStudenti(idCorso);
         }
 
-        [HttpPost("[action]")]
+        [HttpPut("[action]")]
         public async Task<IActionResult> PromuoviStudente([FromBody]  PromozioneModel promozione)
         {
             var coordinatore = await _context.Coordinatori.SingleOrDefaultAsync(c => c.IdCoordinatore == promozione.AuthCoordinatore.IdCoordinatore && c.Password == promozione.AuthCoordinatore.Password);
@@ -420,7 +420,7 @@ namespace ProjectWork.Controllers
                 studente.Promosso = "true";
             }
 
-            _context.Entry(studente).State = EntityState.Modified;
+            _context.Studenti.Update(studente);
             await _context.SaveChangesAsync();
 
             return GetStudenti(studente.IdCorso);
