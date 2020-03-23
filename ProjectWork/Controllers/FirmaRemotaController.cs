@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjectWork.classi;
 using ProjectWork.CustomizedModels;
 using ProjectWork.Models;
 
@@ -16,11 +17,13 @@ namespace ProjectWork.Controllers
     {
         private readonly AvocadoDBContext _context;
         private readonly FirmaController _firma;
+        private readonly EmailSender _es;
 
         public FirmaRemotaController(AvocadoDBContext context)
         {
             _context = context;
             _firma = new FirmaController(context);
+            _es = new EmailSender();
         }
 
         [HttpPost("[action]")]
@@ -54,6 +57,22 @@ namespace ProjectWork.Controllers
                 return Ok(_firma.FirmaStudente(studente));
 
             return Ok(OutputMsg.generateMessage("Errore!", "Il codice non è valido!", true));
+        }
+
+        [HttpPost]
+        public IActionResult RichiestaCodice([FromBody] int idStudente)
+        {
+            var s = _context.Studenti.Find(idStudente);
+            if (s == null)
+                return NotFound();
+
+            s.Password = Guid.NewGuid().ToString().Split('-')[0];
+            _context.Studenti.Update(s);
+            _context.SaveChanges();
+
+            _es.SendCredenzialiAccessoRemoto(s.Email, s.Password);
+
+            return Ok("success");
         }
     }
 }
