@@ -7,7 +7,6 @@ import Axios from "axios"
 export interface IProps{}
 export interface IState{
     readonly nome: string
-    readonly descrizione: string
     readonly luogo: string
     readonly logo: string
 }
@@ -19,7 +18,6 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
 
         this.state = {
             nome: "",
-            descrizione: "",
             luogo: "",
             logo: null
         }
@@ -30,14 +28,6 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
 
         this.setState({
             nome: nome
-        })
-    }
-
-    changeDesc = (event: any) => {
-        let desc = event.target.value
-
-        this.setState({
-            descrizione: desc
         })
     }
 
@@ -52,9 +42,9 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
     aggiungiCorso = (e: any) => {
         e.preventDefault()
 
-        const { nome, descrizione, luogo, logo } = this.state
+        const { nome, luogo, logo } = this.state
 
-        if(nome.trim() === "" || descrizione.trim() === "" || luogo.trim() === ""){
+        if(nome.trim() === "" || luogo.trim() === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -65,7 +55,6 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
 
         Axios.post(siteUrl+"/api/corsi", {
             nome: nome.trim(),
-            descrizione: descrizione.trim(),
             luogo: luogo.trim(),
             logo: logo ? logo.trim() : ""
         }).then(_ => {
@@ -86,7 +75,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { nome, descrizione, luogo, logo } = this.state,
+        const { nome, luogo, logo } = this.state,
         uploadButton = (
             <div>
                 <Icon type="plus" style={{ fontSize: 30, marginBottom: 5 }} />
@@ -106,23 +95,14 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
                     </Upload>
                 </div>
                 
-                <div className="col">
-                    <div className="form-group row">
-                        <div className="col">
-                            <label className="text-secondary">Nome</label>
-                            <input name="nomecorso" type="text" className="form-control" value={nome} onChange={this.changeNome} />
-                        </div>
-                        <div className="col pr-0">
-                            <label className="text-secondary">Luogo</label>
-                            <input name="luogo" type="text" className="form-control" value={luogo} onChange={this.changeLuogo} />
-                        </div>
+                <div className="col pr-0">
+                    <div className="form-group">
+                        <label className="text-secondary">Nome</label>
+                        <input name="nomecorso" type="text" className="form-control" value={nome} onChange={this.changeNome} />
                     </div>
-
-                    <div className="form-group row">
-                        <div className="col pr-0">
-                            <label className="text-secondary">Breve descrizione</label>
-                            <textarea name="description" className="form-control" rows={2} onChange={this.changeDesc}>{descrizione}</textarea>
-                        </div>
+                    <div className="form-group">
+                        <label className="text-secondary">Luogo</label>
+                        <input name="luogo" type="text" className="form-control" value={luogo} onChange={this.changeLuogo} />
                     </div>
                 </div>
                 <button type="submit" className="btn btn-success text-uppercase w-100">Aggiungi corso</button>
