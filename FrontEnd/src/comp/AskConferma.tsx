@@ -27,12 +27,12 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
             preAction()
             
         if(callType === "post"){
-            let password = cipher.encode(input.value)
+            let password = input.value
 
             if(tutor){
                 body.authCoordinatore = {
                     idCoordinatore: tutor.idCoordinatore,
-                    password: password
+                    password: cipher.encode(password)
                 }
             }else{
                 body.password = password
@@ -45,12 +45,12 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
                 })
             })
         }else if(callType === "put"){
-            let password = cipher.encode(input.value)
+            let password = input.value
             
             if(tutor){
                 body.authCoordinatore = {
                     idCoordinatore: tutor.idCoordinatore,
-                    password: password
+                    password: cipher.encode(password)
                 }
             }else{
                 body.password = password
