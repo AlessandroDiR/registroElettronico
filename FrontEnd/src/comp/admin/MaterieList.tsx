@@ -170,7 +170,6 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                     <tbody>
                         <tr>
                             <th>Nome</th>
-                            <th>Descrizione</th>
                             <th style={{width: "10%"}}>Azioni</th>
                         </tr>
 
