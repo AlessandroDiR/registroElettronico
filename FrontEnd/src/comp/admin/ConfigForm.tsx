@@ -3,6 +3,7 @@ import { Modal, message, Icon, Spin } from "antd"
 import Axios from "axios"
 import { siteUrl } from "../../utilities"
 import { ICalendar } from "../../models/ICalendar"
+import Calendario from "../Calendario"
 
 export interface IProps{
     readonly anno: number
@@ -11,6 +12,7 @@ export interface IProps{
 export interface IState{
     readonly calendarId: string
     readonly calendar: ICalendar
+    readonly actualId: string
 }
 
 export default class ConfigForm extends React.PureComponent<IProps, IState>{
@@ -19,7 +21,8 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
 
         this.state = {
             calendarId: null,
-            calendar: null
+            calendar: null,
+            actualId: ""
         }
     }
 
@@ -31,6 +34,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
 
             this.setState({
                 calendarId: calendar.idGoogleCalendar,
+                actualId: calendar.idGoogleCalendar,
                 calendar: calendar
             })
         })
@@ -65,12 +69,16 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
             Anno: anno,
             IdGoogleCalendar: calendarId
         }).then(_ => {
+            this.setState({
+                actualId: calendarId
+            })
+
             message.success("Configurazione calendario salvata!")
         })
     }
 
     render(): JSX.Element{
-        const { calendarId } = this.state
+        const { calendarId, actualId } = this.state
 
         if(calendarId === null){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
@@ -88,7 +96,14 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
                 </div>
             </div>
 
-            <button type="submit" className="btn btn-success float-right mr-1 mb-1">Salva configurazione</button>
+            <button type="submit" className="btn btn-success float-right mr-1 mb-3">Salva configurazione</button>
+
+            <div className="clearfix"></div>
+
+            <div className="p-1">
+                <h4>Anteprima visualizzazione</h4>
+                <Calendario calendarId={actualId} />
+            </div> 
         </form>
     }
 }
