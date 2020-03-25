@@ -165,30 +165,25 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
                 <i className="fal fa-plus fa-fw"></i> Aggiungi materia
             </button>
 
-            <table className="table table-bordered text-center">
-                
-                    <tbody>
-                        <tr>
-                            <th>Nome</th>
-                            <th style={{width: "10%"}}>Azioni</th>
-                        </tr>
+            <div className="clearfix"></div>
 
-                        {
-                            materie.map(m => {        
-                                return <tr>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{m.nome}</td>
-                                    <td>
-                                        <Tooltip title="Modifica">
-                                            <button type="button" className="btn btn-warning text-white circle-btn" onClick={() => this.showEditModal(m)}>
-                                                <i className="fa fa-pen"></i>
-                                            </button>
-                                        </Tooltip>
-                                    </td>
-                                </tr>
-                            })
-                        }
-                    </tbody>
-            </table>
+            <div className="row mx-0">
+                {
+                    materie.map(m => {    
+                        return <div className="col-12 col-md-3 col-lg-4 p-0 p-md-1 mb-1">
+                            <div className="border rounded p-2">
+                                <Tooltip title="Modifica">
+                                    <span onClick={() => this.showEditModal(m)} className="float-right link-warning ml-2">
+                                        <i className="fa fa-pen"></i>
+                                    </span>
+                                </Tooltip>
+
+                                <div className="text-truncate">{m.nome}</div>
+                            </div>
+                        </div>
+                    })
+                }
+            </div>
 
             <Modal title="Aggiungi una materia" visible={showModal} footer={[
                 <Button type="primary" onClick={this.aggiungiMateria}>Aggiungi</Button>,

@@ -14,9 +14,11 @@ export interface IState{}
 
 export default class Calendario extends React.PureComponent<IProps, IState>{
     render(): JSX.Element{
+        const { calendarId } = this.props
+
         return <FullCalendar
             plugins={[ googleCalendarPlugin, dayGridPlugin ]}
-            events={{ googleCalendarId: this.props.calendarId }}
+            events={{ googleCalendarId: calendarId }}
             googleCalendarApiKey={"AIzaSyCEEaAbHOYhofQs-iLdHd_J8-KyD_IlRbE"}
             defaultView="dayGridMonth"
             fixedWeekCount={false}
