@@ -4,9 +4,10 @@ import { Tooltip, Icon, Spin, Modal, Select } from "antd"
 import { siteUrl, formatItalian, validateTime, checkEnter } from "../../utilities"
 import Axios from "axios"
 import { askPassword } from "../AskConferma"
+import { IStudent } from "../../models/IStudent"
 
 export interface IProps{
-    readonly studente: number
+    readonly studente: IStudent
     reloadTotali(): void
 }
 export interface IState{
@@ -28,7 +29,9 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/api/studenti/getdetailedpresences/"+this.props.studente).then((response) => {
+        const { studente } = this.props
+
+        Axios.get(siteUrl+"/api/studenti/getdetailedpresences/"+studente.idStudente).then((response) => {
 
             let presenze = response.data as IPresenze[]
 
@@ -152,6 +155,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
 
     render(): JSX.Element{
         const { presenze, editingList, filter } = this.state,
+        { studente } = this.props,
         { Option } = Select
 
         if(!presenze){
@@ -189,7 +193,9 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
                         <th>Entrata</th>
                         <th>Uscita</th>
                         <th>Lezione</th>
-                        <th>Azioni</th>
+                        {
+                            !studente.promosso && <th>Azioni</th>
+                        }
                     </tr>
 
                     {
@@ -213,19 +219,21 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
                                 <Tooltip title={p.lezione}>
                                     <td style={{maxWidth: 0}} className="text-truncate">{p.lezione}</td>
                                 </Tooltip>
-                                <td>
-                                    {
-                                        presenzaEdit ? <Tooltip title="Conferma modifiche">
-                                            <button type="button" className="btn btn-success circle-btn" onClick={() => this.confirmEdit(p.idPresenza, td1, td2)} >
-                                                <i className="fa fa-check"></i>
-                                            </button>
-                                        </Tooltip> : <Tooltip title="Modifica orari">
-                                            <button type="button" className="btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p)}>
-                                                <i className="fa fa-user-edit"></i>
-                                            </button>
-                                        </Tooltip>
-                                    }
-                                </td>
+                                {
+                                    !studente.promosso && <td>
+                                        {
+                                            presenzaEdit ? <Tooltip title="Conferma modifiche">
+                                                <button type="button" className="btn btn-success circle-btn" onClick={() => this.confirmEdit(p.idPresenza, td1, td2)} >
+                                                    <i className="fa fa-check"></i>
+                                                </button>
+                                            </Tooltip> : <Tooltip title="Modifica orari">
+                                                <button type="button" className="btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p)}>
+                                                    <i className="fa fa-user-edit"></i>
+                                                </button>
+                                            </Tooltip>
+                                        }
+                                    </td>
+                                }
                             </tr>
                         })
                     }
