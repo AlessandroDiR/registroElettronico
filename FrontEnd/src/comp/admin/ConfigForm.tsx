@@ -1,10 +1,11 @@
 import React from "react"
-import { Modal, message, Icon, Spin } from "antd"
+import { Modal, message, Icon, Spin, Collapse } from "antd"
 import Axios from "axios"
 import { siteUrl } from "../../utilities"
 import { ICalendar } from "../../models/ICalendar"
 import Calendario from "../Calendario"
 import { askPassword } from "../AskConferma"
+import { ICalendarEvent } from "../../models/ICalendarEvent"
 
 export interface IProps{
     readonly anno: number
@@ -71,7 +72,31 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
                 anno: anno,
                 idGoogleCalendar: calendarId
             }
-        }, (_: any) => {
+        }, (response: any) => {
+            let eventiScartati = response.data as ICalendarEvent[],
+            { Panel } = Collapse
+
+            if(eventiScartati.length){
+                Modal.warning({
+                    title: "Attenzione!",
+                    content: <div style={{ marginLeft: -38 }}>
+                        <p className="text-muted">I seguenti eventi sono stati scartati durante l'inserimento. Assicurati che siano scritti nel giusto modo (<strong>LUOGO: DOCENTE - MATERIA</strong>).</p>
+
+                        <Collapse bordered={false}>
+                            <Panel header="Espandi per visualizzare gli eventi" key={1}>
+                                { 
+                                    eventiScartati.map(e => {
+                                        return <span className="d-block">
+                                            <strong>{e.date} ({e.inizio} - {e.fine})</strong>: {e.summary}
+                                        </span>
+                                    })
+                                }
+                            </Panel>
+                        </Collapse>
+                    </div>
+                })
+            }
+            
             this.setState({
                 actualId: calendarId
             })
