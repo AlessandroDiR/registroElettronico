@@ -1,5 +1,5 @@
 export interface IDocente{
-    readonly idDocente: string
+    readonly idDocente: number
     readonly email: string
     readonly nome: string
     readonly cognome: string

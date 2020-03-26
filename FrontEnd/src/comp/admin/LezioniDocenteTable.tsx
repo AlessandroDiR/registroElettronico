@@ -3,6 +3,7 @@ import { Tooltip, Icon, Spin, Modal, Select } from "antd"
 import { siteUrl, formatItalian, validateTime, checkEnter } from "../../utilities"
 import Axios from "axios"
 import { IPresenzaDocente } from "../../models/IPresenzaDocente"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{
     readonly idDocente: string
@@ -97,13 +98,15 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
             return
         }
 
-        Axios.put(siteUrl+"/api/presenzedocente/"+id, {
-            idPresenza: id,
-            ingresso: presenza.ingresso,
-            uscita: presenza.uscita,
-            idDocente: presenza.idDocente,
-            idLezione: presenza.idLezione
-        }).then(response => {
+        askPassword(siteUrl+"/api/presenzedocente/" + id, "put", {
+            presenza: {
+                idPresenza: id,
+                ingresso: presenza.ingresso,
+                uscita: presenza.uscita,
+                idDocente: presenza.idDocente,
+                idLezione: presenza.idLezione
+            }
+        }, (response: any) => {
             let output = response.data
 
             if(output.trim() === "success"){

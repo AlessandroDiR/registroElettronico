@@ -4,6 +4,7 @@ import { routerHistory } from "../.."
 import { Modal, Tooltip, Spin, Icon, Switch, message } from "antd"
 import Axios from "axios"
 import { siteUrl, adminRoute } from "../../utilities"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{
     readonly corso: number
@@ -39,30 +40,30 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
     }
 
     showDeleteConfirm = (docente: IDocente) => {
-        let context = this
-
         Modal.confirm({
             title: `ATTENZIONE: si sta per ritirare un docente (${docente.nome} ${docente.cognome})`,
             content: "I dati identificativi del docente, le lezioni e le presenze verranno comunque mantenuti, ma il docente verrà ritirato da tutti i corsi in cui insegna. In seguito sarà possibile reintegrarlo nel corso se necessario.",
             okText: "Confermo",
             okType: "danger",
             cancelText: "Annulla",
-            onOk: () => {
-                context.setState({
-                    docenti: null
-                })
-                
-                Axios.delete(siteUrl+"/api/docenti/"+docente.idDocente).then(response => {
+            onOk: () => this.ritiraOAnnulla(docente.idDocente, "Docente ritirato con successo!")
+        })
+    }
 
-                    let docenti = response.data as IDocente[]
+    ritiraOAnnulla = (idDocente: number, msg: string) => {
+        askPassword(siteUrl+"/api/docenti/ritiradocente/" + idDocente, "put", {}, (response: any) => {
 
-                    context.setState({
-                        docenti: docenti
-                    })
+            let docenti = response.data as IDocente[]
 
-                    message.success("Docente ritirato con successo!")
-                })
-            }
+            this.setState({
+                docenti: docenti
+            })
+
+            message.success(msg)
+        }, () => {
+            this.setState({
+                docenti: null
+            })
         })
     }
 
@@ -76,30 +77,13 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
     }
 
     backRetire = (doc: IDocente) => {
-        let context = this
-
         Modal.confirm({
             title: `${doc.nome} ${doc.cognome}`,
             content: "Questo docente verrà reintegrato all'interno del corso.",
             okText: "Confermo",
             okType: "danger",
             cancelText: "Annulla",
-            onOk: () => {
-                context.setState({
-                    docenti: null
-                })
-
-                Axios.delete(siteUrl+"/api/docenti/"+doc.idDocente).then(response => {
-
-                    let docenti = response.data as IDocente[]
-
-                    context.setState({
-                        docenti: docenti
-                    })
-
-                    message.success("Docente reintegrato con successo!")
-                })
-            }
+            onOk: () => this.ritiraOAnnulla(doc.idDocente, "Docente reintegrato con successo!")
         })
     }
 

@@ -6,6 +6,7 @@ import Axios from "axios"
 import { IMateria } from "../../models/IMateria"
 import { ICorso } from "../../models/ICorso"
 import { Cipher } from "../../models/Cipher"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{
     readonly corso: number
@@ -132,7 +133,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         let cipher = new Cipher(),
         password = cipher.encode(CF)
 
-        Axios.post(siteUrl+"/api/docenti", {
+        askPassword(siteUrl+"/api/docenti", "post", {
             nome: nome.trim(),
             cognome: cognome.trim(),
             cf: CF,
@@ -140,11 +141,10 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             email: email,
             tenere: corsiSel.map(c => { return { idCorso: c, idDocente: 0 } }),
             insegnare: materieSel.map(m => { return { idMateria: m, idDocente: 0 } }),
-        }).then(_ => {
+        }, (_: any) => {
             message.success("Docente creato con successo!")
             routerHistory.push(adminRoute+"/docenti")
         })
-
     }
 
     switchMateria = (materiaId: number) => {

@@ -7,6 +7,7 @@ import Axios from "axios"
 import { RouteComponentProps } from "react-router-dom"
 import { IMateria } from "../../models/IMateria"
 import { ICorso } from "../../models/ICorso"
+import { askPassword } from "../AskConferma"
 
 export interface IRouteParams{
     readonly id: string
@@ -154,7 +155,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.put(siteUrl+"/api/docenti/" + this.props.match.params.id, {
+        askPassword(siteUrl+"/api/docenti/" + this.props.match.params.id, "put", {
             idDocente: parseInt(this.props.match.params.id),
             nome: nome.trim(),
             cognome: cognome.trim(),
@@ -163,13 +164,10 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             tenere: corsiSel.map(c => { return { idCorso: c, idDocente: docente.idDocente } }),
             insegnare: materieSel.map(m => { return { idMateria: m, idDocente: docente.idDocente } }),
             ritirato: docente.ritirato
-        }).then(_ => {
+        }, (_: any) => {
             message.success("Docente modificato con successo!")
             routerHistory.push(adminRoute+"/docenti")
-
-
         })
-
     }
 
     switchMateria = (materiaId: number) => {
