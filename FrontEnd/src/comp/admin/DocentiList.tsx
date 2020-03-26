@@ -51,7 +51,9 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
     }
 
     ritiraOAnnulla = (idDocente: number, msg: string) => {
-        askPassword(siteUrl+"/api/docenti/ritiradocente/" + idDocente, "put", {}, (response: any) => {
+        askPassword(siteUrl+"/api/docenti/ritiradocente", "put", {
+            idDocente: idDocente
+        }, (response: any) => {
 
             let docenti = response.data as IDocente[]
 
