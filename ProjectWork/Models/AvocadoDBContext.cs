@@ -28,6 +28,7 @@ namespace ProjectWork.Models
         public virtual DbSet<Materie> Materie { get; set; }
         public virtual DbSet<Presenze> Presenze { get; set; }
         public virtual DbSet<PresenzeDocente> PresenzeDocente { get; set; }
+        public virtual DbSet<RecPwdCoordinatore> RecPwdCoordinatore { get; set; }
         public virtual DbSet<Studenti> Studenti { get; set; }
         public virtual DbSet<Tenere> Tenere { get; set; }
 
@@ -36,7 +37,7 @@ namespace ProjectWork.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 
@@ -148,6 +149,10 @@ namespace ProjectWork.Models
             modelBuilder.Entity<Coordinatori>(entity =>
             {
                 entity.HasKey(e => e.IdCoordinatore);
+
+                entity.HasIndex(e => e.Email)
+                    .HasName("UQ__Coordina__AB6E616474CBF6E6")
+                    .IsUnique();
 
                 entity.Property(e => e.IdCoordinatore).HasColumnName("id_coordinatore");
 
@@ -429,6 +434,27 @@ namespace ProjectWork.Models
                     .HasForeignKey(d => d.IdLezione)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PresenzeDocente_Lezioni");
+            });
+
+            modelBuilder.Entity<RecPwdCoordinatore>(entity =>
+            {
+                entity.ToTable("RecPwd_Coordinatore");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Codice).HasColumnName("codice");
+
+                entity.Property(e => e.DataRichiesta)
+                    .HasColumnName("data_richiesta")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.IdCoordinatore).HasColumnName("id_coordinatore");
+
+                entity.HasOne(d => d.IdCoordinatoreNavigation)
+                    .WithMany(p => p.RecPwdCoordinatore)
+                    .HasForeignKey(d => d.IdCoordinatore)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RecPwd_Coordinatore_Coordinatori");
             });
 
             modelBuilder.Entity<Studenti>(entity =>
