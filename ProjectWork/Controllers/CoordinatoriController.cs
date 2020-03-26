@@ -176,6 +176,98 @@ namespace ProjectWork.Controllers
             return CreatedAtAction("GetCoordinatori", _context.Coordinatori.Last());
         }
 
+        // POST: api/Coordinatori/RecuperoCoordinatori
+        [HttpPost("[action]")]
+        public async Task<IActionResult> RecuperoCoordinatori([FromBody] RecPwd_CoordinatoreEmail obj)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var coord = _context.Coordinatori.FirstOrDefault(c => obj.Email == c.Email);
+
+            if (coord == null)
+            {
+                return NotFound("Email coordinatore non trovata");
+            }
+            
+            Random rnd = new Random();
+            int Codice = rnd.Next(100000,999999);
+
+            string subject = "FITSTIC | Recupero Password";
+            string body = $"Ciao! Ecco il codice che dovrai inserire per recuperare la password : {Codice} . Il codice ha una durata di 5 minuti";
+
+            EmailSender es = new EmailSender();
+            if(es.SendEmailTo(obj.Email, subject, body) == "success")
+            {
+                RecPwdCoordinatore rec = new RecPwdCoordinatore();
+                rec.IdCoordinatore = coord.IdCoordinatore;
+                rec.DataRichiesta = DateTime.Now;
+                rec.Codice = Codice;
+                _context.RecPwdCoordinatore.Add(rec);
+                await _context.SaveChangesAsync();
+            }else
+            {
+                return BadRequest("Impossibile inviare la mail");
+            }
+
+
+            return Ok(coord.IdCoordinatore);
+        }
+
+        // POST: api/Coordinatori/ControlloCodice
+        [HttpPost("[action]")]
+        public async Task<IActionResult> CambioPassword([FromBody] RecPwd_CoordinatoreDati obj)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var rec = _context.RecPwdCoordinatore.LastOrDefault(c => obj.IdCoordinatore == c.IdCoordinatore);
+            
+            if (rec == null)
+            {
+                return NotFound("Coordinatore non trovato");
+            }
+
+            if (rec.Codice != obj.Codice)
+            {
+                return BadRequest("Codice errato");
+            }else if(rec.DataRichiesta.AddMinutes(5) < DateTime.Now)
+            {
+                return BadRequest("Codice non più valido");
+            }
+
+            var coord = _context.Coordinatori.FirstOrDefault(c => obj.IdCoordinatore == c.IdCoordinatore);
+            if (coord == null)
+            {
+                return NotFound("Coordinatore non trovato");
+            }
+
+            coord.Password = obj.Password;
+
+            _context.Entry(coord).State = EntityState.Modified;            
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CoordinatoriExists(coord.IdCoordinatore))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok("success");
+        }
+
         private bool CoordinatoriExists(int id)
         {
             return _context.Coordinatori.Any(e => e.IdCoordinatore == id);

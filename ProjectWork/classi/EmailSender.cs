@@ -99,5 +99,46 @@ namespace ProjectWork.classi
                 return ex.InnerException.Message;
             }
         }
+
+        public string SendEmailTo(string emailTo, string subject,string body)
+        {
+            SmtpClient client = new SmtpClient()
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential
+                {
+                    UserName = "registro.fitstic@gmail.com",
+                    Password = "dkviqxwjmlvrwppt"
+                }
+            };
+
+            MailAddress from = new MailAddress("registro.fitstic@gmail.com", "Registro Fitstic");
+            MailAddress to = new MailAddress(emailTo);
+            MailMessage message = new MailMessage()
+            {
+                From = from,
+                IsBodyHtml = true,
+                Subject = subject,
+                Body = body
+            };
+
+            message.To.Add(to);
+
+            try
+            {
+                client.SendMailAsync(message);
+                return "success";
+            }
+            catch (Exception ex)
+            {
+                return ex.InnerException.Message;
+            }
+        }
+        
+        
     }
 }

@@ -8,6 +8,7 @@ namespace ProjectWork.Models
         public Coordinatori()
         {
             Coordina = new HashSet<Coordina>();
+            RecPwdCoordinatore = new HashSet<RecPwdCoordinatore>();
         }
 
         public int IdCoordinatore { get; set; }
@@ -20,5 +21,6 @@ namespace ProjectWork.Models
         public int? IdCorso { get; set; }
 
         public ICollection<Coordina> Coordina { get; set; }
+        public ICollection<RecPwdCoordinatore> RecPwdCoordinatore { get; set; }
     }
 }
