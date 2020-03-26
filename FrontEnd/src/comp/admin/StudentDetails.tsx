@@ -142,7 +142,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                 </div>
             </div>
 
-            <PresenzeTable studente={student.idStudente} reloadTotali={this.loadTotali} />
+            <PresenzeTable studente={student} reloadTotali={this.loadTotali} />
             
             <Modal visible={modal} maskClosable={true} centered title={
                 <span>

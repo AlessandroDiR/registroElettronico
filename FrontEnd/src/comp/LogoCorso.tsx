@@ -6,6 +6,7 @@ import { ICorso } from "../models/ICorso"
 
 export interface IProps{
     readonly idCorso?: string | number
+    readonly forLogin?: boolean
 }
 export interface IState{
     readonly logo: string
@@ -59,8 +60,12 @@ export default class LogoCorso extends React.PureComponent<IProps, IState>{
             </div>
         }
 
-        return <div className="logo-block px-3 py-4">
-            <img src={logo} height="100" className="mx-auto d-block logo" alt="logo" />
-        </div>
+        if(this.props.forLogin){
+            return <img src={logo} height="40" className="float-right logo" alt="logo" />
+        }else{
+            return <div className="logo-block px-3 py-4">
+                <img src={logo} height="100" className="mx-auto d-block logo" alt="logo" />
+            </div>
+        }
     }
 }

@@ -17,6 +17,7 @@ import { IAdmin } from "../../models/IAdmin"
 import LogoCorso from "../LogoCorso"
 import Page404 from "../Page404"
 import { adminRoute } from "../../utilities"
+import EditCodiceFirma from "./EditCodiceFirma"
 
 export default class Dashboard extends React.Component{
 
@@ -41,23 +42,30 @@ export default class Dashboard extends React.Component{
                         <LogoCorso idCorso={admin.idCorso} />
 
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(adminRoute+"/studenti")} to={adminRoute+"/studenti"}>
-                            <span>Studenti</span>
+                            <span><i className="fal fa-users-class fa-fw mr-1"></i> Studenti</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(adminRoute+"/docenti")} to={adminRoute+"/docenti"}>
-                            <span>Docenti</span>
+                            <span><i className="fal fa-chalkboard-teacher fa-fw mr-1"></i> Docenti</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(adminRoute+"/materie")} to={adminRoute+"/materie"}>
-                            <span>Materie</span>
+                            <span><i className="fal fa-list-alt fa-fw mr-1"></i> Materie</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(adminRoute+"/config")} to={adminRoute+"/config"}>
-                            <span>Configura calendario</span>
+                            <span><i className="fal fa-calendar-edit fa-fw mr-1"></i> Configura calendario</span>
+                        </NavLink>
+                        <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(adminRoute+"/codicefirma")} to={adminRoute+"/codicefirma"}>
+                            <span><i className="fal fa-house-signal fa-fw mr-1"></i> Firma da casa</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => {
                             sessionStorage.removeItem("adminSession")
                             routerHistory.push(adminRoute)
                         }} exact to={adminRoute+"/login"}>
-                            <span>Esci</span>
+                            <span><i className="fal fa-power-off fa-fw mr-1"></i> Esci</span>
                         </NavLink>
+
+                        <div className="copyright">
+                            {(new Date()).getFullYear()} Copyright FITSTIC
+                        </div>
                     </div>
   
                     <Switch>
@@ -109,6 +117,10 @@ export default class Dashboard extends React.Component{
 
                         <Route exact path={adminRoute+"/config"} render={() => (
                             <ConfigCalendar corso={admin.idCorso} />
+                        )} />
+
+                        <Route exact path={adminRoute+"/codicefirma"} render={() => (
+                            <EditCodiceFirma />
                         )} />
 
                         <Route render={() => <Page404 goTo={adminRoute} />} />

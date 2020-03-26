@@ -36,7 +36,7 @@ namespace ProjectWork.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 
@@ -194,11 +194,25 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.IdCorso).HasColumnName("id_corso");
 
-                entity.Property(e => e.Descrizione).HasColumnName("descrizione");
+                entity.Property(e => e.Codice)
+                    .IsRequired()
+                    .HasColumnName("codice")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CodicePrimoAnno)
+                    .HasColumnName("codice_primo_anno")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CodiceSecondoAnno)
+                    .HasColumnName("codice_secondo_anno")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Logo)
                     .HasColumnName("logo")
-                    .HasColumnType("text");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Luogo)
                     .IsRequired()
@@ -356,10 +370,6 @@ namespace ProjectWork.Models
                 entity.HasKey(e => e.IdMateria);
 
                 entity.Property(e => e.IdMateria).HasColumnName("id_materia");
-
-                entity.Property(e => e.Descrizione)
-                    .HasColumnName("descrizione")
-                    .HasMaxLength(100);
 
                 entity.Property(e => e.Nome)
                     .IsRequired()

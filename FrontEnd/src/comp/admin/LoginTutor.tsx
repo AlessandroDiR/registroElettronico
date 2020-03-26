@@ -5,11 +5,13 @@ import { mountLogin, unmountLogin, siteUrl, logoUrl, adminRoute } from "../../ut
 import Axios from "axios"
 import { Cipher } from "../../models/Cipher"
 import { isAdmin } from "../../models/IAdmin"
+import ForgotPassword from "../ForgotPassword"
 
 export interface IProps{}
 export interface IState{
     readonly adminName: string
     readonly adminPsw: string
+    readonly showForgot: boolean
 }
 
 export default class LoginTutor extends React.PureComponent<IProps, IState>{
@@ -18,7 +20,8 @@ export default class LoginTutor extends React.PureComponent<IProps, IState>{
 
         this.state = {
             adminName: "",
-            adminPsw: ""
+            adminPsw: "",
+            showForgot: false
         }
     }
 
@@ -75,8 +78,14 @@ export default class LoginTutor extends React.PureComponent<IProps, IState>{
         })
     }
 
+    switchForgot = () => {
+        this.setState({
+            showForgot: !this.state.showForgot
+        })
+    }
+
     render(): JSX.Element{
-        const { adminName, adminPsw } = this.state
+        const { adminName, adminPsw, showForgot } = this.state
 
         return <div className="col-11 col-lg-5 mx-auto" id="loginBlock">
             <form className="w-100 bg-white p-3 rounded shadow" onSubmit={this.tryLogin}>
@@ -94,7 +103,11 @@ export default class LoginTutor extends React.PureComponent<IProps, IState>{
                 </div>
 
                 <input type="submit" value="Accedi" className="btn btn-lg btn-success w-100 text-uppercase"/>
+
+                {/* <input type="button" value="Ho dimenticato la password" className="btn btn-lg btn-danger w-100 text-uppercase mt-3" onClick={this.switchForgot}/> */}
             </form>
+
+            <ForgotPassword show={showForgot} closeModal={this.switchForgot} />
         </div>
     }
 

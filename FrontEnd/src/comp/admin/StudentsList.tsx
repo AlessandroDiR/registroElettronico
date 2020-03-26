@@ -1,10 +1,11 @@
 import React from "react"
 import { IStudent } from "../../models/IStudent"
 import { routerHistory } from "../.."
-import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse, DatePicker, message, Tabs } from "antd"
+import { Modal, Tooltip, Spin, Icon, Checkbox, Collapse, DatePicker, message, Tabs, Input } from "antd"
 import Axios from "axios"
 import { siteUrl, formattaData, adminRoute } from "../../utilities"
 import locale from "antd/es/date-picker/locale/it_IT"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{
     readonly corso: number
@@ -13,6 +14,7 @@ export interface IState{
     readonly students: IStudent[]
     readonly selection: IStudent[]
     readonly confirmModal: boolean
+    readonly filter: string
 }
 
 export default class StudentsList extends React.PureComponent<IProps, IState>{
@@ -23,7 +25,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         this.state = {
             students: null,
             selection: [],
-            confirmModal: false
+            confirmModal: false,
+            filter: ""
         }
     }
 
@@ -40,9 +43,9 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         let date: string = ""
 
         Modal.confirm({
-            title: `ATTENZIONE: si sta per ritirare uno studente (${student.nome} ${student.cognome})`,
+            title: `${student.nome} ${student.cognome}`,
             content: <div style={{ marginLeft: -38 }}>
-                <p>I dati identificativi dello studente e le sue frequenze verranno comunque mantenuti.</p>
+                <p>Confermi di voler ritirare questo studente dal corso?</p>
                 <label className="text-secondary">Data di ritiro</label>
                 
                 <DatePicker locale={locale} className="w-100" onChange={(_, d2) => date = d2} format="DD-MM-YYYY" />
@@ -50,6 +53,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             okText: "Conferma ritiro",
             okType: "danger",
             cancelText: "Annulla",
+            icon: <Icon type="warning" className="text-danger" theme="filled" />,
             onOk: () => {
                 if(date === ""){
                     Modal.error({
@@ -65,11 +69,9 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 studente.ritirato = "true"
                 studente.dataRitiro = dataRitiro
                 
-                this.setState({
-                    students: null
-                })
-                
-                Axios.put(siteUrl+"/api/studenti/"+student.idStudente, {...studente}).then(response => {
+                askPassword(siteUrl+"/api/studenti/" + student.idStudente, "put", {
+                    studente: studente
+                }, (response: any) => {
 
                     let stu = response.data as IStudent,
                     currentList = students as any,
@@ -82,6 +84,10 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                     })
 
                     message.success("Studente ritirato con successo!")
+                }, () => {
+                    this.setState({
+                        students: null
+                    })
                 })
             }
         })
@@ -137,21 +143,21 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
             })
         }
 
-        this.setState({
-            students: null,
-            selection: []
-        })
-
-        Axios.put(siteUrl+"/api/studenti", studenti).then(response => {
+        askPassword(siteUrl+"/api/studenti", "put", {
+            studenti: studenti
+        }, (response: any) => {
             this.setState({
-                students: response.data as IStudent[]
+                students: response.data as IStudent[],
+                confirmModal: false
             })
 
             message.success("Studenti spostati con successo!")
+        }, () => {
+            this.setState({
+                students: null,
+                selection: []
+            })
         })
-
-
-        this.showHideModal()
     }
 
     allRetired = (group: IStudent[]) => {
@@ -177,30 +183,47 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     promuoviStudent = (s: IStudent) => {
         Modal.confirm({
             title: `${s.nome} ${s.cognome}`,
-            content: "Confermi di voler segnare questo studente come promosso?",
+            content: "Confermi di voler segnare questo studente come archiviato?",
             okText: "Conferma",
             okType: "primary",
             cancelText: "Annulla",
             onOk: () => {
-                this.setState({
-                    students: null
-                })
-        
-                Axios.delete(siteUrl+"/api/studenti/" + s.idStudente).then(response => {
+                askPassword(siteUrl+"/api/studenti/promuovistudente", "put", {
+                    idStudente: s.idStudente
+                }, (response: any) => {
+                    
                     let studenti = response.data as IStudent[]
         
                     this.setState({
                         students: studenti
                     })
         
-                    message.success("Studente promosso con successo!")
+                    message.success("Studente archiviato con successo!")
+                }, () => {
+                    this.setState({
+                        students: null
+                    })
                 })
             }
         })
     }
 
+    changeFilter = (e: any) => {
+        let filter = e.target.value
+
+        this.setState({
+            filter: filter
+        })
+    }
+
+    filterStudentsByFilter = () => {
+        const { students, filter } = this.state
+
+        return students.filter(s => s.nome.toLowerCase().indexOf(filter.toLowerCase()) !== -1 || s.cognome.toLowerCase().indexOf(filter.toLowerCase()) !== -1)
+    }
+
     render(): JSX.Element{
-        const { students, selection } = this.state,
+        const { students, selection, filter } = this.state,
         { Panel } = Collapse,
         { TabPane } = Tabs
         
@@ -215,23 +238,24 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         let firstYear = students.filter(s => s.annoFrequentazione === 1 && !s.promosso).sort(this.sortbyId).sort((a, _) => a.ritirato ? 0 : -1),
         secondYear = students.filter(s => s.annoFrequentazione === 2 && !s.promosso).sort(this.sortbyId).sort((a, _) => a.ritirato ? 0 : -1),
         groups = [firstYear, secondYear],
-        ritirati = students.filter(s => s.promosso).sort(this.sortbyId)
+        studentiRitirati = filter.trim() === "" ? students : this.filterStudentsByFilter(),
+        ritirati = studentiRitirati.filter(s => s.promosso).sort(this.sortbyId).sort((a, _) => a.ritirato ? 0 : -1)
 
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-3 text-center">Studenti del corso</h3>
 
             <Tabs defaultActiveKey="1">
-                <TabPane tab="Studenti attivi" key="1">
-                    <button className="btn btn-success float-right" type="button" onClick={() => routerHistory.push(adminRoute+"/studenti/new")}>
-                        <i className="fal fa-plus"></i> Aggiungi studente
+                <TabPane tab={<span><i className="fal fa-user fa-fw mr-1"></i> Studenti attivi</span>} key="1">
+                    <button className="btn btn-success float-right mr-1" type="button" onClick={() => routerHistory.push(adminRoute+"/studenti/new")}>
+                        <i className="fal fa-plus fa-fw"></i> Aggiungi studente
                     </button>
 
                     <button className="btn btn-orange float-right mr-2" type="button" onClick={this.showHideModal}>
-                        <i className="fa fa-arrows-alt"></i> Sposta studenti
+                        <i className="fa fa-arrows-alt fa-fw"></i> Sposta studenti
                     </button>
 
                     <button className="btn btn-blue float-right mr-2" type="button" onClick={() => routerHistory.push(adminRoute+"/studenti/import")}>
-                        <i className="fa fa-file-csv"></i> Importa da CSV
+                        <i className="fa fa-file-csv fa-fw"></i> Importa da CSV
                     </button>
 
                     <div className="clearfix"></div>
@@ -313,8 +337,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                                                     </button>
                                                                 </Tooltip>
                                                             }
-                                                            
-                                                            <Tooltip title="Segna come promosso">
+
+                                                            <Tooltip title="Archivia studente">
                                                                 <button type="button" className="btn btn-success circle-btn ml-2" onClick={() => this.promuoviStudent(s)}>
                                                                     <i className="fa fa-user-check"></i>
                                                                 </button>
@@ -332,7 +356,12 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                     </Tabs>
                 </TabPane>
 
-                <TabPane tab="Studenti archiviati" key="2">
+                <TabPane tab={<span><i className="fal fa-user-graduate fa-fw mr-1"></i> Studenti archiviati</span>} key="2">
+                    <div className="float-right mr-1 mb-2">
+                        <label className="d-inline-block text-secondary mr-2">Filtra studenti: </label>
+                        <Input value={filter} onChange={this.changeFilter} className="w-auto" />
+                    </div>
+
                     <table className="table table-bordered text-center">
                         <tbody className="border-top-0">
 
@@ -347,9 +376,14 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                             
                             {
                                 ritirati.map(s => {
+                                    let bg = s.ritirato ? "light font-italic" : "white"
 
-                                    return <tr>
-                                        <td><i className="fa fa-check-circle fa-lg text-success"></i></td>
+                                    return <tr className={"bg-"+bg}>
+                                        <td>
+                                            {
+                                                !s.ritirato ? <i className="fa fa-check-circle fa-lg text-success"></i> : <i className="fa fa-times-circle fa-lg text-danger"></i>
+                                            }
+                                        </td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.nome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cognome}</td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>

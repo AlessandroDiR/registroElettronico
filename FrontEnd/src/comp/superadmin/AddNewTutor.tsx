@@ -4,6 +4,7 @@ import { routerHistory } from "../.."
 import { siteUrl, superAdminRoute } from "../../utilities"
 import Axios from "axios"
 import { ICorso } from "../../models/ICorso"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{}
 export interface IState{
@@ -75,7 +76,9 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
         return this.state.listaCorsi.find(c => c.idCorso === corso)
     }
 
-    aggiungiTutor = () => {
+    aggiungiTutor = (e: any) => {
+        e.preventDefault()
+
         const { nome, cognome, email, corso } = this.state
 
         if(nome.trim() === "" || cognome.trim() === "" || email === ""){
@@ -96,16 +99,17 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.post(siteUrl+"/api/coordinatori", {
-            nome: nome.trim(),
-            cognome: cognome.trim(),
-            email: email,
-            idCorso: corso
-        }).then(_ => {
+        askPassword(siteUrl+"/api/coordinatori", "post", {
+            coordinatore: {
+                nome: nome.trim(),
+                cognome: cognome.trim(),
+                email: email,
+                idCorso: corso
+            }
+        }, (_: any) => {
             message.success("Tutor creato con successo!")
             routerHistory.push(superAdminRoute+"/tutor")
         })
-
     }
 
     render(): JSX.Element{
@@ -128,7 +132,7 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo coordinatore</h3>
 
-            <form>
+            <form onSubmit={this.aggiungiTutor}>
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">Nome</label>
@@ -143,7 +147,7 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">E-mail</label>
-                        <input name="email" type="text" className="form-control" value={email} onChange={this.changeEmail} />
+                        <input name="email" type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Corso gestito</label>
@@ -157,7 +161,7 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
                     </div>
                 </div>
 
-                <button type="button" className="btn btn-success text-uppercase w-100" onClick={this.aggiungiTutor}>Aggiungi coordinatore</button>
+                <button type="submit" className="btn btn-success text-uppercase w-100">Aggiungi coordinatore</button>
             </form>
         </div>
     }

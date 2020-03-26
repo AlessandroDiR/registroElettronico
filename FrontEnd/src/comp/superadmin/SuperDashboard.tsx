@@ -33,17 +33,21 @@ export default class SuperDashboard extends React.Component{
                         <LogoCorso idCorso={0} />
 
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(superAdminRoute+"/studenti")} to={superAdminRoute+"/tutor"}>
-                            <span>Coordinatori</span>
+                            <span><i className="fal fa-users-crown fa-fw mr-1"></i> Coordinatori</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(superAdminRoute+"/corsi")} to={superAdminRoute+"/corsi"}>
-                            <span>Corsi</span>
+                            <span><i className="fal fa-list-alt fa-fw mr-1"></i> Corsi</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => {
                             sessionStorage.removeItem("superSession")
                             routerHistory.push(superAdminRoute)
                         }} exact to={superAdminRoute+"/login"}>
-                            <span>Esci</span>
+                            <span><i className="fal fa-power-off fa-fw mr-1"></i> Esci</span>
                         </NavLink>
+
+                        <div className="copyright">
+                            {(new Date()).getFullYear()} Copyright FITSTIC
+                        </div>
                     </div>
   
                     <Switch>

@@ -6,6 +6,7 @@ import Axios from "axios"
 import { ICorso } from "../../models/ICorso"
 import { RouteComponentProps } from "react-router-dom"
 import { ITutor } from "../../models/ITutor"
+import { askPassword } from "../AskConferma"
 
 export interface IRouteParams{
     readonly id: string
@@ -95,7 +96,9 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
         return this.state.listaCorsi.find(c => c.idCorso === corso)
     }
 
-    aggiungiTutor = () => {
+    modificaTutor = (e: any) => {
+        e.preventDefault()
+
         const { nome, cognome, email, corso } = this.state
         const idCoordinatore = this.props.match.params.id
 
@@ -117,17 +120,18 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.put(siteUrl+"/api/coordinatori/"+idCoordinatore, {
-            idCoordinatore: idCoordinatore,
-            nome: nome.trim(),
-            cognome: cognome.trim(),
-            email: email,
-            idCorso: corso
-        }).then(_ => {
+        askPassword(siteUrl+"/api/coordinatori/" + idCoordinatore, "put", {
+            coordinatore: {
+                idCoordinatore: idCoordinatore,
+                nome: nome.trim(),
+                cognome: cognome.trim(),
+                email: email,
+                idCorso: corso
+            }
+        }, (_: any) => {
             message.success("Tutor modificato con successo!")
             routerHistory.push(superAdminRoute+"/tutor")
         })
-
     }
 
     render(): JSX.Element{
@@ -144,7 +148,7 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Modifica di un coordinatore</h3>
 
-            <form>
+            <form onSubmit={this.modificaTutor}>
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">Nome</label>
@@ -159,7 +163,7 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">E-mail</label>
-                        <input name="email" type="text" className="form-control" value={email} onChange={this.changeEmail} />
+                        <input name="email" type="email" className="form-control" value={email} onChange={this.changeEmail} />
                     </div>
                     <div className="col">
                         <label className="text-secondary">Corso gestito</label>
@@ -175,7 +179,7 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
                     </div>
                 </div>
 
-                <button type="button" className="btn btn-success text-uppercase w-100" onClick={this.aggiungiTutor}>Modifica coordinatore</button>
+                <button type="submit" className="btn btn-success text-uppercase w-100">Modifica coordinatore</button>
             </form>
         </div>
     }

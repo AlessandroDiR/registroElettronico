@@ -3,6 +3,8 @@ import { Modal, message, Icon, Spin } from "antd"
 import Axios from "axios"
 import { siteUrl } from "../../utilities"
 import { ICalendar } from "../../models/ICalendar"
+import Calendario from "../Calendario"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{
     readonly anno: number
@@ -11,6 +13,7 @@ export interface IProps{
 export interface IState{
     readonly calendarId: string
     readonly calendar: ICalendar
+    readonly actualId: string
 }
 
 export default class ConfigForm extends React.PureComponent<IProps, IState>{
@@ -19,7 +22,8 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
 
         this.state = {
             calendarId: null,
-            calendar: null
+            calendar: null,
+            actualId: ""
         }
     }
 
@@ -31,6 +35,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
 
             this.setState({
                 calendarId: calendar.idGoogleCalendar,
+                actualId: calendar.idGoogleCalendar,
                 calendar: calendar
             })
         })
@@ -44,7 +49,9 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
         })
     }
 
-    saveConfig = () => {
+    saveConfig = (e: any) => {
+        e.preventDefault()
+
         const { corso, anno } = this.props
         const { calendarId, calendar } = this.state
 
@@ -56,19 +63,29 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
 
             return
         }
+        
+        askPassword(siteUrl+"/api/calendari", "post", {
+            calendario: {
+                idCalendario: calendar ? calendar.idCalendario : "0",
+                idCorso: corso,
+                anno: anno,
+                idGoogleCalendar: calendarId
+            }
+        }, (_: any) => {
+            this.setState({
+                actualId: calendarId
+            })
 
-        Axios.post(siteUrl+"/api/calendari", {
-            IdCalendario: calendar ? calendar.idCalendario : "0",
-            IdCorso: corso,
-            Anno: anno,
-            IdGoogleCalendar: calendarId
-        }).then(_ => {
             message.success("Configurazione calendario salvata!")
+        }, () => {
+            this.setState({
+                actualId: null
+            })
         })
     }
 
     render(): JSX.Element{
-        const { calendarId } = this.state
+        const { calendarId, actualId } = this.state
 
         if(calendarId === null){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
@@ -78,15 +95,27 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
             </div>
         }
 
-        return <form>
-            <div className="form-group row">
-                <div className="col">
+        return <form onSubmit={this.saveConfig}>
+            <div className="form-group row mx-1">
+                <div className="col px-0">
                     <label className="text-secondary">ID Calendario</label>
                     <input name="calendarID" type="text" className="form-control" value={calendarId} onChange={this.changeID} />
                 </div>
             </div>
 
-            <button type="button" className="btn btn-success float-right mr-1 mb-1" onClick={this.saveConfig}>Salva configurazione</button>
+            <button type="submit" className="btn btn-success float-right mr-1 mb-3">
+                {
+                    actualId === null && <Icon type="loading" className="mr-2 loadable-btn" spin />
+                }
+                Salva configurazione
+            </button>
+
+            <div className="clearfix"></div>
+
+            <div className="p-1">
+                <h4>Anteprima visualizzazione</h4>
+                <Calendario calendarId={actualId} />
+            </div> 
         </form>
     }
 }

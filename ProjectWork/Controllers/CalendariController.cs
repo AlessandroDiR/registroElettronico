@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectWork.Models;
 using ProjectWork.classi;
+using Google.Apis.Calendar.v3.Data;
+using ProjectWork.CustomizedModels;
 
 namespace ProjectWork.Controllers
 {
@@ -63,31 +65,37 @@ namespace ProjectWork.Controllers
 
         // POST: api/Calendari
         [HttpPost]
-        public async Task<IActionResult> PostCalendari([FromBody] Calendari calendario)
+        public async Task<IActionResult> PostCalendari([FromBody] PostCalendarioModel obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (!CalendariExists(calendario.IdCalendario))
+            var coordinatore = _context.Coordinatori.SingleOrDefault(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
+            if (coordinatore == null)
+                return NotFound();
+
+            var lezioniNonValidate = new List<EventiModel>();
+
+            if (!CalendariExists(obj.Calendario.IdCalendario))
             {
-                calendario.IdCalendario = Guid.NewGuid().ToString();
-                _context.Calendari.Add(calendario);
+                obj.Calendario.IdCalendario = Guid.NewGuid().ToString();
+                _context.Calendari.Add(obj.Calendario);
             }
             else
             {
-                if (!GoogleCalendarExists(calendario))
+                if (!GoogleCalendarExists(obj.Calendario))
                 {
-                    _context.Lezioni.RemoveRange(_context.Lezioni.Where(l => l.IdCalendario == calendario.IdCalendario));
-                    var events = _calendarApi.GetCalendarEvents(calendario);
-                    _calendarApi.SaveEventsInContext(calendario, events);
+                    _context.Lezioni.RemoveRange(_context.Lezioni.Where(l => l.IdCalendario == obj.Calendario.IdCalendario));
+                    var events = _calendarApi.GetCalendarEvents(obj.Calendario);
+                    lezioniNonValidate =  _calendarApi.SaveEventsInContext(obj.Calendario, events);
                 }
                 else
                 {
-                    var updatedCalendar = _context.Calendari.Find(calendario.IdCalendario);
+                    var updatedCalendar = _context.Calendari.Find(obj.Calendario.IdCalendario);
                     var updatedEvents = _calendarApi.GetUpdatedEvents(updatedCalendar);
-                    _calendarApi.UpdateEventsInContext(calendario, updatedEvents);
+                    lezioniNonValidate = _calendarApi.UpdateEventsInContext(obj.Calendario, updatedEvents);
                 }
             }
 
@@ -97,7 +105,7 @@ namespace ProjectWork.Controllers
             }
             catch (DbUpdateException)
             {
-                if (CalendariExists(calendario.IdCalendario))
+                if (CalendariExists(obj.Calendario.IdCalendario))
                 {
                     return new StatusCodeResult(StatusCodes.Status409Conflict);
                 }
@@ -107,7 +115,7 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return Ok("ok");
+            return Ok(lezioniNonValidate);
         }
 
         // DELETE: api/Calendari/5
@@ -138,7 +146,7 @@ namespace ProjectWork.Controllers
 
         private bool GoogleCalendarExists(Calendari c)
         {
-            return _context.Calendari.Any(gc => gc.IdGoogleCalendar == c.IdGoogleCalendar);
+            return _context.Calendari.Any(gc => gc.IdCalendario == c.IdCalendario && gc.IdGoogleCalendar == c.IdGoogleCalendar);
         }
     }
 }

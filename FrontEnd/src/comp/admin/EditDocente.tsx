@@ -7,6 +7,7 @@ import Axios from "axios"
 import { RouteComponentProps } from "react-router-dom"
 import { IMateria } from "../../models/IMateria"
 import { ICorso } from "../../models/ICorso"
+import { askPassword } from "../AskConferma"
 
 export interface IRouteParams{
     readonly id: string
@@ -113,7 +114,9 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         })
     }
 
-    modificaDocente = () => {
+    modificaDocente = (e: any) => {
+        e.preventDefault()
+        
         const { docente, nome, cognome, CF, email, corsiSel, materieSel } = this.state
 
         if(nome.trim() === "" || cognome.trim() === "" || CF === "" || email === ""){
@@ -152,22 +155,21 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.put(siteUrl+"/api/docenti/" + this.props.match.params.id, {
-            idDocente: parseInt(this.props.match.params.id),
-            nome: nome.trim(),
-            cognome: cognome.trim(),
-            email: email,
-            cf: CF,
-            tenere: corsiSel.map(c => { return { idCorso: c, idDocente: docente.idDocente } }),
-            insegnare: materieSel.map(m => { return { idMateria: m, idDocente: docente.idDocente } }),
-            ritirato: docente.ritirato
-        }).then(_ => {
+        askPassword(siteUrl+"/api/docenti/" + this.props.match.params.id, "put", {
+            docente: {
+                idDocente: parseInt(this.props.match.params.id),
+                nome: nome.trim(),
+                cognome: cognome.trim(),
+                email: email,
+                cf: CF,
+                tenere: corsiSel.map(c => { return { idCorso: c, idDocente: docente.idDocente } }),
+                insegnare: materieSel.map(m => { return { idMateria: m, idDocente: docente.idDocente } }),
+                ritirato: docente.ritirato
+            }
+        }, (_: any) => {
             message.success("Docente modificato con successo!")
             routerHistory.push(adminRoute+"/docenti")
-
-
         })
-
     }
 
     switchMateria = (materiaId: number) => {
@@ -202,7 +204,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Modifica di un docente</h3>
 
-            <form>
+            <form onSubmit={this.modificaDocente}>
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">Nome</label>
@@ -261,7 +263,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                     </div>
                 </div>
 
-                <button type="button" className="btn btn-success text-uppercase w-100" onClick={this.modificaDocente}>Modifica docente</button>
+                <button type="submit" className="btn btn-success text-uppercase w-100">Modifica docente</button>
             </form>
         </div>
     }

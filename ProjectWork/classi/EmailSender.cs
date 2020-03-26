@@ -20,7 +20,7 @@ namespace ProjectWork.classi
 {
     public class EmailSender
     {
-        public string SendEmail(Coordinatori c)
+        public string SendEmail(Coordinatori c, Corsi corso)
         {
             SmtpClient client = new SmtpClient()
             {
@@ -41,8 +41,11 @@ namespace ProjectWork.classi
             MailMessage message = new MailMessage()
             {
                 From = from,
+				IsBodyHtml = true,
                 Subject = "FITSTIC | Credenziali registro",
-                Body = $"Ciao {c.Nome} e benvenuto in FITSTIC.\n\nTi comunichiamo che il tuo account è stato creato e le tue credenziali per accedere a https://avocadoapi.azurewebsites.net/#/adminpanel sono le seguenti:\n\nUsername: {c.Username}\nPassword: {Cipher.decode(c.Password)}"
+                Body =  $"Ciao {c.Nome} e benvenuto in FITSTIC.<br><br>Ti comunichiamo che il tuo account è stato creato " +
+                        $"e le tue credenziali per accedere a https://avocadoapi.azurewebsites.net/#/adminpanel sono le seguenti:<br><br><strong>Username</strong>: {c.Username}<br><strong>Password</strong>: {Cipher.decode(c.Password)}<br><br>" +
+                        $"Il codice per abilitare la registrazione delle firme su https://avocadoapi.azurewebsites.net/#/firme è:<br> <strong style='font-size:25px'>{corso.Codice}</strong>"
             };
 
             message.To.Add(to);
@@ -53,6 +56,45 @@ namespace ProjectWork.classi
                 return "success";
             }
             catch(Exception ex)
+            {
+                return ex.InnerException.Message;
+            }
+        }
+
+        public string SendCredenzialiAccessoRemoto(string email, string codice)
+        {
+            SmtpClient client = new SmtpClient()
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential
+                {
+                    UserName = "registro.fitstic@gmail.com",
+                    Password = "dkviqxwjmlvrwppt"
+                }
+            };
+
+            MailAddress from = new MailAddress("registro.fitstic@gmail.com", "Registro Fitstic");
+            MailAddress to = new MailAddress(email);
+            MailMessage message = new MailMessage()
+            {
+                From = from,
+                IsBodyHtml = true,
+                Subject = "FITSTIC | Credenziali accesso remoto",
+                Body = $"Ciao! Ecco il codice di accesso per registrare la firma da remoto: {codice}"
+            };
+
+            message.To.Add(to);
+
+            try
+            {
+                client.SendMailAsync(message);
+                return "success";
+            }
+            catch (Exception ex)
             {
                 return ex.InnerException.Message;
             }

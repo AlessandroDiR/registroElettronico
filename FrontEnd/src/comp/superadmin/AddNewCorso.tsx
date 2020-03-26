@@ -2,12 +2,11 @@ import React from "react"
 import { Modal, Upload, Icon, message } from "antd"
 import { routerHistory } from "../.."
 import { imageFileToBase64, superAdminRoute, siteUrl } from "../../utilities"
-import Axios from "axios"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{}
 export interface IState{
     readonly nome: string
-    readonly descrizione: string
     readonly luogo: string
     readonly logo: string
 }
@@ -19,7 +18,6 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
 
         this.state = {
             nome: "",
-            descrizione: "",
             luogo: "",
             logo: null
         }
@@ -33,14 +31,6 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
         })
     }
 
-    changeDesc = (event: any) => {
-        let desc = event.target.value
-
-        this.setState({
-            descrizione: desc
-        })
-    }
-
     changeLuogo = (event: any) => {
         let luogo = event.target.value
 
@@ -49,10 +39,12 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
         })
     }
 
-    aggiungiCorso = () => {
-        const { nome, descrizione, luogo, logo } = this.state
+    aggiungiCorso = (e: any) => {
+        e.preventDefault()
 
-        if(nome.trim() === "" || descrizione.trim() === "" || luogo.trim() === ""){
+        const { nome, luogo, logo } = this.state
+
+        if(nome.trim() === "" || luogo.trim() === ""){
             Modal.error({
                 title: "Errore!",
                 content: "Riempire tutti i campi."
@@ -61,16 +53,16 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.post(siteUrl+"/api/corsi", {
-            nome: nome.trim(),
-            descrizione: descrizione.trim(),
-            luogo: luogo.trim(),
-            logo: logo ? logo.trim() : ""
-        }).then(_ => {
+        askPassword(siteUrl+"/api/corsi", "post", {
+            corso: {
+                nome: nome.trim(),
+                luogo: luogo.trim(),
+                logo: logo ? logo.trim() : ""
+            }
+        }, (_: any) => {
             message.success("Corso creato con successo!")
             routerHistory.push(superAdminRoute+"/corsi")
         })
-
     }
 
     convertImage = (file: any) => {
@@ -84,7 +76,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { nome, descrizione, luogo, logo } = this.state,
+        const { nome, luogo, logo } = this.state,
         uploadButton = (
             <div>
                 <Icon type="plus" style={{ fontSize: 30, marginBottom: 5 }} />
@@ -95,7 +87,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo corso</h3>
 
-            <form className="row">
+            <form className="row" onSubmit={this.aggiungiCorso}>
 
                 <div className="form-group mr-3">
                     <label className="text-secondary d-block">Logo</label>
@@ -104,26 +96,17 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
                     </Upload>
                 </div>
                 
-                <div className="col">
-                    <div className="form-group row">
-                        <div className="col">
-                            <label className="text-secondary">Nome</label>
-                            <input name="nomecorso" type="text" className="form-control" value={nome} onChange={this.changeNome} />
-                        </div>
-                        <div className="col pr-0">
-                            <label className="text-secondary">Luogo</label>
-                            <input name="luogo" type="text" className="form-control" value={luogo} onChange={this.changeLuogo} />
-                        </div>
+                <div className="col pr-0">
+                    <div className="form-group">
+                        <label className="text-secondary">Nome</label>
+                        <input name="nomecorso" type="text" className="form-control" value={nome} onChange={this.changeNome} />
                     </div>
-
-                    <div className="form-group row">
-                        <div className="col pr-0">
-                            <label className="text-secondary">Breve descrizione</label>
-                            <textarea name="description" className="form-control" rows={2} onChange={this.changeDesc}>{descrizione}</textarea>
-                        </div>
+                    <div className="form-group">
+                        <label className="text-secondary">Luogo</label>
+                        <input name="luogo" type="text" className="form-control" value={luogo} onChange={this.changeLuogo} />
                     </div>
                 </div>
-                <button type="button" className="btn btn-success text-uppercase w-100" onClick={this.aggiungiCorso}>Aggiungi corso</button>
+                <button type="submit" className="btn btn-success text-uppercase w-100">Aggiungi corso</button>
             </form>
         </div>
     }

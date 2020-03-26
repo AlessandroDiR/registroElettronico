@@ -44,15 +44,15 @@ export default class CorsiList extends React.PureComponent<IProps, IState>{
             <h3 className="mb-3 text-center">Lista dei corsi</h3>
 
             <button className="btn btn-success float-right mb-3" type="button" onClick={() => routerHistory.push(superAdminRoute+"/corsi/new")}>
-                <i className="fal fa-plus"></i> Aggiungi corso
+                <i className="fal fa-plus fa-fw"></i> Aggiungi corso
             </button>
 
             <table className="table table-bordered text-center">
                 
                     <tbody>
                         <tr>
+                            <th style={{width: "15%"}}>Logo</th>
                             <th>Nome</th>
-                            <th>Descrizione</th>
                             <th>Luogo</th>
                             <th style={{width: "10%"}}>Azioni</th>
                         </tr>
@@ -60,8 +60,8 @@ export default class CorsiList extends React.PureComponent<IProps, IState>{
                         {
                             corsi.map(c => {        
                                 return <tr>
+                                    <td><img width="55" src={c.logo} alt="logo" /></td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{c.nome}</td>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{c.descrizione}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{c.luogo}</td>
                                     <td>
                                         <Tooltip title="Modifica">

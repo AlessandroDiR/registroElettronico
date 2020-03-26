@@ -10,6 +10,7 @@ using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using Microsoft.AspNetCore.Mvc;
+using ProjectWork.CustomizedModels;
 using ProjectWork.Models;
 
 namespace ProjectWork.classi
@@ -88,8 +89,9 @@ namespace ProjectWork.classi
             return updatedEvents;
         }
 
-        public void UpdateEventsInContext(Calendari c, IList<Event> updatedEvents)
+        public List<EventiModel> UpdateEventsInContext(Calendari c, IList<Event> updatedEvents)
         {
+            var lezioniNonValidate = new List<EventiModel>();
             foreach(var e in updatedEvents)
             {
                 var lezione = _context.Lezioni.SingleOrDefault(l => l.IdGEvent == e.Id);
@@ -103,32 +105,63 @@ namespace ProjectWork.classi
                         lezione.Data = DateTime.Parse(e.Start.DateTime.ToString().Split(' ')[0]).Date;
                         lezione.OraInizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]);
                         lezione.OraFine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1]);
+                        lezione.IdMateria = FindIdMateria(e.Summary);
 
-                        _context.Lezioni.Update(lezione);
+                        if(lezione.IdMateria == -1)
+                            lezioniNonValidate.Add(new EventiModel()
+                            {
+                                Summary = e.Summary,
+                                Date = DateTime.Parse(e.Start.DateTime.ToString().Split(' ')[0]).Date,
+                                Inizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]),
+                                Fine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1])
+                            });
+                        else
+                            _context.Lezioni.Update(lezione);
                     }
                 }
                 else
                 {
-                    lezione = new Lezioni
+                    if(e.Status != "cancelled")
                     {
-                        Titolo = e.Summary,
-                        Data = DateTime.Parse(e.Start.DateTime.ToString().Split(' ')[0]).Date,
-                        OraInizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]),
-                        OraFine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1]),
-                        IdCalendario = c.IdCalendario,
-                        IdGEvent = e.Id,
-                        IdMateria = FindIdMateria(e.Summary)
-                    };
+                        lezione = new Lezioni
+                        {
+                            Titolo = e.Summary,
+                            Data = DateTime.Parse(e.Start.DateTime.ToString().Split(' ')[0]).Date,
+                            OraInizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]),
+                            OraFine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1]),
+                            IdCalendario = c.IdCalendario,
+                            IdGEvent = e.Id,
+                            IdMateria = FindIdMateria(e.Summary)
+                        };
 
-                    _context.Lezioni.Add(lezione);
+                        if (lezione.IdMateria == -1)
+                            lezioniNonValidate.Add(new EventiModel()
+                            {
+                                Summary = e.Summary,
+                                Date = DateTime.Parse(e.Start.DateTime.ToString().Split(' ')[0]).Date,
+                                Inizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]),
+                                Fine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1])
+                            });
+                        else
+                            _context.Lezioni.Add(lezione);
+                    }
                 }
-
+            }
+            try
+            {
                 _context.SaveChanges();
             }
+            catch
+            {
+                throw;
+            }
+
+            return lezioniNonValidate;
         }
 
-        public bool SaveEventsInContext(Calendari c, IList<Event> events)
+        public List<EventiModel> SaveEventsInContext(Calendari c, IList<Event> events)
         {
+            var lezioniNonValidate = new List<EventiModel>();
             foreach (var e in events)
             {
                 var lezione = new Lezioni
@@ -142,9 +175,17 @@ namespace ProjectWork.classi
                     IdMateria = FindIdMateria(e.Summary)
                 };
 
-                _context.Lezioni.Add(lezione);
+                if (lezione.IdMateria == -1)
+                    lezioniNonValidate.Add(new EventiModel()
+                    {
+                        Summary = e.Summary,
+                        Date = DateTime.Parse(e.Start.DateTime.ToString().Split(' ')[0]).Date,
+                        Inizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]),
+                        Fine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1])
+                    });
+                else
+                    _context.Lezioni.Add(lezione);
             }
-
             try
             {
                 _context.SaveChanges();
@@ -154,16 +195,20 @@ namespace ProjectWork.classi
                 throw;
             }
 
-            return true;
-
+            return lezioniNonValidate;
         }
 
         private int FindIdMateria(string evento)
         {
-            var nomeMateria = evento.Split('-')[1].TrimStart();
-            var id = _context.Materie.SingleOrDefault(m => m.Nome == nomeMateria).IdMateria;
+            if (!evento.Contains('-'))
+                return -1;
 
-            return id;
+            var nomeMateria = evento.Split('-')[1].TrimStart();
+            var materia = _context.Materie.SingleOrDefault(m => m.Nome == nomeMateria);
+            if (materia == null)
+                return -1;
+
+            return materia.IdMateria;
         }
     }
 }

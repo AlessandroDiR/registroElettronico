@@ -55,5 +55,38 @@ namespace ProjectWork.Controllers
 
             return Ok(result);
         }
+
+        // GET: api/Lezioni/1/2
+        [HttpGet("{idCorso}/{anno}")]
+        public IActionResult GetLezioniGiornaliere([FromRoute] int idCorso, int anno)
+        {
+            var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == idCorso && c.Anno == anno).IdCalendario;
+            var lezioni = _context.Lezioni.Where(l => l.Data == DateTime.Today && l.IdCalendario == calendario);
+
+            if (lezioni.Count() == 0)
+                return NotFound();
+
+            foreach(var l in lezioni)
+            {
+                if(l.OraInizio <= DateTime.Now.TimeOfDay && l.OraFine >= DateTime.Now.TimeOfDay)
+                {
+                    var idDocente = _context.Insegnare.SingleOrDefault(i => i.IdMateria == l.IdMateria).IdDocente;
+                    var json = new
+                    {
+                        idLezione = l.IdLezione,
+                        titolo = l.Titolo,
+                        data = l.Data,
+                        oraInizio = l.OraInizio,
+                        oraFine = l.OraFine,
+                        idDocente
+                    };
+
+                    return Ok(json);
+                }
+            }
+
+            return Ok("Tutte le lezioni sono state svolte");
+        }
+
     }
 }

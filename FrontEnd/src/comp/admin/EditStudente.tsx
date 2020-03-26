@@ -7,6 +7,7 @@ import { RouteComponentProps } from "react-router-dom"
 import { IStudent } from "../../models/IStudent"
 import locale from "antd/es/date-picker/locale/it_IT"
 import moment from "moment"
+import { askPassword } from "../AskConferma"
 
 export interface IRouteParams{
     readonly id: string
@@ -96,7 +97,9 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
         })
     }
 
-    modificaStudente = () => {
+    modificaStudente = (e: any) => {
+        e.preventDefault()
+        
         const { nome, cognome, dataNascita, CF, email, studente } = this.state
 
         if(nome.trim() === "" || cognome.trim() === "" || dataNascita === "" || CF === "" || email === ""){
@@ -117,17 +120,20 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.put(siteUrl+"/api/studenti/" + studente.idStudente, {
-            idStudente: studente.idStudente,
-            nome: nome.trim(),
-            cognome: cognome.trim(),
-            email: email,
-            cf: CF,
-            idCorso: this.props.corso,
-            annoFrequentazione: studente.annoFrequentazione,
-            dataNascita: formattaData(dataNascita, true),
-            ritirato: studente.ritirato
-        }).then(_ => {
+        askPassword(siteUrl+"/api/studenti/" + studente.idStudente, "put", {
+            studente: {
+                idStudente: studente.idStudente,
+                nome: nome.trim(),
+                cognome: cognome.trim(),
+                email: email,
+                cf: CF,
+                idCorso: this.props.corso,
+                annoFrequentazione: studente.annoFrequentazione,
+                dataNascita: formattaData(dataNascita, true),
+                ritirato: studente.ritirato,
+                promosso: studente.promosso
+            }
+        }, (_: any) => {
             message.success("Studente modificato con successo!")
             routerHistory.push(adminRoute+"/studenti")
         })
@@ -148,7 +154,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Modifica di uno studente</h3>
 
-            <form>
+            <form onSubmit={this.modificaStudente}>
                 <div className="form-group row">
                     <div className="col">
                         <label className="text-secondary">Nome</label>
@@ -175,7 +181,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
                     </div>
                 </div>
 
-                <button type="button" className="btn btn-success text-uppercase w-100" onClick={this.modificaStudente}>Modifica studente</button>
+                <button type="submit" className="btn btn-success text-uppercase w-100">Modifica studente</button>
             </form>
         </div>
     }

@@ -53,14 +53,13 @@ export default class SceltaCorso extends React.PureComponent<IProps, IState>{
         }
 
         return <div className="col-11 col-lg-5 mx-auto" id="loginBlock">
-            <div className="w-100 bg-white py-3 rounded shadow">
+            <div className="w-100 bg-white py-3 rounded shadow px-2 text-center">
                 <h3 className="text-center">Scegli il corso</h3>
 
                 {
                     corsi.map(c => {
-                        return <div className="py-2 text-center pointer corso-item" onClick={() => this.chooseCorso(c.idCorso)}>
-                            {/* <img src={c.logo} alt="logo" height="28" className="mr-2" /> */}
-                            <span className="align-middle">{c.nome}</span>
+                        return <div className="p-3 mx-2 text-center pointer corso-item d-inline-block rounded" onClick={() => this.chooseCorso(c.idCorso)}>
+                            <img src={c.logo} alt="logo" height="60" />
                         </div>
                     })
                 }
