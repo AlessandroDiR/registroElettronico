@@ -79,7 +79,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
             message.success("Configurazione calendario salvata!")
         }, () => {
             this.setState({
-                actualId: ""
+                actualId: null
             })
         })
     }
@@ -103,7 +103,12 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
                 </div>
             </div>
 
-            <button type="submit" className="btn btn-success float-right mr-1 mb-3">Salva configurazione</button>
+            <button type="submit" className="btn btn-success float-right mr-1 mb-3">
+                {
+                    actualId === null && <Icon type="loading" className="mr-2 loadable-btn" spin />
+                }
+                Salva configurazione
+            </button>
 
             <div className="clearfix"></div>
 
