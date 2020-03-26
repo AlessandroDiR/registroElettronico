@@ -6,6 +6,7 @@ import Axios from "axios"
 import { ICorso } from "../../models/ICorso"
 import { RouteComponentProps } from "react-router-dom"
 import { ITutor } from "../../models/ITutor"
+import { askPassword } from "../AskConferma"
 
 export interface IRouteParams{
     readonly id: string
@@ -119,17 +120,18 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.put(siteUrl+"/api/coordinatori/"+idCoordinatore, {
-            idCoordinatore: idCoordinatore,
-            nome: nome.trim(),
-            cognome: cognome.trim(),
-            email: email,
-            idCorso: corso
-        }).then(_ => {
+        askPassword(siteUrl+"/api/coordinatori/" + idCoordinatore, "put", {
+            coordinatore: {
+                idCoordinatore: idCoordinatore,
+                nome: nome.trim(),
+                cognome: cognome.trim(),
+                email: email,
+                idCorso: corso
+            }
+        }, (_: any) => {
             message.success("Tutor modificato con successo!")
             routerHistory.push(superAdminRoute+"/tutor")
         })
-
     }
 
     render(): JSX.Element{

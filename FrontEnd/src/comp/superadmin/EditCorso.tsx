@@ -5,6 +5,7 @@ import { siteUrl, imageFileToBase64, superAdminRoute } from "../../utilities"
 import Axios from "axios"
 import { RouteComponentProps } from "react-router-dom"
 import { ICorso } from "../../models/ICorso"
+import { askPassword } from "../AskConferma"
 
 export interface IRouteParams{
     readonly id: string
@@ -78,16 +79,17 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.put(siteUrl+"/api/corsi/"+corso.idCorso, {
-            idCorso: corso.idCorso,
-            nome: nome.trim(),
-            luogo: luogo.trim(),
-            logo: logo ? logo.trim() : ""
-        }).then(_ => {
+        askPassword(siteUrl+"/api/corsi/" + corso.idCorso, "put", {
+            corso: {
+                idCorso: corso.idCorso,
+                nome: nome.trim(),
+                luogo: luogo.trim(),
+                logo: logo ? logo.trim() : ""
+            }
+        }, (_: any) => {
             message.success("Corso modificato con successo!")
             routerHistory.push(superAdminRoute+"/corsi")
         })
-
     }
 
     convertImage = (file: any) => {

@@ -25,19 +25,25 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
 
         if(preAction)
             preAction()
-            
-        if(callType === "post"){
-            let password = input.value
+        
+        let password = input.value
 
-            if(tutor){
-                body.authCoordinatore = {
-                    idCoordinatore: tutor.idCoordinatore,
-                    password: cipher.encode(password)
-                }
-            }else{
-                body.password = password
+        if("idAmministratore" in tutor){
+            body.authAdmin = {
+                idAdmin: tutor.idAmministratore,
+                password: cipher.encode(password)
             }
+        }
+        else if(tutor){
+            body.authCoordinatore = {
+                idCoordinatore: tutor.idCoordinatore,
+                password: cipher.encode(password)
+            }
+        }else{
+            body.password = password
+        }
 
+        if(callType === "post"){
             Axios.post(url, body).then(callback).catch(_ => {
                 Modal.error({
                     title: "Errore!",
@@ -45,17 +51,6 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
                 })
             })
         }else if(callType === "put"){
-            let password = input.value
-            
-            if(tutor){
-                body.authCoordinatore = {
-                    idCoordinatore: tutor.idCoordinatore,
-                    password: cipher.encode(password)
-                }
-            }else{
-                body.password = password
-            }
-
             Axios.put(url, body).then(callback).catch(_ => {
                 Modal.error({
                     title: "Errore!",

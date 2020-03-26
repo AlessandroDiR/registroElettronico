@@ -4,6 +4,7 @@ import { routerHistory } from "../.."
 import { siteUrl, superAdminRoute } from "../../utilities"
 import Axios from "axios"
 import { ICorso } from "../../models/ICorso"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{}
 export interface IState{
@@ -98,16 +99,17 @@ export default class AddNewTutor extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.post(siteUrl+"/api/coordinatori", {
-            nome: nome.trim(),
-            cognome: cognome.trim(),
-            email: email,
-            idCorso: corso
-        }).then(_ => {
+        askPassword(siteUrl+"/api/coordinatori", "post", {
+            coordinatore: {
+                nome: nome.trim(),
+                cognome: cognome.trim(),
+                email: email,
+                idCorso: corso
+            }
+        }, (_: any) => {
             message.success("Tutor creato con successo!")
             routerHistory.push(superAdminRoute+"/tutor")
         })
-
     }
 
     render(): JSX.Element{

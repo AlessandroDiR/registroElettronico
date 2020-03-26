@@ -3,6 +3,7 @@ import { Modal, Upload, Icon, message } from "antd"
 import { routerHistory } from "../.."
 import { imageFileToBase64, superAdminRoute, siteUrl } from "../../utilities"
 import Axios from "axios"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{}
 export interface IState{
@@ -53,15 +54,16 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.post(siteUrl+"/api/corsi", {
-            nome: nome.trim(),
-            luogo: luogo.trim(),
-            logo: logo ? logo.trim() : ""
-        }).then(_ => {
+        askPassword(siteUrl+"/api/corsi", "post", {
+            corso: {
+                nome: nome.trim(),
+                luogo: luogo.trim(),
+                logo: logo ? logo.trim() : ""
+            }
+        }, (_: any) => {
             message.success("Corso creato con successo!")
             routerHistory.push(superAdminRoute+"/corsi")
         })
-
     }
 
     convertImage = (file: any) => {
