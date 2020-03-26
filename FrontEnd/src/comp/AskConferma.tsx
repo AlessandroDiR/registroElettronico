@@ -8,7 +8,8 @@ import { checkEnter } from "../utilities"
 export const askPassword = (url: string, callType: string, body?: any, callback?: any, preAction?: any, customText?: string) => {
     let input: HTMLInputElement,
     cipher = new Cipher(),
-    tutor = JSON.parse(sessionStorage.getItem("adminSession")) as IAdmin
+    tutor = JSON.parse(sessionStorage.getItem("adminSession")) as IAdmin,
+    admin = JSON.parse(sessionStorage.getItem("superSession")) as IAdmin
 
     const sendForm = () => {
 
@@ -28,7 +29,7 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
         
         let password = input.value
 
-        if("idAmministratore" in tutor){
+        if(admin){
             body.authAdmin = {
                 idAdmin: tutor.idAmministratore,
                 password: cipher.encode(password)

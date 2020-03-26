@@ -2,7 +2,6 @@ import React from "react"
 import { Modal, Upload, Icon, message } from "antd"
 import { routerHistory } from "../.."
 import { imageFileToBase64, superAdminRoute, siteUrl } from "../../utilities"
-import Axios from "axios"
 import { askPassword } from "../AskConferma"
 
 export interface IProps{}
