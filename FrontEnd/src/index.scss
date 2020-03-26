@@ -436,6 +436,15 @@ table td, table th{
     color: $value;
     cursor: pointer;
 
+    &.u-hover{
+      font-size: 20px;
+      font-weight: 400;
+
+      &:hover{
+        text-decoration: underline
+      }
+    }
+
     &:hover{
       color: darken($value, 15%)
     }
