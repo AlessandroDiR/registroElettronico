@@ -104,7 +104,7 @@ export default class LoginTutor extends React.PureComponent<IProps, IState>{
 
                 <input type="submit" value="Accedi" className="btn btn-lg btn-success w-100 text-uppercase"/>
 
-                {/* <input type="button" value="Ho dimenticato la password" className="btn btn-lg btn-danger w-100 text-uppercase mt-3" onClick={this.switchForgot}/> */}
+                <input type="button" value="Ho dimenticato la password" className="btn btn-lg btn-danger w-100 text-uppercase mt-3" onClick={this.switchForgot}/>
             </form>
 
             <ForgotPassword show={showForgot} closeModal={this.switchForgot} />

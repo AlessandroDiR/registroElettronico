@@ -85,6 +85,12 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
         })
     }
 
+    decreaseStep = () => {
+        this.setState({
+            currentStep: this.state.currentStep - 1
+        })
+    }
+
     switchLoading = () => {
         this.setState({
             loading: !this.state.loading
@@ -108,7 +114,7 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
 
         this.switchLoading()
 
-        Axios.post(siteUrl+"/api/emailrecuperopassword", {
+        Axios.post(siteUrl+"/api/coordinatori/recuperocoordinatori", {
             email: email
         }).then(response => {
             let data = response.data,
@@ -134,37 +140,17 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
     confirmSecondStep = (e: any) => {
         e.preventDefault()
         
-        const { code, idCoordinatore } = this.state
-
-        if(code === ""){
+        if(this.state.code === ""){
             Modal.error({
                 title: "Errore!",
-                content: "Riempire tutti i campi.",
+                content: "Riempire il campo.",
                 maskClosable: true
             })
 
             return
         }
 
-        this.switchLoading()
-
-        Axios.post(siteUrl+"/api/confrontacodicerecupero", {
-            codice: code,
-            idCoordinatore: idCoordinatore
-        }).then(response => {
-            let msg = response.data
-
-            if(msg.trim() === "success"){
-                this.increaseStep()
-                this.switchLoading()
-            }else{
-                Modal.error({
-                    title: "Errore!",
-                    content: "Il codice non corrisponde, o forse la richiesta è scaduta.",
-                    maskClosable: true
-                })
-            }
-        })
+        this.increaseStep()
     }
 
     savePassword = (e: any) => {
@@ -207,7 +193,7 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
         let cipher = new Cipher(),
         password = cipher.encode(newPassword)
 
-        Axios.post(siteUrl+"/api/salvapasswordtutor", {
+        Axios.post(siteUrl+"/api/coordinatori/cambiopassword", {
             idCoordinatore: idCoordinatore,
             password: password,
             codice: code
@@ -256,7 +242,11 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
                     <input type="text" name="code" value={code} className="form-control" onChange={this.changeCode} disabled={loading} />
                 </div>
 
-                <Button htmlType="submit" className="float-right" type="primary" loading={loading}>Prosegui</Button>
+                <div className="float-right">
+                    <Button className="mr-2" onClick={this.decreaseStep}>Indietro</Button>
+
+                    <Button htmlType="submit" type="primary" loading={loading}>Prosegui</Button>
+                </div>
 
                 <div className="clearfix"></div>
             </form>
@@ -274,7 +264,11 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
                     <input type="password" name="newpassword_conf" value={newPasswordConfirm} className="form-control" onChange={this.changePasswordConfirm} disabled={loading} />
                 </div>
 
-                <Button htmlType="submit" className="float-right" type="primary" loading={loading}>Salva la password</Button>
+                <div className="float-right">
+                    <Button className="mr-2" onClick={this.decreaseStep}>Indietro</Button>
+
+                    <Button htmlType="submit" type="primary" loading={loading}>Salva la password</Button>
+                </div>
 
                 <div className="clearfix"></div>
             </form>

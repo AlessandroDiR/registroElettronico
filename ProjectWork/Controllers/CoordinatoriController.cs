@@ -216,7 +216,7 @@ namespace ProjectWork.Controllers
             return Ok(coord.IdCoordinatore);
         }
 
-        // POST: api/Coordinatori/ControlloCodice
+        // POST: api/Coordinatori/CambioPassword
         [HttpPost("[action]")]
         public async Task<IActionResult> CambioPassword([FromBody] RecPwd_CoordinatoreDati obj)
         {
