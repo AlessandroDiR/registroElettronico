@@ -3,6 +3,7 @@ import { Tooltip, Spin, Icon, Modal, message, Button } from "antd"
 import Axios from "axios"
 import { siteUrl } from "../../utilities"
 import { IMateria } from "../../models/IMateria"
+import { askPassword } from "../AskConferma"
 
 export interface IProps{
     readonly corso: number
@@ -75,15 +76,12 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
 
            return
         }
-        
-        this.setState({
-            materie: null,
-            showModal: false
-        })
 
-        Axios.post(siteUrl+"/api/materie/"+this.props.corso, {
-            nome: nomeMateria.trim()
-        }).then(response => {
+        askPassword(siteUrl+"/api/materie/" + this.props.corso, "post", {
+            materia: {
+                nome: nomeMateria.trim()
+            }
+        }, (response: any) => {
             let materie = response.data as IMateria[]
 
             this.setState({
@@ -91,8 +89,12 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             })
 
             message.success("Materia aggiunta con successo!")
+        }, () => {
+            this.setState({
+                materie: null,
+                showModal: false
+            })
         })
-
     }
 
     modificaMateria = (e: any) => {
@@ -108,16 +110,13 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
 
            return
         }
-        
-        this.setState({
-            materie: null,
-            showEditModal: false
-        })
 
-        Axios.put(siteUrl+"/api/materie/"+materiaEdit.idMateria, {
-            idMateria: materiaEdit.idMateria,
-            nome: nomeEdit.trim()
-        }).then(response => {
+        askPassword(siteUrl+"/api/materie/" + materiaEdit.idMateria, "put", {
+            materia: {
+                idMateria: materiaEdit.idMateria,
+                nome: nomeEdit.trim()
+            }
+        }, (response: any) => {
             let materie = response.data as IMateria[]
 
             this.setState({
@@ -127,8 +126,12 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             })
 
             message.success("Materia modificata con successo!")
+        }, () => {
+            this.setState({
+                materie: null,
+                showEditModal: false
+            })
         })
-
     }
 
     changeNome = (event: any) => {
