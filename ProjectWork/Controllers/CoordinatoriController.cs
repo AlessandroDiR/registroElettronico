@@ -191,12 +191,11 @@ namespace ProjectWork.Controllers
             {
                 return NotFound("Email coordinatore non trovata");
             }
-            
-            Random rnd = new Random();
-            int Codice = rnd.Next(100000,999999);
+
+            int Codice = int.Parse(DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString().Substring(5, 5));
 
             string subject = "FITSTIC | Recupero Password";
-            string body = $"Ciao! Ecco il codice che dovrai inserire per recuperare la password : {Codice} . Il codice ha una durata di 5 minuti";
+            string body = $"Ciao! Ecco il codice che dovrai inserire per recuperare la password: <strong>{Codice}</strong>. Il codice ha una durata di 5 minuti.";
 
             EmailSender es = new EmailSender();
             if(es.SendEmailTo(obj.Email, subject, body) == "success")
@@ -234,10 +233,10 @@ namespace ProjectWork.Controllers
 
             if (rec.Codice != obj.Codice)
             {
-                return BadRequest("Codice errato");
+                return Ok("Codice errato");
             }else if(rec.DataRichiesta.AddMinutes(5) < DateTime.Now)
             {
-                return BadRequest("Codice non più valido");
+                return Ok("Codice non più valido");
             }
 
             var coord = _context.Coordinatori.FirstOrDefault(c => obj.IdCoordinatore == c.IdCoordinatore);

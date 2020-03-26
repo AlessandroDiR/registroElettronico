@@ -37,7 +37,7 @@ namespace ProjectWork.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=dell-alessandro\\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;");
             }
         }
 
@@ -151,7 +151,7 @@ namespace ProjectWork.Models
                 entity.HasKey(e => e.IdCoordinatore);
 
                 entity.HasIndex(e => e.Email)
-                    .HasName("UQ__Coordina__AB6E616474CBF6E6")
+                    .HasName("UQ__Coordina__AB6E616449E4E45E")
                     .IsUnique();
 
                 entity.Property(e => e.IdCoordinatore).HasColumnName("id_coordinatore");

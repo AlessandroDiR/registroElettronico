@@ -1,7 +1,7 @@
 import React from "react"
 import { Modal, message, Icon, Spin, Collapse } from "antd"
 import Axios from "axios"
-import { siteUrl } from "../../utilities"
+import { siteUrl, formatItalian } from "../../utilities"
 import { ICalendar } from "../../models/ICalendar"
 import Calendario from "../Calendario"
 import { askPassword } from "../AskConferma"
@@ -87,7 +87,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
                                 { 
                                     eventiScartati.map(e => {
                                         return <span className="d-block">
-                                            <strong>{e.date} ({e.inizio} - {e.fine})</strong>: {e.summary}
+                                            <strong>{formatItalian(e.date)} ({e.inizio} - {e.fine})</strong>: {e.summary}
                                         </span>
                                     })
                                 }
