@@ -6,7 +6,7 @@ import { IPresenzaDocente } from "../../models/IPresenzaDocente"
 import { askPassword } from "../AskConferma"
 
 export interface IProps{
-    readonly idDocente: string
+    readonly idDocente: number
     readonly canEdit: boolean
     readonly corso: number
 }

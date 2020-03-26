@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectWork.classi;
+using ProjectWork.CustomizedModels;
 using ProjectWork.Models;
 
 namespace ProjectWork.Controllers
@@ -152,19 +153,23 @@ namespace ProjectWork.Controllers
 
         // PUT: api/Docenti/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDocenti([FromRoute] int id, [FromBody] Docenti docenti)
+        public async Task<IActionResult> PutDocenti([FromRoute] int id, [FromBody] PostDocentiModel obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != docenti.IdDocente)
+            var coordinatore = _context.Coordinatori.SingleOrDefault(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
+            if (coordinatore == null)
+                return NotFound();
+
+            if (id != obj.Docente.IdDocente)
             {
                 return BadRequest();
             }
 
-            if (docenti == null)
+            if (obj.Docente == null)
             {
                 return NotFound();
             }
@@ -172,23 +177,23 @@ namespace ProjectWork.Controllers
             var t = _context.Tenere.Where(d => d.IdDocente == id);
             _context.Tenere.RemoveRange(t);
             
-            _context.Tenere.AddRange(docenti.Tenere);
+            _context.Tenere.AddRange(obj.Docente.Tenere);
 
             var i = _context.Insegnare.Where(d => d.IdDocente == id);
             _context.Insegnare.RemoveRange(i);
 
-            _context.Insegnare.AddRange(docenti.Insegnare);
+            _context.Insegnare.AddRange(obj.Docente.Insegnare);
 
             var doc = await _context.Docenti.SingleOrDefaultAsync(a => a.IdDocente == id);
 
-            if (docenti.Password == null)
-                docenti.Password = doc.Password;
+            if (obj.Docente.Password == null)
+                obj.Docente.Password = doc.Password;
 
-            if (docenti.Codice == null)
-                docenti.Codice = doc.Codice;
+            if (obj.Docente.Codice == null)
+                obj.Docente.Codice = doc.Codice;
 
             _context.Remove(doc);
-            _context.Entry(docenti).State = EntityState.Modified;
+            _context.Entry(obj.Docente).State = EntityState.Modified;
 
             try
             {
@@ -211,34 +216,38 @@ namespace ProjectWork.Controllers
 
         // POST: api/Docenti
         [HttpPost]
-        public async Task<IActionResult> PostDocenti([FromBody] Docenti d)
+        public async Task<IActionResult> PostDocenti([FromBody] PostDocentiModel obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            var coordinatore = _context.Coordinatori.SingleOrDefault(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
+            if (coordinatore == null)
+                return NotFound();
+
             Docenti docente = new Docenti
             {
                 IdDocente = _context.Docenti.Count() + 1,
-                Nome = d.Nome,
-                Cognome = d.Cognome,
-                Cf = d.Cf,
-                Password = Cipher.encode(d.Cf),
-                Codice = Cipher.encode(d.Cf),
-                Email = d.Email
+                Nome = obj.Docente.Nome,
+                Cognome = obj.Docente.Cognome,
+                Cf = obj.Docente.Cf,
+                Password = Cipher.encode(obj.Docente.Cf),
+                Codice = Cipher.encode(obj.Docente.Cf),
+                Email = obj.Docente.Email
             };
 
-            foreach (var item in d.Tenere)
+            foreach (var item in obj.Docente.Tenere)
             {
                 item.IdDocente = docente.IdDocente;
             }
-            _context.Tenere.AddRange(d.Tenere);
-            foreach (var item in d.Insegnare)
+            _context.Tenere.AddRange(obj.Docente.Tenere);
+            foreach (var item in obj.Docente.Insegnare)
             {
                 item.IdDocente = docente.IdDocente;
             }
-            _context.Insegnare.AddRange(d.Insegnare);
+            _context.Insegnare.AddRange(obj.Docente.Insegnare);
             _context.Docenti.Add(docente);
 
             await _context.SaveChangesAsync();
@@ -262,16 +271,20 @@ namespace ProjectWork.Controllers
             return Ok("success");
         }
 
-        // DELETE: api/Docenti/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDocenti([FromRoute] int id)
+        // PUT: api/Docenti/RitiraDocente/1
+        [HttpPut("[action]")]
+        public async Task<IActionResult> RitiraDocente([FromBody] RitiroDocenteModel obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var docenti = await _context.Docenti.FindAsync(id);
+            var coordinatore = _context.Coordinatori.SingleOrDefault(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
+            if (coordinatore == null)
+                return NotFound();
+
+            var docenti = await _context.Docenti.FindAsync(obj.IdDocente);
             if (docenti == null)
             {
                 return NotFound();
