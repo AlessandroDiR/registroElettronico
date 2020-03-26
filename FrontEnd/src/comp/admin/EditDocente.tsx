@@ -156,14 +156,16 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         }
 
         askPassword(siteUrl+"/api/docenti/" + this.props.match.params.id, "put", {
-            idDocente: parseInt(this.props.match.params.id),
-            nome: nome.trim(),
-            cognome: cognome.trim(),
-            email: email,
-            cf: CF,
-            tenere: corsiSel.map(c => { return { idCorso: c, idDocente: docente.idDocente } }),
-            insegnare: materieSel.map(m => { return { idMateria: m, idDocente: docente.idDocente } }),
-            ritirato: docente.ritirato
+            docente: {
+                idDocente: parseInt(this.props.match.params.id),
+                nome: nome.trim(),
+                cognome: cognome.trim(),
+                email: email,
+                cf: CF,
+                tenere: corsiSel.map(c => { return { idCorso: c, idDocente: docente.idDocente } }),
+                insegnare: materieSel.map(m => { return { idMateria: m, idDocente: docente.idDocente } }),
+                ritirato: docente.ritirato
+            }
         }, (_: any) => {
             message.success("Docente modificato con successo!")
             routerHistory.push(adminRoute+"/docenti")
