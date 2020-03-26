@@ -210,7 +210,12 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
             }else{
                 Modal.error({
                     title: "Errore!",
-                    content: "Non è stato possibile completare l'operazione."
+                    content: "Non è stato possibile completare l'operazione.",
+                    onOk: () => {
+                        this.setState({
+                            loading: false
+                        })
+                    }
                 })
             }
         })
