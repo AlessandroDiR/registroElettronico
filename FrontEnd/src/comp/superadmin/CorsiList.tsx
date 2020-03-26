@@ -51,6 +51,7 @@ export default class CorsiList extends React.PureComponent<IProps, IState>{
                 
                     <tbody>
                         <tr>
+                            <th style={{width: "15%"}}>Logo</th>
                             <th>Nome</th>
                             <th>Luogo</th>
                             <th style={{width: "10%"}}>Azioni</th>
@@ -59,6 +60,7 @@ export default class CorsiList extends React.PureComponent<IProps, IState>{
                         {
                             corsi.map(c => {        
                                 return <tr>
+                                    <td><img width="55" src={c.logo} alt="logo" /></td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{c.nome}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{c.luogo}</td>
                                     <td>

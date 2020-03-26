@@ -69,27 +69,31 @@ namespace ProjectWork.Controllers
 
         // PUT: api/Coordinatori/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCoordinatore([FromRoute] int id, [FromBody] Coordinatori c)
+        public async Task<IActionResult> PutCoordinatore([FromRoute] int id, [FromBody] PostCoordinatoriModel obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != c.IdCoordinatore)
+            var admin = _context.Amministratori.SingleOrDefault(a => a.IdAmministratore == obj.AuthAdmin.IdAdmin && a.Password == obj.AuthAdmin.Password);
+            if (admin == null)
+                return NotFound();
+
+            if (id != obj.Coordinatore.IdCoordinatore)
             {
                 return BadRequest();
             }
 
             var coord = await _context.Coordinatori.SingleOrDefaultAsync(i => i.IdCoordinatore == id);
 
-            if(c.Username==null)
-                c.Username = coord.Username;
-            if(c.Password==null)
-                c.Password = coord.Password;
+            if(obj.Coordinatore.Username==null)
+                obj.Coordinatore.Username = coord.Username;
+            if(obj.Coordinatore.Password==null)
+                obj.Coordinatore.Password = coord.Password;
 
             _context.Remove(coord);
-            _context.Entry(c).State = EntityState.Modified;
+            _context.Entry(obj.Coordinatore).State = EntityState.Modified;
 
             try
             {
@@ -139,26 +143,30 @@ namespace ProjectWork.Controllers
 
         // POST: api/Coordinatori
         [HttpPost]
-        public async Task<IActionResult> PostCoordinatori([FromBody] Coordinatori coordinatore)
+        public async Task<IActionResult> PostCoordinatori([FromBody] PostCoordinatoriModel obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            var admin = _context.Amministratori.SingleOrDefault(a => a.IdAmministratore == obj.AuthAdmin.IdAdmin && a.Password == obj.AuthAdmin.Password);
+            if (admin == null)
+                return NotFound();
+
             Coordinatori coor = new Coordinatori();
-            coor.Nome = coordinatore.Nome;
-            coor.Email = coordinatore.Email;
-            coor.IdCorso = coordinatore.IdCorso;
-            coor.Cognome = coordinatore.Cognome;
-            coor.Username = coordinatore.Nome + "." + coordinatore.Cognome;
+            coor.Nome = obj.Coordinatore.Nome;
+            coor.Email = obj.Coordinatore.Email;
+            coor.IdCorso = obj.Coordinatore.IdCorso;
+            coor.Cognome = obj.Coordinatore.Cognome;
+            coor.Username = obj.Coordinatore.Nome + "." + obj.Coordinatore.Cognome;
             coor.Password = Cipher.encode(string.Format("{0}{1}{2}{3}{4}{5}", DateTime.Now.Day, coor.Nome.Substring(0, 2), coor.IdCorso, DateTime.Now.DayOfYear, coor.Cognome.Substring(0, 2), DateTime.Now.Second));
 
             _context.Coordinatori.Add(coor);
 
             await _context.SaveChangesAsync();
             int id = _context.Coordinatori.Last().IdCoordinatore;
-            _context.Coordinatori.Last().Username = coordinatore.Nome + "." + coordinatore.Cognome + id;
+            _context.Coordinatori.Last().Username = obj.Coordinatore.Nome + "." + obj.Coordinatore.Cognome + id;
             await _context.SaveChangesAsync();
 
             var corsoCoordinato = _context.Corsi.Find(coor.IdCorso);
@@ -166,27 +174,6 @@ namespace ProjectWork.Controllers
             _es.SendEmail(_context.Coordinatori.Last(), corsoCoordinato);
 
             return CreatedAtAction("GetCoordinatori", _context.Coordinatori.Last());
-        }
-
-        // DELETE: api/Coordinatori/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCoordinatori([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var c = await _context.Coordinatori.FindAsync(id);
-            if (c == null)
-            {
-                return NotFound();
-            }
-
-            _context.Coordinatori.Remove(c);
-            await _context.SaveChangesAsync();
-
-            return Ok(c);
         }
 
         private bool CoordinatoriExists(int id)

@@ -134,13 +134,15 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         password = cipher.encode(CF)
 
         askPassword(siteUrl+"/api/docenti", "post", {
-            nome: nome.trim(),
-            cognome: cognome.trim(),
-            cf: CF,
-            password: password,
-            email: email,
-            tenere: corsiSel.map(c => { return { idCorso: c, idDocente: 0 } }),
-            insegnare: materieSel.map(m => { return { idMateria: m, idDocente: 0 } }),
+            docente: {
+                nome: nome.trim(),
+                cognome: cognome.trim(),
+                cf: CF,
+                password: password,
+                email: email,
+                tenere: corsiSel.map(c => { return { idCorso: c, idDocente: 0 } }),
+                insegnare: materieSel.map(m => { return { idMateria: m, idDocente: 0 } }),
+            }
         }, (_: any) => {
             message.success("Docente creato con successo!")
             routerHistory.push(adminRoute+"/docenti")

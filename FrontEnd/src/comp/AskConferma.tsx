@@ -31,7 +31,7 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
 
         if(admin){
             body.authAdmin = {
-                idAdmin: tutor.idAmministratore,
+                idAdmin: admin.idAmministratore,
                 password: cipher.encode(password)
             }
         }

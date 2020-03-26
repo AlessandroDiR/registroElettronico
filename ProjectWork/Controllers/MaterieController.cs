@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjectWork.CustomizedModels;
 using ProjectWork.Models;
 using System;
 using System.Collections.Generic;
@@ -103,19 +104,23 @@ namespace ProjectWork.Controllers
 
         // PUT: api/Materie/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMaterie([FromRoute] int id, [FromBody] Materie materie)
+        public async Task<IActionResult> PutMaterie([FromRoute] int id, [FromBody] PostMaterieModel obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != materie.IdMateria)
+            var coordinatore = _context.Coordinatori.SingleOrDefault(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
+            if (coordinatore == null)
+                return NotFound();
+
+            if (id != obj.Materia.IdMateria)
             {
                 return BadRequest();
             }
 
-            _context.Entry(materie).State = EntityState.Modified;
+            _context.Entry(obj.Materia).State = EntityState.Modified;
 
             try
             {
@@ -136,21 +141,25 @@ namespace ProjectWork.Controllers
             return GetMaterie();
         }
 
-        // POST: api/Materie
+        // POST: api/Materie/1
         [HttpPost("{idCorso}")]
-        public async Task<IActionResult> PostMaterie([FromRoute] int idCorso, [FromBody] Materie materie)
+        public async Task<IActionResult> PostMaterie([FromRoute] int idCorso, [FromBody] PostMaterieModel obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Materie.Add(materie);
+            var coordinatore = _context.Coordinatori.SingleOrDefault(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
+            if (coordinatore == null)
+                return NotFound();
+
+            _context.Materie.Add(obj.Materia);
 
             var newComprende = new Comprende
             {
                 IdCorso = idCorso,
-                IdMateria = materie.IdMateria
+                IdMateria = obj.Materia.IdMateria
             };
             _context.Comprende.Add(newComprende);
 

@@ -105,33 +105,37 @@ namespace ProjectWork.Controllers
 
         // PUT: api/Corsi/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCorsi([FromRoute] int id, [FromBody] Corsi corsi)
+        public async Task<IActionResult> PutCorsi([FromRoute] int id, [FromBody] PostCorsiModel obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != corsi.IdCorso)
+            var admin = _context.Amministratori.SingleOrDefault(a => a.IdAmministratore == obj.AuthAdmin.IdAdmin &&  a.Password == obj.AuthAdmin.Password);
+            if (admin == null)
+                return NotFound();
+
+            if (id != obj.Corso.IdCorso)
             {
                 return BadRequest();
             }
 
             var corso = _context.Corsi.Find(id);
 
-            if (corsi.Codice == null)
-                corsi.Codice = corso.Codice;
+            if (obj.Corso.Codice == null)
+                obj.Corso.Codice = corso.Codice;
 
             var t = _context.Tenere.Where(c => c.IdCorso == id);
             _context.Tenere.RemoveRange(t);
-             _context.Tenere.AddRange(corsi.Tenere);
+             _context.Tenere.AddRange(obj.Corso.Tenere);
 
             var com = _context.Comprende.Where(c => c.IdCorso == id);
             _context.Comprende.RemoveRange(com);
-            _context.Comprende.AddRange(corsi.Comprende);
+            _context.Comprende.AddRange(obj.Corso.Comprende);
 
             _context.Remove(corso);
-            _context.Entry(corsi).State = EntityState.Modified;
+            _context.Entry(obj.Corso).State = EntityState.Modified;
 
             try
             {
@@ -154,60 +158,40 @@ namespace ProjectWork.Controllers
 
         // POST: api/Corsi
         [HttpPost]
-        public async Task<IActionResult> PostCorsi([FromBody] Corsi corsi)
+        public async Task<IActionResult> PostCorsi([FromBody] PostCorsiModel obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (corsi.Codice == null)
-                corsi.Codice = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+            var admin = _context.Amministratori.SingleOrDefault(a => a.IdAmministratore == obj.AuthAdmin.IdAdmin && a.Password == obj.AuthAdmin.Password);
+            if (admin == null)
+                return NotFound();
+
+            if (obj.Corso.Codice == null)
+                obj.Corso.Codice = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
 
             var cor = _context.Corsi.Last();
             if (cor == null)
             {
                 return CreatedAtAction("GetCorsi", "Corso inesistente");
             }
-            foreach (var item in corsi.Tenere)
+            foreach (var item in obj.Corso.Tenere)
             {
-                item.IdCorso = corsi.IdCorso;
+                item.IdCorso = obj.Corso.IdCorso;
             }
-            _context.Tenere.AddRange(corsi.Tenere);
-            foreach (var item in corsi.Comprende)
+            _context.Tenere.AddRange(obj.Corso.Tenere);
+            foreach (var item in obj.Corso.Comprende)
             {
                 item.IdCorso = cor.IdCorso;
             }
-            _context.Comprende.AddRange(corsi.Comprende);
+            _context.Comprende.AddRange(obj.Corso.Comprende);
 
-            _context.Corsi.Add(corsi);
+            _context.Corsi.Add(obj.Corso);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCorsi", new { id = corsi.IdCorso }, corsi);
-        }
-
-        // DELETE: api/Corsi/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCorsi([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var corsi = await _context.Corsi.FindAsync(id);
-            if (corsi == null)
-            {
-                return NotFound();
-            }
-            var t = _context.Tenere.Where(c => c.IdCorso == id);
-            _context.Tenere.RemoveRange(t);
-            var com = _context.Comprende.Where(c => c.IdCorso == id);
-            _context.Comprende.RemoveRange(com);
-            _context.Corsi.Remove(corsi);
-            await _context.SaveChangesAsync();
-
-            return Ok(corsi);
+            return CreatedAtAction("GetCorsi", new { id = obj.Corso.IdCorso }, obj.Corso);
         }
 
         private bool CorsiExists(int id)
