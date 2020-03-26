@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjectWork.CustomizedModels;
 using ProjectWork.Models;
 
 namespace ProjectWork.Controllers
@@ -29,28 +30,36 @@ namespace ProjectWork.Controllers
 
         // PUT: api/PresenzeDocente/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPresenzeDocente([FromRoute] int id, [FromBody] PresenzeDocente presenzeDocente)
+        public async Task<IActionResult> PutPresenzeDocente([FromRoute] int id, [FromBody] PutPresenzeDocenteModel obj)
         {
-            LogPresenze log = new LogPresenze();
-            log.DataOra = DateTime.Now;
-            log.IdPresenza = id;
-            log.IdDocente = presenzeDocente.IdDocente;
-            var lezione = _context.Lezioni.First(l => l.IdLezione == presenzeDocente.IdLezione);
+            var coordinatore = _context.Coordinatori.SingleOrDefault(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
+            if (coordinatore == null)
+                return NotFound();
+
+            LogPresenze log = new LogPresenze
+            {
+                DataOra = DateTime.Now,
+                IdPresenza = id,
+                IdDocente = obj.Presenza.IdDocente
+            };
+
+            var lezione = _context.Lezioni.First(l => l.IdLezione == obj.Presenza.IdLezione);
             lezione.IdCalendarioNavigation = _context.Calendari.SingleOrDefault(c => c.IdCalendario == lezione.IdCalendario);
+
             log.IdCorso = lezione.IdCalendarioNavigation.IdCorso;
             var presenzaNonModificata = _context.PresenzeDocente.First(p => p.IdPresenza == id);
             log.Modifiche = "MODIFICHE = ";
             bool modificato = false;
 
-            if (presenzeDocente.Ingresso != presenzaNonModificata.Ingresso)
+            if (obj.Presenza.Ingresso != presenzaNonModificata.Ingresso)
             {
-                log.Modifiche += string.Format("Valore precedente ingresso : {0} - Valore attuale ingresso : {1}; ", presenzaNonModificata.Ingresso, presenzeDocente.Ingresso);
+                log.Modifiche += string.Format("Valore precedente ingresso : {0} - Valore attuale ingresso : {1}; ", presenzaNonModificata.Ingresso, obj.Presenza.Ingresso);
                 modificato = true;
             }
 
-            if (presenzeDocente.Uscita != presenzaNonModificata.Uscita)
+            if (obj.Presenza.Uscita != presenzaNonModificata.Uscita)
             {
-                log.Modifiche += string.Format("Valore precedente uscita : {0} - Valore attuale uscita : {1}; ", presenzaNonModificata.Uscita, presenzeDocente.Uscita);
+                log.Modifiche += string.Format("Valore precedente uscita : {0} - Valore attuale uscita : {1}; ", presenzaNonModificata.Uscita, obj.Presenza.Uscita);
                 modificato = true;
             }
 
@@ -59,7 +68,7 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != presenzeDocente.IdPresenza)
+            if (id != obj.Presenza.IdPresenza)
             {
                 return BadRequest();
             }
@@ -68,7 +77,7 @@ namespace ProjectWork.Controllers
             {
                 _context.LogPresenze.Add(log);
                 _context.Remove(presenzaNonModificata);
-                _context.Entry(presenzeDocente).State = EntityState.Modified;
+                _context.Entry(obj.Presenza).State = EntityState.Modified;
             }
             try
             {

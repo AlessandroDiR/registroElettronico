@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectWork.Models;
 using ProjectWork.classi;
+using Google.Apis.Calendar.v3.Data;
 
 namespace ProjectWork.Controllers
 {
@@ -70,6 +71,8 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
+            var lezioniNonValidate = new List<object>();
+
             if (!CalendariExists(calendario.IdCalendario))
             {
                 calendario.IdCalendario = Guid.NewGuid().ToString();
@@ -81,13 +84,13 @@ namespace ProjectWork.Controllers
                 {
                     _context.Lezioni.RemoveRange(_context.Lezioni.Where(l => l.IdCalendario == calendario.IdCalendario));
                     var events = _calendarApi.GetCalendarEvents(calendario);
-                    _calendarApi.SaveEventsInContext(calendario, events);
+                    lezioniNonValidate =  _calendarApi.SaveEventsInContext(calendario, events);
                 }
                 else
                 {
                     var updatedCalendar = _context.Calendari.Find(calendario.IdCalendario);
                     var updatedEvents = _calendarApi.GetUpdatedEvents(updatedCalendar);
-                    _calendarApi.UpdateEventsInContext(calendario, updatedEvents);
+                    lezioniNonValidate = _calendarApi.UpdateEventsInContext(calendario, updatedEvents);
                 }
             }
 
@@ -107,7 +110,7 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return Ok("ok");
+            return Ok(lezioniNonValidate);
         }
 
         // DELETE: api/Calendari/5

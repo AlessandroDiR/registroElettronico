@@ -88,8 +88,9 @@ namespace ProjectWork.classi
             return updatedEvents;
         }
 
-        public void UpdateEventsInContext(Calendari c, IList<Event> updatedEvents)
+        public List<object> UpdateEventsInContext(Calendari c, IList<Event> updatedEvents)
         {
+            var lezioniNonValidate = new List<object>();
             foreach(var e in updatedEvents)
             {
                 var lezione = _context.Lezioni.SingleOrDefault(l => l.IdGEvent == e.Id);
@@ -103,8 +104,12 @@ namespace ProjectWork.classi
                         lezione.Data = DateTime.Parse(e.Start.DateTime.ToString().Split(' ')[0]).Date;
                         lezione.OraInizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]);
                         lezione.OraFine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1]);
+                        lezione.IdMateria = FindIdMateria(e.Summary);
 
-                        _context.Lezioni.Update(lezione);
+                        if(lezione.IdMateria == -1)
+                            lezioniNonValidate.Add(e);
+                        else
+                            _context.Lezioni.Update(lezione);
                     }
                 }
                 else
@@ -120,15 +125,27 @@ namespace ProjectWork.classi
                         IdMateria = FindIdMateria(e.Summary)
                     };
 
-                    _context.Lezioni.Add(lezione);
+                    if(lezione.IdMateria == -1)
+                        lezioniNonValidate.Add(e);
+                    else
+                        _context.Lezioni.Add(lezione);
                 }
-
+            }
+            try
+            {
                 _context.SaveChanges();
             }
+            catch
+            {
+                throw;
+            }
+
+            return lezioniNonValidate;
         }
 
-        public bool SaveEventsInContext(Calendari c, IList<Event> events)
+        public List<object> SaveEventsInContext(Calendari c, IList<Event> events)
         {
+            var lezioniNonValidate = new List<object>();
             foreach (var e in events)
             {
                 var lezione = new Lezioni
@@ -142,9 +159,11 @@ namespace ProjectWork.classi
                     IdMateria = FindIdMateria(e.Summary)
                 };
 
-                _context.Lezioni.Add(lezione);
+                if (lezione.IdMateria == -1)
+                    lezioniNonValidate.Add(e);
+                else
+                    _context.Lezioni.Add(lezione);
             }
-
             try
             {
                 _context.SaveChanges();
@@ -154,16 +173,20 @@ namespace ProjectWork.classi
                 throw;
             }
 
-            return true;
-
+            return lezioniNonValidate;
         }
 
         private int FindIdMateria(string evento)
         {
-            var nomeMateria = evento.Split('-')[1].TrimStart();
-            var id = _context.Materie.SingleOrDefault(m => m.Nome == nomeMateria).IdMateria;
+            if (!evento.Contains('-'))
+                return -1;
 
-            return id;
+            var nomeMateria = evento.Split('-')[1].TrimStart();
+            var materia = _context.Materie.SingleOrDefault(m => m.Nome == nomeMateria);
+            if (materia == null)
+                return -1;
+
+            return materia.IdMateria;
         }
     }
 }
