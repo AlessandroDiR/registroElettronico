@@ -85,7 +85,7 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return Ok("Tutte le lezioni sono state svolte");
+            return Ok(DateTime.Now);
         }
 
     }
