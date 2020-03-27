@@ -7,6 +7,7 @@ import SceltaCorso from "./SceltaCorso"
 import SceltaClasse from "./SceltaClasse"
 import LogoCorso from "./LogoCorso"
 import CodiceAccesso from "./CodiceAccesso"
+import Footer from "./Footer"
 
 export default class Main extends React.Component{
 
@@ -46,9 +47,7 @@ export default class Main extends React.Component{
                             <span><i className="fal fa-calendar-alt fa-fw mr-1"></i> Calendario</span>
                         </NavLink>
 
-                        <div className="copyright">
-                            {(new Date()).getFullYear()} Copyright FITSTIC
-                        </div>
+                        <Footer inMenu={true} />
                     </div>
 
                     <Switch>

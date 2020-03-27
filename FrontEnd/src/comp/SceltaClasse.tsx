@@ -1,6 +1,7 @@
 import React from "react"
 import { mountLogin, unmountLogin } from "../utilities"
 import { routerHistory } from ".."
+import Footer from "./Footer"
 
 export default class SceltaClasse extends React.Component{
 
@@ -19,15 +20,19 @@ export default class SceltaClasse extends React.Component{
 
     render(): JSX.Element{
         return <div className="col-11 col-lg-5 mx-auto" id="loginBlock">
-            <div className="w-100 bg-white py-3 rounded shadow">
-                <h3 className="text-center">Scegli la classe</h3>
+            <div className="w-100">
+                <div className="w-100 bg-white py-3 rounded shadow">
+                    <h3 className="text-center">Scegli la classe</h3>
 
-                <div className="py-2 text-center pointer corso-item" onClick={() => this.chooseClasse(1)}>
-                    Primo anno
+                    <div className="py-2 text-center pointer corso-item" onClick={() => this.chooseClasse(1)}>
+                        Primo anno
+                    </div>
+                    <div className="py-2 text-center pointer corso-item" onClick={() => this.chooseClasse(2)}>
+                        Secondo anno
+                    </div>
                 </div>
-                <div className="py-2 text-center pointer corso-item" onClick={() => this.chooseClasse(2)}>
-                    Secondo anno
-                </div>
+                
+                <Footer />
             </div>
         </div>
 

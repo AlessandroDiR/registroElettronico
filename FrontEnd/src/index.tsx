@@ -13,6 +13,7 @@ import "moment/locale/it"
 import SuperDashboard from "./comp/superadmin/SuperDashboard"
 import { superAdminRoute, adminRoute } from "./utilities"
 import DashboardCasa from "./comp/firmacasa/DashboardCasa"
+import Docs from "./comp/Docs"
 
 moment.locale("it")
 
@@ -44,6 +45,10 @@ ReactDOM.render(<Router history={routerHistory}>
 
         <Route path="/firmacasa" render={() => (
             <DashboardCasa />
+        )} />
+
+        <Route exact path="/documentazione" render={() => (
+            <Docs />
         )} />
 
         <Route render={() => <Page404 goTo="/" />} />

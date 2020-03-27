@@ -6,6 +6,7 @@ import Axios from "axios"
 import { Cipher } from "../../models/Cipher"
 import { isAdmin } from "../../models/IAdmin"
 import ForgotPassword from "../ForgotPassword"
+import Footer from "../Footer"
 
 export interface IProps{}
 export interface IState{
@@ -88,24 +89,28 @@ export default class LoginTutor extends React.PureComponent<IProps, IState>{
         const { adminName, adminPsw, showForgot } = this.state
 
         return <div className="col-11 col-lg-5 mx-auto" id="loginBlock">
-            <form className="w-100 bg-white p-3 rounded shadow" onSubmit={this.tryLogin}>
-                <h3 className="d-inline-block">Accesso coordinatori</h3>
-                <img src={logoUrl} height="40" className="float-right logo" alt="logo" />
+            <div className="w-100">
+                <form className="w-100 bg-white p-3 rounded shadow" onSubmit={this.tryLogin}>
+                    <h3 className="d-inline-block">Accesso coordinatori</h3>
+                    <img src={logoUrl} height="40" className="float-right logo" alt="logo" />
 
-                <div className="form-group">
-                    <label className="text-secondary">Utente di accesso</label>
-                    <input name="username" type="text" className="form-control" value={adminName} onChange={this.changeInputName} />
-                </div>
+                    <div className="form-group">
+                        <label className="text-secondary">Utente di accesso</label>
+                        <input name="username" type="text" className="form-control" value={adminName} onChange={this.changeInputName} />
+                    </div>
 
-                <div className="form-group">
-                    <label className="text-secondary">Password di accesso</label>
-                    <input name="password" type="password" className="form-control" value={adminPsw} onChange={this.changeInputPassword} />
-                </div>
+                    <div className="form-group">
+                        <label className="text-secondary">Password di accesso</label>
+                        <input name="password" type="password" className="form-control" value={adminPsw} onChange={this.changeInputPassword} />
+                    </div>
 
-                <input type="submit" value="Accedi" className="btn btn-lg btn-success w-100 text-uppercase"/>
+                    <input type="submit" value="Accedi" className="btn btn-lg btn-success w-100 text-uppercase"/>
 
-                <span className="link-blue u-hover d-block mt-3 text-center" onClick={this.switchForgot}>Hai dimenticato la password?</span>
-            </form>
+                    <span className="link-blue u-hover d-block mt-3 text-center" onClick={this.switchForgot}>Hai dimenticato la password?</span>
+                </form>
+
+                <Footer />
+            </div>
 
             <ForgotPassword show={showForgot} closeModal={this.switchForgot} />
         </div>
