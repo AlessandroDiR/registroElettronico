@@ -18,6 +18,7 @@ import LogoCorso from "../LogoCorso"
 import Page404 from "../Page404"
 import { adminRoute } from "../../utilities"
 import EditCodiceFirma from "./EditCodiceFirma"
+import Footer from "../Footer"
 
 export default class Dashboard extends React.Component{
 
@@ -63,9 +64,7 @@ export default class Dashboard extends React.Component{
                             <span><i className="fal fa-power-off fa-fw mr-1"></i> Esci</span>
                         </NavLink>
 
-                        <div className="copyright">
-                            {(new Date()).getFullYear()} Copyright FITSTIC
-                        </div>
+                        <Footer inMenu={true} />
                     </div>
   
                     <Switch>

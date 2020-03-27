@@ -80,7 +80,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
                 Modal.warning({
                     title: "Attenzione!",
                     content: <div style={{ marginLeft: -38 }}>
-                        <p className="text-muted">I seguenti eventi sono stati scartati durante l'inserimento. Assicurati che siano scritti nel giusto modo (<strong>LUOGO: DOCENTE - MATERIA</strong>).</p>
+                        <p className="text-muted">I seguenti eventi sono stati scartati durante l'inserimento. Assicurati che siano scritti nel giusto modo (<strong>LUOGO: DOCENTE - MATERIA</strong>), e che i docenti siano stati creati.</p>
 
                         <Collapse bordered={false}>
                             <Panel header="Espandi per visualizzare gli eventi" key={1}>

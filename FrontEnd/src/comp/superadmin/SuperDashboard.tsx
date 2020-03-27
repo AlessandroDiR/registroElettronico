@@ -11,6 +11,7 @@ import EditCorso from "./EditCorso"
 import TutorList from "./TutorList"
 import AddNewTutor from "./AddNewTutor"
 import EditTutor from "./EditTutor"
+import Footer from "../Footer"
 
 export default class SuperDashboard extends React.Component{
 
@@ -45,9 +46,7 @@ export default class SuperDashboard extends React.Component{
                             <span><i className="fal fa-power-off fa-fw mr-1"></i> Esci</span>
                         </NavLink>
 
-                        <div className="copyright">
-                            {(new Date()).getFullYear()} Copyright FITSTIC
-                        </div>
+                        <Footer inMenu={true} />
                     </div>
   
                     <Switch>

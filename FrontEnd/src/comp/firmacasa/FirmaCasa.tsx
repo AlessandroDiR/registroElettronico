@@ -7,6 +7,7 @@ import { IMessage } from "../../models/IMessage"
 import { askPassword } from "../AskConferma"
 import Axios from "axios"
 import { ILezione } from "../../models/ILezione"
+import Footer from "../Footer"
 
 export interface IProps{}
 export interface IState{
@@ -163,6 +164,8 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
 
                     <input type="submit" value="Firma" className="btn btn-lg btn-success w-100 text-uppercase"/>
                 </form>
+
+                <Footer />
             </div>
         </div>
     }
