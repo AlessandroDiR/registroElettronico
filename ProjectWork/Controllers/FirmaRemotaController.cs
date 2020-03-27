@@ -32,7 +32,7 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (DateTimeOffset.FromUnixTimeSeconds(long.Parse(codice)).Date != DateTime.Now.Date)
+            if (DateTimeOffset.FromUnixTimeSeconds(long.Parse(codice)).Date != DateTime.UtcNow.Date)
                 return Ok("error");
 
             var corso = await _context.Corsi.SingleOrDefaultAsync(c => codice == c.CodicePrimoAnno || codice == c.CodiceSecondoAnno);
