@@ -36,7 +36,8 @@ export default class EditCodiceFirma extends React.PureComponent<IProps, IState>
                         <p>Nel caso in cui ce ne fosse bisogno, è possibile dare agli studenti la possibilità di firmare le loro presenze da casa.</p>
                         <p>Tramite <a href={siteUrl+"/#/firmacasa"} target="_blank" rel="noopener noreferrer">questo url</a> (da condividere con gli studenti) è possibile eseguire tale operazione, ma per farlo è necessario generare, tramite la pagina corrente, un codice univoco che permetta l'accesso alla schermata. Basterà quindi digitarlo nell'apposito campo di testo e si accederà alla lista degli studenti presenti nella classe.</p>
                         <p>Lo studente sarà poi libero di scegliere il proprio nome nella lista, e confermando la propria identità tramite password avrà la possibilità di firmare.</p>
-                        <p className="mb-0">Il codice sarà differente in base all'anno di appartenenza.</p>
+                        <p>Il codice sarà differente in base all'anno di appartenenza.</p>
+                        <p className="mb-0"><strong>Ricorda di cambiare i due codici una volta che le lezioni saranno terminate, altrimenti gli studenti potrebbero accedere alla firma da remoto in qualsiasi momento.</strong></p>
                     </div>
                 </div>
             </div>
