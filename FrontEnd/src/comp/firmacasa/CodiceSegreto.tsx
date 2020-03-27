@@ -62,7 +62,7 @@ export default class CodiceSegreto extends React.PureComponent<IProps, IState>{
             }else{
                 Modal.error({
                     title: "Errore!",
-                    content: "Il codice non corrisponde a nessun corso/classe.",
+                    content: "Il codice non corrisponde a nessun corso/classe, oppure è scaduto (chiedi al tuo coordinatore di cambiarlo).",
                     centered: true,
                     maskClosable: true
                 })

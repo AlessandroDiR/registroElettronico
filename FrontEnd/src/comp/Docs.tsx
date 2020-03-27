@@ -92,7 +92,7 @@ export default class Docs extends React.Component{
                                 <li>
                                     <p>Possibilità di abilitare la firma da casa qualora sia necessario.</p>
 
-                                    <p>Tramite <a href={siteUrl+"/#"+adminRoute+"/codicefirma"} target="_blank" rel="noopener noreferrer">questo</a> URL è possibile creare un codice segreto per identificare la classe scelta. Il codice andrà condiviso con gli studenti, e <u>dovrà essere cambiato una volta terminata la lezione</u>.</p>
+                                    <p>Tramite <a href={siteUrl+"/#"+adminRoute+"/codicefirma"} target="_blank" rel="noopener noreferrer">questo</a> URL è possibile creare un codice segreto per identificare la classe scelta. Il codice andrà condiviso con gli studenti, e <u>varrà solamente per il giorno in cui è stato generato</u>.</p>
                                     
                                     <p>Da <a href={siteUrl+"/#/firmacasa"} target="_blank" rel="noopener noreferrer">questo</a> URL gli studenti saranno in grado di inserire il codice creato e, scegliendo il loro nome e cognome, potranno firmare per la lezione programmata.</p>
 
