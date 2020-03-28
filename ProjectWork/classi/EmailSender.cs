@@ -44,8 +44,8 @@ namespace ProjectWork.classi
 				IsBodyHtml = true,
                 Subject = "FITSTIC | Credenziali registro",
                 Body =  $"Ciao {c.Nome} e benvenuto in FITSTIC.<br><br>Ti comunichiamo che il tuo account è stato creato " +
-                        $"e le tue credenziali per accedere a https://avocadoapi.azurewebsites.net/#/adminpanel sono le seguenti:<br><br><strong>Username</strong>: {c.Username}<br><strong>Password</strong>: {Cipher.decode(c.Password)}<br><br>" +
-                        $"Il codice per abilitare la registrazione delle firme su https://avocadoapi.azurewebsites.net/#/firme è:<br> <strong style='font-size:25px'>{corso.Codice}</strong>"
+                        $"e le tue credenziali per accedere a https://registrofitstic.azurewebsites.net/#/adminpanel sono le seguenti:<br><br><strong>Username</strong>: {c.Username}<br><strong>Password</strong>: {Cipher.decode(c.Password)}<br><br>" +
+                        $"Il codice per abilitare la registrazione delle firme su https://registrofitstic.azurewebsites.net/#/firme è:<br> <strong style='font-size:25px'>{corso.Codice}</strong>"
             };
 
             message.To.Add(to);
