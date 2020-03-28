@@ -135,7 +135,7 @@ namespace ProjectWork.Controllers
                                 {
                                     presenza.Uscita = l.OraFine;
                                     _context.SaveChanges();
-                                    return OutputMsg.generateMessage("Ok", $"Arrivederci {d.Nome}!");
+                                    return OutputMsg.generateMessage("Ok!", $"Arrivederci {d.Nome}!");
                                 }
                             }
                             else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
@@ -155,7 +155,7 @@ namespace ProjectWork.Controllers
 
                                 _context.PresenzeDocente.Add(newPresenza);
                                 _context.SaveChanges();
-                                return OutputMsg.generateMessage("Ok", $"Buona lezione {d.Nome}!");
+                                return OutputMsg.generateMessage("Ok!", $"Buona lezione {d.Nome}!");
                             }
 
                         }
@@ -163,7 +163,7 @@ namespace ProjectWork.Controllers
                 }
             }
 
-            return OutputMsg.generateMessage("Spiacente", "Nessuna lezione da tenere oggi!", true);
+            return OutputMsg.generateMessage("Spiacente!", "Nessuna lezione da tenere oggi!", true);
         }
 
         private bool CheckDocenteLezione(Docenti d, Lezioni l)
