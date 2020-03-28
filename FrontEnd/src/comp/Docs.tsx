@@ -25,7 +25,7 @@ export default class Docs extends React.Component{
     render(): JSX.Element{
         return <div className="col-11 col-lg-8 mx-auto" id="loginBlock">
             <div className="w-100 bg-white p-4 rounded shadow text-justify my-4">
-                <span className="link-blue float-right" onClick={() => routerHistory.push("/")}>
+                <span className="link-primary float-right" onClick={() => routerHistory.push("/")}>
                     <i className="far fa-arrow-left fa-fw fa-lg"></i> Torna al registro
                 </span>
 
@@ -45,8 +45,9 @@ export default class Docs extends React.Component{
 
                 <div className="pl-4 p-2 rounded overflow-hidden" id="stuDoc">
                     <h6>Studenti e Docenti</h6>
-                    <p className="mb-2">Gli studenti e i docenti avranno la possibilità di firmare la loro entrata/uscita da una lezione tramite <a href={siteUrl+"/#/"} target="_blank" rel="noopener noreferrer">questo</a> URL.</p>
+                    <p>Gli studenti e i docenti avranno la possibilità di firmare la loro entrata/uscita da una lezione tramite <a href={siteUrl+"/#/"} target="_blank" rel="noopener noreferrer">questo</a> URL.</p>
                     <p>Una volta scelti il corso e la classe, l'accesso alla firma è possibile <strong>solamente</strong> tramite un codice segreto, fornito dal coordinatore del corso o, eventualmente, dal docente incaricato della lezione.</p>
+                    <p className="mb-0">Tramite <a href={siteUrl+"/#/firmacasa"} target="_blank" rel="noopener noreferrer">questo</a> URL è possibile firmare da casa qualora sia necessario farlo. L'accesso alla firma è potretto da un codice segreto che il coordinatore del corso può generare su richiesta. Gli studenti dovranno solamente scegliere il loro nome nella lista, verrà quindi inviata un'e-mail con un codice segreto, da inserire per confermare la propria identità. Il procedimento rimane identico anche per i docenti, con la differenza che quest'ultimi potranno firmare tramite un semplice bottone.</p>
                 </div>
 
                 <div className="pl-4 p-2 rounded overflow-hidden" id="tutor">
@@ -75,16 +76,20 @@ export default class Docs extends React.Component{
                             </ul>
                             <li>Materie:</li>
                             <ul>
-                                <li>Creazione e modifica di materie del corso.</li>
+                                <li>Creazione e modifica di materie del corso, assegnabili poi ai docenti.</li>
                             </ul>
                             <li>Calendario:</li>
                             <ul>
                                 <li>
                                     <p>Possibilità di configurare il calendario delle classi del corso, caricando così le lezioni nel database del registro.</p>
 
-                                    <p>Gli eventi del calendario dovranno <strong>obbligatoriamente</strong> essere scritti nel seguente modo: <strong>LUOGO: DOCENTE - MATERIA</strong> (esempio: LAB 1 PASCAL: Matteo Mascellani - PHP).</p>
+                                    <p className="bg-transblue">Gli eventi del calendario dovranno <strong>obbligatoriamente</strong> essere scritti nel seguente modo:
+                                        <div className="text-center">
+                                            <strong>LUOGO: DOCENTE - MATERIA</strong> (esempio: LAB 1 PASCAL: Matteo Mascellani - PHP).
+                                        </div>
+                                    </p>
                                     
-                                    <p className="mb-0"><strong>ATTENZIONE</strong>: prima di configurare il calendario è necessario creare tutte le materie e i docenti citati nel calendario stesso. Ovviamente, è possibile salvare nuovamente il calendario per aggiornare le lezioni nel caso in cui si aggiungano docenti o materie durante l'anno.</p>
+                                    <p className="mb-0 bg-transblue"><strong>ATTENZIONE</strong>: prima di configurare il calendario è necessario creare tutte le materie e i docenti citati nel calendario stesso. Ovviamente, è possibile salvare nuovamente il calendario per aggiornare le lezioni nel caso in cui si aggiungano docenti o materie durante l'anno.</p>
                                 </li>
                             </ul>
                             <li>Firma da remoto:</li>
@@ -96,7 +101,7 @@ export default class Docs extends React.Component{
                                     
                                     <p>Da <a href={siteUrl+"/#/firmacasa"} target="_blank" rel="noopener noreferrer">questo</a> URL gli studenti saranno in grado di inserire il codice creato e, scegliendo il loro nome e cognome, potranno firmare per la lezione programmata.</p>
 
-                                    <p>Il procedimento rimane identico anche per i docenti, con la differenza che quest'ultimi potranno firmare tramite un semplice bottone.</p>
+                                    <p className="mb-0">Il procedimento rimane identico anche per i docenti, con la differenza che quest'ultimi potranno firmare tramite un semplice bottone.</p>
                                 </li>
                             </ul>
                         </ul>
@@ -111,7 +116,9 @@ export default class Docs extends React.Component{
                             <li>Corsi:</li>
                             <ul>
                                 <li>Creazione e modifica di corsi (es: Alan Turing, McLuhan, Hopper, ecc.), con possibilità di inserire nome, luogo e logo del corso.</li>
-                                <li>Creazione e modifica di coordinatori, che possono essere assegnati ad un determinato corso per gestirlo di conseguenza.</li>
+                                <li>Creazione e modifica di coordinatori, che possono essere assegnati ad un determinato corso per gestirlo di conseguenza. 
+                                    <div className="bg-transblue">Al momento della creazione il nuovo coordinatore riceverà un'e-mail con le credenziali per accedere al gestionale, e il codice per confermare l'accesso all'interfaccia della firma.</div>
+                                </li>
                             </ul>
                         </ul>
                 </div>

@@ -1,5 +1,5 @@
-export const siteUrl = "http://localhost:5000"
-//export const siteUrl = "https://avocadoapi.azurewebsites.net"
+// export const siteUrl = "http://localhost:5000"
+export const siteUrl = "https://registrofitstic.azurewebsites.net"
 export const logoUrl = "fitstic_logo.png"
 
 export const adminRoute = "/adminpanel"
@@ -25,24 +25,6 @@ export const formatItalian = (d: string) => {
     let date = new Date(d)
 
     return `${Digits2(date.getDate())}-${Digits2(date.getMonth() + 1)}-${date.getFullYear()}` 
-}
-
-export const getDateDay = (d: string) => {
-    let date = new Date(d)
-
-    return Digits2(date.getDate()).toString()
-}
-
-export const getDateMonth = (d: string) => {
-    let date = new Date(d)
-
-    return Digits2(date.getMonth() + 1).toString()
-}
-
-export const getDateYear = (d: string) => {
-    let date = new Date(d)
-
-    return date.getFullYear().toString()
 }
 
 export const capitalizeFirst = (name: string) => {
