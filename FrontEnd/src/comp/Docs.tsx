@@ -56,55 +56,61 @@ export default class Docs extends React.Component{
                     <p className="mb-2">
                         Grazie al gestionale, è possibile gestire le seguenti attività:
                     </p>
+
+                    <ul>
+                        <li>Homepage:</li>
                         <ul>
-                            <li>Studenti:</li>
-                            <ul>
-                                <li>Creazione e modifica di studenti, specificando i dati anagrafici e la classe di appartenenza.</li>
-                                <li>Possibilità di importare una classe tramite CSV, per velocizzare il processo.</li>
-                                <li>Possibilità di spostare gli studenti dal primo al secondo anno.</li>
-                                <li>Visualizzazione del dettaglio di uno studente, con la lista delle lezioni frequentate da quest'ultimo.</li>
-                                <li>Possibilità di modificare l'entrata o l'uscita di uno studente (nel caso in cui sia stato commesso un errore) tramite appositi bottoni nella lista delle lezioni frequentate.</li>
-                                <li>Possibilità di ritirare uno studente tramite apposito bottone nella lista degli studenti.</li>
-                                <li>Possibilità di archiviare uno studente (nel caso in cui quest'ultimo sia stato promosso) tramite apposito bottone nella lista degli studenti.</li>
-                            </ul>
-                            <li>Docenti:</li>
-                            <ul>
-                                <li>Creazione e modifica di docenti, specificando i dati anagrafici, le materie insegnate e i corsi di appartenenza.</li>
-                                <li>Visualizzazione del dettaglio di un docente, con la lista delle lezioni tenute da quest'ultimo.</li>
-                                <li>Possibilità di modificare l'entrata o l'uscita di un docente (nel caso in cui sia stato commesso un errore) tramite appositi bottoni nella lista delle lezioni tenute.</li>
-                                <li>Possibilità di ritirare un docente dal corso tramite apposito bottone nella lista dei docenti, con possibilità di annullare l'azione di ritiro in caso di reintegro nel corso.</li>
-                            </ul>
-                            <li>Materie:</li>
-                            <ul>
-                                <li>Creazione e modifica di materie del corso, assegnabili poi ai docenti.</li>
-                            </ul>
-                            <li>Calendario:</li>
-                            <ul>
-                                <li>
-                                    <p>Possibilità di configurare il calendario delle classi del corso, caricando così le lezioni nel database del registro.</p>
-
-                                    <p className="bg-transblue">Gli eventi del calendario dovranno <strong>obbligatoriamente</strong> essere scritti nel seguente modo:
-                                        <div className="text-center">
-                                            <strong>LUOGO: DOCENTE - MATERIA</strong> (esempio: LAB 1 PASCAL: Matteo Mascellani - PHP).
-                                        </div>
-                                    </p>
-                                    
-                                    <p className="mb-0 bg-transblue"><strong>ATTENZIONE</strong>: prima di configurare il calendario è necessario creare tutte le materie e i docenti citati nel calendario stesso. Ovviamente, è possibile salvare nuovamente il calendario per aggiornare le lezioni nel caso in cui si aggiungano docenti o materie durante l'anno.</p>
-                                </li>
-                            </ul>
-                            <li>Firma da remoto:</li>
-                            <ul>
-                                <li>
-                                    <p>Possibilità di abilitare la firma da casa qualora sia necessario.</p>
-
-                                    <p>Tramite <a href={siteUrl+"/#"+adminRoute+"/codicefirma"} target="_blank" rel="noopener noreferrer">questo</a> URL è possibile creare un codice segreto per identificare la classe scelta. Il codice andrà condiviso con gli studenti, e <u>varrà solamente per il giorno in cui è stato generato</u>.</p>
-                                    
-                                    <p>Da <a href={siteUrl+"/#/firmacasa"} target="_blank" rel="noopener noreferrer">questo</a> URL gli studenti saranno in grado di inserire il codice creato e, scegliendo il loro nome e cognome, potranno firmare per la lezione programmata.</p>
-
-                                    <p className="mb-0">Il procedimento rimane identico anche per i docenti, con la differenza che quest'ultimi potranno firmare tramite un semplice bottone.</p>
-                                </li>
-                            </ul>
+                            <li className="bg-transblue">Visualizzare il codice d'accesso alla firma del corso.</li>
+                            <li>Tenere traccia delle lezioni attualmente in corso nelle classi, con la lista degli studenti presenti.</li>
                         </ul>
+                        <li>Studenti:</li>
+                        <ul>
+                            <li>Creazione e modifica di studenti, specificando i dati anagrafici e la classe di appartenenza.</li>
+                            <li>Possibilità di importare una classe tramite CSV, per velocizzare il processo.</li>
+                            <li>Possibilità di spostare gli studenti dal primo al secondo anno.</li>
+                            <li>Visualizzazione del dettaglio di uno studente, con la lista delle lezioni frequentate da quest'ultimo.</li>
+                            <li>Possibilità di modificare l'entrata o l'uscita di uno studente (nel caso in cui sia stato commesso un errore) tramite appositi bottoni nella lista delle lezioni frequentate.</li>
+                            <li>Possibilità di ritirare uno studente tramite apposito bottone nella lista degli studenti.</li>
+                            <li>Possibilità di archiviare uno studente (nel caso in cui quest'ultimo sia stato promosso) tramite apposito bottone nella lista degli studenti.</li>
+                        </ul>
+                        <li>Docenti:</li>
+                        <ul>
+                            <li>Creazione e modifica di docenti, specificando i dati anagrafici, le materie insegnate e i corsi di appartenenza.</li>
+                            <li>Visualizzazione del dettaglio di un docente, con la lista delle lezioni tenute da quest'ultimo.</li>
+                            <li>Possibilità di modificare l'entrata o l'uscita di un docente (nel caso in cui sia stato commesso un errore) tramite appositi bottoni nella lista delle lezioni tenute.</li>
+                            <li>Possibilità di ritirare un docente dal corso tramite apposito bottone nella lista dei docenti, con possibilità di annullare l'azione di ritiro in caso di reintegro nel corso.</li>
+                        </ul>
+                        <li>Materie:</li>
+                        <ul>
+                            <li>Creazione e modifica di materie del corso, assegnabili poi ai docenti.</li>
+                        </ul>
+                        <li>Calendario:</li>
+                        <ul>
+                            <li>
+                                <p>Possibilità di configurare il calendario delle classi del corso, caricando così le lezioni nel database del registro.</p>
+
+                                <p className="bg-transblue">Gli eventi del calendario dovranno <strong>obbligatoriamente</strong> essere scritti nel seguente modo:
+                                    <div className="text-center">
+                                        <strong>LUOGO: DOCENTE - MATERIA</strong> (esempio: LAB 1 PASCAL: Matteo Mascellani - PHP).
+                                    </div>
+                                </p>
+                                
+                                <p className="mb-0 bg-transblue"><strong>ATTENZIONE</strong>: prima di configurare il calendario è necessario creare tutte le materie e i docenti citati nel calendario stesso. Ovviamente, è possibile salvare nuovamente il calendario per aggiornare le lezioni nel caso in cui si aggiungano docenti o materie durante l'anno.</p>
+                            </li>
+                        </ul>
+                        <li>Firma da remoto:</li>
+                        <ul>
+                            <li>
+                                <p>Possibilità di abilitare la firma da casa qualora sia necessario.</p>
+
+                                <p>Tramite <a href={siteUrl+"/#"+adminRoute+"/codicefirma"} target="_blank" rel="noopener noreferrer">questo</a> URL è possibile creare un codice segreto per identificare la classe scelta. Il codice andrà condiviso con gli studenti, e <u>varrà solamente per il giorno in cui è stato generato</u>.</p>
+                                
+                                <p>Da <a href={siteUrl+"/#/firmacasa"} target="_blank" rel="noopener noreferrer">questo</a> URL gli studenti saranno in grado di inserire il codice creato e, scegliendo il loro nome e cognome, potranno firmare per la lezione programmata.</p>
+
+                                <p className="mb-0">Il procedimento rimane identico anche per i docenti, con la differenza che quest'ultimi potranno firmare tramite un semplice bottone.</p>
+                            </li>
+                        </ul>
+                    </ul>
                 </div>
                 <div className="pl-4 p-2 rounded overflow-hidden" id="admin">
                     <h6>Amministratori</h6>
@@ -112,15 +118,16 @@ export default class Docs extends React.Component{
                     <p className="mb-2">
                         Grazie al gestionale, è possibile gestire le seguenti attività:
                     </p>
+
+                    <ul>
+                        <li>Corsi:</li>
                         <ul>
-                            <li>Corsi:</li>
-                            <ul>
-                                <li>Creazione e modifica di corsi (es: Alan Turing, McLuhan, Hopper, ecc.), con possibilità di inserire nome, luogo e logo del corso.</li>
-                                <li>Creazione e modifica di coordinatori, che possono essere assegnati ad un determinato corso per gestirlo di conseguenza. 
-                                    <div className="bg-transblue">Al momento della creazione il nuovo coordinatore riceverà un'e-mail con le credenziali per accedere al gestionale, e il codice per confermare l'accesso all'interfaccia della firma.</div>
-                                </li>
-                            </ul>
+                            <li>Creazione e modifica di corsi (es: Alan Turing, McLuhan, Hopper, ecc.), con possibilità di inserire nome, luogo e logo del corso.</li>
+                            <li>Creazione e modifica di coordinatori, che possono essere assegnati ad un determinato corso per gestirlo di conseguenza. 
+                                <div className="bg-transblue">Al momento della creazione il nuovo coordinatore riceverà un'e-mail con le credenziali per accedere al gestionale, e il codice per confermare l'accesso all'interfaccia della firma (visualizzabile anche nel gestionale dei coordinatori).</div>
+                            </li>
                         </ul>
+                    </ul>
                 </div>
             </div>
         </div>
