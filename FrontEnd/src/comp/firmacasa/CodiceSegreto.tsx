@@ -57,6 +57,8 @@ export default class CodiceSegreto extends React.PureComponent<IProps, IState>{
             let data = response.data
 
             if(areStudent(data)){
+                sessionStorage.removeItem("adminSession")
+                sessionStorage.removeItem("superSession")
                 sessionStorage.setItem("confermaCasa", JSON.stringify(data))
                 routerHistory.push("/firmacasa")
             }else{
