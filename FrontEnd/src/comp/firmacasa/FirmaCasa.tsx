@@ -1,6 +1,6 @@
 import React from "react"
 import { Modal, Radio, Icon, Tooltip } from "antd"
-import { mountLogin, unmountLogin, siteUrl } from "../../utilities"
+import { mountLogin, unmountLogin, siteUrl, convertFromUTC } from "../../utilities"
 import { IStudent } from "../../models/IStudent"
 import LogoCorso from "../LogoCorso"
 import { IMessage } from "../../models/IMessage"
@@ -142,7 +142,7 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
                                 </Tooltip> : <h5 className="mb-0 text-truncate">Non c'è lezione.</h5>
                             }
                             {
-                                !noLezione && <small className="text-muted">{lezione.oraInizio} - {lezione.oraFine}</small>
+                                !noLezione && <small className="text-muted">{convertFromUTC(lezione.oraInizio)} - {convertFromUTC(lezione.oraFine)}</small>
                             }
                             
                             <button type="button" className="btn btn-danger w-100 text-uppercase mt-2" disabled={lezione === null && noLezione} onClick={this.firmaDocente}>

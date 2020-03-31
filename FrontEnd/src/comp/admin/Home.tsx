@@ -2,7 +2,7 @@ import React from "react"
 import { IAdmin } from "../../models/IAdmin"
 import { ILezioneCorrente } from "../../models/ILezioneCorrente"
 import Axios from "axios"
-import { siteUrl } from "../../utilities"
+import { siteUrl, convertFromUTC } from "../../utilities"
 import { Tabs, Icon, Spin } from "antd"
 
 export interface IProps{
@@ -64,7 +64,7 @@ export default class Home extends React.PureComponent<IProps, IState>{
             <div className="col-12 col-md-6 mb-2 px-2">
                 <div className="p-3 bg-white border rounded">
                     <h4 className="text-uppercase mb-2 text-truncate">{lezione.lezione.titolo}</h4>
-                    <span className="text-muted">{lezione.lezione.oraInizio} - {lezione.lezione.oraFine}</span>
+                    <span className="text-muted">{convertFromUTC(lezione.lezione.oraInizio)} - {convertFromUTC(lezione.lezione.oraFine)}</span>
                 </div>
             </div>
 

@@ -1,6 +1,6 @@
 import React from "react"
 import { Tooltip, Icon, Spin, Modal, Select } from "antd"
-import { siteUrl, formatItalian, validateTime, checkEnter } from "../../utilities"
+import { siteUrl, formatItalian, validateTime, checkEnter, convertFromUTC } from "../../utilities"
 import Axios from "axios"
 import { IPresenzaDocente } from "../../models/IPresenzaDocente"
 import { askPassword } from "../AskConferma"
@@ -35,7 +35,12 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
             let presenze = response.data as IPresenzaDocente[]
 
             this.setState({
-                presenze: presenze
+                presenze: presenze.map(p => {
+                    p.ingresso = convertFromUTC(p.ingresso)
+                    p.uscita = convertFromUTC(p.uscita)
+
+                    return p
+                })
             })
         })
     }
