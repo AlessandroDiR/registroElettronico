@@ -21,8 +21,10 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
     constructor(props: IProps){
         super(props)
 
+        const studenti = JSON.parse(sessionStorage.getItem("confermaCasa")) as IStudent[]
+
         this.state = {
-            studenti: JSON.parse(sessionStorage.getItem("confermaCasa")) as IStudent[],
+            studenti: studenti.filter(s => !s.ritirato),
             selectedStudente: null,
             lezione: null,
             noLezione: false
