@@ -134,6 +134,7 @@ namespace ProjectWork.Controllers
             {
                 idCoordinatore = coord.IdCoordinatore,
                 idCorso = coord.IdCorso,
+                codiceCorso = _context.Corsi.Find(coord.IdCorso).Codice,
                 nome = coord.Nome,
                 cognome = coord.Cognome
             };

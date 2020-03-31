@@ -118,27 +118,6 @@ namespace ProjectWork.Controllers
             return Ok(lezioniNonValidate);
         }
 
-        // DELETE: api/Calendari/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCalendari([FromRoute] string id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var calendario = await _context.Calendari.FindAsync(id);
-            if (calendario == null)
-            {
-                return NotFound();
-            }
-
-            _context.Calendari.Remove(calendario);
-            await _context.SaveChangesAsync();
-
-            return Ok(calendario);
-        }
-
         private bool CalendariExists(string id)
         {
             return _context.Calendari.Any(e => e.IdCalendario == id);
