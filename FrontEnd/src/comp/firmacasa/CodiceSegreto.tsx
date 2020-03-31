@@ -67,6 +67,13 @@ export default class CodiceSegreto extends React.PureComponent<IProps, IState>{
                     maskClosable: true
                 })
             }
+        }).catch(err => {
+            Modal.error({
+                title: "Errore!",
+                content: "Il codice non è valido.",
+                centered: true,
+                maskClosable: true
+            })
         })
     }
 
