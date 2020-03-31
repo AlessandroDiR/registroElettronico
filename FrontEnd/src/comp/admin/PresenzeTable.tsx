@@ -1,7 +1,7 @@
 import React from "react"
 import { IPresenze } from "../../models/IPresenze"
 import { Tooltip, Icon, Spin, Modal, Select } from "antd"
-import { siteUrl, formatItalian, validateTime, checkEnter } from "../../utilities"
+import { siteUrl, formatItalian, validateTime, checkEnter, convertFromUTC } from "../../utilities"
 import Axios from "axios"
 import { askPassword } from "../AskConferma"
 import { IStudent } from "../../models/IStudent"
@@ -36,7 +36,12 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
             let presenze = response.data as IPresenze[]
 
             this.setState({
-                presenze: presenze
+                presenze: presenze.map(p => {
+                    p.ingresso = convertFromUTC(p.ingresso)
+                    p.uscita = convertFromUTC(p.uscita)
+
+                    return p
+                })
             })
         })
     }

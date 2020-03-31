@@ -1,5 +1,5 @@
-export const siteUrl = "https://localhost:44336"
-//export const siteUrl = "https://registrofitstic.azurewebsites.net"
+// export const siteUrl = "http://localhost:5000"
+export const siteUrl = "https://registrofitstic.azurewebsites.net"
 export const logoUrl = "fitstic_logo.png"
 
 export const adminRoute = "/adminpanel"
@@ -91,6 +91,13 @@ export const resizePopup = () => {
 export const checkEnter = (e: any, callback: any) => {
     if(e.keyCode === 13)
         callback()
+}
+
+export const convertFromUTC = (date: string) => {
+    let dateString = date + " UTC",
+    localDate = new Date(dateString)
+
+    return `${Digits2(localDate.getHours())}:${Digits2(localDate.getMinutes())}:00`
 }
 
 window.addEventListener("load", resizePopup)
