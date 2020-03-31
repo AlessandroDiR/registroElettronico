@@ -44,11 +44,11 @@ namespace ProjectWork.Controllers
                 {
                     idPresenza = lezione.IdPresenza,
                     idDocente = lezione.IdDocente,
-                    data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == lezione.IdLezioneNavigation.IdLezione).Data,
+                    data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == lezione.IdLezioneNavigation.IdLezione).Data.ToLocalTime(),
                     idLezione = lezione.IdLezione,
                     lezione = lezione.IdLezioneNavigation.Titolo.Split('-')[1].TrimStart(),
-                    ingresso = lezione.Ingresso,
-                    uscita = lezione.Uscita
+                    ingresso = DateTime.UtcNow.Date.Add(lezione.Ingresso).ToLocalTime().TimeOfDay,
+                    uscita = lezione.Uscita == new TimeSpan(0, 0, 0) ? lezione.Uscita : DateTime.UtcNow.Date.Add(lezione.Uscita).ToLocalTime().TimeOfDay
                 };
                 result.Add(json);
             }
@@ -68,14 +68,17 @@ namespace ProjectWork.Controllers
 
             foreach(var l in lezioni)
             {
-                if(l.OraInizio <= DateTime.Now.TimeOfDay && l.OraFine >= DateTime.Now.TimeOfDay)
+                l.OraInizio = DateTime.UtcNow.Date.Add(l.OraInizio).ToLocalTime().TimeOfDay;
+                l.OraFine = DateTime.UtcNow.Date.Add(l.OraFine).ToLocalTime().TimeOfDay;
+
+                if (l.OraInizio <= DateTime.Now.TimeOfDay && l.OraFine >= DateTime.Now.TimeOfDay)
                 {
                     var idDocente = _context.Insegnare.SingleOrDefault(i => i.IdMateria == l.IdMateria).IdDocente;
                     var json = new
                     {
                         idLezione = l.IdLezione,
                         titolo = l.Titolo,
-                        data = l.Data,
+                        data = l.Data.ToLocalTime(),
                         oraInizio = l.OraInizio,
                         oraFine = l.OraFine,
                         idDocente

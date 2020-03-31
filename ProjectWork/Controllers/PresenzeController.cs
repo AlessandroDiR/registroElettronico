@@ -29,9 +29,12 @@ namespace ProjectWork.Controllers
             if (coordinatore == null)
                 return NotFound();
 
+            obj.Presenza.Ingresso = DateTime.Now.Date.Add(obj.Presenza.Ingresso).ToUniversalTime().TimeOfDay;
+            obj.Presenza.Uscita = DateTime.Now.Date.Add(obj.Presenza.Uscita).ToUniversalTime().TimeOfDay;
+
             LogPresenze log = new LogPresenze
             {
-                DataOra = DateTime.Now,
+                DataOra = DateTime.UtcNow,
                 IdPresenza = id,
                 IdStudente = obj.Presenza.IdStudente
             };

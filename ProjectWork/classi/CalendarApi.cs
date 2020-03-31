@@ -102,18 +102,18 @@ namespace ProjectWork.classi
                     else
                     {
                         lezione.Titolo = e.Summary;
-                        lezione.Data = DateTime.Parse(e.Start.DateTime.ToString().Split(' ')[0]).Date;
-                        lezione.OraInizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]);
-                        lezione.OraFine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1]);
+                        lezione.Data = DateTime.Parse(e.Start.DateTime.ToString()).ToUniversalTime().Date;
+                        lezione.OraInizio = DateTime.Parse(e.Start.DateTime.ToString()).ToUniversalTime().TimeOfDay;
+                        lezione.OraFine = DateTime.Parse(e.End.DateTime.ToString()).ToUniversalTime().TimeOfDay;
                         lezione.IdMateria = FindIdMateria(e.Summary);
 
                         if(lezione.IdMateria == -1)
                             lezioniNonValidate.Add(new EventiModel()
                             {
                                 Summary = e.Summary,
-                                Date = DateTime.Parse(e.Start.DateTime.ToString().Split(' ')[0]).Date,
-                                Inizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]),
-                                Fine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1])
+                                Date = DateTime.Parse(e.Start.DateTime.ToString()).ToLocalTime().Date,
+                                Inizio = DateTime.Parse(e.Start.DateTime.ToString()).ToLocalTime().TimeOfDay,
+                                Fine = DateTime.Parse(e.End.DateTime.ToString()).ToLocalTime().TimeOfDay
                             });
                         else
                             _context.Lezioni.Update(lezione);
@@ -126,9 +126,9 @@ namespace ProjectWork.classi
                         lezione = new Lezioni
                         {
                             Titolo = e.Summary,
-                            Data = DateTime.Parse(e.Start.DateTime.ToString().Split(' ')[0]).Date,
-                            OraInizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]),
-                            OraFine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1]),
+                            Data = DateTime.Parse(e.Start.DateTime.ToString()).ToUniversalTime().Date,
+                            OraInizio = DateTime.Parse(e.Start.DateTime.ToString()).ToUniversalTime().TimeOfDay,
+                            OraFine = DateTime.Parse(e.End.DateTime.ToString()).ToUniversalTime().TimeOfDay,
                             IdCalendario = c.IdCalendario,
                             IdGEvent = e.Id,
                             IdMateria = FindIdMateria(e.Summary)
@@ -138,9 +138,9 @@ namespace ProjectWork.classi
                             lezioniNonValidate.Add(new EventiModel()
                             {
                                 Summary = e.Summary,
-                                Date = DateTime.Parse(e.Start.DateTime.ToString().Split(' ')[0]).Date,
-                                Inizio = TimeSpan.Parse(e.Start.DateTime.ToString().Split(' ')[1]),
-                                Fine = TimeSpan.Parse(e.End.DateTime.ToString().Split(' ')[1])
+                                Date = DateTime.Parse(e.Start.DateTime.ToString()).ToLocalTime().Date,
+                                Inizio = DateTime.Parse(e.Start.DateTime.ToString()).ToLocalTime().TimeOfDay,
+                                Fine = DateTime.Parse(e.End.DateTime.ToString()).ToLocalTime().TimeOfDay
                             });
                         else
                             _context.Lezioni.Add(lezione);

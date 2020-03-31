@@ -161,7 +161,7 @@ namespace ProjectWork.Controllers
             coor.IdCorso = obj.Coordinatore.IdCorso;
             coor.Cognome = obj.Coordinatore.Cognome;
             coor.Username = obj.Coordinatore.Nome + "." + obj.Coordinatore.Cognome;
-            coor.Password = Cipher.encode(string.Format("{0}{1}{2}{3}{4}{5}", DateTime.Now.Day, coor.Nome.Substring(0, 2), coor.IdCorso, DateTime.Now.DayOfYear, coor.Cognome.Substring(0, 2), DateTime.Now.Second));
+            coor.Password = Cipher.encode(string.Format("{0}{1}{2}{3}{4}{5}", DateTime.UtcNow.ToLocalTime().Day, coor.Nome.Substring(0, 2), coor.IdCorso, DateTime.UtcNow.ToLocalTime().DayOfYear, coor.Cognome.Substring(0, 2), DateTime.UtcNow.ToLocalTime().Second));
 
             _context.Coordinatori.Add(coor);
 
@@ -201,10 +201,12 @@ namespace ProjectWork.Controllers
             EmailSender es = new EmailSender();
             if(es.SendEmailTo(obj.Email, subject, body) == "success")
             {
-                RecPwdCoordinatore rec = new RecPwdCoordinatore();
-                rec.IdCoordinatore = coord.IdCoordinatore;
-                rec.DataRichiesta = DateTime.Now;
-                rec.Codice = Codice;
+                RecPwdCoordinatore rec = new RecPwdCoordinatore
+                {
+                    IdCoordinatore = coord.IdCoordinatore,
+                    DataRichiesta = DateTime.UtcNow.ToLocalTime(),
+                    Codice = Codice
+                };
                 _context.RecPwdCoordinatore.Add(rec);
                 await _context.SaveChangesAsync();
             }else
@@ -235,7 +237,7 @@ namespace ProjectWork.Controllers
             if (rec.Codice != obj.Codice)
             {
                 return Ok("Codice errato");
-            }else if(rec.DataRichiesta.AddMinutes(5) < DateTime.Now)
+            }else if(rec.DataRichiesta.AddMinutes(5) < DateTime.UtcNow.ToLocalTime())
             {
                 return Ok("Codice non più valido");
             }
