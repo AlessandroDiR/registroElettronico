@@ -235,13 +235,12 @@ namespace ProjectWork.Controllers
                 {
                     idPresenza = p.IdPresenza,
                     idStudente = p.IdStudente,
-                    data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).Data,
+                    data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).Data.ToLocalTime(),
                     idLezione = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).IdLezione,
                     lezione = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).Titolo,
-                    ingresso = p.Ingresso,
-                    uscita = p.Uscita
+                    ingresso = DateTime.UtcNow.Date.Add(p.Ingresso).ToLocalTime().TimeOfDay,
+                    uscita = p.Uscita == new TimeSpan(0,0,0) ? p.Uscita : DateTime.UtcNow.Date.Add(p.Uscita).ToLocalTime().TimeOfDay
                 };
-
                 result.Add(json);
             }
             return Ok(result);
@@ -498,7 +497,7 @@ namespace ProjectWork.Controllers
         {
             var studente = _context.Studenti.Find(idStudente);
             var id_calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == studente.IdCorso && c.Anno == studente.AnnoFrequentazione).IdCalendario;
-            var lezioni = _context.Lezioni.Where(l => l.IdCalendario == id_calendario && l.Data <= DateTime.Now);
+            var lezioni = _context.Lezioni.Where(l => l.IdCalendario == id_calendario && l.Data <= DateTime.UtcNow);
             TimeSpan totOreLezioni = new TimeSpan();
 
             foreach (var l in lezioni)

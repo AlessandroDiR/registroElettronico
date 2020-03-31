@@ -58,7 +58,7 @@ namespace ProjectWork.Controllers
 
         public string FirmaStudente(Studenti s)
         {
-            var date = DateTime.Now;
+            var date = DateTime.UtcNow;
             var time = TimeSpan.Parse(date.TimeOfDay.ToString().Split('.')[0]);
             var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == s.IdCorso && c.Anno == s.AnnoFrequentazione);
             var lesson = _context.Lezioni.Where(l => l.Data == date && calendario.IdCalendario == l.IdCalendario);
@@ -111,7 +111,7 @@ namespace ProjectWork.Controllers
 
         public string FirmaDocente(Docenti d, int idCorso, int anno)
         {
-            var date = DateTime.Now;
+            var date = DateTime.UtcNow;
             var time = TimeSpan.Parse(date.TimeOfDay.ToString().Split('.')[0]);
             var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == idCorso && c.Anno == anno);
             var lesson = _context.Lezioni.Where(l => l.Data == date && calendario.IdCalendario == l.IdCalendario);
@@ -140,7 +140,7 @@ namespace ProjectWork.Controllers
                             }
                             else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
                             {
-                                presenza.Uscita = time;
+                                presenza.Uscita = time >= (l.OraFine - new TimeSpan(0, 10, 0)) ? l.OraFine : time;
                                 _context.SaveChanges();
                                 return OutputMsg.generateMessage("Ok", $"Arrivederci {d.Nome}!");
                             }
