@@ -1,5 +1,6 @@
 import React from "react"
 import { routerHistory } from ".."
+import { adminRoute, superAdminRoute } from "../utilities"
 
 export interface IProps{
     readonly inMenu?: boolean
@@ -15,7 +16,11 @@ export default class Footer extends React.PureComponent<IProps, IState>{
         }
 
         return <div className="w-100 bg-white p-3 mt-3 rounded shadow px-2 text-center">
-            &copy; {(new Date()).getFullYear()} FITSTIC - <span className="link-blue u-hover" onClick={() => routerHistory.push("/documentazione")}>Documentazione</span>
+            <div>
+                &copy; {(new Date()).getFullYear()} FITSTIC
+            </div>
+            
+            <span className="link-blue u-hover" onClick={() => routerHistory.push(adminRoute)}>Coordinatori</span> - <span className="link-blue u-hover" onClick={() => routerHistory.push(superAdminRoute)}>Amministratori</span> - <span className="link-blue u-hover" onClick={() => routerHistory.push("/documentazione")}>Documentazione</span>
         </div>
     }
 }

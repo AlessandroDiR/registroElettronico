@@ -19,6 +19,7 @@ import Page404 from "../Page404"
 import { adminRoute } from "../../utilities"
 import EditCodiceFirma from "./EditCodiceFirma"
 import Footer from "../Footer"
+import Home from "./Home"
 
 export default class Dashboard extends React.Component{
 
@@ -42,6 +43,9 @@ export default class Dashboard extends React.Component{
                         
                         <LogoCorso idCorso={admin.idCorso} />
 
+                        <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(adminRoute+"/home")} to={adminRoute+"/home"}>
+                            <span><i className="fal fa-home-alt fa-fw mr-1"></i> Home</span>
+                        </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(adminRoute+"/studenti")} to={adminRoute+"/studenti"}>
                             <span><i className="fal fa-users-class fa-fw mr-1"></i> Studenti</span>
                         </NavLink>
@@ -69,10 +73,14 @@ export default class Dashboard extends React.Component{
   
                     <Switch>
                         <Route exact path={adminRoute} render={() => {
-                            routerHistory.push(adminRoute+"/studenti")
+                            routerHistory.push(adminRoute+"/home")
 
                             return null
                         }} />
+
+                        <Route exact path={adminRoute+"/home"} render={() => (
+                            <Home coordinatore={admin} />
+                        )} />
 
                         <Route exact path={adminRoute+"/studenti"} render={() => (
                             <StudentsList corso={admin.idCorso} />

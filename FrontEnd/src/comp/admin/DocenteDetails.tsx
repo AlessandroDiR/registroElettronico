@@ -90,7 +90,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
             <div className="row mx-0">
                 <div className="col-12 col-md-6 pl-md-0 mb-2 mb-md-0">
 
-                    <div className="p-3 bg-white border">
+                    <div className="p-3 bg-white border rounded">
                         {
                             docente.ritirato && <span className="border-text">Ritirato</span>
                         }

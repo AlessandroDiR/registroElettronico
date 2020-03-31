@@ -4,6 +4,7 @@ export interface IAdmin{
     readonly idCorso: number
     readonly nome: string
     readonly cognome: string
+    readonly codiceCorso?: string
 }
 export const isAdmin = (obj: any) => {
     try{
