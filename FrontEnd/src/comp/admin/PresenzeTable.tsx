@@ -153,6 +153,12 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
         })
     }
 
+    annullaModifica = (presenza: IPresenze) => {
+        this.setState({
+            editingList: this.state.editingList.filter(p => p.idPresenza !== presenza.idPresenza)
+        })
+    }
+
     render(): JSX.Element{
         const { presenze, editingList, filter } = this.state,
         { studente } = this.props,
@@ -194,7 +200,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
                         <th>Uscita</th>
                         <th>Lezione</th>
                         {
-                            !studente.promosso && <th>Azioni</th>
+                            !studente.promosso && <th style={{ width: "20%" }}>Azioni</th>
                         }
                     </tr>
 
@@ -222,11 +228,19 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
                                 {
                                     !studente.promosso && <td>
                                         {
-                                            presenzaEdit ? <Tooltip title="Conferma modifiche">
-                                                <button type="button" className="btn btn-success circle-btn" onClick={() => this.confirmEdit(p.idPresenza, td1, td2)} >
-                                                    <i className="fa fa-check"></i>
-                                                </button>
-                                            </Tooltip> : <Tooltip title="Modifica orari">
+                                            presenzaEdit ? <div>
+                                                <Tooltip title="Annulla">
+                                                    <button type="button" className="btn btn-danger circle-btn" onClick={() => this.annullaModifica(p)} >
+                                                        <i className="fa fa-times"></i>
+                                                    </button>
+                                                </Tooltip>
+
+                                                <Tooltip title="Conferma modifiche">
+                                                    <button type="button" className="btn btn-success circle-btn ml-2" onClick={() => this.confirmEdit(p.idPresenza, td1, td2)} >
+                                                        <i className="fa fa-check"></i>
+                                                    </button>
+                                                </Tooltip>
+                                            </div> : <Tooltip title="Modifica orari">
                                                 <button type="button" className="btn btn-orange circle-btn" onClick={() => this.startTimeEdit(p)}>
                                                     <i className="fa fa-user-edit"></i>
                                                 </button>
