@@ -61,6 +61,7 @@ export default class LoginAdmin extends React.PureComponent<IProps, IState>{
             let data = response.data
 
             if(isSuperAdmin(data)){
+                data.password = password
                 sessionStorage.setItem("superSession", JSON.stringify(data))
                 routerHistory.push(superAdminRoute)
                 message.success("Login effettuato con successo!")

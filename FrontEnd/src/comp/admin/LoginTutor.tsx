@@ -64,11 +64,11 @@ export default class LoginTutor extends React.PureComponent<IProps, IState>{
             let data = response.data
 
             if(isAdmin(data)){
+                data.password = password
                 sessionStorage.setItem("adminSession", JSON.stringify(data))
                 routerHistory.push(adminRoute)
                 message.success("Login effettuato con successo!")
-            }
-            else{
+            }else{
                 Modal.error({
                     title: "Errore!",
                     content: "Username o Password errati!",

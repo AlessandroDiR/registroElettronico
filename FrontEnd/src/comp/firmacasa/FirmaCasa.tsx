@@ -14,6 +14,7 @@ export interface IState{
     readonly studenti: IStudent[]
     readonly selectedStudente: IStudent
     readonly lezione: ILezione
+    readonly noLezione: boolean
 }
 
 export default class FirmaCasa extends React.PureComponent<IProps, IState>{
@@ -23,7 +24,8 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
         this.state = {
             studenti: JSON.parse(sessionStorage.getItem("confermaCasa")) as IStudent[],
             selectedStudente: null,
-            lezione: null
+            lezione: null,
+            noLezione: false
         }
     }
 
@@ -101,16 +103,22 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
         temp = studenti[0]
 
         Axios.get(siteUrl+"/api/lezioni/"+temp.idCorso+"/"+temp.annoFrequentazione).then(response => {
-            let lezione = response.data as ILezione
+            if(typeof(response.data) === "string"){
+                this.setState({
+                    noLezione: true
+                })
+            }else{
+                let lezione = response.data as ILezione
 
-            this.setState({
-                lezione: lezione
-            })
+                this.setState({
+                    lezione: lezione
+                })
+            }
         })
     }
 
     render(): JSX.Element{
-        const { studenti, selectedStudente, lezione } = this.state
+        const { studenti, selectedStudente, lezione, noLezione } = this.state
 
         if(!studenti.length){
             return <div className="col-11 col-lg-4 mx-auto" id="loginBlock">
@@ -125,15 +133,19 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
             <div className="w-100">
                 <div className="bg-white p-3 rounded shadow mx-auto mb-3 col-12 col-md-6 pos-lg-fixed">
                     {
-                        lezione ? <div>
-                            <Tooltip title={lezione.titolo}>
-                                <h5 className="mb-0 text-truncate">{lezione.titolo}</h5>
-                            </Tooltip>
-                            <small className="text-muted">{lezione.oraInizio.slice(0, -3)} - {lezione.oraFine.slice(0, -3)}</small>
+                        lezione || (!lezione && noLezione) ? <div>
+                            {
+                                !noLezione ? <Tooltip title={lezione.titolo}>
+                                    <h5 className="mb-0 text-truncate">{lezione.titolo}</h5>
+                                </Tooltip> : <h5 className="mb-0 text-truncate">Non c'è lezione.</h5>
+                            }
+                            {
+                                !noLezione && <small className="text-muted">{lezione.oraInizio} - {lezione.oraFine}</small>
+                            }
                             
-                            <button type="button" className="btn btn-danger w-100 text-uppercase mt-2" disabled={lezione === null} onClick={this.firmaDocente}>
+                            <button type="button" className="btn btn-danger w-100 text-uppercase mt-2" disabled={lezione === null && noLezione} onClick={this.firmaDocente}>
                                 {
-                                    lezione === null && <Icon type="loading" className="mr-2 loadable-btn" spin />
+                                    lezione === null && !noLezione && <Icon type="loading" className="mr-2 loadable-btn" spin />
                                 }
 
                                 Firma docente
@@ -162,7 +174,7 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
                         </div>
                     </div>
 
-                    <input type="submit" value="Firma" className="btn btn-lg btn-success w-100 text-uppercase"/>
+                    <input type="submit" disabled={lezione === null && noLezione} value="Firma" className="btn btn-lg btn-success w-100 text-uppercase"/>
                 </form>
 
                 <Footer />
