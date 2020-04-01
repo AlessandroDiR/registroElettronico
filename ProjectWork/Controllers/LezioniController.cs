@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProjectWork.CustomizedModels;
 using ProjectWork.Models;
 
 namespace ProjectWork.Controllers
 {
+    [EnableCors("AllowAllHeaders")]
     [Route("api/[controller]")]
     [ApiController]
     public class LezioniController : ControllerBase
@@ -86,6 +89,53 @@ namespace ProjectWork.Controllers
             }
 
             return Ok("Tutte le lezioni sono state svolte");
+        }
+
+        [HttpGet("[action]/{idCorso}/{anno}")]
+        public IActionResult GetStudentiAtLezione([FromRoute] int idCorso, int anno)
+        {
+            var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == idCorso && c.Anno == anno).IdCalendario;
+            var lezioni = _context.Lezioni.Where(l => l.Data == DateTime.Today && l.IdCalendario == calendario);
+
+            if (lezioni.Count() == 0)
+                return Ok("Nessuna lezione");
+
+            foreach(var l in lezioni)
+            {
+                if (l.OraInizio <= DateTime.UtcNow.TimeOfDay && l.OraFine >= DateTime.UtcNow.TimeOfDay)
+                {
+                    var presenze = _context.Presenze.Where(p => p.IdLezione == l.IdLezione && p.Uscita == new TimeSpan(0, 0, 0));
+                    var studenti = new List<object>();
+
+                    foreach(var p in presenze)
+                    {
+                        var studente = _context.Studenti.Find(p.IdStudente);
+                        studenti.Add(new
+                        {
+                            idStudent = p.IdStudente,
+                            nome = studente.Nome,
+                            cognome = studente.Cognome,
+                            oraIngresso = DateTime.UtcNow.Date.Add(p.Ingresso)
+                        });
+                    }
+
+                    var result = new
+                    {
+                        lezione = new
+                        {
+                            idLezione = l.IdLezione,
+                            titolo = l.Titolo,
+                            data = l.Data,
+                            oraInizio = DateTime.UtcNow.Date.Add(l.OraInizio),
+                            oraFine = DateTime.UtcNow.Date.Add(l.OraFine)
+                        },
+                        studenti
+                    };
+
+                    return Ok(result);
+                }
+            }
+            return Ok("Lezioni terminate");
         }
 
     }

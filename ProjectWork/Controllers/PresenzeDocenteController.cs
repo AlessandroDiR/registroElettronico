@@ -36,17 +36,19 @@ namespace ProjectWork.Controllers
             if (coordinatore == null)
                 return NotFound();
 
-            obj.Presenza.Ingresso = DateTime.Now.Date.Add(obj.Presenza.Ingresso).ToUniversalTime().TimeOfDay;
-            obj.Presenza.Uscita = DateTime.Now.Date.Add(obj.Presenza.Uscita).ToUniversalTime().TimeOfDay;
+            var presenza = _context.PresenzeDocente.FirstOrDefault(p => p.IdPresenza == obj.IdPresenza);
+
+            presenza.Ingresso = obj.Ingresso.TimeOfDay;
+            presenza.Uscita = obj.Uscita.TimeOfDay;
 
             LogPresenze log = new LogPresenze
             {
                 DataOra = DateTime.UtcNow,
                 IdPresenza = id,
-                IdDocente = obj.Presenza.IdDocente
+                IdDocente = presenza.IdDocente
             };
 
-            var lezione = _context.Lezioni.First(l => l.IdLezione == obj.Presenza.IdLezione);
+            var lezione = _context.Lezioni.First(l => l.IdLezione == presenza.IdLezione);
             lezione.IdCalendarioNavigation = _context.Calendari.SingleOrDefault(c => c.IdCalendario == lezione.IdCalendario);
 
             log.IdCorso = lezione.IdCalendarioNavigation.IdCorso;
@@ -54,15 +56,15 @@ namespace ProjectWork.Controllers
             log.Modifiche = "MODIFICHE = ";
             bool modificato = false;
 
-            if (obj.Presenza.Ingresso != presenzaNonModificata.Ingresso)
+            if (presenza.Ingresso != presenzaNonModificata.Ingresso)
             {
-                log.Modifiche += string.Format("Valore precedente ingresso : {0} - Valore attuale ingresso : {1}; ", presenzaNonModificata.Ingresso, obj.Presenza.Ingresso);
+                log.Modifiche += string.Format("Valore precedente ingresso : {0} - Valore attuale ingresso : {1}; ", presenzaNonModificata.Ingresso, presenza.Ingresso);
                 modificato = true;
             }
 
-            if (obj.Presenza.Uscita != presenzaNonModificata.Uscita)
+            if (presenza.Uscita != presenzaNonModificata.Uscita)
             {
-                log.Modifiche += string.Format("Valore precedente uscita : {0} - Valore attuale uscita : {1}; ", presenzaNonModificata.Uscita, obj.Presenza.Uscita);
+                log.Modifiche += string.Format("Valore precedente uscita : {0} - Valore attuale uscita : {1}; ", presenzaNonModificata.Uscita, presenza.Uscita);
                 modificato = true;
             }
 
@@ -71,7 +73,7 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != obj.Presenza.IdPresenza)
+            if (id != presenza.IdPresenza)
             {
                 return BadRequest();
             }
@@ -80,7 +82,7 @@ namespace ProjectWork.Controllers
             {
                 _context.LogPresenze.Add(log);
                 _context.Remove(presenzaNonModificata);
-                _context.Entry(obj.Presenza).State = EntityState.Modified;
+                _context.Entry(presenza).State = EntityState.Modified;
             }
             try
             {
