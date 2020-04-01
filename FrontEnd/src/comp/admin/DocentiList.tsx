@@ -122,8 +122,7 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                 
                     <tbody>
                         <tr>
-                            <th>Nome</th>
-                            <th>Cognome</th>
+                            <th style={{width: "35%"}}>Docente</th>
                             <th style={{width: "15%"}}>Ore 1° anno</th>
                             <th style={{width: "15%"}}>Ore 2° anno</th>
                             <th style={{width: "20%"}}>Azioni</th>
@@ -134,8 +133,9 @@ export default class DocentiList extends React.PureComponent<IProps, IState>{
                                 let bg = d.ritirato ? "light font-italic" : !this.isInCorso(d) ? "transblue" :"white"
 
                                 return <tr className={"bg-"+bg}>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{d.nome}</td>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{d.cognome}</td>
+                                    <Tooltip title={d.nome + " " + d.cognome}>
+                                        <td style={{maxWidth: 0}} className="text-truncate">{d.nome} {d.cognome}</td>
+                                    </Tooltip>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.monteOre.orePrimo}</td>
                                     <td style={{maxWidth: 0}} className="text-truncate">{d.monteOre.oreSecondo}</td>
                                     <td>

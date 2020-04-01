@@ -285,8 +285,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                                         <Checkbox onChange={(e) => this.selectAll(g[0].annoFrequentazione, e)} checked={checkedAll} />
                                                     </Tooltip>
                                                 </th>
-                                                <th>Nome</th>
-                                                <th>Cognome</th>
+                                                <th>Studente</th>
                                                 <th>Codice Fiscale</th>
                                                 <th style={{width: "15%"}}>Frequenza</th>
                                                 <th style={{width: "26%"}}>Azioni</th>
@@ -303,8 +302,9 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                                                 s.ritirato ? <Checkbox disabled={true} /> : <Checkbox onChange={() => this.changeSelection(s)} checked={checked} />
                                                             }
                                                         </td>
-                                                        <td style={{maxWidth: 0}} className="text-truncate">{s.nome}</td>
-                                                        <td style={{maxWidth: 0}} className="text-truncate">{s.cognome}</td>
+                                                        <Tooltip title={s.nome + " " + s.cognome}>
+                                                            <td style={{maxWidth: 0}} className="text-truncate">{s.nome} {s.cognome}</td>
+                                                        </Tooltip>
                                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
                                                         <td style={{maxWidth: 0}} className="text-truncate">{s.frequenza}%</td>
                                                         
@@ -367,9 +367,9 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
 
                             <tr>
                                 <th><i className="fa fa-check-circle fa-lg text-success"></i></th>
-                                <th>Nome</th>
-                                <th>Cognome</th>
+                                <th>Studente</th>
                                 <th>Codice Fiscale</th>
+                                <th style={{width: "15%"}}>Anno</th>
                                 <th style={{width: "15%"}}>Frequenza</th>
                                 <th style={{width: "20%"}}>Azioni</th>
                             </tr>
@@ -384,9 +384,13 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                                 !s.ritirato ? <i className="fa fa-check-circle fa-lg text-success"></i> : <i className="fa fa-times-circle fa-lg text-danger"></i>
                                             }
                                         </td>
-                                        <td style={{maxWidth: 0}} className="text-truncate">{s.nome}</td>
-                                        <td style={{maxWidth: 0}} className="text-truncate">{s.cognome}</td>
+                                        <Tooltip title={s.nome + " " + s.cognome}>
+                                            <td style={{maxWidth: 0}} className="text-truncate">{s.nome} {s.cognome}</td>
+                                        </Tooltip>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
+                                        <td style={{maxWidth: 0}} className="text-truncate">
+                                            {s.annoFrequentazione === 1 ? "Primo" : "Secondo"}
+                                        </td>
                                         <td style={{maxWidth: 0}} className="text-truncate">{s.frequenza}%</td>
                                         
                                         <td>

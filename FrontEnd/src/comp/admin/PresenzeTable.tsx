@@ -105,13 +105,11 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
         }
 
         askPassword(siteUrl+"/api/presenze/" + id, "put", {
-            presenza: {
-                idPresenza: presenza.idPresenza,
-                idStudente: presenza.idStudente,
-                ingresso: new Date(`1/1/2020 ${presenza.ingresso}`),
-                uscita: new Date(`1/1/2020 ${presenza.uscita}`),
-                idLezione: presenza.idLezione
-            }
+            idPresenza: presenza.idPresenza,
+            idStudente: presenza.idStudente,
+            ingresso: new Date(`1/1/2020 ${presenza.ingresso}`),
+            uscita: new Date(`1/1/2020 ${presenza.uscita}`),
+            idLezione: presenza.idLezione
         }, (response: any) => {
             let output = response.data
 
