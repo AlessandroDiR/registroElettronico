@@ -96,7 +96,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
         if(!validateTime(presenza.ingresso) || !validateTime(presenza.uscita)){
             Modal.error({
                 title: "Errore!",
-                content: "Orari non validi! (ore:minuti:secondi)",
+                content: "Orari non validi! (ore:minuti)",
                 maskClosable: true
             })
 
