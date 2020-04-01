@@ -72,8 +72,11 @@ export default class Home extends React.PureComponent<IProps, IState>{
             <div className="row mx-0">
                 {
                     lezione.studenti.map(s => {
-                        return <div className="col-12 col-md-4 mb-md-0 p-1 p-md-2">
-                            <div className="border rounded p-2 text-truncate">{s.nome} {s.cognome}</div>
+                        return <div className="col-12 col-md-3 mb-md-0 p-1 p-md-2">
+                            <div className="border rounded p-2 text-truncate">
+                                <div>{s.nome} {s.cognome}</div>
+                                <span className="text-muted">Entrata: {convertFromUTC(s.oraIngresso)}</span>
+                            </div>
                         </div>
                     })
                 }

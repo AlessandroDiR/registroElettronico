@@ -173,7 +173,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             <div className="row mx-0">
                 {
                     materie.map(m => {    
-                        return <div className="col-12 col-md-3 col-lg-4 p-0 p-md-1 mb-1">
+                        return <div className="col-12 col-md-3 col-lg-3 p-0 p-md-1 mb-1">
                             <div className="border rounded p-2">
                                 <Tooltip title="Modifica">
                                     <span onClick={() => this.showEditModal(m)} className="float-right link-warning ml-2">

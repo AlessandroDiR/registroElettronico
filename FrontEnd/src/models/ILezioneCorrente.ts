@@ -1,7 +1,7 @@
 import { ILezione } from "./ILezione"
-import { IStudent } from "./IStudent"
+import { IStudenteAtLezione } from "./IStudenteAtLezione";
 
 export interface ILezioneCorrente{
     readonly lezione: ILezione
-    readonly studenti: IStudent[]
+    readonly studenti: IStudenteAtLezione[]
 }
