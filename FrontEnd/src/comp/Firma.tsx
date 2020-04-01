@@ -88,7 +88,9 @@ export default class Firma extends React.PureComponent<IProps, IState>{
         if(disable)
             input.setAttribute("disabled", "disabled")
         else{
-            input.value = ""
+            this.setState({
+                code: ""
+            })
             input.removeAttribute("disabled")
             input.focus()
         }
