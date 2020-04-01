@@ -37,7 +37,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
             this.setState({
                 presenze: presenze.map(p => {
                     p.ingresso = convertFromUTC(p.ingresso)
-                    p.uscita = convertFromUTC(p.uscita)
+                    p.uscita = p.uscita.trim() === "00:00" ? "Non firmata" : convertFromUTC(p.uscita)
 
                     return p
                 })
