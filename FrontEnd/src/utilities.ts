@@ -94,10 +94,16 @@ export const checkEnter = (e: any, callback: any) => {
 }
 
 export const convertFromUTC = (date: string) => {
-    let dateString = date,
-    localDate = new Date(dateString)
+    let localDate = new Date(date)
 
     return `${Digits2(localDate.getHours())}:${Digits2(localDate.getMinutes())}`
+}
+
+export const getDateTime = (date: string) => {
+    let clearDate = date.replace("Z", ""),
+    converted = new Date(clearDate)
+
+    return `${Digits2(converted.getHours())}:${Digits2(converted.getMinutes())}`
 }
 
 window.addEventListener("load", resizePopup)

@@ -1,6 +1,6 @@
 import React from "react"
 import { Tooltip, Icon, Spin, Modal, Select } from "antd"
-import { siteUrl, formatItalian, validateTime, checkEnter, convertFromUTC } from "../../utilities"
+import { siteUrl, formatItalian, validateTime, checkEnter, convertFromUTC, getDateTime } from "../../utilities"
 import Axios from "axios"
 import { IPresenzaDocente } from "../../models/IPresenzaDocente"
 import { askPassword } from "../AskConferma"
@@ -37,7 +37,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
             this.setState({
                 presenze: presenze.map(p => {
                     p.ingresso = convertFromUTC(p.ingresso)
-                    p.uscita = p.uscita.trim() === "00:00" ? "Non firmata" : convertFromUTC(p.uscita)
+                    p.uscita = getDateTime(p.uscita) === "00:00" ? "Non firmata" : convertFromUTC(p.uscita)
 
                     return p
                 })
