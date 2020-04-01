@@ -61,14 +61,15 @@ namespace ProjectWork.Controllers
             var date = DateTime.UtcNow;
             var time = TimeSpan.Parse(date.TimeOfDay.ToString().Split('.')[0]);
             var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == s.IdCorso && c.Anno == s.AnnoFrequentazione);
-            var lesson = _context.Lezioni.Where(l => l.Data == date && calendario.IdCalendario == l.IdCalendario);
+            var lesson = _context.Lezioni.Where(l => l.Data == date && calendario.IdCalendario == l.IdCalendario).ToList();
 
             if (lesson != null)
             {
+                var count = 0;
                 foreach (var l in lesson)
                 {
                     var presenza = _context.Presenze.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdStudente == s.IdStudente);
-                    if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0))
+                    if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0) && lesson[count + 1] == null)
                     {
                         return OutputMsg.generateMessage("Attenzione!", "Hai già la firmato la lezione!", true);
                     }
@@ -85,7 +86,7 @@ namespace ProjectWork.Controllers
                         }
                         else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
                         {
-                            presenza.Uscita = time;
+                            presenza.Uscita = time >= (l.OraFine - new TimeSpan(0, 10, 0)) ? l.OraFine : time;
                             _context.SaveChanges();
                             return OutputMsg.generateMessage("Ok!", $"Arrivederci {s.Nome}!");
                         }
@@ -103,6 +104,7 @@ namespace ProjectWork.Controllers
                             return OutputMsg.generateMessage("Ok!", $"Ben arrivato {s.Nome}!");
                         }
                     }
+                    count += 1;
                 }
             }
 
@@ -114,18 +116,19 @@ namespace ProjectWork.Controllers
             var date = DateTime.UtcNow;
             var time = TimeSpan.Parse(date.TimeOfDay.ToString().Split('.')[0]);
             var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == idCorso && c.Anno == anno);
-            var lesson = _context.Lezioni.Where(l => l.Data == date && calendario.IdCalendario == l.IdCalendario);
+            var lesson = _context.Lezioni.Where(l => l.Data == date && calendario.IdCalendario == l.IdCalendario).ToList();
 
             if (lesson != null)
             {
                 foreach (var l in lesson)
                 {
+                    var count = 0;
                     if(CheckDocenteLezione(d, l))
                     {
                         var presenza = _context.PresenzeDocente.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdDocente == d.IdDocente);
-                        if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0))
+                        if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0) && lesson[count + 1] == null)
                         {
-                            return OutputMsg.generateMessage("Attenzione!", "Hai già la firmato la lezione di oggi!", true);
+                            return OutputMsg.generateMessage("Attenzione!", "Hai già la firmato le lezioni di oggi!", true);
                         }
                         else
                         {
@@ -160,6 +163,7 @@ namespace ProjectWork.Controllers
 
                         }
                     }
+                    count += 1;
                 }
             }
 

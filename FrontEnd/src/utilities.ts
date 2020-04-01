@@ -1,4 +1,4 @@
-// export const siteUrl = "http://localhost:5000"
+//export const siteUrl = "https://localhost:44336"
 export const siteUrl = "https://registrofitstic.azurewebsites.net"
 export const logoUrl = "fitstic_logo.png"
 
@@ -11,7 +11,7 @@ export const Digits2 = (n: number) => {
 }
 
 export const validateTime = (time: string) => {
-    return /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])$/.test(time)
+    return /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])$/.test(time)
 }
 
 export const formattaData = (d: string, convert?: boolean) => {
@@ -94,10 +94,10 @@ export const checkEnter = (e: any, callback: any) => {
 }
 
 export const convertFromUTC = (date: string) => {
-    let dateString = date + " UTC",
+    let dateString = date,
     localDate = new Date(dateString)
 
-    return `${Digits2(localDate.getHours())}:${Digits2(localDate.getMinutes())}:00`
+    return `${Digits2(localDate.getHours())}:${Digits2(localDate.getMinutes())}`
 }
 
 window.addEventListener("load", resizePopup)
