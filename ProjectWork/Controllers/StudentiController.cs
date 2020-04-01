@@ -235,11 +235,11 @@ namespace ProjectWork.Controllers
                 {
                     idPresenza = p.IdPresenza,
                     idStudente = p.IdStudente,
-                    data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).Data.ToLocalTime(),
+                    data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).Data,
                     idLezione = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).IdLezione,
                     lezione = _context.Lezioni.FirstOrDefault(l => l.IdLezione == p.IdLezioneNavigation.IdLezione).Titolo,
-                    ingresso = DateTime.UtcNow.Date.Add(p.Ingresso).ToLocalTime().TimeOfDay,
-                    uscita = p.Uscita == new TimeSpan(0,0,0) ? p.Uscita : DateTime.UtcNow.Date.Add(p.Uscita).ToLocalTime().TimeOfDay
+                    ingresso = DateTime.UtcNow.Date.Add(p.Ingresso),
+                    uscita = DateTime.UtcNow.Date.Add(p.Uscita)
                 };
                 result.Add(json);
             }

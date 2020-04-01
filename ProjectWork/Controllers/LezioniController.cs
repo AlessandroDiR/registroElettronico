@@ -44,11 +44,11 @@ namespace ProjectWork.Controllers
                 {
                     idPresenza = lezione.IdPresenza,
                     idDocente = lezione.IdDocente,
-                    data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == lezione.IdLezioneNavigation.IdLezione).Data.ToLocalTime(),
+                    data = _context.Lezioni.FirstOrDefault(l => l.IdLezione == lezione.IdLezioneNavigation.IdLezione).Data,
                     idLezione = lezione.IdLezione,
                     lezione = lezione.IdLezioneNavigation.Titolo.Split('-')[1].TrimStart(),
-                    ingresso = DateTime.UtcNow.Date.Add(lezione.Ingresso).ToLocalTime().TimeOfDay,
-                    uscita = lezione.Uscita == new TimeSpan(0, 0, 0) ? lezione.Uscita : DateTime.UtcNow.Date.Add(lezione.Uscita).ToLocalTime().TimeOfDay
+                    ingresso = DateTime.UtcNow.Date.Add(lezione.Ingresso),
+                    uscita = DateTime.UtcNow.Date.Add(lezione.Uscita)
                 };
                 result.Add(json);
             }
@@ -68,9 +68,6 @@ namespace ProjectWork.Controllers
 
             foreach(var l in lezioni)
             {
-                l.OraInizio = DateTime.UtcNow.Date.Add(l.OraInizio).ToLocalTime().TimeOfDay;
-                l.OraFine = DateTime.UtcNow.Date.Add(l.OraFine).ToLocalTime().TimeOfDay;
-
                 if (l.OraInizio <= DateTime.Now.TimeOfDay && l.OraFine >= DateTime.Now.TimeOfDay)
                 {
                     var idDocente = _context.Insegnare.SingleOrDefault(i => i.IdMateria == l.IdMateria).IdDocente;
@@ -78,9 +75,9 @@ namespace ProjectWork.Controllers
                     {
                         idLezione = l.IdLezione,
                         titolo = l.Titolo,
-                        data = l.Data.ToLocalTime(),
-                        oraInizio = l.OraInizio,
-                        oraFine = l.OraFine,
+                        data = l.Data,
+                        oraInizio = DateTime.UtcNow.Date.Add(l.OraInizio),
+                        oraFine = DateTime.UtcNow.Date.Add(l.OraFine),
                         idDocente
                     };
 
