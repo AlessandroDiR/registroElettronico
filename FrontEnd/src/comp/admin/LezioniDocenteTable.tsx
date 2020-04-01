@@ -103,10 +103,12 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
             return
         }
 
+        let data = new Date()
+
         askPassword(siteUrl+"/api/presenzedocente/" + id, "put", {
             idPresenza: id,
-            ingresso: new Date(`1/1/2020 ${presenza.ingresso}`),
-            uscita: new Date(`1/1/2020 ${presenza.uscita}`),
+            ingresso: new Date(`${data.getDay()}/${data.getMonth() + 1}/${data.getFullYear()} ${presenza.ingresso}`),
+            uscita: new Date(`${data.getDay()}/${data.getMonth() + 1}/${data.getFullYear()} ${presenza.uscita}`),
             idDocente: presenza.idDocente,
             idLezione: presenza.idLezione
         }, (response: any) => {
