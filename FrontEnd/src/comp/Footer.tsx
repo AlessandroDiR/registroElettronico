@@ -1,6 +1,5 @@
 import React from "react"
-import { routerHistory } from ".."
-import { adminRoute, superAdminRoute } from "../utilities"
+import { adminRoute, superAdminRoute, siteUrl } from "../utilities"
 
 export interface IProps{
     readonly inMenu?: boolean
@@ -11,7 +10,7 @@ export default class Footer extends React.PureComponent<IProps, IState>{
     render(): JSX.Element{
         if(this.props.inMenu){
             return <div className="copyright">
-                &copy; {(new Date()).getFullYear()} FITSTIC - <span className="link-white u-hover" onClick={() => routerHistory.push("/documentazione")}>Documentazione</span>
+                &copy; {(new Date()).getFullYear()} FITSTIC - <a href={siteUrl+"/#/documentazione"} className="text-white u-hover">Documentazione</a>
             </div>
         }
 
@@ -19,8 +18,8 @@ export default class Footer extends React.PureComponent<IProps, IState>{
             <div>
                 &copy; {(new Date()).getFullYear()} FITSTIC
             </div>
-            
-            <span className="link-blue u-hover" onClick={() => routerHistory.push(adminRoute)}>Coordinatori</span> - <span className="link-blue u-hover" onClick={() => routerHistory.push(superAdminRoute)}>Amministratori</span> - <span className="link-blue u-hover" onClick={() => routerHistory.push("/documentazione")}>Documentazione</span>
+
+            <a href={siteUrl+"/#"+adminRoute} className="text-blue u-hover">Coordinatori</a> - <a href={siteUrl+"/#"+superAdminRoute} className="text-blue u-hover">Amministratori</a> - <a href={siteUrl+"/#/documentazione"} className="text-blue u-hover">Documentazione</a>
         </div>
     }
 }
