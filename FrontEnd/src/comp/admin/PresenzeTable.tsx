@@ -108,8 +108,8 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
             presenza: {
                 idPresenza: presenza.idPresenza,
                 idStudente: presenza.idStudente,
-                ingresso: presenza.ingresso,
-                uscita: presenza.uscita,
+                ingresso: new Date(`1/1/2020 ${presenza.ingresso}`),
+                uscita: new Date(`1/1/2020 ${presenza.uscita}`),
                 idLezione: presenza.idLezione
             }
         }, (response: any) => {
