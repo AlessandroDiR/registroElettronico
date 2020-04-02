@@ -44,14 +44,14 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
             Axios.post(url, body).then(callback).catch(_ => {
                 Modal.error({
                     title: "Errore!",
-                    content: "Password errata."
+                    content: "C'è stato un problema. Forse sei stato disconnesso: prova a riefettuare il login."
                 })
             })
         }else if(callType === "put"){
             Axios.put(url, body).then(callback).catch(_ => {
                 Modal.error({
                     title: "Errore!",
-                    content: "Password errata."
+                    content: "C'è stato un problema. Forse sei stato disconnesso: prova a riefettuare il login."
                 })
             })
         }
