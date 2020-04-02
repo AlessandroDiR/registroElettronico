@@ -9,6 +9,10 @@ namespace ProjectWork.CustomizedModels
     public class PutPresenzeDocenteModel
     {
         public AuthCoordinatoreModel AuthCoordinatore { get; set; }
-        public PresenzeDocente Presenza { get; set; }
+        public int IdPresenza { get; set; }
+        public int IdLezione { get; set; }
+        public int IdDocente { get; set; }
+        public DateTime Ingresso { get; set; }
+        public DateTime Uscita { get; set; }
     }
 }

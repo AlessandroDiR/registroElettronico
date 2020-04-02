@@ -30,7 +30,7 @@ export default class Home extends React.PureComponent<IProps, IState>{
     componentDidMount = () => {
         const { coordinatore } = this.props
 
-        Axios.get(siteUrl+"/api/lezioni/getlezionecorrente/"+coordinatore.idCorso+"/1").then(response => {
+        Axios.get(siteUrl+"/api/lezioni/getstudentiatlezione/"+coordinatore.idCorso+"/1").then(response => {
             if(typeof(response.data) === "string"){
                 this.setState({
                     noLezione1: true
@@ -44,7 +44,7 @@ export default class Home extends React.PureComponent<IProps, IState>{
             }
         })
 
-        Axios.get(siteUrl+"/api/lezioni/getlezionecorrente/"+coordinatore.idCorso+"/2").then(response => {
+        Axios.get(siteUrl+"/api/lezioni/getstudentiatlezione/"+coordinatore.idCorso+"/2").then(response => {
             if(typeof(response.data) === "string"){
                 this.setState({
                     noLezione2: true

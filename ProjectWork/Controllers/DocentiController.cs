@@ -81,45 +81,6 @@ namespace ProjectWork.Controllers
             return Ok(result);
         }
 
-        // GET: api/Docenti/GetDocentiByCorso/5
-        [HttpGet("[action]/{idc}")]
-        public IActionResult GetDocentiByCorso([FromRoute] int idc)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var tenere = _context.Tenere.Where(t => t.IdCorso == idc);
-
-            var docente = _context.Docenti.Where(d => tenere.Any(t => t.IdDocente == d.IdDocente));
-
-            if (docente == null)
-            {
-                return NotFound();
-            }
-
-            var result = new List<object>();
-            foreach (var d in docente)
-            {
-                var json = new
-                {
-                    idDocente = d.IdDocente,
-                    nome = d.Nome,
-                    cognome = d.Cognome,
-                    email = d.Email,
-                    cf = d.Cf,
-                    ritirato = bool.Parse(d.Ritirato),
-                    corsi = getCorsiDocente(d.IdDocente),
-                    monteOre = getMonteOre(d.IdDocente)
-                };
-
-                result.Add(json);
-            }
-
-            return Ok(result);
-        }
-
         // GET: api/Docenti/GetDocentiByCf/cf
         [HttpGet("[action]/{Cf}")]
         public async Task<IActionResult> GetDocentiByCf([FromRoute] string cf)

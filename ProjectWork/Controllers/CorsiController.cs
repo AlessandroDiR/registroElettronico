@@ -23,9 +23,24 @@ namespace ProjectWork.Controllers
 
         // GET: api/Corsi
         [HttpGet]
-        public IEnumerable<Corsi> GetCorsi()
+        public IActionResult GetCorsi()
         {
-            return _context.Corsi;
+            var corsi = _context.Corsi;
+            var result = new List<object>();
+
+            foreach(var c in corsi)
+            {
+                var json = new
+                {
+                    idCorso = c.IdCorso,
+                    nome = c.Nome,
+                    luogo = c.Luogo,
+                    logo = c.Logo
+                };
+                result.Add(json);
+            }
+
+            return Ok(result);
         }
 
         // GET: api/Corsi/5
@@ -43,8 +58,16 @@ namespace ProjectWork.Controllers
             {
                 return NotFound();
             }
+
+            var json = new
+            {
+                idCorso = corsi.IdCorso,
+                nome = corsi.Nome,
+                luogo = corsi.Luogo,
+                logo = corsi.Logo
+            };
             
-            return Ok(corsi);
+            return Ok(json);
         }
 
         // GET: api/Corsi/GetCorsiByDocenti/IdDoc
