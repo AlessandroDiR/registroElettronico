@@ -306,7 +306,9 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                                             <td style={{maxWidth: 0}} className="text-truncate">{s.nome} {s.cognome}</td>
                                                         </Tooltip>
                                                         <td style={{maxWidth: 0}} className="text-truncate">{s.cf}</td>
-                                                        <td style={{maxWidth: 0}} className="text-truncate">{s.frequenza}%</td>
+                                                        <td style={{maxWidth: 0}} className="text-truncate">
+                                                            {isNaN(s.frequenza) ? 0 : s.frequenza}%
+                                                        </td>
                                                         
                                                         <td>
                                                             <Tooltip title="Dettagli">
@@ -391,7 +393,9 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                         <td style={{maxWidth: 0}} className="text-truncate">
                                             {s.annoFrequentazione === 1 ? "Primo" : "Secondo"}
                                         </td>
-                                        <td style={{maxWidth: 0}} className="text-truncate">{s.frequenza}%</td>
+                                        <td style={{maxWidth: 0}} className="text-truncate">
+                                            {isNaN(s.frequenza) ? 0 : s.frequenza}%
+                                        </td>
                                         
                                         <td>
                                             <Tooltip title="Dettagli">

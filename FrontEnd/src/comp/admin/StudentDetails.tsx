@@ -48,7 +48,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
 
         Axios.get(siteUrl+"/api/studenti/gettotaleorelezioni/" + id).then((response) => {
             this.setState({
-                oreTotali: this.roundToTwo(response.data as number)
+                oreTotali: Math.round(response.data as number)
             })
         })
 
@@ -62,7 +62,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
 
         Axios.get(siteUrl+"/api/studenti/gethoursamount/" + this.props.match.params.id).then((response) => {
             this.setState({
-                totPresenze: this.roundToTwo(response.data as number)
+                totPresenze: Math.round(response.data as number)
             })
         })
     }
@@ -91,10 +91,6 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
         return student.codice
     }
 
-    roundToTwo = (total: number) => {    
-        return Math.round(total)
-    }
-
     render(): JSX.Element{
         const { student, totPresenze, oreTotali, modal } = this.state
         
@@ -106,7 +102,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
             </div>
         }
 
-        let perc = student.frequenza !== null ? this.roundToTwo(100 * totPresenze / oreTotali) : null,
+        let perc = student.frequenza !== null ? Math.round(100 * totPresenze / oreTotali) : null,
         color = perc >= 80 ? "var(--success)" : "var(--danger)"
 
         return <div className="col px-5 py-4 right-block">
