@@ -21,15 +21,15 @@ namespace ProjectWork.Controllers
             _context = context;
         }
 
-        // GET: api/Presenze/CheckEntrata
-        [HttpGet("[action]")]
-        public bool CheckEntrata([FromRoute] int idLezione, int idStudente)
+        // GET: api/Presenze/CheckEntrata/1/1
+        [HttpGet("[action]/{idLezione}/{idStudente}")]
+        public IActionResult CheckEntrata([FromRoute] int idLezione, int idStudente)
         {
             var presenza = _context.Presenze.SingleOrDefault(p => p.IdLezione == idLezione && p.IdStudente == idStudente);
-            if (presenza == null)
-                return false;
+            if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
+                return Ok(true);
 
-            return true;
+            return Ok(false);
         }
 
         // PUT: api/Presenze/5

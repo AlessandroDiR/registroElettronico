@@ -71,7 +71,7 @@ namespace ProjectWork.Controllers
 
             foreach(var l in lezioni)
             {
-                if (l.OraInizio <= DateTime.UtcNow.TimeOfDay && l.OraFine >= DateTime.UtcNow.TimeOfDay)
+                if (l.OraInizio <= DateTime.UtcNow.TimeOfDay && l.OraFine.Add(new TimeSpan(0, 60, 0)) >= DateTime.UtcNow.TimeOfDay)
                 {
                     var idDocente = _context.Insegnare.SingleOrDefault(i => i.IdMateria == l.IdMateria).IdDocente;
                     var json = new
