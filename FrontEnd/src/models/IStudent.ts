@@ -14,6 +14,7 @@ export interface IStudent{
     readonly giornate?: number
     readonly frequenza?: number
     readonly promosso?: boolean
+    readonly firmato?: boolean
 }
 
 export const isStudent = (obj: any) => {

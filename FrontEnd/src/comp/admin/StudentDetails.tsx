@@ -48,7 +48,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
 
         Axios.get(siteUrl+"/api/studenti/gettotaleorelezioni/" + id).then((response) => {
             this.setState({
-                oreTotali: Math.round(response.data as number)
+                oreTotali: response.data as number
             })
         })
 
@@ -62,7 +62,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
 
         Axios.get(siteUrl+"/api/studenti/gethoursamount/" + this.props.match.params.id).then((response) => {
             this.setState({
-                totPresenze: Math.round(response.data as number)
+                totPresenze: response.data as number
             })
         })
     }
@@ -111,7 +111,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                     <div className="p-3 bg-white border rounded">
                         <span className="border-text">
                             {
-                                student.ritirato ? "Ritirato: "+student.dataRitiro : student.annoFrequentazione === 1 ? "Primo anno" : "Secondo anno"
+                                student.ritirato ? "Ritirato: " + formatItalian(student.dataRitiro) : student.annoFrequentazione === 1 ? "Primo anno" : "Secondo anno"
                             }
                         </span>
                         <h4 className="text-uppercase mb-2 text-truncate">{student.nome} {student.cognome}</h4>

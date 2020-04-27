@@ -3,7 +3,7 @@ import { IAdmin } from "../../models/IAdmin"
 import { ILezioneCorrente } from "../../models/ILezioneCorrente"
 import Axios from "axios"
 import { siteUrl, convertFromUTC } from "../../utilities"
-import { Tabs, Icon, Spin } from "antd"
+import { Tabs, Icon, Spin, Tooltip } from "antd"
 
 export interface IProps{
     readonly coordinatore: IAdmin
@@ -42,6 +42,10 @@ export default class Home extends React.PureComponent<IProps, IState>{
                     lezioneCorrente1: data
                 })
             }
+        }).catch(_ => {
+            this.setState({
+                noLezione1: true
+            })
         })
 
         Axios.get(siteUrl+"/api/lezioni/getstudentiatlezione/"+coordinatore.idCorso+"/2").then(response => {
@@ -56,6 +60,10 @@ export default class Home extends React.PureComponent<IProps, IState>{
                     lezioneCorrente2: data
                 })
             }
+        }).catch(_ => {
+            this.setState({
+                noLezione2: true
+            })
         })
     }
 
@@ -63,7 +71,9 @@ export default class Home extends React.PureComponent<IProps, IState>{
         return <div>
             <div className="col-12 col-md-6 mb-2 px-2">
                 <div className="p-3 bg-white border rounded">
-                    <h4 className="text-uppercase mb-2 text-truncate">{lezione.lezione.titolo}</h4>
+                    <Tooltip title={lezione.lezione.titolo}>
+                        <h4 className="text-uppercase mb-2 text-truncate">{lezione.lezione.titolo}</h4>
+                    </Tooltip>
                     <span className="text-muted">{convertFromUTC(lezione.lezione.oraInizio)} - {convertFromUTC(lezione.lezione.oraFine)}</span>
                 </div>
             </div>
