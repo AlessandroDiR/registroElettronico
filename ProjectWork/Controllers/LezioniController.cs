@@ -67,7 +67,7 @@ namespace ProjectWork.Controllers
             var lezioni = _context.Lezioni.Where(l => l.Data == DateTime.Today && l.IdCalendario == calendario);
 
             if (lezioni.Count() == 0)
-                return NotFound();
+                return Ok("Nessuna lezione");
 
             foreach(var l in lezioni)
             {
