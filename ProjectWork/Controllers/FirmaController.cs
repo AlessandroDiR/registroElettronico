@@ -69,9 +69,9 @@ namespace ProjectWork.Controllers
                 foreach (var l in lesson)
                 {
                     var presenza = _context.Presenze.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdStudente == s.IdStudente);
-                    if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0) && lesson[count + 1] == null)
+                    if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0) && count == lesson.Count() - 1 )
                     {
-                        return OutputMsg.generateMessage("Attenzione!", "Hai già la firmato la lezione!", true);
+                        return OutputMsg.generateMessage("Attenzione!", "Non ci sono più lezioni!", true);
                     }
                     else
                     {

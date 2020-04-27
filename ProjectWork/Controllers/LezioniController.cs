@@ -67,11 +67,11 @@ namespace ProjectWork.Controllers
             var lezioni = _context.Lezioni.Where(l => l.Data == DateTime.Today && l.IdCalendario == calendario);
 
             if (lezioni.Count() == 0)
-                return NotFound();
+                return Ok("Nessuna lezione");
 
             foreach(var l in lezioni)
             {
-                if (l.OraInizio <= DateTime.UtcNow.TimeOfDay && l.OraFine >= DateTime.UtcNow.TimeOfDay)
+                if (l.OraInizio <= DateTime.UtcNow.TimeOfDay && l.OraFine.Add(new TimeSpan(0, 60, 0)) >= DateTime.UtcNow.TimeOfDay)
                 {
                     var idDocente = _context.Insegnare.SingleOrDefault(i => i.IdMateria == l.IdMateria).IdDocente;
                     var json = new

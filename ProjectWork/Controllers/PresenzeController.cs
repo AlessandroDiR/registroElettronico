@@ -21,6 +21,17 @@ namespace ProjectWork.Controllers
             _context = context;
         }
 
+        // GET: api/Presenze/CheckEntrata/1/1
+        [HttpGet("[action]/{idLezione}/{idStudente}")]
+        public IActionResult CheckEntrata([FromRoute] int idLezione, int idStudente)
+        {
+            var presenza = _context.Presenze.SingleOrDefault(p => p.IdLezione == idLezione && p.IdStudente == idStudente);
+            if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
+                return Ok(true);
+
+            return Ok(false);
+        }
+
         // PUT: api/Presenze/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPresenze([FromRoute] int id, [FromBody] PutPresenzeModel obj)
@@ -94,27 +105,6 @@ namespace ProjectWork.Controllers
             }
 
             return Ok("success");
-        }
-
-        // DELETE: api/Presenze/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePresenze([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var presenze = await _context.Presenze.FindAsync(id);
-            if (presenze == null)
-            {
-                return NotFound();
-            }
-
-            _context.Presenze.Remove(presenze);
-            await _context.SaveChangesAsync();
-
-            return Ok(presenze);
         }
 
         private bool PresenzeExists(int id)
