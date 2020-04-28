@@ -81,14 +81,14 @@ namespace ProjectWork.Controllers
                             {
                                 presenza.Uscita = l.OraFine;
                                 _context.SaveChanges();
-                                return OutputMsg.generateMessage("Ok!", $"Arrivederci {s.Nome}!");
+                                return OutputMsg.generateMessage("USCITA", $"Arrivederci {s.Nome}!");
                             }
                         }
                         else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
                         {
                             presenza.Uscita = time >= (l.OraFine - new TimeSpan(0, 10, 0)) ? l.OraFine : time;
                             _context.SaveChanges();
-                            return OutputMsg.generateMessage("Ok!", $"Arrivederci {s.Nome}!");
+                            return OutputMsg.generateMessage("USCITA", $"Arrivederci {s.Nome}!");
                         }
                         else if (presenza == null && l.OraFine >= time)
                         {
@@ -101,7 +101,7 @@ namespace ProjectWork.Controllers
 
                             _context.Presenze.Add(newPresenza);
                             _context.SaveChanges();
-                            return OutputMsg.generateMessage("Ok!", $"Ben arrivato {s.Nome}!");
+                            return OutputMsg.generateMessage("ENTRATA", $"Ben arrivato {s.Nome}!");
                         }
                     }
                     count += 1;
@@ -138,14 +138,14 @@ namespace ProjectWork.Controllers
                                 {
                                     presenza.Uscita = l.OraFine;
                                     _context.SaveChanges();
-                                    return OutputMsg.generateMessage("Ok!", $"Arrivederci {d.Nome}!");
+                                    return OutputMsg.generateMessage("USCITA", $"Arrivederci {d.Nome}!");
                                 }
                             }
                             else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
                             {
                                 presenza.Uscita = time >= (l.OraFine - new TimeSpan(0, 10, 0)) ? l.OraFine : time;
                                 _context.SaveChanges();
-                                return OutputMsg.generateMessage("Ok", $"Arrivederci {d.Nome}!");
+                                return OutputMsg.generateMessage("USCITA", $"Arrivederci {d.Nome}!");
                             }
                             else if (presenza == null && l.OraFine >= time)
                             {
@@ -158,7 +158,7 @@ namespace ProjectWork.Controllers
 
                                 _context.PresenzeDocente.Add(newPresenza);
                                 _context.SaveChanges();
-                                return OutputMsg.generateMessage("Ok!", $"Buona lezione {d.Nome}!");
+                                return OutputMsg.generateMessage("ENTRATA", $"Buona lezione {d.Nome}!");
                             }
 
                         }
