@@ -443,6 +443,213 @@ namespace ProjectWork.Controllers
             return GetStudenti(studente.IdCorso);
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> CheckEmailLogin([FromBody] StudentEmail email)
+        {
+            var studente = await _context.Studenti.SingleOrDefaultAsync(s => s.Email == email.Email);
+            if (studente == null)
+                return Ok(false);
+
+            studente.Password = Guid.NewGuid().ToString().Split('-')[0];
+            _context.Studenti.Update(studente);
+            _context.SaveChanges();
+
+            _es.SendCredenzialiAccessoRemoto(studente.Email, studente.Password);
+
+            return Ok(true);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> LoginStudente([FromBody] StudentCred cred)
+        {
+            var st = await _context.Studenti.SingleOrDefaultAsync(s => s.Email == cred.Email && s.Password == cred.Password);
+            if (st == null)
+                return Ok("Studente inesistente");
+
+            var json = new
+            {
+                idStudente = st.IdStudente,
+                nome = st.Nome,
+                cognome = st.Cognome,
+                password = st.Password
+            };
+
+            return Ok(json);
+        }
+
+        [HttpGet("[action]/{idStudente}")]
+        public IActionResult GetOreStage([FromRoute] int idStudente)
+        {
+            var stage = _context.Stage.Where(s => s.IdStudente == idStudente);
+            var result = new List<object>();
+
+            foreach(var s in stage)
+            {
+                var json = new
+                {
+                    data = s.Data,
+                    oraInizio = s.OraInizio,
+                    oraFine = s.OraFine,
+                    argomento = s.Argomento,
+                    totaleRelativo = Math.Abs((s.OraFine.TimeOfDay - s.OraInizio.TimeOfDay).TotalHours)
+                };
+
+                result.Add(json);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost("[action]/{idStudente}")]
+        public async Task<IActionResult> PostOreStage([FromRoute] int idStudente, [FromBody] PostOreStage obj)
+        {
+            var studente = await _context.Studenti.SingleOrDefaultAsync(s => s.IdStudente == idStudente && s.Password == obj.Password);
+            var oreDaInserire = (obj.OraFine - obj.OraInizio).TotalHours;
+
+            if (studente == null)
+            {
+                var json = new
+                {
+                    type = "error",
+                    message = "Lo studente è inesistente."
+                };
+
+                return Ok(json);
+            }
+
+            var oreTotali = TotaleOrestage(idStudente);
+
+            if (obj.OraFine < obj.OraInizio)
+            {
+                var json = new
+                {
+                    type = "error",
+                    message = "L'orario di fine non può essere minore dell'orario di inizio."
+                };
+
+                return Ok(json);
+            }
+
+            if(oreTotali == 800)
+            {
+                var json = new
+                {
+                    type = "error",
+                    message = "Hai già registrato un massimo di 800 ore."
+                };
+
+                return Ok(json);
+            }
+
+            if(oreTotali + oreDaInserire > 800)
+            {
+                var json = new
+                {
+                    type = "error",
+                    message = "Non puoi registrare più di 800 ore."
+                };
+
+                return Ok(json);
+            }
+
+            if (CheckOreStagePerDay(idStudente, obj.Data))
+            {
+                var json = new
+                {
+                    type = "error",
+                    message = "Hai già registrato un massimo di 8 ore per la data selezionata."
+                };
+
+                return Ok(json);
+            }
+
+            if(oreDaInserire >= 8)
+            {
+                var json = new
+                {
+                    type = "error",
+                    message = "Non puoi inserire 8 o più ore di lavoro consecutive."
+                };
+
+                return Ok(json);
+            }
+
+            if (CheckOreSvolteConOreInseritePerDay(idStudente, obj.Data, oreDaInserire))
+            {
+                var json = new
+                {
+                    type = "error",
+                    message = "Non puoi inserire più di 8 ore di lavoro giornaliere."
+                };
+
+                return Ok(json);
+            }
+
+
+            var nuovaIstanzaStage = new Stage
+            {
+                IdStudente = idStudente,
+                Data = obj.Data,
+                OraInizio = obj.OraInizio,
+                OraFine = obj.OraFine,
+                Argomento = obj.Argomento
+            };
+
+            _context.Stage.Add(nuovaIstanzaStage);
+            _context.SaveChanges();
+
+            var result = new
+            {
+                type = "success",
+                message = "Inserimento avvenuto correttamente"
+            };
+
+            return Ok(result);
+
+        }
+
+        private bool CheckOreStagePerDay(int idStudente, DateTime oggi)
+        {
+            var istanzeStage = _context.Stage.Where(s => s.IdStudente == idStudente && s.Data == oggi);
+            if (istanzeStage.Count() == 0)
+                return false;
+            TimeSpan sommaOreSvolte = new TimeSpan();
+            foreach(var i in istanzeStage)
+            {
+                sommaOreSvolte += i.OraFine.TimeOfDay - i.OraInizio.TimeOfDay;
+            }
+
+            return sommaOreSvolte.TotalHours == 8;
+        }
+
+        private bool CheckOreSvolteConOreInseritePerDay(int idStudente, DateTime oggi, double oreDaInserire)
+        {
+            var istanzeGiornaliere = _context.Stage.Where(s => s.IdStudente == idStudente && s.Data == oggi);
+            if (istanzeGiornaliere.Count() == 0)
+                return false;
+            TimeSpan sommaOreSvolte = new TimeSpan();
+            foreach (var i in istanzeGiornaliere)
+            {
+                sommaOreSvolte += i.OraFine.TimeOfDay - i.OraInizio.TimeOfDay;
+            }
+
+            return sommaOreSvolte.TotalHours + oreDaInserire > 8;
+        }
+
+        private double TotaleOrestage(int idStudente)
+        {
+            var stage = _context.Stage.Where(s => s.IdStudente == idStudente);
+            var oreTotali = 0.0;
+            foreach(var s in stage)
+            {
+                oreTotali += Math.Abs((s.OraFine.TimeOfDay - s.OraInizio.TimeOfDay).TotalHours);
+            }
+
+            return oreTotali;
+        }
+
+
+
         private bool StudentiExists(int id)
         {
             return _context.Studenti.Any(e => e.IdStudente == id);

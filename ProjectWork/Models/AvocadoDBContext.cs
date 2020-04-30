@@ -29,6 +29,7 @@ namespace ProjectWork.Models
         public virtual DbSet<Presenze> Presenze { get; set; }
         public virtual DbSet<PresenzeDocente> PresenzeDocente { get; set; }
         public virtual DbSet<RecPwdCoordinatore> RecPwdCoordinatore { get; set; }
+        public virtual DbSet<Stage> Stage { get; set; }
         public virtual DbSet<Studenti> Studenti { get; set; }
         public virtual DbSet<Tenere> Tenere { get; set; }
 
@@ -455,6 +456,38 @@ namespace ProjectWork.Models
                     .HasForeignKey(d => d.IdCoordinatore)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RecPwd_Coordinatore_Coordinatori");
+            });
+
+            modelBuilder.Entity<Stage>(entity =>
+            {
+                entity.HasKey(e => e.IdGiornata);
+
+                entity.Property(e => e.IdGiornata).HasColumnName("id_giornata");
+
+                entity.Property(e => e.Argomento)
+                    .IsRequired()
+                    .HasColumnName("argomento")
+                    .HasColumnType("text");
+
+                entity.Property(e => e.Data)
+                    .HasColumnName("data")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.IdStudente).HasColumnName("id_studente");
+
+                entity.Property(e => e.OraFine)
+                    .HasColumnName("ora_fine")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.OraInizio)
+                    .HasColumnName("ora_inizio")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdStudenteNavigation)
+                    .WithMany(p => p.Stage)
+                    .HasForeignKey(d => d.IdStudente)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Stage_Studenti");
             });
 
             modelBuilder.Entity<Studenti>(entity =>

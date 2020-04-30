@@ -71,9 +71,11 @@ namespace ProjectWork.Controllers
 
             foreach(var l in lezioni)
             {
-                if (l.OraInizio <= DateTime.UtcNow.TimeOfDay && l.OraFine.Add(new TimeSpan(0, 60, 0)) >= DateTime.UtcNow.TimeOfDay)
+                if (l.OraInizio <= DateTime.UtcNow.TimeOfDay && l.OraFine.Add(new TimeSpan(0, 30, 0)) >= DateTime.UtcNow.TimeOfDay)
                 {
-                    var idDocente = _context.Insegnare.SingleOrDefault(i => i.IdMateria == l.IdMateria).IdDocente;
+                    var nomeDocente = l.Titolo.Split(':')[1].Split('-')[0].Trim();
+                    var insegnare = _context.Insegnare.Where(i => i.IdMateria == l.IdMateria);
+                    var docente = _context.Docenti.SingleOrDefault(d => (d.Nome + " " + d.Cognome) == nomeDocente && insegnare.Any(i => i.IdDocente == d.IdDocente));
                     var json = new
                     {
                         idLezione = l.IdLezione,
@@ -81,7 +83,7 @@ namespace ProjectWork.Controllers
                         data = l.Data,
                         oraInizio = DateTime.UtcNow.Date.Add(l.OraInizio),
                         oraFine = DateTime.UtcNow.Date.Add(l.OraFine),
-                        idDocente
+                        idDocente = docente.IdDocente
                     };
 
                     return Ok(json);

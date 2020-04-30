@@ -75,7 +75,7 @@ namespace ProjectWork.Controllers
                     }
                     else
                     {
-                        if (l.OraFine < time)
+                        if (time > l.OraFine && time <= l.OraFine.Add(new TimeSpan(0,30,0)))
                         {
                             if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
                             {

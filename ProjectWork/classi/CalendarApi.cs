@@ -200,12 +200,20 @@ namespace ProjectWork.classi
 
         private int FindIdMateria(string evento)
         {
-            if (!evento.Contains('-'))
+            if (!evento.Contains('-') || !evento.Contains(':'))
                 return -1;
 
             var nomeMateria = evento.Split('-')[1].TrimStart();
             var materia = _context.Materie.SingleOrDefault(m => m.Nome == nomeMateria);
+
             if (materia == null)
+                return -1;
+
+            var nomeDocente = evento.Split(':')[1].Split('-')[0].Trim();
+            var insegnare = _context.Insegnare.Where(i => i.IdMateria == materia.IdMateria);
+            var docente = _context.Docenti.SingleOrDefault(d => (d.Nome + " " + d.Cognome) == nomeDocente && insegnare.Any(i => i.IdDocente == d.IdDocente));
+
+            if (docente == null)
                 return -1;
 
             return materia.IdMateria;
