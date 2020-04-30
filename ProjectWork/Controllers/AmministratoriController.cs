@@ -29,7 +29,7 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            var admin = await _context.Amministratori.SingleOrDefaultAsync(a => a.Username == amministratore.username && a.Password == amministratore.password);
+            var admin = await _context.Amministratori.SingleOrDefaultAsync(a => string.Compare(a.Username, amministratore.username, false) == 0 && string.Compare(a.Password, amministratore.password, false) == 0);
 
             if (admin == null)
             {

@@ -123,7 +123,7 @@ namespace ProjectWork.Controllers
                 return BadRequest(ModelState);
             }
 
-            var coord = await _context.Coordinatori.SingleOrDefaultAsync(d => d.Username == cred.username && d.Password == cred.password);
+            var coord = await _context.Coordinatori.SingleOrDefaultAsync(d => string.Compare(d.Username, cred.username, false) == 0 && string.Compare(d.Password, cred.password, false) == 0);
 
             if (coord == null)
             {
