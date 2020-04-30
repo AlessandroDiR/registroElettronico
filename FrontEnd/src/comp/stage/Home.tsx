@@ -72,7 +72,7 @@ export default class Home extends React.PureComponent<IProps, IState>{
             <div className="p-3 bg-white border rounded col-4 mb-3">
                 <h4 className="text-uppercase mb-2 text-truncate">{studente.nome} {studente.cognome}</h4>
                 <strong>Ore svolte</strong>: {totaleOre} su 800 totali
-                <Progress percent={Math.round(100 * totaleOre / 800)} />
+                <Progress percent={Math.floor(((100 * totaleOre / 800) + Number.EPSILON) * 100) / 100} />
             </div>
 
             <h3 className="d-inline-block">Ore di stage segnate</h3>
