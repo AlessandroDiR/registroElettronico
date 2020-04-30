@@ -37,7 +37,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push(superAdminRoute)
 
-        Axios.get(siteUrl+"/api/corsi/" + id).then((response) => {
+        Axios.get(siteUrl+"/api/corsi/" + id).then(response => {
             let corso = response.data as ICorso
 
             this.setState({

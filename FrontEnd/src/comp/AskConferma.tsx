@@ -37,7 +37,7 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
                 return true
             }
             
-            body.password = input.value
+            body.password = input.value.trim()
         }
 
         if(callType === "post"){

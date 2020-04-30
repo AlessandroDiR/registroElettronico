@@ -7,6 +7,7 @@ export interface IAdmin{
     readonly codiceCorso?: string
     readonly password?: string
 }
+
 export const isAdmin = (obj: any) => {
     try{
         return "idCorso" in obj && "nome" in obj && "cognome" in obj
@@ -14,6 +15,7 @@ export const isAdmin = (obj: any) => {
         return false
     }
 }
+
 export const isSuperAdmin = (obj: any) => {
     try{
         return "nome" in obj && "cognome" in obj

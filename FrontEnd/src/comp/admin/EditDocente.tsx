@@ -51,7 +51,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push(adminRoute)
 
-        Axios.get(siteUrl+"/api/docenti/getdocentibyid/" + id).then((response) => {
+        Axios.get(siteUrl+"/api/docenti/getdocentibyid/" + id).then(response => {
             let doc = response.data as IDocente
 
             this.setState({
@@ -65,7 +65,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             })
         })
         
-        Axios.get(siteUrl+"/api/materie/getmateriebycorso/"+this.props.corso).then((response) => {
+        Axios.get(siteUrl+"/api/materie/getmateriebycorso/"+this.props.corso).then(response => {
             let materie = response.data as IMateria[]
             
             this.setState({
@@ -73,7 +73,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             })
         })
 
-        Axios.get(siteUrl+"/api/corsi").then((response) => {
+        Axios.get(siteUrl+"/api/corsi").then(response => {
             let corsi = response.data as ICorso[]
             
             this.setState({

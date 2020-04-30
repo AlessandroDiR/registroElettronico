@@ -45,7 +45,7 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push(adminRoute)
 
-        Axios.get(siteUrl+"/api/studenti/getstudentibyid/" + id).then((response) => {
+        Axios.get(siteUrl+"/api/studenti/getstudentibyid/" + id).then(response => {
             let stu = response.data as IStudent
 
             this.setState({

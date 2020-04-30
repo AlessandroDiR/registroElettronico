@@ -6,14 +6,14 @@ import * as serviceWorker from "./serviceWorker"
 import Main from "./comp/Main"
 import { Router, Switch, Route } from "react-router-dom"
 import Dashboard from "./comp/admin/Dashboard"
-import UserApplication from "./comp/mobile/UserApplication"
 import Page404 from "./comp/Page404"
 import moment from "moment"
 import "moment/locale/it"
 import SuperDashboard from "./comp/superadmin/SuperDashboard"
-import { superAdminRoute, adminRoute } from "./utilities"
+import { superAdminRoute, adminRoute, stageRoute } from "./utilities"
 import DashboardCasa from "./comp/firmacasa/DashboardCasa"
 import Docs from "./comp/Docs"
+import StageDashboard from "./comp/stage/StageDashboard"
 
 moment.locale("it")
 
@@ -35,8 +35,8 @@ ReactDOM.render(<Router history={routerHistory}>
             <Dashboard />
         )} />
 
-        <Route path="/userprofile" render={() => (
-            <UserApplication />
+        <Route path={stageRoute} render={() => (
+            <StageDashboard />
         )} />
 
         <Route path={superAdminRoute} render={() => (

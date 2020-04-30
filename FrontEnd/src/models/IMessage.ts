@@ -4,6 +4,7 @@ export interface IMessage{
     readonly iconColor: string
     readonly message: string
     readonly time: number
+    readonly type?: string
 }
 
 export const genericError = {

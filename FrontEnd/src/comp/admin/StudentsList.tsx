@@ -31,7 +31,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/api/studenti/"+this.props.corso).then((response) => {
+        Axios.get(siteUrl+"/api/studenti/"+this.props.corso).then(response => {
             this.setState({
                 students: response.data as IStudent[]
             })

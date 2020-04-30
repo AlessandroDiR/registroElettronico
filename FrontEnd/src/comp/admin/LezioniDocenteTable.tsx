@@ -96,7 +96,7 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
         if(!validateTime(presenza.ingresso) || !validateTime(presenza.uscita)){
             Modal.error({
                 title: "Errore!",
-                content: "Orari non validi! (ore:minuti)",
+                content: "Orari non validi. (ore:minuti)",
                 maskClosable: true
             })
 
@@ -107,8 +107,8 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
 
         askPassword(siteUrl+"/api/presenzedocente/" + id, "put", {
             idPresenza: id,
-            ingresso: new Date(`${data.getFullYear()}-${data.getMonth() + 1}-${data.getDay()} ${presenza.ingresso}`),
-            uscita: new Date(`${data.getFullYear()}-${data.getMonth() + 1}-${data.getDay()} ${presenza.uscita}`),
+            ingresso: new Date(`${data.getFullYear()}-${data.getMonth() + 1}-${data.getDate()} ${presenza.ingresso}`),
+            uscita: new Date(`${data.getFullYear()}-${data.getMonth() + 1}-${data.getDate()} ${presenza.uscita}`),
             idDocente: presenza.idDocente,
             idLezione: presenza.idLezione
         }, (response: any) => {

@@ -38,7 +38,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push(adminRoute)
 
-        Axios.get(siteUrl+"/api/docenti/getdocentibyid/" + id).then((response) => {
+        Axios.get(siteUrl+"/api/docenti/getdocentibyid/" + id).then(response => {
             this.setState({
                 docente: response.data as IDocente
             })

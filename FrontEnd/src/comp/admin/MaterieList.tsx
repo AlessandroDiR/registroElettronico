@@ -33,7 +33,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
     }
 
     componentDidMount = () => {
-        Axios.get(siteUrl+"/api/materie/getmateriebycorso/" + this.props.corso).then((response) => {
+        Axios.get(siteUrl+"/api/materie/getmateriebycorso/" + this.props.corso).then(response => {
             this.setState({
                 materie: response.data as IMateria[]
             })

@@ -115,7 +115,7 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
         this.switchLoading()
 
         Axios.post(siteUrl+"/api/coordinatori/recuperocoordinatori", {
-            email: email
+            email
         }).then(response => {
             let data = response.data,
             idCoordinatore = parseInt(data)
@@ -194,8 +194,8 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
         password = cipher.encode(newPassword)
 
         Axios.post(siteUrl+"/api/coordinatori/cambiopassword", {
-            idCoordinatore: idCoordinatore,
-            password: password,
+            idCoordinatore,
+            password,
             codice: code
         }).then(response => {
             let msg = response.data
