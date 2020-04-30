@@ -5,6 +5,7 @@ import { mountLogin, unmountLogin, siteUrl, logoUrl, stageRoute } from "../../ut
 import Axios from "axios"
 import Footer from "../Footer"
 import { isAccessStudent } from "../../models/IStudent"
+import { IMessage } from "../../models/IMessage"
 
 export interface IProps{}
 export interface IState{
@@ -63,16 +64,16 @@ export default class LoginStage extends React.PureComponent<IProps, IState>{
             Axios.post(siteUrl+"/api/studenti/checkemaillogin", {
                 email: userEmail
             }).then(response => {
-                let exists = response.data as boolean
+                let output = response.data as IMessage
 
-                if(exists){
-                    this.setState({
-                        isExisting: exists
-                    })
-                }else{
+                if(output.type === "error"){
                     Modal.error({
                         title: "Errore!",
-                        content: "L'e-mail inserita non corrisponde a nessuno studente."
+                        content: output.message
+                    })
+                }else{
+                    this.setState({
+                        isExisting: true
                     })
                 }
             })
