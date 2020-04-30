@@ -26,6 +26,15 @@ export const isStudent = (obj: any) => {
     }
 }
 
+export const isAccessStudent = (obj: any) => {
+    try{
+        return "nome" in obj && "cognome" in obj && "idStudente" in obj && "password" in obj
+    }
+    catch{
+        return false
+    }
+}
+
 export const areStudent = (obj: any) => {
     try{
         obj.forEach((s: any) => {

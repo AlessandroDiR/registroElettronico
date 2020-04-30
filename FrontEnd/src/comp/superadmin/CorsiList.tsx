@@ -48,32 +48,31 @@ export default class CorsiList extends React.PureComponent<IProps, IState>{
             </button>
 
             <table className="table table-bordered text-center">
-                
-                    <tbody>
-                        <tr>
-                            <th style={{width: "15%"}}>Logo</th>
-                            <th>Nome</th>
-                            <th>Luogo</th>
-                            <th style={{width: "10%"}}>Azioni</th>
-                        </tr>
+                <tbody>
+                    <tr>
+                        <th style={{width: "15%"}}>Logo</th>
+                        <th>Nome</th>
+                        <th>Luogo</th>
+                        <th style={{width: "10%"}}>Azioni</th>
+                    </tr>
 
-                        {
-                            corsi.map(c => {        
-                                return <tr>
-                                    <td><img width="55" src={c.logo} alt="logo" /></td>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{c.nome}</td>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{c.luogo}</td>
-                                    <td>
-                                        <Tooltip title="Modifica">
-                                            <button type="button" className="btn btn-warning text-white circle-btn" onClick={() => routerHistory.push(superAdminRoute+"/corsi/edit/" + c.idCorso)}>
-                                                <i className="fa fa-pen"></i>
-                                            </button>
-                                        </Tooltip>
-                                    </td>
-                                </tr>
-                            })
-                        }
-                    </tbody>
+                    {
+                        corsi.map(c => {        
+                            return <tr>
+                                <td><img width="55" src={c.logo} alt="logo" /></td>
+                                <td style={{maxWidth: 0}} className="text-truncate">{c.nome}</td>
+                                <td style={{maxWidth: 0}} className="text-truncate">{c.luogo}</td>
+                                <td>
+                                    <Tooltip title="Modifica">
+                                        <button type="button" className="btn btn-warning text-white circle-btn" onClick={() => routerHistory.push(superAdminRoute+"/corsi/edit/" + c.idCorso)}>
+                                            <i className="fa fa-pen"></i>
+                                        </button>
+                                    </Tooltip>
+                                </td>
+                            </tr>
+                        })
+                    }
+                </tbody>
             </table>
         </div>
     }

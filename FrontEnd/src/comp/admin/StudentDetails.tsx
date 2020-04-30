@@ -40,13 +40,13 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
         if(isNaN(id))
             routerHistory.push(adminRoute)
 
-        Axios.get(siteUrl+"/api/studenti/getstudentibyid/" + id).then((response) => {
+        Axios.get(siteUrl+"/api/studenti/getstudentibyid/" + id).then(response => {
             this.setState({
                 student: response.data as IStudent
             })
         })
 
-        Axios.get(siteUrl+"/api/studenti/gettotaleorelezioni/" + id).then((response) => {
+        Axios.get(siteUrl+"/api/studenti/gettotaleorelezioni/" + id).then(response => {
             this.setState({
                 oreTotali: response.data as number
             })
@@ -60,7 +60,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
             totPresenze: null
         })
 
-        Axios.get(siteUrl+"/api/studenti/gethoursamount/" + this.props.match.params.id).then((response) => {
+        Axios.get(siteUrl+"/api/studenti/gethoursamount/" + this.props.match.params.id).then(response => {
             this.setState({
                 totPresenze: response.data as number
             })

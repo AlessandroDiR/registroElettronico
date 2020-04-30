@@ -65,7 +65,7 @@ export default class Firma extends React.PureComponent<IProps, IState>{
             code: code,
             idCorso: idCorso,
             anno: anno
-        }).then((response) => {
+        }).then(response => {
             this.setState({
                 popup: response.data as IMessage
             })

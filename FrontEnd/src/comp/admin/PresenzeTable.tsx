@@ -31,7 +31,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
     componentDidMount = () => {
         const { studente } = this.props
 
-        Axios.get(siteUrl+"/api/studenti/getdetailedpresences/"+studente.idStudente).then((response) => {
+        Axios.get(siteUrl+"/api/studenti/getdetailedpresences/"+studente.idStudente).then(response => {
 
             let presenze = response.data as IPresenze[]
 
@@ -97,7 +97,7 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
         if(!validateTime(presenza.ingresso) || !validateTime(presenza.uscita)){
             Modal.error({
                 title: "Errore!",
-                content: "Orari non validi! (ore:minuti)",
+                content: "Orari non validi. (ore:minuti)",
                 maskClosable: true
             })
 
@@ -109,8 +109,8 @@ export default class PresenzeTable extends React.PureComponent<IProps, IState>{
         askPassword(siteUrl+"/api/presenze/" + id, "put", {
             idPresenza: presenza.idPresenza,
             idStudente: presenza.idStudente,
-            ingresso: new Date(`${data.getFullYear()}-${data.getMonth() + 1}-${data.getDay()} ${presenza.ingresso}`),
-            uscita: new Date(`${data.getFullYear()}-${data.getMonth() + 1}-${data.getDay()} ${presenza.uscita}`),
+            ingresso: new Date(`${data.getFullYear()}-${data.getMonth() + 1}-${data.getDate()} ${presenza.ingresso}`),
+            uscita: new Date(`${data.getFullYear()}-${data.getMonth() + 1}-${data.getDate()} ${presenza.uscita}`),
             idLezione: presenza.idLezione
         }, (response: any) => {
             let output = response.data
