@@ -86,7 +86,7 @@ export default class CodiceSegreto extends React.PureComponent<IProps, IState>{
             <div className="w-100">
                 <form className="w-100 bg-white p-3 rounded shadow" onSubmit={this.inviaCodice}>
                     <h3 className="d-inline-block">Accesso firma da casa</h3>
-                    <LogoCorso forLogin={true} />
+                    <LogoCorso forLogin />
 
                     <div className="form-group">
                         <label className="text-secondary">Codice segreto</label>

@@ -10,10 +10,10 @@ import Page404 from "./comp/Page404"
 import moment from "moment"
 import "moment/locale/it"
 import SuperDashboard from "./comp/superadmin/SuperDashboard"
-import { superAdminRoute, adminRoute, stageRoute } from "./utilities"
+import { superAdminRoute, adminRoute, studentRoute } from "./utilities"
 import DashboardCasa from "./comp/firmacasa/DashboardCasa"
 import Docs from "./comp/Docs"
-import StageDashboard from "./comp/stage/StageDashboard"
+import StudentDashboard from "./comp/studente/StudentDashboard"
 
 moment.locale("it")
 
@@ -35,8 +35,8 @@ ReactDOM.render(<Router history={routerHistory}>
             <Dashboard />
         )} />
 
-        <Route path={stageRoute} render={() => (
-            <StageDashboard />
+        <Route path={studentRoute} render={() => (
+            <StudentDashboard />
         )} />
 
         <Route path={superAdminRoute} render={() => (

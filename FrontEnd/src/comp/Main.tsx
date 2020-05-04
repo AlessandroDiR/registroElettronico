@@ -47,7 +47,7 @@ export default class Main extends React.Component{
                             <span><i className="fal fa-calendar-alt fa-fw mr-1"></i> Calendario</span>
                         </NavLink>
 
-                        <Footer inMenu={true} />
+                        <Footer inMenu />
                     </div>
 
                     <Switch>

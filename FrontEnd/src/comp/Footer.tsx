@@ -1,5 +1,5 @@
 import React from "react"
-import { adminRoute, superAdminRoute, siteUrl } from "../utilities"
+import { adminRoute, superAdminRoute, studentRoute, siteUrl } from "../utilities"
 
 export interface IProps{
     readonly inMenu?: boolean
@@ -14,12 +14,12 @@ export default class Footer extends React.PureComponent<IProps, IState>{
             </div>
         }
 
-        return <div className="w-100 bg-white p-3 mt-3 rounded shadow px-2 text-center">
+        return <div className="w-100 bg-white p-3 mt-3 shadow px-2 text-center fixed-bottom">
             <div>
                 &copy; {(new Date()).getFullYear()} FITSTIC
             </div>
 
-            <a href={siteUrl+"/#"+adminRoute} className="text-blue u-hover">Coordinatori</a> - <a href={siteUrl+"/#"+superAdminRoute} className="text-blue u-hover">Amministratori</a> - <a href={siteUrl+"/#/documentazione"} className="text-blue u-hover">Documentazione</a> - <a href={siteUrl+"/#/firmacasa"} className="text-blue u-hover">Firma da remoto</a>
+            <a href={siteUrl+"/#"+adminRoute} className="text-blue u-hover">Coordinatori</a> - <a href={siteUrl+"/#"+superAdminRoute} className="text-blue u-hover">Amministratori</a> - <a href={siteUrl+"/#"+studentRoute} className="text-blue u-hover">Studenti</a> - <a href={siteUrl+"/#/firmacasa"} className="text-blue u-hover">Firma da remoto</a> - <a href={siteUrl+"/#/documentazione"} className="text-blue u-hover">Documentazione</a>
         </div>
     }
 }

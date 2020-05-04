@@ -68,7 +68,7 @@ export default class Dashboard extends React.Component{
                             <span><i className="fal fa-power-off fa-fw mr-1"></i> Esci</span>
                         </NavLink>
 
-                        <Footer inMenu={true} />
+                        <Footer inMenu />
                     </div>
   
                     <Switch>

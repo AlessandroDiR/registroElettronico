@@ -302,7 +302,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                                     return <tr className={"bg-"+bg}>
                                                         <td>
                                                             {
-                                                                s.ritirato ? <Checkbox disabled={true} /> : <Checkbox onChange={() => this.changeSelection(s)} checked={checked} />
+                                                                s.ritirato ? <Checkbox disabled /> : <Checkbox onChange={() => this.changeSelection(s)} checked={checked} />
                                                             }
                                                         </td>
                                                         <Tooltip title={s.nome + " " + s.cognome}>

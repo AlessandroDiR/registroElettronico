@@ -3,11 +3,13 @@ import Axios from "axios"
 import { Modal, Icon } from "antd"
 import { IAdmin } from "../models/IAdmin"
 import { checkEnter } from "../utilities"
+import { Cipher } from "../models/Cipher"
 
 export const askPassword = (url: string, callType: string, body?: any, callback?: any, preAction?: any, customText?: string) => {
     let input: HTMLInputElement,
     tutor = JSON.parse(sessionStorage.getItem("adminSession")) as IAdmin,
-    admin = JSON.parse(sessionStorage.getItem("superSession")) as IAdmin
+    admin = JSON.parse(sessionStorage.getItem("superSession")) as IAdmin,
+    cipher = new Cipher()
 
     const sendForm = () => {
 
@@ -37,7 +39,7 @@ export const askPassword = (url: string, callType: string, body?: any, callback?
                 return true
             }
             
-            body.password = input.value.trim()
+            body.password = "idStudente" in body ? cipher.encode(input.value) : input.value.trim()
         }
 
         if(callType === "post"){

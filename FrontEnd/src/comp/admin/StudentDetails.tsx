@@ -140,7 +140,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
 
             <PresenzeTable studente={student} reloadTotali={this.loadTotali} />
             
-            <Modal visible={modal} maskClosable={true} centered title={
+            <Modal visible={modal} maskClosable centered title={
                 <span>
                     <i className="far fa-qrcode fa-fw fa-lg text-primary mr-2"></i>Codice QR dello studente
                 </span>
