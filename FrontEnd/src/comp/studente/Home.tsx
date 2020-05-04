@@ -95,7 +95,7 @@ export default class Home extends React.PureComponent<IProps, IState>{
             }
 
             {
-                isActive === null  && <Spin indicator={icon} />
+                isActive === null && <Spin indicator={icon} />
             }
 
             <div className="clearfix"></div>
