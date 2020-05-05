@@ -35,8 +35,8 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
             let calendar = response.data as ICalendar
 
             this.setState({
-                calendarId: calendar.idGoogleCalendar,
-                actualId: calendar.idGoogleCalendar,
+                calendarId: calendar.idCalendario,
+                actualId: calendar.idCalendario,
                 calendar
             })
         })

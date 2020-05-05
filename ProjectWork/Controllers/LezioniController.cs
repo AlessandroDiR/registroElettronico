@@ -96,8 +96,11 @@ namespace ProjectWork.Controllers
         [HttpGet("[action]/{idCorso}/{anno}")]
         public IActionResult GetStudentiAtLezione([FromRoute] int idCorso, int anno)
         {
-            var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == idCorso && c.Anno == anno).IdCalendario;
-            var lezioni = _context.Lezioni.Where(l => l.Data == DateTime.Today && l.IdCalendario == calendario);
+            var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == idCorso && c.Anno == anno);
+            if (calendario == null)
+                return BadRequest();
+
+            var lezioni = _context.Lezioni.Where(l => l.Data == DateTime.Today && l.IdCalendario == calendario.IdCalendario);
 
             if (lezioni.Count() == 0)
                 return Ok("Nessuna lezione");

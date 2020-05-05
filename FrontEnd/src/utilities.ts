@@ -5,7 +5,7 @@ export const logoUrl = "fitstic_logo.png"
 export const adminRoute = "/adminpanel"
 export const superAdminRoute = "/superpanel"
 export const docentiRoute = "/docentipanel"
-export const stageRoute = "/stagepanel"
+export const studentRoute = "/studentipanel"
 
 export const Digits2 = (n: number) => {
     return n < 10 ? "0" + n : n

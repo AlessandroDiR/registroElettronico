@@ -732,6 +732,10 @@ namespace ProjectWork.Controllers
                 }
             }
 
+            var studente = _context.Studenti.Find(idStudente);
+            if (studente.Promosso == "true" || studente.AnnoFrequentazione == 2)
+                return _context.Stage.Where(s => s.IdStudente == idStudente).Sum(s => s.OraFine.TimeOfDay.TotalHours - s.OraInizio.TimeOfDay.TotalHours) + Math.Round(hoursAmount.TotalHours, 2);
+
             return Math.Round(hoursAmount.TotalHours, 2);
         }
 
@@ -741,6 +745,7 @@ namespace ProjectWork.Controllers
 
             if (studente.Promosso == "true")
                 return 2000;
+
 
             var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == studente.IdCorso && c.Anno == studente.AnnoFrequentazione);
 
@@ -754,6 +759,9 @@ namespace ProjectWork.Controllers
             {
                 totOreLezioni += l.OraFine - l.OraInizio;
             }
+
+            if (studente.AnnoFrequentazione == 2)
+                return totOreLezioni.TotalHours + 400;
 
             return totOreLezioni.TotalHours;
         }
