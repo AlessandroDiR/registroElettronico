@@ -1,9 +1,10 @@
 import React from "react"
-import { Tooltip, Icon, Spin, Modal, Select } from "antd"
-import { siteUrl, formatItalian, validateTime, checkEnter, convertFromUTC, getDateTime } from "../../utilities"
+import { Tooltip, Icon, Spin, Modal, Select, TimePicker } from "antd"
+import { siteUrl, formatItalian, validateTime, convertFromUTC, getDateTime } from "../../utilities"
 import Axios from "axios"
 import { IPresenzaDocente } from "../../models/IPresenzaDocente"
 import { askPassword } from "../AskConferma"
+import moment from "moment"
 
 export interface IProps{
     readonly idDocente: number
@@ -45,9 +46,8 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
         })
     }
 
-    changeEntrata = (e: any, idPresenza: number) => {
-        let entrata = e.target.value.trim(),
-        presenze = this.state.editingList.map(p => {
+    changeEntrata = (entrata: string, idPresenza: number) => {
+        let presenze = this.state.editingList.map(p => {
             if(p.idPresenza === idPresenza)
                 p.ingresso = entrata
             
@@ -59,9 +59,8 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
         })
     }
 
-    changeUscita = (e: any, idPresenza: number) => {
-        let uscita = e.target.value.trim(),
-        presenze = this.state.editingList.map(p => {
+    changeUscita = (uscita: string, idPresenza: number) => {
+        let presenze = this.state.editingList.map(p => {
             if(p.idPresenza === idPresenza)
                 p.uscita = uscita
             
@@ -216,12 +215,12 @@ export default class LezioniDocenteTable extends React.PureComponent<IProps, ISt
                                 <td style={{maxWidth: 0}} className="text-truncate">{formatItalian(p.data)}</td>
                                 <td style={{maxWidth: 0}} className="text-truncate" ref={r => td1 = r}>
                                     {
-                                        editPresenza ? <input type="text" className="form-control edit-time" value={editPresenza.ingresso} onChange={(e) => this.changeEntrata(e, p.idPresenza)} onKeyUp={(e) => checkEnter(e, () => this.confirmEdit(p.idPresenza, td1, td2))} /> : <span>{p.ingresso}</span>
+                                        editPresenza ? <TimePicker defaultValue={moment(p.ingresso, 'HH:mm')} format='HH:mm' onChange={(_, ingresso) => this.changeEntrata(ingresso, p.idPresenza)} minuteStep={10} placeholder="Seleziona una data" /> : <span>{p.ingresso}</span>
                                     }
                                 </td>
                                 <td style={{maxWidth: 0}} className="text-truncate" ref={r => td2 = r}>
                                     {
-                                        editPresenza ? <input type="text" className="form-control edit-time" value={editPresenza.uscita} onChange={(e) => this.changeUscita(e, p.idPresenza)} onKeyUp={(e) => checkEnter(e, () => this.confirmEdit(p.idPresenza, td1, td2))} /> : <span>{p.uscita}</span>
+                                        editPresenza ? <TimePicker defaultValue={moment(p.uscita, 'HH:mm')} format='HH:mm' onChange={(_, uscita) => this.changeUscita(uscita, p.idPresenza)} minuteStep={10} placeholder="Seleziona una data" /> : <span>{p.uscita}</span>
                                     }
                                 </td>
                                 <Tooltip title={p.lezione}>

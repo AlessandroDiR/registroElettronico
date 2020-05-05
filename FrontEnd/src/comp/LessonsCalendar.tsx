@@ -44,7 +44,7 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
         }
 
         return <div className="col px-5 py-3" id="mainBlock">
-            <Calendario calendarId={calendar.idGoogleCalendar} />
+            <Calendario calendarId={calendar.idCalendario} />
         </div>
     }
   

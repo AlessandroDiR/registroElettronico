@@ -7,6 +7,7 @@ import PresenzeTable from "./PresenzeTable"
 import Axios from "axios"
 import { formatItalian, siteUrl, adminRoute } from "../../utilities"
 import QRCode from "qrcode.react"
+import StudentStage from "./StudentStage"
 
 export interface IRouteParams{
     readonly id: string
@@ -19,6 +20,7 @@ export interface IState{
     readonly totPresenze: number
     readonly oreTotali: number
     readonly modal: boolean
+    readonly showStage: boolean
 }
 
 export default class StudentDetails extends React.PureComponent<IProps, IState>{
@@ -30,7 +32,8 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
             student: null,
             totPresenze: null,
             oreTotali: null,
-            modal: false
+            modal: false,
+            showStage: false
         }
     }
 
@@ -86,13 +89,17 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
     }
 
     getQRCode = () => {
-        const { student } = this.state
+        return this.state.student.codice
+    }
 
-        return student.codice
+    toggleStage = () => {
+        this.setState({
+            showStage: !this.state.showStage
+        })
     }
 
     render(): JSX.Element{
-        const { student, totPresenze, oreTotali, modal } = this.state
+        const { student, totPresenze, oreTotali, modal, showStage } = this.state
         
         if(!student){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
@@ -132,6 +139,10 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                         {
                             oreTotali !== null && totPresenze !== null ? <Statistic title="Presenze totali (ore)" value={totPresenze} suffix={"/ "+oreTotali} decimalSeparator="," groupSeparator="." /> : <Spin indicator={<Icon type="loading" spin />} />
                         }
+
+                        <Button onClick={this.toggleStage} className="float-right mt-3" type="link">
+                            Mostra ore di stage
+                        </Button>
                         
                         <div className="clearfix"></div>
                     </div>
@@ -158,6 +169,8 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                     </div>
                 </div>
             </Modal>
+
+            <StudentStage idStudente={student.idStudente} toggleModal={this.toggleStage} show={showStage} />
         </div>
     }
 }

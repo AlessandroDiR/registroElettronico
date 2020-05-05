@@ -108,7 +108,7 @@ export default class Home extends React.PureComponent<IProps, IState>{
                             <th style={{width: "25%"}}>Descrizione</th>
                             <th>Inizio</th>
                             <th>Fine</th>
-                            <th>Totale</th>
+                            <th>Ore svolte</th>
                         </tr>
 
                         {

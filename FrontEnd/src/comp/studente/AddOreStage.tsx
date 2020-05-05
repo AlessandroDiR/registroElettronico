@@ -1,6 +1,6 @@
 import React from "react"
 import Axios from "axios"
-import { Modal, Button, DatePicker } from "antd"
+import { Modal, Button, DatePicker, TimePicker } from "antd"
 import { validateTime, formatItalian, siteUrl, formattaData } from "../../utilities"
 import locale from "antd/es/date-picker/locale/it_IT"
 import moment from "moment"
@@ -40,19 +40,16 @@ export default class AddOreStage extends React.PureComponent<IProps, IState>{
         })
     }
 
-    changeInizio = (e: any) => {
-        let inizio = e.target.value.trim()
-
+    changeInizio = (_: any, oraInizio: string) => {
+        console.log(oraInizio)
         this.setState({
-            oraInizio: inizio
+            oraInizio
         })
     }
 
-    changeFine = (e: any) => {
-        let fine = e.target.value.trim()
-
+    changeFine = (_: any, oraFine: string) => {
         this.setState({
-            oraFine: fine
+            oraFine
         })
     }
 
@@ -138,7 +135,7 @@ export default class AddOreStage extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { date, oraInizio, oraFine, argomento, loading } = this.state,
+        const { date, argomento, loading } = this.state,
         { visible, annullaAggiunta } = this.props
 
         return <Modal title="Registrazione ore di stage" visible={visible} footer={[
@@ -159,11 +156,12 @@ export default class AddOreStage extends React.PureComponent<IProps, IState>{
                 <div className="form-group row mx-0">
                     <div className="col pr-1 pl-0">
                         <label className="text-secondary">Inizio</label>
-                        <input type="text" value={oraInizio} onChange={this.changeInizio} className="form-control" disabled={loading} />
+                        <TimePicker defaultValue={moment(new Date(), 'HH:mm')} format='HH:mm' onChange={this.changeInizio} className="w-100 select-date" minuteStep={10} placeholder="Seleziona una data" />
                     </div>
+
                     <div className="col pr-0 pl-1">
                         <label className="text-secondary">Fine</label>
-                        <input type="text" value={oraFine} onChange={this.changeFine} className="form-control" disabled={loading} />
+                        <TimePicker defaultValue={moment(new Date(), 'HH:mm')} format='HH:mm' onChange={this.changeFine} className="w-100 select-date" minuteStep={10} placeholder="Seleziona una data" />
                     </div>
                 </div>
 

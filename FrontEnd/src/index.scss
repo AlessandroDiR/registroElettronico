@@ -461,6 +461,10 @@ table td, table th{
   box-shadow: 0 -2px 2px rgba(0,0,0,0.1)
 }
 
+.ant-time-picker-input{
+  text-align: center
+}
+
 @keyframes changed{
   20%{ width: 100% }
   100%{ width: 100%; opacity: 0 }
