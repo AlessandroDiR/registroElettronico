@@ -8,6 +8,7 @@ namespace ProjectWork.Models
         public Studenti()
         {
             Presenze = new HashSet<Presenze>();
+            RecPwdStudente = new HashSet<RecPwdStudente>();
             Stage = new HashSet<Stage>();
         }
 
@@ -27,6 +28,7 @@ namespace ProjectWork.Models
 
         public Corsi IdCorsoNavigation { get; set; }
         public ICollection<Presenze> Presenze { get; set; }
+        public ICollection<RecPwdStudente> RecPwdStudente { get; set; }
         public ICollection<Stage> Stage { get; set; }
     }
 }

@@ -80,23 +80,16 @@ namespace ProjectWork.Controllers
 
             if (!CalendariExists(obj.Calendario.IdCalendario))
             {
-                obj.Calendario.IdCalendario = Guid.NewGuid().ToString();
+                _context.Calendari.Remove(_context.Calendari.SingleOrDefault(c => c.IdCorso == obj.Calendario.IdCorso && c.Anno == obj.Calendario.Anno));
                 _context.Calendari.Add(obj.Calendario);
+                var events = _calendarApi.GetCalendarEvents(obj.Calendario);
+                lezioniNonValidate = _calendarApi.SaveEventsInContext(obj.Calendario, events);
             }
             else
             {
-                if (!GoogleCalendarExists(obj.Calendario))
-                {
-                    _context.Lezioni.RemoveRange(_context.Lezioni.Where(l => l.IdCalendario == obj.Calendario.IdCalendario));
-                    var events = _calendarApi.GetCalendarEvents(obj.Calendario);
-                    lezioniNonValidate =  _calendarApi.SaveEventsInContext(obj.Calendario, events);
-                }
-                else
-                {
-                    var updatedCalendar = _context.Calendari.Find(obj.Calendario.IdCalendario);
-                    var updatedEvents = _calendarApi.GetUpdatedEvents(updatedCalendar);
-                    lezioniNonValidate = _calendarApi.UpdateEventsInContext(obj.Calendario, updatedEvents);
-                }
+                _context.Calendari.Update(obj.Calendario);
+                var updatedEvents = _calendarApi.GetUpdatedEvents(obj.Calendario);
+                lezioniNonValidate = _calendarApi.UpdateEventsInContext(obj.Calendario, updatedEvents);
             }
 
             try
@@ -121,11 +114,6 @@ namespace ProjectWork.Controllers
         private bool CalendariExists(string id)
         {
             return _context.Calendari.Any(e => e.IdCalendario == id);
-        }
-
-        private bool GoogleCalendarExists(Calendari c)
-        {
-            return _context.Calendari.Any(gc => gc.IdCalendario == c.IdCalendario && gc.IdGoogleCalendar == c.IdGoogleCalendar);
         }
     }
 }

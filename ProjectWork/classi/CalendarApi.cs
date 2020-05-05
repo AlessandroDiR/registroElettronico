@@ -60,7 +60,7 @@ namespace ProjectWork.classi
 
         public IList<Event> GetCalendarEvents(Calendari c)
         {
-            var request = _service.Events.List(c.IdGoogleCalendar);
+            var request = _service.Events.List(c.IdCalendario);
             request.MaxResults = 400;
 
             var response = request.Execute();
@@ -75,7 +75,7 @@ namespace ProjectWork.classi
 
         public IList<Event> GetUpdatedEvents(Calendari c)
         {
-            var request = _service.Events.List(c.IdGoogleCalendar);
+            var request = _service.Events.List(c.IdCalendario);
             request.MaxResults = 400;
             request.SyncToken = c.NextSyncToken;
 

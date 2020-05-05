@@ -11,7 +11,6 @@ namespace ProjectWork.Models
         }
 
         public string IdCalendario { get; set; }
-        public string IdGoogleCalendar { get; set; }
         public int IdCorso { get; set; }
         public int Anno { get; set; }
         public string NextSyncToken { get; set; }

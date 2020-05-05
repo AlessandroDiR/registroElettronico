@@ -90,7 +90,7 @@ namespace ProjectWork.Controllers
             return Ok(result);
         }
 
-        // GET: api/Studenti/1
+        // GET: api/Studenti/1/1
         [HttpGet("{idCorso}/{anno}")]
         public IActionResult GetStudenti([FromRoute] int idCorso, int anno)
         {
@@ -154,42 +154,6 @@ namespace ProjectWork.Controllers
                 annoFrequentazione = s.AnnoFrequentazione,
                 giornate = GetDaysAmount(s.IdStudente),
                 frequenza = GetPercentualeFrequenza(s.IdStudente)
-            };
-
-            return Ok(json);
-        }
-
-        // GET: api/Studenti/GetStudentiByCf/5
-        [HttpGet("[action]/{Cf}")]
-        public async Task<IActionResult> GetStudentiByCf([FromRoute] string cf)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var studente = await _context.Studenti.FirstOrDefaultAsync(s => s.Cf == cf);
-
-            if (studente == null)
-            {
-                return NotFound();
-            }
-
-            var json = new
-            {
-                idStudente = studente.IdStudente,
-                idCorso = studente.IdCorso,
-                nome = studente.Nome,
-                cognome = studente.Cognome,
-                email = studente.Email,
-                dataNascita = studente.DataNascita,
-                cf = studente.Cf,
-                ritirato = bool.Parse(studente.Ritirato),
-                dataRitiro = studente.DataRitiro,
-                promosso = bool.Parse(studente.Promosso),
-                annoFrequentazione = studente.AnnoFrequentazione,
-                giornate = GetDaysAmount(studente.IdStudente),
-                frequenza = GetPercentualeFrequenza(studente.IdStudente)
             };
 
             return Ok(json);
@@ -284,27 +248,12 @@ namespace ProjectWork.Controllers
                 };
 
                 _context.Studenti.Add(studente);
+                _es.SendCredenzialiStudente(studente);
             }
 
             await _context.SaveChangesAsync();
 
             return GetStudenti(idCorso);
-        }
-
-        [HttpPost("[action]")]
-        public IActionResult RichiestaCodice([FromBody] int idStudente)
-        {
-            var s = _context.Studenti.Find(idStudente);
-            if (s == null)
-                return NotFound();
-
-            s.Password = Guid.NewGuid().ToString().Split('-')[0];
-            _context.Studenti.Update(s);
-            _context.SaveChanges();
-
-            _es.SendCredenzialiAccessoRemoto(s.Email, s.Password);
-
-            return Ok("success");
         }
 
         // PUT: api/Studenti/5
@@ -444,37 +393,124 @@ namespace ProjectWork.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> CheckEmailLogin([FromBody] StudentEmail email)
-        {
-            var studente = await _context.Studenti.SingleOrDefaultAsync(s => s.Email == email.Email);
-            if (studente == null)
-                return Ok(false);
-
-            studente.Password = Guid.NewGuid().ToString().Split('-')[0];
-            _context.Studenti.Update(studente);
-            _context.SaveChanges();
-
-            _es.SendCredenzialiAccessoRemoto(studente.Email, studente.Password);
-
-            return Ok(true);
-        }
-
-        [HttpPost("[action]")]
         public async Task<IActionResult> LoginStudente([FromBody] StudentCred cred)
         {
             var st = await _context.Studenti.SingleOrDefaultAsync(s => s.Email == cred.Email && s.Password == cred.Password);
+
             if (st == null)
                 return Ok("Studente inesistente");
+
+            if (st.Promosso == "true" || st.Ritirato == "true")
+            {
+                return Ok("errore");
+            }
 
             var json = new
             {
                 idStudente = st.IdStudente,
                 nome = st.Nome,
                 cognome = st.Cognome,
-                password = st.Password
+                password = st.Password,
+                idCorso = st.IdCorso,
+                annoFrequentazione = st.AnnoFrequentazione
             };
 
             return Ok(json);
+        }
+
+        // POST: api/Studente/RecuperoPwdStudente
+        [HttpPost("[action]")]
+        public async Task<IActionResult> RecuperoPwdStudente([FromBody] StudentEmail obj)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var studente = _context.Studenti.FirstOrDefault(s => obj.Email == s.Email);
+
+            if (studente == null)
+            {
+                return Ok("error");
+            }
+
+            int Codice = int.Parse(DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString().Substring(5, 5));
+
+            string subject = "FITSTIC | Recupero Password";
+            string body = $"Ciao! Ecco il codice che dovrai inserire per recuperare la password: <strong>{Codice}</strong>. Il codice ha una durata di 5 minuti.";
+
+            EmailSender es = new EmailSender();
+            if (es.SendEmailTo(obj.Email, subject, body) == "success")
+            {
+                RecPwdStudente rec = new RecPwdStudente
+                {
+                    IdStudente = studente.IdStudente,
+                    DataRichiesta = DateTime.UtcNow.ToLocalTime(),
+                    Codice = Codice
+                };
+                _context.RecPwdStudente.Add(rec);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return BadRequest("Impossibile inviare la mail");
+            }
+
+
+            return Ok(studente.IdStudente);
+        }
+
+        // POST: api/Studenti/CambioPassword
+        [HttpPost("[action]")]
+        public async Task<IActionResult> CambioPassword([FromBody] RecPwd_UtenteDati obj)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var rec = _context.RecPwdStudente.LastOrDefault(s => obj.IdUtente == s.IdStudente);
+
+            if (rec == null)
+            {
+                return NotFound("Studente non trovato");
+            }
+
+            if (rec.Codice != obj.Codice)
+            {
+                return Ok("Codice errato");
+            }
+            else if (rec.DataRichiesta.AddMinutes(5) < DateTime.UtcNow.ToLocalTime())
+            {
+                return Ok("Codice non più valido");
+            }
+
+            var studente = _context.Studenti.FirstOrDefault(s => obj.IdUtente == s.IdStudente);
+            if (studente == null)
+            {
+                return NotFound("studente non trovato");
+            }
+
+            studente.Password = obj.Password;
+
+            _context.Entry(studente).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!StudentiExists(studente.IdStudente))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok("success");
         }
 
         [HttpGet("[action]/{idStudente}")]
@@ -697,20 +733,36 @@ namespace ProjectWork.Controllers
                 }
             }
 
+            var studente = _context.Studenti.Find(idStudente);
+            if (studente.Promosso == "true" || studente.AnnoFrequentazione == 2)
+                return _context.Stage.Where(s => s.IdStudente == idStudente).Sum(s => s.OraFine.TimeOfDay.TotalHours - s.OraInizio.TimeOfDay.TotalHours) + Math.Round(hoursAmount.TotalHours, 2);
+
             return Math.Round(hoursAmount.TotalHours, 2);
         }
 
         public double TotaleOreLezioni(int idStudente)
         {
             var studente = _context.Studenti.Find(idStudente);
-            var id_calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == studente.IdCorso && c.Anno == studente.AnnoFrequentazione).IdCalendario;
-            var lezioni = _context.Lezioni.Where(l => l.IdCalendario == id_calendario && l.Data <= DateTime.UtcNow);
+
+            if (studente.Promosso == "true")
+                return 2000;
+
+
+            var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == studente.IdCorso && c.Anno == studente.AnnoFrequentazione);
+
+            if (calendario == null)
+                return 0;
+
+            var lezioni = _context.Lezioni.Where(l => l.IdCalendario == calendario.IdCalendario && l.Data <= DateTime.UtcNow);
             TimeSpan totOreLezioni = new TimeSpan();
 
             foreach (var l in lezioni)
             {
                 totOreLezioni += l.OraFine - l.OraInizio;
             }
+
+            if (studente.AnnoFrequentazione == 2)
+                return totOreLezioni.TotalHours + 400;
 
             return totOreLezioni.TotalHours;
         }

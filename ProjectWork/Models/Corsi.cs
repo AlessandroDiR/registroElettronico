@@ -21,6 +21,8 @@ namespace ProjectWork.Models
         public string Codice { get; set; }
         public string CodicePrimoAnno { get; set; }
         public string CodiceSecondoAnno { get; set; }
+        public bool StagePrimoAnno { get; set; }
+        public bool StageSecondoAnno { get; set; }
 
         public ICollection<Calendari> Calendari { get; set; }
         public ICollection<Comprende> Comprende { get; set; }

@@ -85,6 +85,18 @@ namespace ProjectWork.Controllers
             return Ok(corso);
         }
 
+        [HttpGet("[action]/{idCorso}/{anno}")]
+        public IActionResult GetStageValue([FromRoute] int idCorso, int anno)
+        {
+            var corso = _context.Corsi.SingleOrDefault(c => c.IdCorso == idCorso);
+            if (anno == 1)
+                return Ok(corso.StagePrimoAnno);
+            if (anno == 2)
+                return Ok(corso.StageSecondoAnno);
+
+            return BadRequest();
+        }
+
 
         // POST: api/Corsi/GeneraCodiceAnno
         [HttpPost("[action]")]
@@ -124,6 +136,39 @@ namespace ProjectWork.Controllers
                 
             return NotFound();
 
+        }
+
+        // POST: api/Corsi/SwitchAbilitaStage
+        [HttpPost("[action]")]
+        public async Task<IActionResult> SwitchAbilitaStage([FromBody] GeneraCodiceAnnoModel obj)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var coordinatore = await _context.Coordinatori.SingleOrDefaultAsync(c => c.IdCoordinatore == obj.AuthCoordinatore.IdCoordinatore && c.Password == obj.AuthCoordinatore.Password);
+            if (coordinatore == null)
+                return NotFound();
+
+            var corso = await _context.Corsi.SingleOrDefaultAsync(c => c.IdCorso == coordinatore.IdCorso);
+
+            if (obj.Anno == 1)
+                corso.StagePrimoAnno = !corso.StagePrimoAnno;
+            if (obj.Anno == 2)
+                corso.StageSecondoAnno = !corso.StageSecondoAnno;
+
+            try
+            {
+                _context.Corsi.Update(corso);
+                _context.SaveChanges();
+
+                return Ok("success");
+            }
+            catch
+            {
+                return StatusCode(500, "salvataggio non riuscito");
+            }
         }
 
         // PUT: api/Corsi/5

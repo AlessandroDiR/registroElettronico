@@ -29,6 +29,7 @@ namespace ProjectWork.Models
         public virtual DbSet<Presenze> Presenze { get; set; }
         public virtual DbSet<PresenzeDocente> PresenzeDocente { get; set; }
         public virtual DbSet<RecPwdCoordinatore> RecPwdCoordinatore { get; set; }
+        public virtual DbSet<RecPwdStudente> RecPwdStudente { get; set; }
         public virtual DbSet<Stage> Stage { get; set; }
         public virtual DbSet<Studenti> Studenti { get; set; }
         public virtual DbSet<Tenere> Tenere { get; set; }
@@ -79,19 +80,13 @@ namespace ProjectWork.Models
 
                 entity.Property(e => e.IdCalendario)
                     .HasColumnName("id_calendario")
-                    .HasMaxLength(50)
+                    .HasMaxLength(100)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.Anno).HasColumnName("anno");
 
                 entity.Property(e => e.IdCorso).HasColumnName("id_corso");
-
-                entity.Property(e => e.IdGoogleCalendar)
-                    .IsRequired()
-                    .HasColumnName("id_google_calendar")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.NextSyncToken)
                     .HasColumnName("nextSyncToken")
@@ -152,7 +147,7 @@ namespace ProjectWork.Models
                 entity.HasKey(e => e.IdCoordinatore);
 
                 entity.HasIndex(e => e.Email)
-                    .HasName("UQ__Coordina__AB6E616449E4E45E")
+                    .HasName("UQ__Coordina__AB6E6164B41216D7")
                     .IsUnique();
 
                 entity.Property(e => e.IdCoordinatore).HasColumnName("id_coordinatore");
@@ -231,6 +226,10 @@ namespace ProjectWork.Models
                     .HasColumnName("nome")
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.StagePrimoAnno).HasColumnName("stage_primo_anno");
+
+                entity.Property(e => e.StageSecondoAnno).HasColumnName("stage_secondo_anno");
             });
 
             modelBuilder.Entity<Docenti>(entity =>
@@ -314,8 +313,9 @@ namespace ProjectWork.Models
                     .HasColumnType("date");
 
                 entity.Property(e => e.IdCalendario)
+                    .IsRequired()
                     .HasColumnName("id_calendario")
-                    .HasMaxLength(50)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.IdGEvent)
@@ -336,6 +336,7 @@ namespace ProjectWork.Models
                 entity.HasOne(d => d.IdCalendarioNavigation)
                     .WithMany(p => p.Lezioni)
                     .HasForeignKey(d => d.IdCalendario)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Lezioni_Calendari");
 
                 entity.HasOne(d => d.IdMateriaNavigation)
@@ -456,6 +457,27 @@ namespace ProjectWork.Models
                     .HasForeignKey(d => d.IdCoordinatore)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RecPwd_Coordinatore_Coordinatori");
+            });
+
+            modelBuilder.Entity<RecPwdStudente>(entity =>
+            {
+                entity.ToTable("RecPwd_Studente");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Codice).HasColumnName("codice");
+
+                entity.Property(e => e.DataRichiesta)
+                    .HasColumnName("data_richiesta")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.IdStudente).HasColumnName("id_studente");
+
+                entity.HasOne(d => d.IdStudenteNavigation)
+                    .WithMany(p => p.RecPwdStudente)
+                    .HasForeignKey(d => d.IdStudente)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RecPwd_Studente_Studenti");
             });
 
             modelBuilder.Entity<Stage>(entity =>
