@@ -37,7 +37,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
             this.setState({
                 calendarId: calendar.idGoogleCalendar,
                 actualId: calendar.idGoogleCalendar,
-                calendar: calendar
+                calendar
             })
         })
     }
@@ -46,7 +46,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
         let calendarId = e.target.value
 
         this.setState({
-            calendarId: calendarId
+            calendarId
         })
     }
 
@@ -54,7 +54,7 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
         e.preventDefault()
 
         const { corso, anno } = this.props
-        const { calendarId, calendar } = this.state
+        const { calendarId } = this.state
 
         if(calendarId === ""){
             Modal.error({
@@ -67,10 +67,9 @@ export default class ConfigForm extends React.PureComponent<IProps, IState>{
         
         askPassword(siteUrl+"/api/calendari", "post", {
             calendario: {
-                idCalendario: calendar ? calendar.idCalendario : "0",
+                idCalendario: calendarId,
                 idCorso: corso,
-                anno: anno,
-                idGoogleCalendar: calendarId
+                anno
             }
         }, (response: any) => {
             let eventiScartati = response.data as ICalendarEvent[],

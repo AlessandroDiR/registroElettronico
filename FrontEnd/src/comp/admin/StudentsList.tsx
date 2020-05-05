@@ -71,7 +71,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 studente.dataRitiro = dataRitiro
                 
                 askPassword(siteUrl+"/api/studenti/" + student.idStudente, "put", {
-                    studente: studente
+                    studente
                 }, (response: any) => {
 
                     let stu = response.data as IStudent,
@@ -145,7 +145,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         }
 
         askPassword(siteUrl+"/api/studenti", "put", {
-            studenti: studenti
+            studenti
         }, (response: any) => {
             this.setState({
                 students: response.data as IStudent[],
@@ -193,10 +193,10 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                     idStudente: s.idStudente
                 }, (response: any) => {
                     
-                    let studenti = response.data as IStudent[]
+                    let students = response.data as IStudent[]
         
                     this.setState({
-                        students: studenti
+                        students
                     })
         
                     message.success("Studente archiviato con successo!")
@@ -213,7 +213,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         let filter = e.target.value
 
         this.setState({
-            filter: filter
+            filter
         })
     }
 

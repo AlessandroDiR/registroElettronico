@@ -41,7 +41,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
             let corso = response.data as ICorso
 
             this.setState({
-                corso: corso,
+                corso,
                 nome: corso.nome,
                 luogo: corso.luogo,
                 logo: corso.logo
@@ -53,7 +53,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         let nome = event.target.value
 
         this.setState({
-            nome: nome
+            nome
         })
     }
 
@@ -61,7 +61,7 @@ export default class EditCorso extends React.PureComponent<IProps, IState>{
         let luogo = event.target.value
 
         this.setState({
-            luogo: luogo
+            luogo
         })
     }
 

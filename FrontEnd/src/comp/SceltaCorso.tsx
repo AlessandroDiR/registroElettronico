@@ -26,7 +26,7 @@ export default class SceltaCorso extends React.PureComponent<IProps, IState>{
             let corsi = response.data as ICorso[]
 
             this.setState({
-                corsi: corsi
+                corsi
             })
         })
 

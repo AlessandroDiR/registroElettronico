@@ -54,9 +54,6 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
             return
         }
 
-        // Axios.post(siteUrl+"/api/studenti/richiestacodice", selectedStudente.idStudente, {
-        //     headers: {"Content-Type": "application/json"}
-        // }).then(_ => {
         askPassword(siteUrl+"/api/firmaremota/firmaremotastudente", "post", {
             idStudente: selectedStudente.idStudente
         }, (response: any) => {
@@ -70,7 +67,6 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
                 onOk: () => routerHistory.push("/")
             })
         }, null, "Inserisci la tua password")
-        // })
     }
 
     firmaDocente = () => {
@@ -124,7 +120,7 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
 
                         if(i === studenti.length - 1){
                             this.setState({
-                                lezione: lezione,
+                                lezione,
                                 studenti: studenti as IStudent[]
                             })
                         }

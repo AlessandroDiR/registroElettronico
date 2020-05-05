@@ -64,7 +64,7 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
         let nome = event.target.value
 
         this.setState({
-            nome: nome
+            nome
         })
     }
 
@@ -72,7 +72,7 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
         let cognome = event.target.value
 
         this.setState({
-            cognome: cognome
+            cognome
         })
     }
 
@@ -80,7 +80,7 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
         let email = event.target.value.trim()
 
         this.setState({
-            email: email
+            email
         })
     }
 
@@ -88,7 +88,7 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
         let corso = parseInt(event.target.value)
 
         this.setState({
-            corso: corso
+            corso
         })
     }
 
@@ -122,10 +122,10 @@ export default class EditTutor extends React.PureComponent<IProps, IState>{
 
         askPassword(siteUrl+"/api/coordinatori/" + idCoordinatore, "put", {
             coordinatore: {
-                idCoordinatore: idCoordinatore,
+                idCoordinatore,
                 nome: nome.trim(),
                 cognome: cognome.trim(),
-                email: email,
+                email,
                 idCorso: corso
             }
         }, (_: any) => {

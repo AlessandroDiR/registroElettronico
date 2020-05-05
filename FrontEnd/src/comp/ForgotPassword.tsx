@@ -52,7 +52,7 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
         let email = e.target.value.trim()
 
         this.setState({
-            email: email
+            email
         })
     }
 
@@ -60,7 +60,7 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
         let code = e.target.value.trim()
 
         this.setState({
-            code: code
+            code
         })
     }
 
