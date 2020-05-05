@@ -19,7 +19,7 @@ export default class Footer extends React.PureComponent<IProps, IState>{
                 &copy; {(new Date()).getFullYear()} FITSTIC
             </div>
 
-            <a href={siteUrl+"/#"+adminRoute} className="text-blue u-hover">Coordinatori</a> - <a href={siteUrl+"/#"+superAdminRoute} className="text-blue u-hover">Amministratori</a> - <a href={siteUrl+"/#"+studentRoute} className="text-blue u-hover">Studenti</a> - <a href={siteUrl+"/#/firmacasa"} className="text-blue u-hover">Firma da remoto</a> - <a href={siteUrl+"/#/documentazione"} className="text-blue u-hover">Documentazione</a>
+            <a href={siteUrl+"/#"+adminRoute} className="text-blue u-hover">Coordinatori</a> 🥑 <a href={siteUrl+"/#"+superAdminRoute} className="text-blue u-hover">Amministratori</a> 🥑 <a href={siteUrl+"/#"+studentRoute} className="text-blue u-hover">Studenti</a> 🥑 <a href={siteUrl+"/#/firmacasa"} className="text-blue u-hover">Firma da remoto</a> 🥑 <a href={siteUrl+"/#/documentazione"} className="text-blue u-hover">Documentazione</a>
         </div>
     }
 }

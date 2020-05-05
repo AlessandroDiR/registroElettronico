@@ -402,7 +402,7 @@ namespace ProjectWork.Controllers
 
             if (st.Promosso == "true" || st.Ritirato == "true")
             {
-                return Ok("errore");
+                return Ok("Accesso negato. Non frequenti più il corso.");
             }
 
             var json = new
