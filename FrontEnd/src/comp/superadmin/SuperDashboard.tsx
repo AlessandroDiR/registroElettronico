@@ -46,7 +46,7 @@ export default class SuperDashboard extends React.Component{
                             <span><i className="fal fa-power-off fa-fw mr-1"></i> Esci</span>
                         </NavLink>
 
-                        <Footer inMenu={true} />
+                        <Footer inMenu />
                     </div>
   
                     <Switch>

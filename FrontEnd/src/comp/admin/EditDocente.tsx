@@ -69,7 +69,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             let materie = response.data as IMateria[]
             
             this.setState({
-                materie: materie
+                materie
             })
         })
 
@@ -77,7 +77,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             let corsi = response.data as ICorso[]
             
             this.setState({
-                corsi: corsi
+                corsi
             })
         })
     }
@@ -86,7 +86,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         let nome = event.target.value
 
         this.setState({
-            nome: nome
+            nome
         })
     }
 
@@ -94,7 +94,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         let email = event.target.value.trim()
 
         this.setState({
-            email: email
+            email
         })
     }
 
@@ -102,7 +102,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         let cognome = event.target.value
 
         this.setState({
-            cognome: cognome
+            cognome
         })
     }
 
@@ -110,7 +110,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
         let CF = event.target.value.trim()
 
         this.setState({
-            CF: CF
+            CF
         })
     }
 
@@ -160,7 +160,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                 idDocente: parseInt(this.props.match.params.id),
                 nome: nome.trim(),
                 cognome: cognome.trim(),
-                email: email,
+                email,
                 cf: CF,
                 tenere: corsiSel.map(c => { return { idCorso: c, idDocente: docente.idDocente } }),
                 insegnare: materieSel.map(m => { return { idMateria: m, idDocente: docente.idDocente } }),

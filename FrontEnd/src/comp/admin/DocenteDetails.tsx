@@ -113,7 +113,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
 
             <LezioniDocenteTable idDocente={docente.idDocente} canEdit={this.isInCorso(docente)} corso={this.props.corso} />
 
-            <Modal visible={modal} maskClosable={true} centered title={
+            <Modal visible={modal} maskClosable centered title={
                 <span>
                     <i className="far fa-qrcode fa-fw fa-lg text-primary mr-2"></i>Codice QR del docente
                 </span>

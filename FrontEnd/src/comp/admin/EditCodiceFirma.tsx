@@ -9,7 +9,7 @@ export interface IState{}
 export default class EditCodiceFirma extends React.PureComponent<IProps, IState>{
     requestCodeChange = (anno: number) => {
         askPassword(siteUrl+"/api/corsi/generacodiceanno", "post", {
-            anno: anno
+            anno
         }, (response: any) => {
             let codice = response.data
 

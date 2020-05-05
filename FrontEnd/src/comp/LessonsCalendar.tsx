@@ -27,7 +27,7 @@ export default class LessonsCalendar extends React.PureComponent<IProps, IState>
             let calendar = response.data as ICalendar
 
             this.setState({
-                calendar: calendar
+                calendar
             })
         })
     }

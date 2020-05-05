@@ -24,7 +24,7 @@ export default class TutorList extends React.PureComponent<IProps, IState>{
             let tutor = response.data as ITutor[]
 
             this.setState({
-                tutor: tutor
+                tutor
             })
         })
     }

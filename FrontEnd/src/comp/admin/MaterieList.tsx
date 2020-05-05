@@ -85,7 +85,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             let materie = response.data as IMateria[]
 
             this.setState({
-                materie: materie
+                materie
             })
 
             message.success("Materia aggiunta con successo!")
@@ -120,7 +120,7 @@ export default class MaterieList extends React.PureComponent<IProps, IState>{
             let materie = response.data as IMateria[]
 
             this.setState({
-                materie: materie,
+                materie,
                 materiaEdit: null,
                 nomeEdit: "",
             })

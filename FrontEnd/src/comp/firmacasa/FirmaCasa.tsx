@@ -54,23 +54,19 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
             return
         }
 
-        Axios.post(siteUrl+"/api/studenti/richiestacodice", selectedStudente.idStudente, {
-            headers: {"Content-Type": "application/json"}
-        }).then(_ => {
-            askPassword(siteUrl+"/api/firmaremota/firmaremotastudente", "post", {
-                idStudente: selectedStudente.idStudente
-            }, (response: any) => {
-                let popup = response.data as IMessage
-    
-                Modal.info({
-                    title: popup.title,
-                    content: <div style={{ marginLeft: 38 }}>{popup.message}</div>,
-                    icon: <i className={"float-left mr-3 far "+popup.icon} style={{ color: popup.iconColor, fontSize: 22 }}/>,
-                    maskClosable: false,
-                    onOk: () => routerHistory.push("/")
-                })
-            }, null, "Inserisci il codice che ti abbiamo inviato per e-mail")
-        })
+        askPassword(siteUrl+"/api/firmaremota/firmaremotastudente", "post", {
+            idStudente: selectedStudente.idStudente
+        }, (response: any) => {
+            let popup = response.data as IMessage
+
+            Modal.info({
+                title: popup.title,
+                content: <div style={{ marginLeft: 38 }}>{popup.message}</div>,
+                icon: <i className={"float-left mr-3 far "+popup.icon} style={{ color: popup.iconColor, fontSize: 22 }}/>,
+                maskClosable: false,
+                onOk: () => routerHistory.push("/")
+            })
+        }, null, "Inserisci la tua password")
     }
 
     firmaDocente = () => {
@@ -124,7 +120,7 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
 
                         if(i === studenti.length - 1){
                             this.setState({
-                                lezione: lezione,
+                                lezione,
                                 studenti: studenti as IStudent[]
                             })
                         }
@@ -181,7 +177,7 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
 
                 <form className="w-100 bg-white p-3 rounded shadow" onSubmit={this.inviaFirma}>
                     <h3 className="d-inline-block">Firma studente</h3>
-                    <LogoCorso idCorso={studenti[0].idCorso} forLogin={true} />
+                    <LogoCorso idCorso={studenti[0].idCorso} forLogin />
 
                     <div className="form-group">
                         <label className="text-secondary">Scegli lo studente</label>

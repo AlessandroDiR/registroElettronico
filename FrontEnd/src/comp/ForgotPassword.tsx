@@ -7,6 +7,7 @@ import { Cipher } from "../models/Cipher"
 export interface IProps{
     readonly show: boolean
     readonly closeModal: () => void
+    readonly forStudent?: boolean
 }
 export interface IState{
     readonly currentStep: number
@@ -14,7 +15,7 @@ export interface IState{
     readonly code: string
     readonly newPassword: string
     readonly newPasswordConfirm: string
-    readonly idCoordinatore: number
+    readonly idUtente: number
     readonly loading: boolean
 }
 
@@ -28,7 +29,7 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
             code: "",
             newPassword: "",
             newPasswordConfirm: "",
-            idCoordinatore: null,
+            idUtente: null,
             loading: false
         }
     }
@@ -40,7 +41,7 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
             code: "",
             newPassword: "",
             newPasswordConfirm: "",
-            idCoordinatore: null,
+            idUtente: null,
             loading: false
         })
 
@@ -51,7 +52,7 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
         let email = e.target.value.trim()
 
         this.setState({
-            email: email
+            email
         })
     }
 
@@ -59,7 +60,7 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
         let code = e.target.value.trim()
 
         this.setState({
-            code: code
+            code
         })
     }
 
@@ -100,7 +101,8 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
     confirmFirstStep = (e: any) => {
         e.preventDefault()
         
-        const { email } = this.state
+        const { email } = this.state,
+        { forStudent } = this.props
 
         if(email === ""){
             Modal.error({
@@ -114,15 +116,17 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
 
         this.switchLoading()
 
-        Axios.post(siteUrl+"/api/coordinatori/recuperocoordinatori", {
+        let url = forStudent ? "/api/studenti/recuperopwdstudente" : "/api/coordinatori/recuperocoordinatori"
+
+        Axios.post(siteUrl + url, {
             email
         }).then(response => {
             let data = response.data,
-            idCoordinatore = parseInt(data)
+            idUtente = parseInt(data)
 
-            if(!isNaN(idCoordinatore)){
+            if(!isNaN(idUtente)){
                 this.setState({
-                    idCoordinatore: idCoordinatore,
+                    idUtente,
                     loading: false
                 })
 
@@ -130,7 +134,7 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
             }else{
                 Modal.error({
                     title: "Errore!",
-                    content: "Questa e-mail non corrisponde a nessun coordinatore.",
+                    content: "Questa e-mail non corrisponde a nessun utente.",
                     maskClosable: true
                 })
             }
@@ -156,7 +160,8 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
     savePassword = (e: any) => {
         e.preventDefault()
 
-        const { newPassword, newPasswordConfirm, idCoordinatore, code } = this.state
+        const { newPassword, newPasswordConfirm, idUtente, code } = this.state,
+        { forStudent } = this.props
 
         if(newPassword === "" || newPasswordConfirm === ""){
             Modal.error({
@@ -191,10 +196,11 @@ export default class ForgotPassword extends React.PureComponent<IProps, IState>{
         this.switchLoading()
 
         let cipher = new Cipher(),
-        password = cipher.encode(newPassword)
+        password = cipher.encode(newPassword),
+        url = forStudent ? "/api/Studenti/cambiopassword" : "/api/coordinatori/cambiopassword"
 
-        Axios.post(siteUrl+"/api/coordinatori/cambiopassword", {
-            idCoordinatore,
+        Axios.post(siteUrl + url, {
+            idUtente,
             password,
             codice: code
         }).then(response => {

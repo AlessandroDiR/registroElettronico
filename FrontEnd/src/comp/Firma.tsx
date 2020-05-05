@@ -36,7 +36,7 @@ export default class Firma extends React.PureComponent<IProps, IState>{
             let corso = response.data as ICorso
 
             this.setState({
-                corso: corso
+                corso
             })
         })
 
@@ -47,7 +47,7 @@ export default class Firma extends React.PureComponent<IProps, IState>{
         let code = event.target.value
 
         this.setState({
-            code: code
+            code
         })
 
         this.tryToLog(code)
@@ -62,9 +62,9 @@ export default class Firma extends React.PureComponent<IProps, IState>{
         anno = parseInt(sessionStorage.getItem("classe"))
         
         axios.post(siteUrl + "/api/firma", {
-            code: code,
-            idCorso: idCorso,
-            anno: anno
+            code,
+            idCorso,
+            anno
         }).then(response => {
             this.setState({
                 popup: response.data as IMessage

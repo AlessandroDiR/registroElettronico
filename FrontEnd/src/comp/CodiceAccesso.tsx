@@ -32,7 +32,7 @@ export default class CodiceAccesso extends React.PureComponent<IProps, IState>{
         let codice = e.target.value
 
         this.setState({
-            codice: codice
+            codice
         })
     }
 

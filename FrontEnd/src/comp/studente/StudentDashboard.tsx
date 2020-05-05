@@ -3,24 +3,24 @@ import { NavLink, Route, Router, Switch } from "react-router-dom"
 import { routerHistory } from "../.."
 import LogoCorso from "../LogoCorso"
 import Page404 from "../Page404"
-import { stageRoute } from "../../utilities"
+import { studentRoute } from "../../utilities"
 import Footer from "../Footer"
-import LoginStage from "./LoginStage"
+import LoginStudent from "./LoginStudent"
 import { IStudent } from "../../models/IStudent"
 import Home from "./Home"
 
-export default class StageDashboard extends React.Component{
+export default class StudentDashboard extends React.Component{
 
     componentWillUnmount = () => {
-        sessionStorage.removeItem("stageSession")
+        sessionStorage.removeItem("studentSession")
     }
 
     render(): JSX.Element{
 
-        let session = sessionStorage.getItem("stageSession")
+        let session = sessionStorage.getItem("studentSession")
         
         if(!session)
-            return <LoginStage />
+            return <LoginStudent />
 
         let studente = JSON.parse(session) as IStudent
 
@@ -31,31 +31,31 @@ export default class StageDashboard extends React.Component{
                         
                         <LogoCorso idCorso={0} />
 
-                        <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(stageRoute+"/home")} to={stageRoute+"/home"}>
+                        <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(studentRoute+"/home")} to={studentRoute+"/home"}>
                             <span><i className="fal fa-home-alt fa-fw mr-1"></i> Home</span>
                         </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => {
-                            sessionStorage.removeItem("stageSession")
-                            routerHistory.push(stageRoute)
-                        }} exact to={stageRoute+"/login"}>
+                            sessionStorage.removeItem("studentSession")
+                            routerHistory.push(studentRoute)
+                        }} exact to={studentRoute+"/login"}>
                             <span><i className="fal fa-power-off fa-fw mr-1"></i> Esci</span>
                         </NavLink>
 
-                        <Footer inMenu={true} />
+                        <Footer inMenu />
                     </div>
   
                     <Switch>
-                        <Route exact path={stageRoute} render={() => {
-                            routerHistory.push(stageRoute+"/home")
+                        <Route exact path={studentRoute} render={() => {
+                            routerHistory.push(studentRoute+"/home")
 
                             return null
                         }} />
 
-                        <Route exact path={stageRoute+"/home"} render={() => (
+                        <Route exact path={studentRoute+"/home"} render={() => (
                             <Home studente={studente} />
                         )} />
 
-                        <Route render={() => <Page404 goTo={stageRoute} />} />
+                        <Route render={() => <Page404 goTo={studentRoute} />} />
 
                     </Switch>
                         

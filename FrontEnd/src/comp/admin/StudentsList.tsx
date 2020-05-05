@@ -6,6 +6,7 @@ import Axios from "axios"
 import { siteUrl, formattaData, adminRoute } from "../../utilities"
 import locale from "antd/es/date-picker/locale/it_IT"
 import { askPassword } from "../AskConferma"
+import StageSwitch from "./StageSwitch"
 
 export interface IProps{
     readonly corso: number
@@ -70,7 +71,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                 studente.dataRitiro = dataRitiro
                 
                 askPassword(siteUrl+"/api/studenti/" + student.idStudente, "put", {
-                    studente: studente
+                    studente
                 }, (response: any) => {
 
                     let stu = response.data as IStudent,
@@ -144,7 +145,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         }
 
         askPassword(siteUrl+"/api/studenti", "put", {
-            studenti: studenti
+            studenti
         }, (response: any) => {
             this.setState({
                 students: response.data as IStudent[],
@@ -192,10 +193,10 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                     idStudente: s.idStudente
                 }, (response: any) => {
                     
-                    let studenti = response.data as IStudent[]
+                    let students = response.data as IStudent[]
         
                     this.setState({
-                        students: studenti
+                        students
                     })
         
                     message.success("Studente archiviato con successo!")
@@ -212,7 +213,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
         let filter = e.target.value
 
         this.setState({
-            filter: filter
+            filter
         })
     }
 
@@ -276,6 +277,8 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                 })
 
                                 return <TabPane tab={tabTitle + " anno"} key={i.toString()}>
+                                    <StageSwitch anno={g[0].annoFrequentazione} idCorso={g[0].idCorso} />
+                                    
                                     <table className="table table-bordered text-center">
 
                                         <tbody className="border-top-0">
@@ -299,7 +302,7 @@ export default class StudentsList extends React.PureComponent<IProps, IState>{
                                                     return <tr className={"bg-"+bg}>
                                                         <td>
                                                             {
-                                                                s.ritirato ? <Checkbox disabled={true} /> : <Checkbox onChange={() => this.changeSelection(s)} checked={checked} />
+                                                                s.ritirato ? <Checkbox disabled /> : <Checkbox onChange={() => this.changeSelection(s)} checked={checked} />
                                                             }
                                                         </td>
                                                         <Tooltip title={s.nome + " " + s.cognome}>

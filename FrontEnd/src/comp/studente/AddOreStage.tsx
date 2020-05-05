@@ -21,7 +21,7 @@ export interface IState{
     readonly loading: boolean
 }
 
-export default class AddForm extends React.PureComponent<IProps, IState>{
+export default class AddOreStage extends React.PureComponent<IProps, IState>{
     constructor(props: IProps){
         super(props)
 

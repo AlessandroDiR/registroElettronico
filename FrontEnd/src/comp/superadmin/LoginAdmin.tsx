@@ -56,7 +56,7 @@ export default class LoginAdmin extends React.PureComponent<IProps, IState>{
 
         Axios.post(siteUrl+"/api/amministratori/loginamministratori", {
             username: adminName.trim(),
-            password: password
+            password
         }).then(response => {
             let data = response.data
 

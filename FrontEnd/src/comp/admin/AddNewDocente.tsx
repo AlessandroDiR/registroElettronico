@@ -44,7 +44,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             let corsi = response.data as ICorso[]
 
             this.setState({
-                corsi: corsi
+                corsi
             })
         })
 
@@ -52,7 +52,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
             let materie = response.data as IMateria[]
 
             this.setState({
-                materie: materie
+                materie
             })
         })
     }
@@ -61,7 +61,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         let nome = event.target.value
 
         this.setState({
-            nome: nome
+            nome
         })
     }
 
@@ -69,7 +69,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         let email = event.target.value.trim()
 
         this.setState({
-            email: email
+            email
         })
     }
 
@@ -77,7 +77,7 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         let cognome = event.target.value
 
         this.setState({
-            cognome: cognome
+            cognome
         })
     }
 
@@ -85,14 +85,14 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
         let CF = event.target.value.trim()
 
         this.setState({
-            CF: CF
+            CF
         })
     }
 
     aggiungiDocente = (e: any) => {
         e.preventDefault()
         
-        const { nome, cognome,CF, email, corsiSel, materieSel } = this.state
+        const { nome, cognome, CF, email, corsiSel, materieSel } = this.state
 
         if(nome.trim() === "" || cognome.trim() === "" || CF === "" || email === ""){
             Modal.error({
@@ -138,8 +138,8 @@ export default class AddNewDocente extends React.PureComponent<IProps, IState>{
                 nome: nome.trim(),
                 cognome: cognome.trim(),
                 cf: CF,
-                password: password,
-                email: email,
+                password,
+                email,
                 tenere: corsiSel.map(c => { return { idCorso: c, idDocente: 0 } }),
                 insegnare: materieSel.map(m => { return { idMateria: m, idDocente: 0 } }),
             }

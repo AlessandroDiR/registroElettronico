@@ -27,7 +27,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
         let nome = event.target.value
 
         this.setState({
-            nome: nome
+            nome
         })
     }
 
@@ -35,7 +35,7 @@ export default class AddNewCorso extends React.PureComponent<IProps, IState>{
         let luogo = event.target.value
 
         this.setState({
-            luogo: luogo
+            luogo
         })
     }
 
