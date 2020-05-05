@@ -11,10 +11,10 @@ namespace ProjectWork.CustomizedModels
 
     }
 
-    public class RecPwd_CoordinatoreDati
+    public class RecPwd_UtenteDati
     {
         public int Codice { get; set; }
-        public int IdCoordinatore { get; set; }
+        public int IdUtente { get; set; }
 
         public string Password { get; set; }
 

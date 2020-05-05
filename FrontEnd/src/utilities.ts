@@ -1,5 +1,5 @@
-// export const siteUrl = "https://localhost:44336"
-export const siteUrl = "https://registrofitstic.azurewebsites.net"
+export const siteUrl = "https://localhost:44336"
+//export const siteUrl = "https://registrofitstic.azurewebsites.net"
 export const logoUrl = "fitstic_logo.png"
 
 export const adminRoute = "/adminpanel"

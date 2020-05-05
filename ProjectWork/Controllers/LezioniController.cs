@@ -75,7 +75,7 @@ namespace ProjectWork.Controllers
                 {
                     var nomeDocente = l.Titolo.Split(':')[1].Split('-')[0].Trim();
                     var insegnare = _context.Insegnare.Where(i => i.IdMateria == l.IdMateria);
-                    var docente = _context.Docenti.SingleOrDefault(d => (d.Nome + " " + d.Cognome) == nomeDocente && insegnare.Any(i => i.IdDocente == d.IdDocente));
+                    var docente = _context.Docenti.SingleOrDefault(d => (d.Nome + " " + d.Cognome) == nomeDocente && insegnare.Any(i => i.IdDocente == d.IdDocente) && _context.Tenere.Any(t => t.IdCorso == idCorso));
                     var json = new
                     {
                         idLezione = l.IdLezione,

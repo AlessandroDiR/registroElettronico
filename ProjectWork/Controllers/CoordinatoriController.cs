@@ -220,14 +220,14 @@ namespace ProjectWork.Controllers
 
         // POST: api/Coordinatori/CambioPassword
         [HttpPost("[action]")]
-        public async Task<IActionResult> CambioPassword([FromBody] RecPwd_CoordinatoreDati obj)
+        public async Task<IActionResult> CambioPassword([FromBody] RecPwd_UtenteDati obj)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var rec = _context.RecPwdCoordinatore.LastOrDefault(c => obj.IdCoordinatore == c.IdCoordinatore);
+            var rec = _context.RecPwdCoordinatore.LastOrDefault(c => obj.IdUtente == c.IdCoordinatore);
             
             if (rec == null)
             {
@@ -242,7 +242,7 @@ namespace ProjectWork.Controllers
                 return Ok("Codice non più valido");
             }
 
-            var coord = _context.Coordinatori.FirstOrDefault(c => obj.IdCoordinatore == c.IdCoordinatore);
+            var coord = _context.Coordinatori.FirstOrDefault(c => obj.IdUtente == c.IdCoordinatore);
             if (coord == null)
             {
                 return NotFound("Coordinatore non trovato");
