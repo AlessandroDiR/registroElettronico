@@ -38,7 +38,7 @@ namespace ProjectWork.classi
 
             MailAddress from = new MailAddress("registro.fitstic@gmail.com", "Registro Fitstic");
             MailAddress to = new MailAddress(c.Email);
-            MailMessage message = new MailMessage()
+            MailMessage message = new MailMessage
             {
                 From = from,
 				IsBodyHtml = true,
@@ -56,6 +56,45 @@ namespace ProjectWork.classi
                 return "success";
             }
             catch(Exception ex)
+            {
+                return ex.InnerException.Message;
+            }
+        }
+
+        public string SendCredenzialiStudente(Studenti s)
+        {
+            SmtpClient client = new SmtpClient()
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential
+                {
+                    UserName = "registro.fitstic@gmail.com",
+                    Password = "dkviqxwjmlvrwppt"
+                }
+            };
+
+            MailAddress from = new MailAddress("registro.fitstic@gmail.com", "Registro Fitstic");
+            MailAddress to = new MailAddress(s.Email);
+            MailMessage message = new MailMessage
+            {
+                From = from,
+                IsBodyHtml = true,
+                Subject = "FITSTIC | Credenziali registro",
+                Body = $"Ciao {s.Nome} e benvenuto in FITSTIC.<br><br>Ti comunichiamo che il tuo account è stato creato e che ora puoi accedere al tuo <a href='https://registrofitstic.azurewebsites.net/#/studentipanel'>profilo personale<a/>.<br><br>L'username per accedere è: {s.Email}.<br></br>La prima cosa che devi fare è creare una password seguendo queste semplici istruzioni:<br>1) Vai su https://registrofistsic.azurewebsites.net/#/studentipanel <br>2) Clicca su 'Hai dimenticato la password?'<br>3) Inserisci l'indirizzo email per il quale vuoi recuperare la password<br>4) Riceverai un codice di conferma. Copialo nello step successivo e vai avanti<br>5) Procedi con l'inserimento di una nuova password<br><br><strong>Il gioco è fatto!</strong>"
+            };
+
+            message.To.Add(to);
+
+            try
+            {
+                client.SendMailAsync(message);
+                return "success";
+            }
+            catch (Exception ex)
             {
                 return ex.InnerException.Message;
             }
@@ -100,7 +139,7 @@ namespace ProjectWork.classi
             }
         }
 
-        public string SendEmailTo(string emailTo, string subject,string body)
+        public string SendEmailTo(string emailTo, string subject, string body)
         {
             SmtpClient client = new SmtpClient()
             {

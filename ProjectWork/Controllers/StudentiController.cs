@@ -248,6 +248,7 @@ namespace ProjectWork.Controllers
                 };
 
                 _context.Studenti.Add(studente);
+                _es.SendCredenzialiStudente(studente);
             }
 
             await _context.SaveChangesAsync();
@@ -430,7 +431,7 @@ namespace ProjectWork.Controllers
 
             if (studente == null)
             {
-                return NotFound("Email studente non trovata");
+                return Ok("error");
             }
 
             int Codice = int.Parse(DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString().Substring(5, 5));
