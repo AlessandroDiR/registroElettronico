@@ -5,7 +5,7 @@ import { routerHistory } from "../.."
 import { Icon, Spin, Progress, Statistic, Modal, Button } from "antd"
 import PresenzeTable from "./PresenzeTable"
 import Axios from "axios"
-import { formatItalian, siteUrl, adminRoute } from "../../utilities"
+import { formatItalian, siteUrl, adminRoute, avocadoUrl } from "../../utilities"
 import QRCode from "qrcode.react"
 import StudentStage from "./StudentStage"
 
@@ -78,18 +78,15 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
 
     downloadQR = () => {
         const { student } = this.state,
-        canvas = document.getElementById("qr-code-image") as any
-        const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream")
+        canvas = document.getElementById("qr-code-image") as any,
+        pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream")
         let downloadLink = document.createElement("a")
+        
         downloadLink.href = pngUrl
         downloadLink.download = `qrcode${student.nome}${student.cognome}.png`
         document.body.appendChild(downloadLink)
         downloadLink.click()
         document.body.removeChild(downloadLink)
-    }
-
-    getQRCode = () => {
-        return this.state.student.codice
     }
 
     toggleStage = () => {
@@ -165,7 +162,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                 <div className="text-center">
                     <p>Salva il codice sottostante e condividilo con <strong>{student.nome} {student.cognome}.</strong></p>
                     <div className="my-2">
-                        <QRCode id="qr-code-image" value={this.getQRCode()} size={200} />
+                        <QRCode id="qr-code-image" value={student.codice} size={200} imageSettings={{ src: avocadoUrl, height: 50, width: 50, excavate: true }} />
                     </div>
                 </div>
             </Modal>

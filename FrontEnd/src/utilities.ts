@@ -1,5 +1,6 @@
 export const siteUrl = "https://registrofitstic.azurewebsites.net"
 export const logoUrl = "fitstic_logo.png"
+export const avocadoUrl = "avocadoLogo.png"
 
 export const adminRoute = "/adminpanel"
 export const superAdminRoute = "/superpanel"
