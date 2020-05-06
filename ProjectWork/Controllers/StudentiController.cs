@@ -402,7 +402,7 @@ namespace ProjectWork.Controllers
 
             if (st.Promosso == "true" || st.Ritirato == "true")
             {
-                return Ok("errore");
+                return Ok("Accesso negato. Non frequenti più il corso.");
             }
 
             var json = new
@@ -412,7 +412,8 @@ namespace ProjectWork.Controllers
                 cognome = st.Cognome,
                 password = st.Password,
                 idCorso = st.IdCorso,
-                annoFrequentazione = st.AnnoFrequentazione
+                annoFrequentazione = st.AnnoFrequentazione,
+                codice = st.Codice
             };
 
             return Ok(json);
