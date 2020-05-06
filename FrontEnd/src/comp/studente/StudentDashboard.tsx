@@ -7,6 +7,7 @@ import { studentRoute } from "../../utilities"
 import Footer from "../Footer"
 import LoginStudent from "./LoginStudent"
 import { IStudent } from "../../models/IStudent"
+import StageList from "./StageList"
 import Home from "./Home"
 
 export default class StudentDashboard extends React.Component{
@@ -34,6 +35,9 @@ export default class StudentDashboard extends React.Component{
                         <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(studentRoute+"/home")} to={studentRoute+"/home"}>
                             <span><i className="fal fa-home-alt fa-fw mr-1"></i> Home</span>
                         </NavLink>
+                        <NavLink className="router-link" activeClassName="active" onClick={() => routerHistory.push(studentRoute+"/stage")} to={studentRoute+"/stage"}>
+                            <span><i className="fal fa-briefcase fa-fw mr-1"></i> Stage</span>
+                        </NavLink>
                         <NavLink className="router-link" activeClassName="active" onClick={() => {
                             sessionStorage.removeItem("studentSession")
                             routerHistory.push(studentRoute)
@@ -53,6 +57,10 @@ export default class StudentDashboard extends React.Component{
 
                         <Route exact path={studentRoute+"/home"} render={() => (
                             <Home studente={studente} />
+                        )} />
+
+                        <Route exact path={studentRoute+"/stage"} render={() => (
+                            <StageList studente={studente} />
                         )} />
 
                         <Route render={() => <Page404 goTo={studentRoute} />} />

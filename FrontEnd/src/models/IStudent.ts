@@ -28,7 +28,7 @@ export const isStudent = (obj: any) => {
 
 export const isAccessStudent = (obj: any) => {
     try{
-        return "nome" in obj && "cognome" in obj && "idStudente" in obj && "password" in obj && "idCorso" in obj && "annoFrequentazione" in obj
+        return "nome" in obj && "cognome" in obj && "idStudente" in obj && "password" in obj && "idCorso" in obj && "annoFrequentazione" in obj && "codice" in obj
     }
     catch{
         return false

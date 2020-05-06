@@ -15,7 +15,7 @@ export default class Footer extends React.PureComponent<IProps, IState>{
         }
 
         return <div className="w-100 bg-white p-3 mt-3 shadow px-2 text-center fixed-bottom">
-            <span style={{ position: "absolute", right: 20, fontSize: 32 }} role="img" aria-label="Avocado Team">🥑</span>
+            <span style={{ position: "absolute", right: 20, fontSize: 32, color: "#000" }} role="img" aria-label="Avocado Team">🥑</span>
 
             <div>
                 &copy; {(new Date()).getFullYear()} FITSTIC

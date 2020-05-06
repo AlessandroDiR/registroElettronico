@@ -5,7 +5,7 @@ import { Icon, Spin, Modal, Button, Statistic } from "antd"
 import Axios from "axios"
 import { IDocente } from "../../models/IDocente"
 import LezioniDocenteTable from "./LezioniDocenteTable"
-import { siteUrl, adminRoute } from "../../utilities"
+import { siteUrl, adminRoute, avocadoUrl } from "../../utilities"
 import { Cipher } from "../../models/Cipher"
 import QRCode from "qrcode.react"
 
@@ -53,9 +53,10 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
 
     downloadQR = () => {
         const { docente } = this.state,
-        canvas = document.getElementById("qr-code-image") as any
-        const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream")
+        canvas = document.getElementById("qr-code-image") as any,
+        pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream")
         let downloadLink = document.createElement("a")
+        
         downloadLink.href = pngUrl
         downloadLink.download = `qrcode${docente.nome}${docente.cognome}.png`
         document.body.appendChild(downloadLink)
@@ -127,7 +128,7 @@ export default class DocenteDetails extends React.PureComponent<IProps, IState>{
                 <div className="text-center">
                     <p>Salva il codice sottostante e condividilo con <strong>{docente.nome} {docente.cognome}.</strong></p>
                     <div className="my-2">
-                        <QRCode id="qr-code-image" value={this.getQRCode()} size={200} />
+                        <QRCode id="qr-code-image" value={this.getQRCode()} size={200} imageSettings={{ src: avocadoUrl, height: 50, width: 50, excavate: true }} />
                     </div>
                 </div>
             </Modal>

@@ -1,19 +1,16 @@
 import React from "react"
 import Axios from "axios"
-import { Spin, Icon, Progress, Tooltip } from "antd"
-import { IStage } from "../../models/IStage"
-import { siteUrl, formatItalian, convertFromUTC } from "../../utilities"
-import AddOreStage from "./AddOreStage"
+import { Button, Progress, Spin, Icon, Statistic, Tooltip } from "antd"
+import QRCode from "qrcode.react"
 import { IStudent } from "../../models/IStudent"
+import { siteUrl, avocadoUrl } from "../../utilities"
 
 export interface IProps{
     readonly studente: IStudent
 }
 export interface IState{
-    readonly oreList: IStage[]
-    readonly addNew: boolean
-    readonly totaleOre: number
-    readonly isActive: boolean
+    readonly oreTotali: number
+    readonly totPresenze: number
 }
 
 export default class Home extends React.PureComponent<IProps, IState>{
@@ -21,114 +18,79 @@ export default class Home extends React.PureComponent<IProps, IState>{
         super(props)
 
         this.state = {
-            oreList: null,
-            addNew: false,
-            totaleOre: 0,
-            isActive: null
+            oreTotali: null,
+            totPresenze: null
         }
     }
 
     componentDidMount = () => {
-        this.loadOre()
-
-        const { studente } = this.props
-
-        Axios.get(siteUrl+"/api/corsi/getstagevalue/"+studente.idCorso+"/"+studente.annoFrequentazione).then(response => {
-            let isActive = response.data as boolean
-
+        Axios.get(siteUrl+"/api/studenti/gethoursamount/" + this.props.studente.idStudente).then(response => {
             this.setState({
-                isActive
+                totPresenze: response.data as number
+            })
+        })
+
+        Axios.get(siteUrl+"/api/studenti/gettotaleorelezioni/" + this.props.studente.idStudente).then(response => {
+            this.setState({
+                oreTotali: response.data as number
             })
         })
     }
 
-    loadOre = () => {
-        this.setState({
-            oreList: null,
-            addNew: false
-        })
+    downloadQR = () => {
+        const { studente } = this.props,
+        canvas = document.getElementById("qr-code-image") as any,
+        pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream")
+        let downloadLink = document.createElement("a")
 
-        Axios.get(siteUrl+"/api/studenti/getorestage/"+this.props.studente.idStudente).then(response => {
-            let ore = response.data as IStage[],
-            totale = 0
-
-            ore.forEach(o => totale += o.totaleRelativo)
-
-            this.setState({
-                oreList: ore,
-                totaleOre: totale
-            })
-        })
+        downloadLink.href = pngUrl
+        downloadLink.download = `qrcode${studente.nome}${studente.cognome}.png`
+        document.body.appendChild(downloadLink)
+        downloadLink.click()
+        document.body.removeChild(downloadLink)
     }
 
-    toggleAdd = () => {
-        this.setState({
-            addNew: !this.state.addNew
-        })
-    }
+    render = () => {
+        const { studente } = this.props,
+        { oreTotali, totPresenze } = this.state
 
-    render(): JSX.Element{
-        const { oreList, addNew, totaleOre, isActive } = this.state,
-        { studente } = this.props,
-        icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
-
-        if(!oreList){
-            return <div className="col px-5 py-4 right-block" id="mainBlock">
-                <Spin indicator={icon} />
-            </div>
-        }
+        let perc = Math.round(100 * totPresenze / oreTotali),
+        color = perc >= 80 ? "var(--success)" : "var(--danger)"
 
         return <div className="col px-5 py-4 right-block">
-            
-            <div className="p-3 bg-white border rounded col-4 mb-3">
-                <h4 className="text-uppercase mb-2 text-truncate">{studente.nome} {studente.cognome}</h4>
-                <strong>Ore svolte</strong>: {totaleOre} su 800 totali
-                <Progress percent={Math.floor(((100 * totaleOre / 800) + Number.EPSILON) * 100) / 100} />
-            </div>
+            <div className="row mx-0">
+                <div className="col-12 col-md-4 pl-md-0 mb-2 mb-md-0">
+                    <div className="p-3 bg-white border rounded">
+                        <Tooltip title={studente.nome + " " + studente.cognome}>
+                            <h4 className="text-uppercase mb-2 text-truncate">{studente.nome} {studente.cognome}</h4>
+                        </Tooltip>
 
-            <h3 className="d-inline-block">Ore di stage segnate</h3>
+                        <div className="text-center">
+                            <QRCode id="qr-code-image" value={studente.codice} size={200} imageSettings={{ src: avocadoUrl, height: 50, width: 50, excavate: true }} />
+                        </div>
 
-            {
-                isActive  && <button className="btn btn-success float-right mb-3" type="button" onClick={this.toggleAdd}>
-                    <i className="fal fa-plus fa-fw"></i> Aggiungi ore di stage
-                </button>
-            }
+                        <Button type="primary" className="float-right mt-3" onClick={this.downloadQR}>
+                            <i className="far fa-arrow-to-bottom mr-2"></i> Salva codice
+                        </Button>
 
-            {
-                isActive === null && <Spin indicator={icon} />
-            }
+                        <div className="clearfix"></div>
+                    </div>
+                </div>
 
-            <div className="clearfix"></div>
-
-            {
-                !oreList.length ? <div className="text-center">Non hai ancora segnato ore di stage.</div> : <table className="table table-bordered text-center">
-                    <tbody>
-                        <tr>
-                            <th style={{width: "15%"}}>Data</th>
-                            <th style={{width: "25%"}}>Descrizione</th>
-                            <th>Inizio</th>
-                            <th>Fine</th>
-                            <th>Ore svolte</th>
-                        </tr>
+                <div className="col-12 col-md-5 pr-md-0">
+                    <div className="p-3 bg-white border rounded">
+                        {
+                            perc !== null ? <Progress type="circle" percent={perc} width={80} className="float-left mr-3" strokeColor={color} format={percent => `${percent}%`}  /> : <Spin indicator={<Icon type="loading" spin />} />
+                        }
 
                         {
-                            oreList.map(s => {        
-                                return <tr>
-                                    <td>{formatItalian(s.data)}</td>
-                                    <Tooltip title={s.argomento}>
-                                        <td style={{maxWidth: 0}} className="text-truncate">{s.argomento}</td>
-                                    </Tooltip>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{convertFromUTC(s.oraInizio + "Z")}</td>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{convertFromUTC(s.oraFine + "Z")}</td>
-                                    <td style={{maxWidth: 0}} className="text-truncate">{s.totaleRelativo}</td>
-                                </tr>
-                            })
+                            oreTotali !== null && totPresenze !== null ? <Statistic title="Presenze totali (ore)" value={totPresenze} suffix={"/ "+oreTotali} decimalSeparator="," groupSeparator="." /> : <Spin indicator={<Icon type="loading" spin />} />
                         }
-                    </tbody>
-                </table>
-            }
 
-            <AddOreStage studente={studente} annullaAggiunta={this.toggleAdd} visible={addNew} reloadStage={this.loadOre} />
+                        <div className="clearfix"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     }
 }
