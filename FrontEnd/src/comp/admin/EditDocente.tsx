@@ -24,7 +24,8 @@ export interface IState{
     readonly materie: IMateria[]
     readonly corsi: ICorso[]
     readonly materieSel: number[]
-    readonly corsiSel: number[] 
+    readonly corsiSel: number[]
+    readonly loading: boolean
 }
 
 export default class EditDocente extends React.PureComponent<IProps, IState>{
@@ -41,7 +42,8 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             materie: [],
             materieSel: [],
             corsi: [],
-            corsiSel: []
+            corsiSel: [],
+            loading: false
         }
     }
 
@@ -155,6 +157,8 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
             return
         }
 
+        this.toggleLoading()
+
         askPassword(siteUrl+"/api/docenti/" + this.props.match.params.id, "put", {
             docente: {
                 idDocente: parseInt(this.props.match.params.id),
@@ -167,8 +171,15 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                 ritirato: docente.ritirato
             }
         }, (_: any) => {
+            this.toggleLoading()
             message.success("Docente modificato con successo!")
             routerHistory.push(adminRoute+"/docenti")
+        })
+    }
+
+    toggleLoading = () => {
+        this.setState({
+            loading: !this.state.loading
         })
     }
 
@@ -191,7 +202,7 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
     }
 
     render(): JSX.Element{
-        const { nome, cognome, CF, docente, email, materie, materieSel, corsi, corsiSel } = this.state
+        const { nome, cognome, CF, docente, email, materie, materieSel, corsi, corsiSel, loading } = this.state
 
         if(!docente || !materie.length || !corsi.length){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
@@ -263,7 +274,12 @@ export default class EditDocente extends React.PureComponent<IProps, IState>{
                     </div>
                 </div>
 
-                <button type="submit" className="btn btn-success text-uppercase w-100">Modifica docente</button>
+                <button type="submit" className="btn btn-success text-uppercase w-100" disabled={loading}>
+                    {
+                        loading && <Icon type="loading" className="mr-2 loadable-btn" spin />
+                    }
+                    Modifica docente
+                </button>
             </form>
         </div>
     }
