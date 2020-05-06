@@ -412,7 +412,8 @@ namespace ProjectWork.Controllers
                 cognome = st.Cognome,
                 password = st.Password,
                 idCorso = st.IdCorso,
-                annoFrequentazione = st.AnnoFrequentazione
+                annoFrequentazione = st.AnnoFrequentazione,
+                codice = st.Codice
             };
 
             return Ok(json);
