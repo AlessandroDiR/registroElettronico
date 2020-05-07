@@ -13,6 +13,7 @@ export interface IState{
     readonly addList: IStudent[]
     readonly fileContent: string
     readonly fields: any
+    readonly loading: boolean
 }
 
 const fields = [{
@@ -47,7 +48,8 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 dataNascita: 0,
                 email: 0,
                 annoFrequentazione: 1
-            }
+            },
+            loading: false
         }
     }
 
@@ -187,16 +189,25 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
     }
 
     confirmImport = () => {
+        this.toggleLoading()
+
         askPassword(siteUrl+"/api/studenti", "post", {
             studenti: this.state.addList
         }, (_: any) => {
+            this.toggleLoading()
             message.success("Importazione eseguita con successo!")
             routerHistory.push(adminRoute+"/studenti")
         })
     }
 
+    toggleLoading = () => {
+        this.setState({
+            loading: !this.state.loading
+        })
+    }
+
     render(): JSX.Element{
-        const { addList } = this.state
+        const { addList, loading } = this.state
 
         return <div className="col p-5 right-block" id="mainBlock" style={{flexDirection: "column"}}>
             <h3 className="text-center w-100">Importa studenti da CSV</h3>
@@ -258,8 +269,13 @@ export default class StudentsImport extends React.PureComponent<IProps, IState>{
                 </div>
 
                 <div className="bottom-side p-3 text-right">
-                    <button className="btn btn-danger mr-2" onClick={this.hidePopup}>Annulla</button>
-                    <button className="btn btn-success" onClick={this.confirmImport}>Conferma importazione</button>
+                    <button className="btn btn-danger mr-2" onClick={this.hidePopup} disabled={loading}>Annulla</button>
+                    <button className="btn btn-success" onClick={this.confirmImport} disabled={loading}>
+                        {
+                            loading && <Icon type="loading" className="mr-2 loadable-btn" spin />
+                        }
+                        Conferma importazione
+                    </button>
                 </div>
             </div>
         </div>

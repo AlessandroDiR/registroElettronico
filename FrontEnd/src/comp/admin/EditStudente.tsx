@@ -22,6 +22,7 @@ export interface IState{
     readonly dataNascita: string
     readonly CF: string
     readonly email: string
+    readonly loading: boolean
 }
 
 export default class EditStudente extends React.PureComponent<IProps, IState>{
@@ -35,7 +36,8 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             cognome: "",
             dataNascita: "",
             CF: "",
-            email: ""
+            email: "",
+            loading: false
         }
     }
 
@@ -120,6 +122,8 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
             return
         }
 
+        this.toggleLoading()
+
         askPassword(siteUrl+"/api/studenti/" + studente.idStudente, "put", {
             studente: {
                 idStudente: studente.idStudente,
@@ -134,14 +138,21 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
                 promosso: studente.promosso
             }
         }, (_: any) => {
+            this.toggleLoading()
             message.success("Studente modificato con successo!")
             routerHistory.push(adminRoute+"/studenti")
         })
         
     }
 
+    toggleLoading = () => {
+        this.setState({
+            loading: !this.state.loading
+        })
+    }
+
     render(): JSX.Element{
-        const { nome, cognome, dataNascita, CF, studente, email } = this.state
+        const { nome, cognome, dataNascita, CF, studente, email, loading } = this.state
 
         if(!studente){
             const icon = <Icon type="loading" style={{ fontSize: 50 }} spin />
@@ -181,7 +192,12 @@ export default class EditStudente extends React.PureComponent<IProps, IState>{
                     </div>
                 </div>
 
-                <button type="submit" className="btn btn-success text-uppercase w-100">Modifica studente</button>
+                <button type="submit" className="btn btn-success text-uppercase w-100" disabled={loading}>
+                    {
+                        loading && <Icon type="loading" className="mr-2 loadable-btn" spin />
+                    }
+                    Modifica studente
+                </button>
             </form>
         </div>
     }

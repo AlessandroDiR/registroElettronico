@@ -1,5 +1,5 @@
 import React from "react"
-import { Modal, message, DatePicker } from "antd"
+import { Modal, message, DatePicker, Icon } from "antd"
 import { routerHistory } from "../.."
 import { siteUrl, formattaData, adminRoute } from "../../utilities"
 import locale from "antd/es/date-picker/locale/it_IT"
@@ -15,6 +15,7 @@ export interface IState{
     readonly cf: string
     readonly email: string
     readonly annoScolastico: number
+    readonly loading: boolean
 }
 
 export default class AddNewStudent extends React.PureComponent<IProps, IState>{
@@ -28,7 +29,8 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
             cf: "",
             annoScolastico: 1,
             email: "",
-            dataNascita: ""
+            dataNascita: "",
+            loading: false
         }
     }
 
@@ -112,17 +114,26 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
             idCorso: this.props.corso
         }]
 
+        this.toggleLoading()
+
         askPassword(siteUrl+"/api/studenti", "post", {
             studenti: students
         }, (_: any) => {
+            this.toggleLoading()
             message.success("Studente creato con successo!")
             routerHistory.push(adminRoute+"/studenti")
         })
 
     }
 
+    toggleLoading = () => {
+        this.setState({
+            loading: !this.state.loading
+        })
+    }
+
     render(): JSX.Element{
-        const { nome, cognome, cf, email } = this.state
+        const { nome, cognome, cf, email, loading } = this.state
 
         return <div className="col px-5 py-4 right-block">
             <h3 className="mb-2 text-center">Aggiungi un nuovo studente</h3>
@@ -161,7 +172,11 @@ export default class AddNewStudent extends React.PureComponent<IProps, IState>{
                     </div>
                 </div>
 
-                <button type="submit" className="btn btn-success text-uppercase w-100">Aggiungi studente</button>
+                <button type="submit" className="btn btn-success text-uppercase w-100" disabled={loading}>
+                    {
+                        loading && <Icon type="loading" className="mr-2 loadable-btn" spin />
+                    }
+                    Aggiungi studente</button>
             </form>
         </div>
     }
