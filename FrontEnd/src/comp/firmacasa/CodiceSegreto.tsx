@@ -1,5 +1,5 @@
 import React from "react"
-import { Modal } from "antd"
+import { Modal, Icon } from "antd"
 import { mountLogin, unmountLogin, siteUrl } from "../../utilities"
 import Axios from "axios"
 import { routerHistory } from "../.."
@@ -10,6 +10,7 @@ import Footer from "../Footer"
 export interface IProps{}
 export interface IState{
     readonly codice: string
+    readonly loading: boolean
 }
 
 export default class CodiceSegreto extends React.PureComponent<IProps, IState>{
@@ -17,7 +18,8 @@ export default class CodiceSegreto extends React.PureComponent<IProps, IState>{
         super(props)
 
         this.state = {
-            codice: ""
+            codice: "",
+            loading: false
         }
     }
 
@@ -51,6 +53,8 @@ export default class CodiceSegreto extends React.PureComponent<IProps, IState>{
             return
         }
 
+        this.toggleLoading()
+
         Axios.post(siteUrl+"/api/firmaremota/accessoremoto", codice, {
             headers: {"Content-Type": "application/json"}
         }).then(response => {
@@ -69,18 +73,28 @@ export default class CodiceSegreto extends React.PureComponent<IProps, IState>{
                     maskClosable: true
                 })
             }
-        }).catch(err => {
+
+            this.toggleLoading()
+        }).catch(_ => {
             Modal.error({
                 title: "Errore!",
                 content: "Il codice non è valido.",
                 centered: true,
                 maskClosable: true
             })
+
+            this.toggleLoading()
+        })
+    }
+
+    toggleLoading = () => {
+        this.setState({
+            loading: !this.state.loading
         })
     }
 
     render(): JSX.Element{
-        const { codice } = this.state
+        const { codice, loading } = this.state
 
         return <div className="col-11 col-lg-5 mx-auto" id="loginBlock">
             <div className="w-100">
@@ -95,7 +109,12 @@ export default class CodiceSegreto extends React.PureComponent<IProps, IState>{
 
                     <p className="text-muted">Chiedi al tuo coordinatore il codice segreto per accedere alla firma da casa.</p>
 
-                    <input type="submit" value="Prosegui" className="btn btn-lg btn-success w-100 text-uppercase"/>
+                    <button type="submit" className="btn btn-lg btn-success w-100 text-uppercase" disabled={loading}>
+                        {
+                            loading && <Icon type="loading" className="mr-2 loadable-btn" spin />
+                        }
+                        Prosegui
+                    </button>
                 </form>
 
                 <Footer />
