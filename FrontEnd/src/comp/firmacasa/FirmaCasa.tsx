@@ -42,7 +42,7 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
     inviaFirma = (e: any) => {
         e.preventDefault()
 
-        const { selectedStudente } = this.state
+        const { selectedStudente, lezione } = this.state
 
         if(!selectedStudente){
             Modal.error({
@@ -55,7 +55,8 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
         }
 
         askPassword(siteUrl+"/api/firmaremota/firmaremotastudente", "post", {
-            idStudente: selectedStudente.idStudente
+            idStudente: selectedStudente.idStudente,
+            idLezione: lezione.idLezione
         }, (response: any) => {
             let popup = response.data as IMessage
 
@@ -78,7 +79,8 @@ export default class FirmaCasa extends React.PureComponent<IProps, IState>{
             askPassword(siteUrl+"/api/firmaremota/firmaremotadocente", "post", {
                 idDocente: lezione.idDocente,
                 idCorso: studenti[0].idCorso,
-                anno: studenti[0].annoFrequentazione
+                anno: studenti[0].annoFrequentazione,
+                idLezione: lezione.idLezione
             }, (response: any) => {
                 let popup = response.data as IMessage
     
