@@ -45,125 +45,115 @@ namespace ProjectWork.Controllers
         {
             var studente = _context.Studenti.Where(s => s.IdCorso == firma.idCorso && s.AnnoFrequentazione == firma.anno).SingleOrDefault(s => s.Codice == firma.code);
             if(studente != null)
-                return Ok(FirmaStudente(studente));
+                return Ok(FirmaStudente(studente, null));
             else
             {
                 var docente = _context.Docenti.SingleOrDefault(d => d.Codice == firma.code);
                 if (docente != null)
-                    return Ok(FirmaDocente(docente, firma.idCorso, firma.anno));
+                    return Ok(FirmaDocente(docente, firma.idCorso, firma.anno, null));
             }
 
             return Ok(OutputMsg.generateMessage("Errore!", "Il codice non è valido!", true));
         }
 
-        public string FirmaStudente(Studenti s)
+        public string FirmaStudente(Studenti s, int? idLezione)
         {
             var date = DateTime.UtcNow;
             var time = TimeSpan.Parse(date.TimeOfDay.ToString().Split('.')[0]);
             var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == s.IdCorso && c.Anno == s.AnnoFrequentazione);
-            var lesson = _context.Lezioni.Where(l => l.Data == date && calendario.IdCalendario == l.IdCalendario).ToList();
+            var lezione = _context.Lezioni.Find(idLezione);
 
-            if (lesson != null)
+            if (lezione != null)
             {
-                var count = 0;
-                foreach (var l in lesson)
+                var presenza = _context.Presenze.SingleOrDefault(p => p.IdLezione == lezione.IdLezione && p.IdStudente == s.IdStudente);
+                if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0))
                 {
-                    var presenza = _context.Presenze.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdStudente == s.IdStudente);
-                    if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0) && count == lesson.Count() - 1 )
+                    return OutputMsg.generateMessage("Attenzione!", "Hai gia firmato l'uscita per questa lezione.", true);
+                }
+                else
+                {
+                    if (time > lezione.OraFine && time <= lezione.OraFine.Add(new TimeSpan(0,30,0)))
                     {
-                        return OutputMsg.generateMessage("Attenzione!", "Non ci sono più lezioni!", true);
-                    }
-                    else
-                    {
-                        if (time > l.OraFine && time <= l.OraFine.Add(new TimeSpan(0,30,0)))
+                        if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
                         {
-                            if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
-                            {
-                                presenza.Uscita = l.OraFine;
-                                _context.SaveChanges();
-                                return OutputMsg.generateMessage("USCITA", $"Arrivederci {s.Nome}!");
-                            }
-                        }
-                        else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
-                        {
-                            presenza.Uscita = time >= (l.OraFine - new TimeSpan(0, 10, 0)) ? l.OraFine : time;
+                            presenza.Uscita = lezione.OraFine;
                             _context.SaveChanges();
                             return OutputMsg.generateMessage("USCITA", $"Arrivederci {s.Nome}!");
                         }
-                        else if (presenza == null && l.OraFine >= time)
-                        {
-                            var newPresenza = new Presenze
-                            {
-                                IdLezione = l.IdLezione,
-                                IdStudente = s.IdStudente,
-                                Ingresso = time <= (l.OraInizio + new TimeSpan(0, 10, 0)) ? l.OraInizio : time
-                            };
-
-                            _context.Presenze.Add(newPresenza);
-                            _context.SaveChanges();
-                            return OutputMsg.generateMessage("ENTRATA", $"Ben arrivato {s.Nome}!");
-                        }
                     }
-                    count += 1;
+                    else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
+                    {
+                        presenza.Uscita = time >= (lezione.OraFine - new TimeSpan(0, 10, 0)) ? lezione.OraFine : time;
+                        _context.SaveChanges();
+                        return OutputMsg.generateMessage("USCITA", $"Arrivederci {s.Nome}!");
+                    }
+                    else if (presenza == null && lezione.OraFine >= time)
+                    {
+                        var newPresenza = new Presenze
+                        {
+                            IdLezione = lezione.IdLezione,
+                            IdStudente = s.IdStudente,
+                            Ingresso = time <= (lezione.OraInizio + new TimeSpan(0, 10, 0)) ? lezione.OraInizio : time
+                        };
+
+                        _context.Presenze.Add(newPresenza);
+                        _context.SaveChanges();
+                        return OutputMsg.generateMessage("ENTRATA", $"Ben arrivato {s.Nome}!");
+                    }
                 }
             }
 
             return OutputMsg.generateMessage("Spiacente!", "Non ci sono lezioni oggi!", true);
         }
 
-        public string FirmaDocente(Docenti d, int idCorso, int anno)
+        public string FirmaDocente(Docenti d, int idCorso, int anno, int? idLezione)
         {
             var date = DateTime.UtcNow;
             var time = TimeSpan.Parse(date.TimeOfDay.ToString().Split('.')[0]);
             var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == idCorso && c.Anno == anno);
-            var lesson = _context.Lezioni.Where(l => l.Data == date && calendario.IdCalendario == l.IdCalendario).ToList();
+            var lezione = _context.Lezioni.Find(idLezione);
 
-            if (lesson != null)
+            if (lezione != null)
             {
-                foreach (var l in lesson)
+                if(CheckDocenteLezione(d, lezione))
                 {
-                    var count = 0;
-                    if(CheckDocenteLezione(d, l))
+                    var presenza = _context.PresenzeDocente.SingleOrDefault(p => p.IdLezione == lezione.IdLezione && p.IdDocente == d.IdDocente);
+                    if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0))
                     {
-                        var presenza = _context.PresenzeDocente.SingleOrDefault(p => p.IdLezione == l.IdLezione && p.IdDocente == d.IdDocente);
-                        if (presenza != null && presenza.Ingresso != null && presenza.Uscita != new TimeSpan(0, 0, 0) && lesson[count + 1] == null)
+                        return OutputMsg.generateMessage("Attenzione!", "Hai già firmato l'uscita per questa lezione.", true);
+                    }
+                    else
+                    {
+                        if (time > lezione.OraFine && time <= lezione.OraFine.Add(new TimeSpan(0, 30, 0)))
                         {
-                            return OutputMsg.generateMessage("Attenzione!", "Hai già la firmato le lezioni di oggi!", true);
-                        }
-                        else
-                        {
-                            if (l.OraFine < time)
+                            if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
                             {
-                                if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
-                                {
-                                    presenza.Uscita = l.OraFine;
-                                    _context.SaveChanges();
-                                    return OutputMsg.generateMessage("USCITA", $"Arrivederci {d.Nome}!");
-                                }
-                            }
-                            else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
-                            {
-                                presenza.Uscita = time >= (l.OraFine - new TimeSpan(0, 10, 0)) ? l.OraFine : time;
+                                presenza.Uscita = lezione.OraFine;
                                 _context.SaveChanges();
                                 return OutputMsg.generateMessage("USCITA", $"Arrivederci {d.Nome}!");
                             }
-                            else if (presenza == null && l.OraFine >= time)
-                            {
-                                var newPresenza = new PresenzeDocente
-                                {
-                                    IdLezione = l.IdLezione,
-                                    IdDocente = d.IdDocente,
-                                    Ingresso = time <= (l.OraInizio + new TimeSpan(0, 10, 0)) ? l.OraInizio : time
-                                };
-
-                                _context.PresenzeDocente.Add(newPresenza);
-                                _context.SaveChanges();
-                                return OutputMsg.generateMessage("ENTRATA", $"Buona lezione {d.Nome}!");
-                            }
-
                         }
+                        else if (presenza != null && presenza.Ingresso != null && presenza.Uscita == new TimeSpan(0, 0, 0))
+                        {
+                            presenza.Uscita = time >= (lezione.OraFine - new TimeSpan(0, 10, 0)) ? lezione.OraFine : time;
+                            _context.SaveChanges();
+                            return OutputMsg.generateMessage("USCITA", $"Arrivederci {d.Nome}!");
+                        }
+                        else if (presenza == null && lezione.OraFine >= time)
+                        {
+                            var newPresenza = new PresenzeDocente
+                            {
+                                IdLezione = lezione.IdLezione,
+                                IdDocente = d.IdDocente,
+                                Ingresso = time <= (lezione.OraInizio + new TimeSpan(0, 10, 0)) ? lezione.OraInizio : time
+                            };
+
+                            _context.PresenzeDocente.Add(newPresenza);
+                            _context.SaveChanges();
+                            return OutputMsg.generateMessage("ENTRATA", $"Buona lezione {d.Nome}!");
+                        }
+
                     }
-                    count += 1;
                 }
             }
 
