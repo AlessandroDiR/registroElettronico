@@ -55,7 +55,7 @@ namespace ProjectWork.Controllers
         {
             var studente = _context.Studenti.SingleOrDefault(s => s.IdStudente == firma.IdStudente && s.Password == firma.Password);
             if (studente != null)
-                return Ok(_firma.FirmaStudente(studente));
+                return Ok(_firma.FirmaStudente(studente, firma.idLezione));
 
             return Ok(OutputMsg.generateMessage("Errore!", "Il codice non è valido!", true));
         }
@@ -66,7 +66,7 @@ namespace ProjectWork.Controllers
         {
             var docente = _context.Docenti.SingleOrDefault(d => d.IdDocente == firma.IdDocente && d.Password == firma.Password);
             if (docente != null)
-                return Ok(_firma.FirmaDocente(docente, firma.IdCorso, firma.Anno));
+                return Ok(_firma.FirmaDocente(docente, firma.IdCorso, firma.Anno, firma.idLezione));
 
             return Ok(OutputMsg.generateMessage("Errore!", "Il codice non è valido!", true));
         }

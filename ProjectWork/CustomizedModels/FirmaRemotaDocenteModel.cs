@@ -11,5 +11,6 @@ namespace ProjectWork.CustomizedModels
         public string Password { get; set; }
         public int IdCorso { get; set; }
         public int Anno { get; set; }
+        public int idLezione { get; set; }
     }
 }

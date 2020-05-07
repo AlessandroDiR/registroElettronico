@@ -71,7 +71,7 @@ namespace ProjectWork.Controllers
 
             foreach(var l in lezioni)
             {
-                if (l.OraInizio <= DateTime.UtcNow.TimeOfDay && l.OraFine.Add(new TimeSpan(0, 30, 0)) >= DateTime.UtcNow.TimeOfDay)
+                if (l.OraInizio.Add(new TimeSpan(0, -15, 0)) <= DateTime.UtcNow.TimeOfDay && l.OraFine.Add(new TimeSpan(0, 30, 0)) >= DateTime.UtcNow.TimeOfDay)
                 {
                     var nomeDocente = l.Titolo.Split(':')[1].Split('-')[0].Trim();
                     var insegnare = _context.Insegnare.Where(i => i.IdMateria == l.IdMateria);

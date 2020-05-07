@@ -744,6 +744,7 @@ namespace ProjectWork.Controllers
         public double TotaleOreLezioni(int idStudente)
         {
             var studente = _context.Studenti.Find(idStudente);
+            var corso = _context.Corsi.Find(studente.IdCorso);
 
             if (studente.Promosso == "true")
                 return 2000;
@@ -751,7 +752,13 @@ namespace ProjectWork.Controllers
 
             var calendario = _context.Calendari.SingleOrDefault(c => c.IdCorso == studente.IdCorso && c.Anno == studente.AnnoFrequentazione);
 
-            if (calendario == null)
+            if (calendario == null && studente.AnnoFrequentazione == 2 && corso.StageSecondoAnno)
+                return 800;
+            if (calendario == null && studente.AnnoFrequentazione == 2 && !corso.StageSecondoAnno)
+                return 400;
+            if (calendario == null && studente.AnnoFrequentazione == 1 && corso.StagePrimoAnno)
+                return 400;
+            if (calendario == null && studente.AnnoFrequentazione == 1 && !corso.StagePrimoAnno)
                 return 0;
 
             var lezioni = _context.Lezioni.Where(l => l.IdCalendario == calendario.IdCalendario && l.Data <= DateTime.UtcNow);
@@ -762,8 +769,10 @@ namespace ProjectWork.Controllers
                 totOreLezioni += l.OraFine - l.OraInizio;
             }
 
-            if (studente.AnnoFrequentazione == 2)
+            if (studente.AnnoFrequentazione == 1 && corso.StagePrimoAnno)
                 return totOreLezioni.TotalHours + 400;
+            if (studente.AnnoFrequentazione == 2 && corso.StageSecondoAnno)
+                return totOreLezioni.TotalHours + 800;
 
             return totOreLezioni.TotalHours;
         }

@@ -9,5 +9,6 @@ namespace ProjectWork.CustomizedModels
     {
         public int IdStudente { get; set; }
         public string Password { get; set; }
+        public int idLezione { get; set; }
     }
 }
