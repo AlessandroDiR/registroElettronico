@@ -48,7 +48,7 @@ export default class StudentStage extends React.PureComponent<IProps, IState>{
 
         return <Modal visible={show} title="Ore di stage svolte" onCancel={toggleModal} width="60%" footer={[
             <Button type="primary" disabled={!oreList || oreList.length === 0}>
-                <CSVLink data={oreList ? oreList.map(o => Object.values(o)) : null} filename={"oreStage"+studente.nome+studente.cognome+".csv"}>
+                <CSVLink data={oreList ? oreList.map(o => Object.values(o)) : null} filename={"oreStage"+studente.nome+studente.cognome+".csv"} className="text-decoration-none">
                     <i className="far fa-arrow-to-bottom mr-2"></i> Scarica CSV
                 </CSVLink>
             </Button>,
