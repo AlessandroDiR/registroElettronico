@@ -10,5 +10,6 @@ namespace ProjectWork.Models
         public string code { get; set; }
         public int idCorso { get; set; }
         public int anno { get; set; }
+        public int idLezione { get; set; }
     }
 }
