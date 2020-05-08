@@ -45,12 +45,12 @@ namespace ProjectWork.Controllers
         {
             var studente = _context.Studenti.Where(s => s.IdCorso == firma.idCorso && s.AnnoFrequentazione == firma.anno).SingleOrDefault(s => s.Codice == firma.code);
             if(studente != null)
-                return Ok(FirmaStudente(studente, null));
+                return Ok(FirmaStudente(studente, firma.idLezione));
             else
             {
                 var docente = _context.Docenti.SingleOrDefault(d => d.Codice == firma.code);
                 if (docente != null)
-                    return Ok(FirmaDocente(docente, firma.idCorso, firma.anno, null));
+                    return Ok(FirmaDocente(docente, firma.idCorso, firma.anno, firma.idLezione));
             }
 
             return Ok(OutputMsg.generateMessage("Errore!", "Il codice non è valido!", true));
