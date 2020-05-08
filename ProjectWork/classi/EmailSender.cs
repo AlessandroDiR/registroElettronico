@@ -84,7 +84,7 @@ namespace ProjectWork.classi
                 From = from,
                 IsBodyHtml = true,
                 Subject = "FITSTIC | Credenziali registro",
-                Body = $"Ciao {s.Nome} e benvenuto in FITSTIC.<br><br>Ti comunichiamo che il tuo account è stato creato e che ora puoi accedere al tuo <a href='https://registrofitstic.azurewebsites.net/#/studentipanel'>profilo personale<a/>.<br><br>L'username per accedere è: {s.Email}.<br></br>La prima cosa che devi fare è creare una password seguendo queste semplici istruzioni:<br>1) Vai su https://registrofistsic.azurewebsites.net/#/studentipanel <br>2) Clicca su 'Hai dimenticato la password?'<br>3) Inserisci l'indirizzo email per il quale vuoi recuperare la password<br>4) Riceverai un codice di conferma. Copialo nello step successivo e vai avanti<br>5) Procedi con l'inserimento di una nuova password<br><br><strong>Il gioco è fatto!</strong>"
+                Body = $"Ciao {s.Nome} e benvenuto in FITSTIC.<br><br>Ti comunichiamo che il tuo account è stato creato e che ora puoi accedere al tuo <a href='https://registrofitstic.azurewebsites.net/#/studentipanel'>profilo personale<a/>.<br><br>L'username per accedere è: {s.Email}.<br></br>La prima cosa che devi fare è creare una password seguendo queste semplici istruzioni:<br>1) Vai su https://registrofitstic.azurewebsites.net/#/studentipanel <br>2) Clicca su 'Hai dimenticato la password?'<br>3) Inserisci l'indirizzo email per il quale vuoi recuperare la password<br>4) Riceverai un codice di conferma. Copialo nello step successivo e vai avanti<br>5) Procedi con l'inserimento di una nuova password<br><br><strong>Il gioco è fatto!</strong>"
             };
 
             message.To.Add(to);
