@@ -167,7 +167,7 @@ export default class StudentDetails extends React.PureComponent<IProps, IState>{
                 </div>
             </Modal>
 
-            <StudentStage idStudente={student.idStudente} toggleModal={this.toggleStage} show={showStage} />
+            <StudentStage studente={student} toggleModal={this.toggleStage} show={showStage} />
         </div>
     }
 }

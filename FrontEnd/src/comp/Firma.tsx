@@ -1,11 +1,11 @@
 import React from "react"
-import axios from "axios"
 import { IMessage, genericError } from "../models/IMessage"
 import { siteUrl, resizePopup } from "../utilities"
 import { routerHistory } from ".."
 import { Divider, Tooltip, Spin, Icon } from "antd"
 import { ICorso } from "../models/ICorso"
 import Axios from "axios"
+import { ILezione } from "../models/ILezione"
 
 export interface IProps{}
 export interface IState{
@@ -61,22 +61,42 @@ export default class Firma extends React.PureComponent<IProps, IState>{
         let idCorso = parseInt(sessionStorage.getItem("corso")),
         anno = parseInt(sessionStorage.getItem("classe"))
         
-        axios.post(siteUrl + "/api/firma", {
-            code,
-            idCorso,
-            anno
-        }).then(response => {
-            this.setState({
-                popup: response.data as IMessage
-            })
+        Axios.get(siteUrl+"/api/lezioni/"+idCorso+"/"+anno).then(output => {
+            if(typeof(output.data) === "string"){
+                this.setState({
+                    popup: {
+                        title: "Attenzione!",
+                        icon: "fa-times-circle",
+                        iconColor: "#de1e30",
+                        message: "Al momento non c'è nessuna lezione in corso.",
+                        time: 3000
+                    }
+                }, () => {
+                    this.showMessagePopup()
+                })
+            }else{
 
-            this.showMessagePopup()
-        }).catch((_) => {
-            this.setState({
-                popup: genericError
-            })
+                let lezione = output.data as ILezione
 
-            this.showMessagePopup()
+                Axios.post(siteUrl + "/api/firma", {
+                    code,
+                    idCorso,
+                    anno,
+                    idLezione: lezione.idLezione
+                }).then(response => {
+                    this.setState({
+                        popup: response.data as IMessage
+                    })
+        
+                    this.showMessagePopup()
+                }).catch((_) => {
+                    this.setState({
+                        popup: genericError
+                    })
+        
+                    this.showMessagePopup()
+                })
+            }
         })
     }
 
