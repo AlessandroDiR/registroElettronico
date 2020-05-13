@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProjectWork.Models;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 
 namespace ProjectWork
 {
@@ -20,8 +22,6 @@ namespace ProjectWork
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            //Scaffold-DbContext "Server=DESKTOP-DKF8A9U;Database=AvocadoDB;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
-            //Scaffold-DbContext "Server=dell-alessandro\dell_alessandro;Database=AvocadoDB;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
         }
 
         public IConfiguration Configuration { get; }
@@ -29,13 +29,29 @@ namespace ProjectWork
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            SecretClientOptions opt = new SecretClientOptions()
+            {
+                Retry =
+                {
+                    Delay= TimeSpan.FromSeconds(2),
+                    MaxDelay = TimeSpan.FromSeconds(16),
+                    MaxRetries = 5,
+                    Mode = Azure.Core.RetryMode.Exponential
+                 }
+            };
+            var client = new SecretClient(new Uri("https://avosecrets.vault.azure.net/"), new DefaultAzureCredential(), opt);
+
+            KeyVaultSecret secret = client.GetSecret("remoteString");
+
+            string remoteString = secret.Value;
+
             // Use SQL Database if in Azure, otherwise, use local Database
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
                 services.AddDbContext<AvocadoDBContext>(options =>
-                        options.UseSqlServer(Configuration.GetConnectionString("Remote")));
+                        options.UseSqlServer(remoteString));
             else
                 services.AddDbContext<AvocadoDBContext>(options =>
-                        options.UseSqlServer(Configuration.GetConnectionString("Local")));
+                        options.UseSqlServer(Environment.GetEnvironmentVariable("LOCAL_STRING")));
 
             // Automatically perform database migration
             services.BuildServiceProvider().GetService<AvocadoDBContext>().Database.Migrate();

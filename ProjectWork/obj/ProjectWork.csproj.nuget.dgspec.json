@@ -41,6 +41,14 @@
       "frameworks": {
         "netcoreapp2.1": {
           "dependencies": {
+            "Azure.Identity": {
+              "target": "Package",
+              "version": "[1.1.1, )"
+            },
+            "Azure.Security.KeyVault.Secrets": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
             "Google.Apis.Calendar.v3": {
               "target": "Package",
               "version": "[1.43.0.1858, )"
