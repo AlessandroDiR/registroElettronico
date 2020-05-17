@@ -156,12 +156,12 @@ export default class AddOreStage extends React.PureComponent<IProps, IState>{
                 <div className="form-group row mx-0">
                     <div className="col pr-1 pl-0">
                         <label className="text-secondary">Inizio</label>
-                        <TimePicker defaultValue={moment(new Date(), 'HH:mm')} format='HH:mm' onChange={this.changeInizio} className="w-100 select-date" minuteStep={10} placeholder="Seleziona una data" />
+                        <TimePicker defaultValue={moment(new Date(), 'HH:mm')} format='HH:mm' onChange={this.changeInizio} className="w-100 select-date" minuteStep={10} placeholder="Seleziona un'orario" />
                     </div>
 
                     <div className="col pr-0 pl-1">
                         <label className="text-secondary">Fine</label>
-                        <TimePicker defaultValue={moment(new Date(), 'HH:mm')} format='HH:mm' onChange={this.changeFine} className="w-100 select-date" minuteStep={10} placeholder="Seleziona una data" />
+                        <TimePicker defaultValue={moment(new Date(), 'HH:mm')} format='HH:mm' onChange={this.changeFine} className="w-100 select-date" minuteStep={10} placeholder="Seleziona un'orario" />
                     </div>
                 </div>
 
